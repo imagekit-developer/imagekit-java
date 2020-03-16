@@ -58,9 +58,21 @@ Step 2. Add the dependency in POM file:
 
 
 ## Initialization
+
+Step 1. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use any quote(',") in values.
+
+```editorconfig
+# Put essential values of keys [UrlEndpoint, PrivateKey, PublicKey]
+UrlEndpoint=<-YOUR-ENDPOINT-URL-HERE->
+PrivateKey=<-YOUR-PRIVATE-KEY-HERE->
+PublicKey=<-YOUR-PUBLIC-KEY-HERE->
+```
+Step 2. Then you need to initialize ImageKit with that configuration.
+
  ```java
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.utils.Utils;
 class App {
     public static void main(String[] args){
         ImageKit imageKit=ImageKit.getInstance();
@@ -134,14 +146,14 @@ The ```.getUrl()``` method accepts the following parameters
 
 | Option                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| url_endpoint            | Optional. `(Type: String)` The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/                                                                                                                                                                                                                                                                                                                                             |
+| urlEndpoint            | Optional. `(Type: String)` The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/                                                                                                                                                                                                                                                                                                                                             |
 | path                    | Conditional. `(Type: String)` This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                                                                                                |
 | src                     | Conditional. `(Type: String)` This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                           |
 | transformation          | Optional. `(Type: List<Map<String,String>>)` An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
-| transformation_position | Optional. `(Type: String)` Default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query` which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                 |
-| query_parameters        | Optional. `(Type: Map<String, String>)` These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameter to your URLs.                                                                                                                                                                                                                                                                                                                           |
+| transformationPosition | Optional. `(Type: String)` Default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query` which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                 |
+| queryParameters        | Optional. `(Type: Map<String, String>)` These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameter to your URLs.                                                                                                                                                                                                                                                                                                                           |
 | signed                  | Optional. `(Type: Boolean)` Default is `false`. If set to `true`, the SDK generates a signed image URL adding the image signature to the image URL. This can only be used if you are creating the URL with the `url_endpoint` and `path` parameters, and not with the `src` parameter.                                                                                                                                                                                                                                                                                            |
-| expire_seconds          | Optional. `(Type: Integer)` Meant to be used along with the `signed` parameter to specify the time in seconds from now when the URL should expire. If specified, the URL contains the expiry timestamp in the URL, and the image signature is modified accordingly.                                                                                                                                                                                                                                                                                                                |
+| expireSeconds          | Optional. `(Type: Integer)` Meant to be used along with the `signed` parameter to specify the time in seconds from now when the URL should expire. If specified, the URL contains the expiry timestamp in the URL, and the image signature is modified accordingly.                                                                                                                                                                                                                                                                                                                |
 
 
 ## Examples of generating URLs
@@ -329,13 +341,13 @@ in the [documentation here](https://docs.imagekit.io/api-reference/media-api/lis
 correct values to get the results.
 
 ```java
-    ResultList resultList=ImageKit.getInstance().getFileList(10,10);
-    System.out.println("======FINAL RESULT=======");
-    System.out.println(resultList);
-    System.out.println("Raw Response:");
-    System.out.println(resultList.getRaw());
-    System.out.println("Map Response:");
-    System.out.println(resultList.getMap());
+ResultList resultList=ImageKit.getInstance().getFileList(10,10);
+System.out.println("======FINAL RESULT=======");
+System.out.println(resultList);
+System.out.println("Raw Response:");
+System.out.println(resultList.getRaw());
+System.out.println("Map Response:");
+System.out.println(resultList.getMap());
 ```
 
 **2. Get File Details**
@@ -531,7 +543,7 @@ ImageKit.getInstance().pHashDistance("a4a65595ac94518b", "7838873e791f8400");
 
 **1. First clone this repository to your system using git.**
 ```shell script
-git clone <imagekit-repo-url>
+git clone https://github.com/imagekit-developer/imagekit-java.git
 ```
 **2. Open project in your favorite Java IDE that can supports Gradle dependency management or you can use Terminal/Command Prompt.**
 
