@@ -33,7 +33,7 @@ allprojects {
 Step 2. Add the dependency on project's `build.gradle`:
 ```
 dependencies {
-        implementation '--gradle dependency here--'
+        implementation 'com.github.imagekit-developer:imagekit-java:v1.0.0'
 }
 ```
 ### For Maven:
@@ -49,9 +49,9 @@ Step 1. Add the JitPack repository to your build file:
 Step 2. Add the dependency in POM file:
 ```
 <dependency>
-    <groupId>maven group id</groupId>
-    <artifactId>maven artiface id</artifactId>
-    <version>version</version>
+    <groupId>com.github.imagekit-developer</groupId>
+    <artifactId>imagekit-java</artifactId>
+    <version>v1.0.0</version>
 </dependency>
 ```
 
