@@ -64,4 +64,13 @@ public class MultipartBuilder {
         }
         return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(fileUpdateRequest));
     }
+
+    public RequestBody build(String json){
+        if (json==null){
+            throw new RuntimeException("Error: You can't send null body.");
+        }
+        else {
+            return RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        }
+    }
 }
