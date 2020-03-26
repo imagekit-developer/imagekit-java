@@ -66,50 +66,6 @@ public class MultipartBuilderTest {
 
         FileCreateRequest fileCreateRequest=new FileCreateRequest("f06830ca9f1e3e90","demo.jpg");
         fileCreateRequest.setPrivateFile(true);
-
-        MultipartBody body = SUT.build(fileCreateRequest);
-
-        HttpUrl baseUrl = server.url("/api/v1/files/upload");
-        Request request=new Request.Builder()
-                .url(baseUrl)
-                .post(body)
-                .headers(Headers.of(headers))
-                .build();
-
-        Response response = okHttpClient.newCall(request).execute();
-
-        String boundary=body.boundary();
-
-        String expectedMultipartData="--"+boundary+"\r\n" +
-                "Content-Disposition: form-data; name=\"file\"\r\n" +
-                "Content-Length: 16\r\n\r\n" +
-                "f06830ca9f1e3e90\r\n" +
-                "--"+boundary+"\r\n" +
-                "Content-Disposition: form-data; name=\"fileName\"\r\n" +
-                "Content-Length: 8\r\n\r\n" +
-                "demo.jpg\r\n" +
-                "--"+boundary+"\r\n" +
-                "Content-Disposition: form-data; name=\"useUniqueFileName\"\r\n" +
-                "Content-Length: 4\r\n\r\n" +
-                "true\r\n" +
-                "--"+boundary+"\r\n" +
-                "Content-Disposition: form-data; name=\"isPrivateFile\"\r\n" +
-                "Content-Length: 4\r\n\r\n" +
-                "true\r\n" +
-                "--"+boundary+"--\r\n";
-
-        // It's capture multipart request
-        RecordedRequest recordedRequest=server.takeRequest();
-
-        String data=recordedRequest.getBody().readUtf8();
-
-        assertEquals(expectedMultipartData, data);
-    }
-
-    @Test
-    public void build_test_with_FileCreateRequest_more_params() throws Exception{
-        FileCreateRequest fileCreateRequest=new FileCreateRequest("f06830ca9f1e3e90","demo.jpg");
-        fileCreateRequest.setPrivateFile(true);
         fileCreateRequest.setFolder("/sample-folder");
         List<String> tags=new ArrayList<>();
         tags.add("Software");
