@@ -66,6 +66,16 @@ public class MultipartBuilderTest {
 
         FileCreateRequest fileCreateRequest=new FileCreateRequest("f06830ca9f1e3e90","demo.jpg");
         fileCreateRequest.setPrivateFile(true);
+        fileCreateRequest.setFolder("/sample-folder");
+        List<String> tags=new ArrayList<>();
+        tags.add("Software");
+        tags.add("Developer");
+        tags.add("Engineer");
+        fileCreateRequest.setTags(tags);
+        fileCreateRequest.setCustomCoordinates("10,10,100,100");
+        List<String> responseFields=new ArrayList<>();
+        responseFields.add("metadata");
+        fileCreateRequest.setResponseFields(responseFields);
 
         MultipartBody body = SUT.build(fileCreateRequest);
 
@@ -93,10 +103,27 @@ public class MultipartBuilderTest {
                 "Content-Length: 4\r\n\r\n" +
                 "true\r\n" +
                 "--"+boundary+"\r\n" +
+                "Content-Disposition: form-data; name=\"tags\"\r\n" +
+                "Content-Length: 27\r\n\r\n" +
+                "Software,Developer,Engineer\r\n" +
+                "--"+boundary+"\r\n" +
+                "Content-Disposition: form-data; name=\"folder\"\r\n" +
+                "Content-Length: 14\r\n\r\n" +
+                "/sample-folder\r\n" +
+                "--"+boundary+"\r\n" +
                 "Content-Disposition: form-data; name=\"isPrivateFile\"\r\n" +
                 "Content-Length: 4\r\n\r\n" +
                 "true\r\n" +
-                "--"+boundary+"--\r\n";
+                "--"+boundary+"--\r\n" +
+                "Content-Disposition: form-data; name=\"customCoordinates\"\r\n" +
+                "Content-Length: 13\r\n\r\n" +
+                "10,10,100,100\r\n" +
+                "--"+boundary+"\r\n" +
+                "Content-Disposition: form-data; name=\"responseFields\"\r\n" +
+                "Content-Length: 8\r\n\r\n" +
+                "metadata\r\n" +
+                "--"+boundary+"\r\n";
+
 
         // It's capture multipart request
         RecordedRequest recordedRequest=server.takeRequest();
