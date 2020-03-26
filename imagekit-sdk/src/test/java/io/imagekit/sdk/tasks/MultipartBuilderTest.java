@@ -159,7 +159,7 @@ public class MultipartBuilderTest {
                 "Content-Disposition: form-data; name=\"isPrivateFile\"\r\n" +
                 "Content-Length: 4\r\n\r\n" +
                 "true\r\n" +
-                "--"+boundary+"--\r\n" +
+                "--"+boundary+"\r\n" +
                 "Content-Disposition: form-data; name=\"customCoordinates\"\r\n" +
                 "Content-Length: 13\r\n\r\n" +
                 "10,10,100,100\r\n" +
@@ -167,7 +167,7 @@ public class MultipartBuilderTest {
                 "Content-Disposition: form-data; name=\"responseFields\"\r\n" +
                 "Content-Length: 8\r\n\r\n" +
                 "metadata\r\n" +
-                "--"+boundary+"\r\n";
+                "--"+boundary+"--\r\n";
 
 
         // It's capture multipart request
