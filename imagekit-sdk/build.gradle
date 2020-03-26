@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'io.imagekit.sdk'
-version '1.0.0'
+version '1.0.1'
 
 sourceCompatibility = 1.8
 
@@ -16,4 +16,5 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: '../libs')
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile "org.mockito:mockito-all:2.+"
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 }

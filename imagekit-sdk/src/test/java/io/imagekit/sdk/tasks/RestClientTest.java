@@ -9,6 +9,10 @@ import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -19,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -39,8 +44,7 @@ public class RestClientTest {
 
     @Test
     public void valid_upload_expectSuccess() {
-        OkHttpClientStub clientStub= new OkHttpClientStub("{}",
-                200, "Ok");
+        OkHttpClientStub clientStub= new OkHttpClientStub("{}", 200, "Ok");
         SUT.setClient(clientStub);
 
         MultipartBuilder multipartBuilder=mock(MultipartBuilder.class);
@@ -253,12 +257,6 @@ public class RestClientTest {
 
         OkHttpClientStub clientStub= new OkHttpClientStub(resp, 200, "Ok");
 
-//        OkHttpClient clientStub=mock(OkHttpClient.class);
-
-//        ArgumentCaptor<Request> ac=ArgumentCaptor.forClass(Request.class);
-
-//        when(clientStub.newCall(ac.capture())).thenReturn();
-
         SUT.setClient(clientStub);
 
         Map<String , String> options=new HashMap<>();
@@ -268,13 +266,9 @@ public class RestClientTest {
         ResultList result = SUT.getFileList(options);
 
 
-//        System.out.println(SUT.request.url());
         assertEquals("https://api.imagekit.io/v1/files?limit=10&skip=0",SUT.request.url().toString());
 
-//        System.out.println(ac.getAllValues());
-
-//        assertEquals(1,result.getResults().size());
-//        assertThat(resp,is(result.getRaw()));
+        assertThat(resp,is(result.getRaw()));
     }
 
     @Test
@@ -326,6 +320,9 @@ public class RestClientTest {
                 200, "Ok");
         SUT.setClient(clientStub);
         Result result = SUT.getFileDetail("598821f949c0a938d57563bd");
+        // Asserting endpoint sending to server
+        assertEquals("https://api.imagekit.io/v1/files/598821f949c0a938d57563bd/details",SUT.request.url().toString());
+        // Asserting mock response getting from server.
         assertThat(resp, is(result.getRaw()));
     }
 
@@ -370,6 +367,7 @@ public class RestClientTest {
                 200, "Ok");
         SUT.setClient(clientStub);
         ResultMetaData result = SUT.getFileMetaData("598821f949c0a938d57563bd");
+        assertEquals("https://api.imagekit.io/v1/files/598821f949c0a938d57563bd/metadata",SUT.request.url().toString());
         assertThat(resp, is(result.getRaw()));
     }
 
@@ -414,6 +412,8 @@ public class RestClientTest {
                 200, "Ok");
         SUT.setClient(clientStub);
         ResultMetaData result = SUT.getRemoteFileMetaData("http://remote_url.example.com/demo.png");
+
+        assertEquals("https://api.imagekit.io/v1/metadata?url=http://remote_url.example.com/demo.png",SUT.request.url().toString());
         assertThat(resp, is(result.getRaw()));
     }
 
@@ -447,7 +447,9 @@ public class RestClientTest {
         OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
                 204, "Ok");
         SUT.setClient(clientStub);
-        Result result = SUT.deleteFile("fileId");
+        Result result = SUT.deleteFile("598821f949c0a938d57563bd");
+
+        assertEquals("https://api.imagekit.io/v1/files/598821f949c0a938d57563bd",SUT.request.url().toString());
         assertThat("File deleted successfully!", is(result.getMessage()));
     }
 
@@ -574,6 +576,8 @@ public class RestClientTest {
                 200, "Ok");
         SUT.setClient(clientStub);
         ResultCacheStatus result = SUT.getPurgeCacheStatus("requestId");
+
+        assertEquals("https://api.imagekit.io/v1/files/purge/requestId",SUT.request.url().toString());
         assertThat("Complete", is(result.getStatus()));
     }
 

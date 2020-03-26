@@ -334,7 +334,7 @@ public class RestClient {
         request=new Request.Builder()
                 .url(url)
                 .post(
-                    RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.format("{\"fileIds\":%s}",new Gson().toJson(fileIds)))
+                        multipartBuilder.build(String.format("{\"fileIds\":%s}",new Gson().toJson(fileIds)))
                 )
                 .headers(Headers.of(headers))
                 .build();
@@ -380,7 +380,7 @@ public class RestClient {
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/files/purge")
                 .post(
-                        RequestBody.create(MediaType.parse("application/json; charset=utf-8"), String.format("{\"url\":\"%s\"}",url))
+                        multipartBuilder.build(String.format("{\"url\":\"%s\"}",url))
                 )
                 .headers(Headers.of(headers))
                 .build();
