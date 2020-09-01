@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.Matchers;
 
 import java.util.*;
+import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -23,6 +24,8 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 public class ImageKitTest {
+    private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
+
     private ImageKit SUT;
     RestClient restClient;
     @Before
@@ -367,18 +370,33 @@ public class ImageKitTest {
 
     @Test
     public void getUrl_with_signature() {
-        List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-        Map<String, String> scale=new HashMap<>();
-        scale.put("width","100");
+        List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+        Map<String, String> scale = new HashMap<>();
+        scale.put("width", "100");
         transformation.add(scale);
 
-        Map<String, Object> options=new HashMap<>();
-        options.put("path","/test-signed-url.png");
-        options.put("transformation",transformation);
-        options.put("signed",true);
+        Map<String, Object> options = new HashMap<>();
+        options.put("path", "/test-signed-url.png");
+        options.put("transformation", transformation);
+        options.put("signed", true);
+        options.put("expireSeconds", 1000);
 
-        String url=SUT.getUrl(options);
-        assertTrue(url.contains("ik-s"));
+        String url = SUT.getUrl(options);
+
+        assertSignedUrl("https://test-domain.com/test-endpoint/tr:w-100/test-signed-url.png", url);
+    }
+
+    @Test
+    public void getUrl_with_signature_src_noTransform() {
+        Map<String, Object> options = new HashMap<>();
+        options.put("src", "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg");
+        options.put("transformation", Collections.emptyList());
+        options.put("signed", true);
+        options.put("expireSeconds", 1000);
+
+        String url = SUT.getUrl(options);
+
+        assertSignedUrl("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg", url);
     }
 
     @Test
@@ -601,4 +619,12 @@ public class ImageKitTest {
         int hammingDistance = SUT.pHashDistance("a4a65595ac94518b3", "7838873e791f8400");
     }
 
+    private void assertSignedUrl(String expectedBaseUrl, String actualUrl) {
+        java.util.regex.Matcher matcher = IMAGEKIT_SIGNED_URL_PATTERN.matcher(actualUrl);
+        assertTrue(actualUrl + " does not look like a signed url", matcher.matches());
+        assertEquals(expectedBaseUrl, matcher.group(1));
+        assertEquals(Version.VERSION_CODE, matcher.group(2));
+        assertFalse(matcher.group(3).trim().isEmpty());
+        assertFalse(matcher.group(4).trim().isEmpty());
+    }
 }
