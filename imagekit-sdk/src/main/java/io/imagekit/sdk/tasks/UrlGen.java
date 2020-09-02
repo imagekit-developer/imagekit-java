@@ -51,11 +51,11 @@ public class UrlGen {
         }
         String newUrl=null;
         if (null!=src){
-            newUrl=buildFullUrl(src,queryParameters,transformation,transformationPosition,signed,expireSeconds);
+            newUrl=buildFullUrl(src,queryParameters,transformation,transformationPosition,signed,expireSeconds, config.getPrivateKey(), urlEndpoint);
         }
         else {
             if ("query".equalsIgnoreCase(transformationPosition)){
-                newUrl=buildFullUrl(urlEndpoint+(path.charAt(0)=='/'?path.substring(1,path.length()):path),queryParameters,transformation,transformationPosition,signed,expireSeconds);
+                newUrl=buildFullUrl(urlEndpoint+(path.charAt(0)=='/'?path.substring(1,path.length()):path),queryParameters,transformation,transformationPosition,signed,expireSeconds, config.getPrivateKey(), urlEndpoint);
             }
             else {
                 newUrl = buildPathUrl(path.charAt(0)=='/'?path:"/"+path, urlEndpoint, queryParameters, transformation, transformationPosition, signed, expireSeconds, config.getPrivateKey());
@@ -110,13 +110,7 @@ public class UrlGen {
                     queryMaker.get(),null);
 
             if (signed){
-                long expiryTimestamp =  DEFAULT_TIMESTAMP;
-                if (expireSeconds > 0){
-                    expiryTimestamp = ((Calendar.getInstance().getTimeInMillis()/1000)+expireSeconds);
-                    String signature = signUrl(privateKey,tmpUri.toString(),urlEndpoint,expiryTimestamp);
-                    queryMaker.put("ik-s=" + signature);
-                    queryMaker.put("ik-t=" + expiryTimestamp);
-                }
+                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUri);
             }
 
             newUri = new URI(baseUrl.getScheme(),baseUrl.getUserInfo(),baseUrl.getHost(),baseUrl.getPort(),
@@ -129,7 +123,7 @@ public class UrlGen {
         return newUri.toString();
     }
 
-    private static String buildFullUrl(String src, Map<String, String> queryParameters, List<Map<String, String>> transformation, String transformationPosition, boolean signed, long expireSeconds) {
+    private static String buildFullUrl(String src, Map<String, String> queryParameters, List<Map<String, String>> transformation, String transformationPosition, boolean signed, long expireSeconds, String privateKey, String urlEndpoint) {
         StringBuilder tr= new StringBuilder("");
         if (transformation.size()>0) {
             tr.append("tr=");
@@ -178,6 +172,15 @@ public class UrlGen {
         URI newUri= null;
         try {
             String newPath=baseUrl.getPath();
+            URI tmpUri = new URI(baseUrl.getScheme(),baseUrl.getUserInfo(),baseUrl.getHost(),baseUrl.getPort(),
+                    newPath,
+                    queryMaker.get(),null);
+
+
+            if (signed){
+                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUri);
+            }
+
             newUri = new URI(baseUrl.getScheme(),baseUrl.getUserInfo(),baseUrl.getHost(),baseUrl.getPort(),
                     newPath,
                     queryMaker.get(),null);
@@ -185,6 +188,16 @@ public class UrlGen {
             e.printStackTrace();
         }
         return newUri.toString();
+    }
+
+    private static void sign(String urlEndpoint, long expireSeconds, String privateKey, QueryMaker queryMaker, URI tmpUri) {
+        long expiryTimestamp =  DEFAULT_TIMESTAMP;
+        if (expireSeconds > 0){
+            expiryTimestamp = ((Calendar.getInstance().getTimeInMillis()/1000)+ expireSeconds);
+            String signature = signUrl(privateKey, tmpUri.toString(), urlEndpoint,expiryTimestamp);
+            queryMaker.put("ik-s=" + signature);
+            queryMaker.put("ik-t=" + expiryTimestamp);
+        }
     }
 
     public static String signUrl(String privateKey, String url, String urlEndpoint, long expiryTimestamp){
