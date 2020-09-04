@@ -194,8 +194,10 @@ public class UrlGen {
         long expiryTimestamp =  DEFAULT_TIMESTAMP;
         if (expireSeconds > 0){
             expiryTimestamp = ((Calendar.getInstance().getTimeInMillis()/1000)+ expireSeconds);
-            String signature = signUrl(privateKey, tmpUri.toString(), urlEndpoint,expiryTimestamp);
-            queryMaker.put("ik-s=" + signature);
+        }
+        String signature = signUrl(privateKey, tmpUri.toString(), urlEndpoint,expiryTimestamp);
+        queryMaker.put("ik-s=" + signature);
+        if(expiryTimestamp > 0 && expiryTimestamp != DEFAULT_TIMESTAMP) {
             queryMaker.put("ik-t=" + expiryTimestamp);
         }
     }
