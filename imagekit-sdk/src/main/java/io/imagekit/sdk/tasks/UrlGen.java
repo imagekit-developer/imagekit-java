@@ -114,16 +114,17 @@ public class UrlGen {
         URL newUri= null;
             String newPath=baseUrl.getPath();
             if (tr.toString().equalsIgnoreCase("")) {
-                newPath += path.substring(1);
+                newPath+=path.substring(1);
             } else {
-                newPath += tr + path;
+                newPath+=tr+path;
             }
 
-            URL tmpUri = new URL(baseUrl.getScheme(), baseUrl.getHost(), baseUrl.getPort(),
+            // Not using URI class here since it will URL encode the path again
+            URL tmpUrl = new URL(baseUrl.getScheme(), baseUrl.getHost(), baseUrl.getPort(),
                     newPath + queryMaker.getAsQueryString(), null);
 
             if (signed){
-                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUri.toURI());
+                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUrl.toURI());
             }
 
             newUri = new URL(baseUrl.getScheme(), baseUrl.getHost(), baseUrl.getPort(),
