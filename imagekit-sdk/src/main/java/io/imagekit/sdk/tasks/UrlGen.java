@@ -8,6 +8,9 @@ import org.apache.commons.codec.digest.HmacUtils;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class UrlGen {
@@ -29,7 +32,12 @@ public class UrlGen {
         if (null!=options.get("expireSeconds")) {
             expire = (long) (int)options.get("expireSeconds");
         }
-        return UrlGen.generateUrl(path,urlEndpoint,src,queryParams,transformation,transformationPosition,signed,expire);
+        try {
+            return UrlGen.generateUrl(path,urlEndpoint,src,queryParams,transformation,transformationPosition,signed,expire);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private static String generateUrl(
@@ -41,7 +49,7 @@ public class UrlGen {
             String transformationPosition,
             boolean signed,
             long expireSeconds
-    ){
+    ) throws Exception {
         Configuration config=ImageKit.getInstance().getConfig();
         if (urlEndpoint==null){
             urlEndpoint= config.getUrlEndpoint();
@@ -58,13 +66,21 @@ public class UrlGen {
                 newUrl=buildFullUrl(urlEndpoint+(path.charAt(0)=='/'?path.substring(1,path.length()):path),queryParameters,transformation,transformationPosition,signed,expireSeconds, config.getPrivateKey(), urlEndpoint);
             }
             else {
-                newUrl = buildPathUrl(path.charAt(0)=='/'?path:"/"+path, urlEndpoint, queryParameters, transformation, transformationPosition, signed, expireSeconds, config.getPrivateKey());
+                newUrl = buildPathUrl(path, urlEndpoint, queryParameters, transformation, transformationPosition, signed, expireSeconds, config.getPrivateKey());
             }
         }
         return newUrl;
     }
 
-    private static String buildPathUrl(String path, String urlEndpoint, Map<String, String> queryParameters, List<Map<String, String>> transformation, String transformationPosition, boolean signed, long expireSeconds, String privateKey) {
+    private static String buildPathUrl(String path, String urlEndpoint, Map<String, String> queryParameters, List<Map<String, String>> transformation, String transformationPosition, boolean signed, long expireSeconds, String privateKey) throws Exception{
+        // First strip off any leading /
+        path = path.startsWith("/") ? path.substring(1) : path;
+
+        // Then ensure the supplied path is always url encoded
+        path = URLEncoder.encode(path, StandardCharsets.UTF_8.name());
+
+        // Then ensure it always begins with a /
+        path = path.charAt(0) == '/' ? path : "/" + path;
 
         StringBuilder tr= new StringBuilder("");
         if (transformation.size()>0) {
@@ -95,31 +111,25 @@ public class UrlGen {
         }
 
         URI baseUrl=URI.create(urlEndpoint);
-        URI newUri= null;
-        try {
+        URL newUri= null;
             String newPath=baseUrl.getPath();
-            if (tr.toString().equalsIgnoreCase("")){
-                newPath+=path.substring(1,path.length());
-            }
-            else {
+            if (tr.toString().equalsIgnoreCase("")) {
+                newPath+=path.substring(1);
+            } else {
                 newPath+=tr+path;
             }
 
-            URI tmpUri = new URI(baseUrl.getScheme(),baseUrl.getUserInfo(),baseUrl.getHost(),baseUrl.getPort(),
-                    newPath,
-                    queryMaker.get(),null);
+            // Not using URI class here since it will URL encode the path again
+            URL tmpUrl = new URL(baseUrl.getScheme(), baseUrl.getHost(), baseUrl.getPort(),
+                    newPath + queryMaker.getAsQueryString(), null);
 
             if (signed){
-                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUri);
+                sign(urlEndpoint, expireSeconds, privateKey, queryMaker, tmpUrl.toURI());
             }
 
-            newUri = new URI(baseUrl.getScheme(),baseUrl.getUserInfo(),baseUrl.getHost(),baseUrl.getPort(),
-                    newPath,
-                    queryMaker.get(),null);
+            newUri = new URL(baseUrl.getScheme(), baseUrl.getHost(), baseUrl.getPort(),
+                    newPath + queryMaker.getAsQueryString(), null);
 
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         return newUri.toString();
     }
 
