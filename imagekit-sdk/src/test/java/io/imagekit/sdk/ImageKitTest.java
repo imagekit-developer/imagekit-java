@@ -7,21 +7,18 @@ import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
-import io.imagekit.sdk.tasks.UrlGen;
 import io.imagekit.sdk.utils.Utils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ImageKitTest {
     private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
@@ -108,6 +105,34 @@ public class ImageKitTest {
         options.put("transformation",transformation);
         String url=SUT.getUrl(options);
         assertThat(SUT.getConfig().getUrlEndpoint()+"tr:w-400,h-600/default-image.jpg?ik-sdk-version="+ Version.VERSION_CODE,is(url));
+    }
+
+    @Test
+    public void getUrl_with_full_url_in_path_with_signature() {
+        List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+        Map<String,Object> options=new HashMap<>();
+        options.put("path","http://placehold.it/1024x1025?text=test");
+        options.put("transformation",transformation);
+        options.put("signed", true);
+        options.put("expireSeconds", 1000);
+        String url=SUT.getUrl(options);
+        assertSignedUrl(SUT.getConfig().getUrlEndpoint() + "http%3A%2F%2Fplacehold.it%2F1024x1025%3Ftext%3Dtest", url);
+    }
+
+    @Test
+    public void getUrl_with_full_url_in_path_with_transform_with_signature() {
+        List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+        Map<String, String> scale=new HashMap<>();
+        scale.put("height","600");
+        scale.put("width","400");
+        transformation.add(scale);
+        Map<String,Object> options=new HashMap<>();
+        options.put("path","http://placehold.it/1024x1025?text=test");
+        options.put("transformation",transformation);
+        options.put("signed", true);
+        options.put("expireSeconds", 1000);
+        String url=SUT.getUrl(options);
+        assertSignedUrl(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/http%3A%2F%2Fplacehold.it%2F1024x1025%3Ftext%3Dtest", url);
     }
 
     @Test

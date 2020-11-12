@@ -1,20 +1,20 @@
 package io.imagekit.sdk.tasks;
 
 public class QueryMaker {
-    private String query;
+    private final StringBuilder query = new StringBuilder();
 
-    public void put(String q){
-        if (null!=query){
-            query+="&";
+    public void put(String q) {
+        if (query.length() != 0) {
+            query.append("&");
         }
-        else {
-            query="";
-        }
-        query+=q;
+        query.append(q);
     }
 
-    public String  get(){
-        return query;
+    public String get() {
+        return query.toString();
     }
 
+    public String getAsQueryString() {
+        return "?" + get();
+    }
 }
