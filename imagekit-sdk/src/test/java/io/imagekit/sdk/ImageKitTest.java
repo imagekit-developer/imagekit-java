@@ -61,6 +61,17 @@ public class ImageKitTest {
     }
 
     @Test
+    public void getUrl_with_relative_and_nested_path() {
+        List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+
+        Map<String,Object> options=new HashMap<>();
+        options.put("path","/path1/path2/default-image.jpg");
+        options.put("transformation",transformation);
+        String url=SUT.getUrl(options);
+        assertThat(SUT.getConfig().getUrlEndpoint()+"path1/path2/default-image.jpg?ik-sdk-version="+ Version.VERSION_CODE,is(url));
+    }
+
+    @Test
     public void getUrl_with_height_width_options_url_version_check() {
         List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
         Map<String, String> scale=new HashMap<>();

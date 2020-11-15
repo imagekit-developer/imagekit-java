@@ -11,6 +11,9 @@ public class QueryMaker {
     }
 
     public String get() {
+        if (query.length() == 0){
+            return null;
+        }
         return query.toString();
     }
 

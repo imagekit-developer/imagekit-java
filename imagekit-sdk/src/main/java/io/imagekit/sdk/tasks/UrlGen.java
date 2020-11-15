@@ -76,8 +76,10 @@ public class UrlGen {
         // First strip off any leading /
         path = path.startsWith("/") ? path.substring(1) : path;
 
-        // Then ensure the supplied path is always url encoded
-        path = URLEncoder.encode(path, StandardCharsets.UTF_8.name());
+        // Then ensure the supplied path is always url encoded if it is a full url
+        if (isValidUrl(path)) {
+            path = URLEncoder.encode(path, StandardCharsets.UTF_8.name());
+        }
 
         // Then ensure it always begins with a /
         path = path.charAt(0) == '/' ? path : "/" + path;
@@ -221,5 +223,14 @@ public class UrlGen {
         }
         String replaceUrl=url.replace(urlEndpoint,"")+expiryTimestamp;
         return HmacUtils.hmacSha1Hex(privateKey, replaceUrl);
+    }
+
+    public static boolean isValidUrl(String path) {
+        try {
+            URI.create(path).toURL();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }
