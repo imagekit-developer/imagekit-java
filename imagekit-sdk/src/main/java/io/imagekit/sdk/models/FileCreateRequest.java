@@ -1,5 +1,7 @@
 package io.imagekit.sdk.models;
 
+import com.google.gson.JsonObject;
+
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -19,6 +21,13 @@ public class FileCreateRequest {
     public boolean isPrivateFile;
     public String customCoordinates;
     public List<String> responseFields;
+    public List<String> extensions;
+    public String webhookUrl;
+    public boolean overwriteFile;
+    public boolean overwriteAITags;
+    public boolean overwriteTags;
+    public boolean overwriteCustomMetadata;
+    public JsonObject customMetadata;
 
     public FileCreateRequest(URL url, String fileName) {
         this.url = url;
@@ -92,6 +101,62 @@ public class FileCreateRequest {
 
     public void setResponseFields(List<String> responseFields) {
         this.responseFields = responseFields;
+    }
+
+    public List<String> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(List<String> extensions) {
+        this.extensions = extensions;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
+
+    public boolean isOverwriteFile() {
+        return overwriteFile;
+    }
+
+    public void setOverwriteFile(boolean overwriteFile) {
+        this.overwriteFile = overwriteFile;
+    }
+
+    public boolean isOverwriteAITags() {
+        return overwriteAITags;
+    }
+
+    public void setOverwriteAITags(boolean overwriteAITags) {
+        this.overwriteAITags = overwriteAITags;
+    }
+
+    public boolean isOverwriteTags() {
+        return overwriteTags;
+    }
+
+    public void setOverwriteTags(boolean overwriteTags) {
+        this.overwriteTags = overwriteTags;
+    }
+
+    public boolean isOverwriteCustomMetadata() {
+        return overwriteCustomMetadata;
+    }
+
+    public void setOverwriteCustomMetadata(boolean overwriteCustomMetadata) {
+        this.overwriteCustomMetadata = overwriteCustomMetadata;
+    }
+
+    public JsonObject getCustomMetadata() {
+        return customMetadata;
+    }
+
+    public void setCustomMetadata(JsonObject customMetadata) {
+        this.customMetadata = customMetadata;
     }
 
     @Override

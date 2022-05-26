@@ -51,6 +51,8 @@ public class FileCreateRequestTest {
 
         List<String> tags=mock(List.class);
         List<String> responseFields=mock(List.class);
+        List<String> mockExtensionsList=mock(List.class);
+        String mockWebhookUrl = "webhook_url";
 
         SUT.setCustomCoordinates("0,0,10,20");
         SUT.setFileName("file_name");
@@ -59,6 +61,13 @@ public class FileCreateRequestTest {
         SUT.setResponseFields(responseFields);
         SUT.setTags(tags);
         SUT.setUseUniqueFileName(true);
+        SUT.setExtensions(mockExtensionsList);
+        SUT.setWebhookUrl(mockWebhookUrl);
+        SUT.setOverwriteFile(true);
+        SUT.setOverwriteAITags(true);
+        SUT.setOverwriteTags(true);
+        SUT.setOverwriteCustomMetadata(true);
+        SUT.setCustomMetadata(new JsonObject());
 
         assertEquals("0,0,10,20",SUT.getCustomCoordinates());
         assertEquals("file_name",SUT.getFileName());
@@ -67,6 +76,16 @@ public class FileCreateRequestTest {
         assertEquals(responseFields,SUT.getResponseFields());
         assertEquals(tags,SUT.getTags());
         assertEquals(true,SUT.isUseUniqueFileName());
+        assertEquals(mockExtensionsList, SUT.getExtensions());
+        assertEquals(mockWebhookUrl, SUT.getWebhookUrl());
+
+        assertTrue(SUT.isOverwriteFile());
+        assertTrue(SUT.isOverwriteAITags());
+        assertTrue(SUT.isOverwriteTags());
+        assertTrue(SUT.isOverwriteCustomMetadata());
+        assertEquals(new JsonObject(), SUT.getCustomMetadata());
+
+
 
     }
 //
