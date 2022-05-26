@@ -46,6 +46,7 @@ public class RestClient {
 
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
 
+        System.out.println("body" + body);
         request=new Request.Builder()
                 .url("https://upload.imagekit.io/api/v1/files/upload")
                 .post(body)

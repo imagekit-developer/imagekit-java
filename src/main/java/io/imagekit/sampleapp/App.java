@@ -2,6 +2,7 @@ package io.imagekit.sampleapp;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
@@ -311,6 +312,18 @@ class App{
         responseFields.add("customCoordinates");
 
         fileCreateRequest.setResponseFields(responseFields);
+        List<String> extensions = new ArrayList<>();
+        extensions.add("png");
+        extensions.add("jpg");
+        fileCreateRequest.setExtensions(extensions);
+        fileCreateRequest.setWebhookUrl("webhookUrl");
+        fileCreateRequest.setOverwriteFile(true);
+        fileCreateRequest.setOverwriteAITags(true);
+        fileCreateRequest.setOverwriteTags(true);
+        fileCreateRequest.setOverwriteCustomMetadata(true);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("ke", "val");
+        fileCreateRequest.setCustomMetadata(jsonObject);
         System.out.println(">> Ref: URL= "+imageUrl);
         Result result = ImageKit.getInstance().upload(fileCreateRequest);
         System.out.println(">> Uploading done.");
