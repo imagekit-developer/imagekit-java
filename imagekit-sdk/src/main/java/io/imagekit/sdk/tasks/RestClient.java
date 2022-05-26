@@ -59,6 +59,9 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
                 result.setRaw(resp);
+                if (response.headers()!=null) {
+                	result.setHeaders(response.headers().toMultimap());
+                }
             }
             else if (response.code()==500) {
                 result=new Result();

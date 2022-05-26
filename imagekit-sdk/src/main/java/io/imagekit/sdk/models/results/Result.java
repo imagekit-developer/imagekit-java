@@ -13,6 +13,7 @@ public class Result extends BaseFile {
     private String message;
     private String help;
     private String raw;
+    private Map<String, List<String>> headers;
 
     public Result() {
 
@@ -189,4 +190,12 @@ public class Result extends BaseFile {
                 ", fileType='" + fileType + '\'' +
                 '}';
     }
+
+	public Map<String, List<String>> getHeaders() {
+		return headers;
+	}
+
+	public void setHeaders(Map<String, List<String>> map) {
+		this.headers = map;
+	}
 }
