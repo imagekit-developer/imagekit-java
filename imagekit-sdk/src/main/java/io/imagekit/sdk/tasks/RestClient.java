@@ -149,7 +149,7 @@ public class RestClient {
                 List<BaseFile> files=new Gson().fromJson(resp,new TypeToken<List<BaseFile>>() {}.getType());
                 resultList.setResults(files);
                 resultList.setSuccessful(true);
-                resultList.setRaw(resp);
+                resultList.responseMetaData.setRaw(resp);
             }
             else if (response.code()==500) {
                 resultList.setSuccessful(false);
@@ -164,9 +164,6 @@ public class RestClient {
                 Map<String, String> mappedHeader = new HashMap<>();
                 response.headers().toMultimap().forEach((key, value) -> value.forEach(k -> mappedHeader.put(key, k)));
                 resultList.responseMetaData.setHeaders(mappedHeader);
-            }
-            if (response.body()!=null) {
-                resultList.responseMetaData.setRaw(response.body());
             }
             resultList.responseMetaData.setHttpStatusCode(response.code());
         } catch (IOException e) {

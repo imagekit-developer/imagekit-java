@@ -9,15 +9,15 @@ import okhttp3.ResponseBody;
 
 public class ResponseMetaData {
 
-    private ResponseBody raw;
+    private String raw;
     private int httpStatusCode;
     private Map<String, String> headers;
 
-    public ResponseBody getRaw() {
+    public String getRaw() {
         return raw;
     }
 
-    public void setRaw(ResponseBody raw) {
+    public void setRaw(String raw) {
         this.raw = raw;
     }
 
