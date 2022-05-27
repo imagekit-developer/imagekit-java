@@ -11,7 +11,7 @@ public class ResponseMetaData {
 
     private String raw;
     private int httpStatusCode;
-    private Map<String, String> headers;
+    private String headers;
 
     public String getRaw() {
         return raw;
@@ -29,11 +29,11 @@ public class ResponseMetaData {
         this.httpStatusCode = httpStatusCode;
     }
 
-    public Map<String, String> getHeaders() {
+    public String getHeaders() {
         return headers;
     }
 
-    public void setHeaders(Map<String, String> headers) {
+    public void setHeaders(String headers) {
         this.headers = headers;
     }
 }

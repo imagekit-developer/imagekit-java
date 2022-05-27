@@ -278,7 +278,7 @@ class App{
         System.out.println(">> No. of files in server: "+resultList.getResults().size());
         System.out.println(">> FileIds: "+resultList.getResults().stream().map(baseFile -> baseFile.getFileId()).collect(Collectors.toList()));
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(resultList.getRaw());
+        System.out.println(resultList.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(resultList.getMap());
         System.out.println("\n\n");

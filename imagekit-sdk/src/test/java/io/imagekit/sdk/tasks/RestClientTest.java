@@ -268,7 +268,7 @@ public class RestClientTest {
 
         assertEquals("https://api.imagekit.io/v1/files?limit=10&skip=0",SUT.request.url().toString());
 
-        assertThat(resp,is(result.getRaw()));
+        assertThat(resp,is(result.getResponseMetaData().getRaw()));
     }
 
     @Test

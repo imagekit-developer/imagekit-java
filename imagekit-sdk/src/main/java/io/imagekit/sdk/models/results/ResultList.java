@@ -13,9 +13,8 @@ public class ResultList {
     private boolean isSuccessful;
     private String message;
     private String help;
-    private String raw;
     private List<BaseFile> results;
-    public ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData;
 
     public ResultList() {
 
@@ -48,17 +47,18 @@ public class ResultList {
     public void setHelp(String help) {
         this.help = help;
     }
-    public String getRaw() {
-        return raw;
+
+    public ResponseMetaData getResponseMetaData() {
+        return responseMetaData;
     }
 
-    public void setRaw(String raw) {
-        this.raw = raw;
+    public void setResponseMetaData(ResponseMetaData responseMetaData) {
+        this.responseMetaData = responseMetaData;
     }
 
     public List<Map<String,Object>> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<List<Map<String, Object>>>() {
+        if (null!=responseMetaData.getRaw()) {
+            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<List<Map<String, Object>>>() {
             }.getType());
         }
         return new ArrayList<Map<String,Object>>();

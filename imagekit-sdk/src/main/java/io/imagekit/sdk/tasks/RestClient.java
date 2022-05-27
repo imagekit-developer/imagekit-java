@@ -7,14 +7,17 @@ import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.ResponseMetaData;
 import io.imagekit.sdk.models.results.*;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class RestClient {
     private ImageKit imageKit;
@@ -144,12 +147,13 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            resultList.setResponseMetaData(new ResponseMetaData());
             if (response.code()==200){
                 String resp=response.body().string();
                 List<BaseFile> files=new Gson().fromJson(resp,new TypeToken<List<BaseFile>>() {}.getType());
                 resultList.setResults(files);
                 resultList.setSuccessful(true);
-                resultList.responseMetaData.setRaw(resp);
+                resultList.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 resultList.setSuccessful(false);
@@ -163,9 +167,9 @@ public class RestClient {
             if (response.headers()!=null) {
                 Map<String, String> mappedHeader = new HashMap<>();
                 response.headers().toMultimap().forEach((key, value) -> value.forEach(k -> mappedHeader.put(key, k)));
-                resultList.responseMetaData.setHeaders(mappedHeader);
+                resultList.getResponseMetaData().setHeaders(response.headers().toMultimap().values().stream().map(Object::toString).collect(Collectors.joining(",")));
             }
-            resultList.responseMetaData.setHttpStatusCode(response.code());
+            resultList.getResponseMetaData().setHttpStatusCode(response.code());
         } catch (IOException e) {
             e.printStackTrace();
         }
