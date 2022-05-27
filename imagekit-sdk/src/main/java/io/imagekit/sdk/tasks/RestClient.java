@@ -167,7 +167,7 @@ public class RestClient {
             if (response.headers()!=null) {
                 Map<String, String> mappedHeader = new HashMap<>();
                 response.headers().toMultimap().forEach((key, value) -> value.forEach(k -> mappedHeader.put(key, k)));
-                resultList.getResponseMetaData().setHeaders(response.headers().toMultimap().values().stream().map(Object::toString).collect(Collectors.joining(",")));
+                resultList.getResponseMetaData().setHeaders(mappedHeader);
             }
             resultList.getResponseMetaData().setHttpStatusCode(response.code());
         } catch (IOException e) {
