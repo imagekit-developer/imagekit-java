@@ -3,6 +3,7 @@ package io.imagekit.sdk.models.results;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.ResponseMetaData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ public class ResultList {
     private String help;
     private String raw;
     private List<BaseFile> results;
+    public ResponseMetaData responseMetaData;
 
     public ResultList() {
 

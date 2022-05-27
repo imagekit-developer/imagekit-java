@@ -160,6 +160,15 @@ public class RestClient {
                 resultList=new Gson().fromJson(resp,ResultList.class);
                 resultList.setSuccessful(false);
             }
+            if (response.headers()!=null) {
+                Map<String, String> mappedHeader = new HashMap<>();
+                response.headers().toMultimap().forEach((key, value) -> value.forEach(k -> mappedHeader.put(key, k)));
+                resultList.responseMetaData.setHeaders(mappedHeader);
+            }
+            if (response.body()!=null) {
+                resultList.responseMetaData.setRaw(response.body());
+            }
+            resultList.responseMetaData.setHttpStatusCode(response.code());
         } catch (IOException e) {
             e.printStackTrace();
         }
