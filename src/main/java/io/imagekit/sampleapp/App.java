@@ -2,6 +2,7 @@ package io.imagekit.sampleapp;
 
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
@@ -312,18 +313,6 @@ class App{
         responseFields.add("customCoordinates");
 
         fileCreateRequest.setResponseFields(responseFields);
-        List<String> extensions = new ArrayList<>();
-        extensions.add("png");
-        extensions.add("jpg");
-        fileCreateRequest.setExtensions(extensions);
-        fileCreateRequest.setWebhookUrl("webhookUrl");
-        fileCreateRequest.setOverwriteFile(true);
-        fileCreateRequest.setOverwriteAITags(true);
-        fileCreateRequest.setOverwriteTags(true);
-        fileCreateRequest.setOverwriteCustomMetadata(true);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("ke", "val");
-        fileCreateRequest.setCustomMetadata(jsonObject);
         System.out.println(">> Ref: URL= "+imageUrl);
         Result result = ImageKit.getInstance().upload(fileCreateRequest);
         System.out.println(">> Uploading done.");
@@ -362,6 +351,25 @@ class App{
         byte[] bytes= Utils.fileToBytes(file);
         FileCreateRequest fileCreateRequest =new FileCreateRequest(bytes, "sample_image.jpg");
         fileCreateRequest.setUseUniqueFileName(false);
+        JsonObject optionsInnerObject = new JsonObject();
+        optionsInnerObject.addProperty("add_shadow", true);
+//        optionsInnerObject.addProperty("bg_colour", "green");
+        JsonObject innerObject = new JsonObject();
+        innerObject.addProperty("name", "remove-bg");
+        innerObject.add("options", optionsInnerObject);
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add( innerObject);
+//        fileCreateRequest.setExtensions(jsonArray);
+//        fileCreateRequest.setWebhookUrl("webhookUrl");
+        fileCreateRequest.setOverwriteFile(true);
+        fileCreateRequest.setOverwriteAITags(true);
+        fileCreateRequest.setOverwriteTags(true);
+        fileCreateRequest.setOverwriteCustomMetadata(true);
+        JsonObject jsonObjectCustomMetada = new JsonObject();
+        jsonObjectCustomMetada.addProperty("brand", "Nike");
+        jsonObjectCustomMetada.addProperty("color", "Cyan");
+        fileCreateRequest.setCustomMetadata(jsonObjectCustomMetada);
+        System.out.println("377:====>" + fileCreateRequest);
         Result result = ImageKit.getInstance().upload(fileCreateRequest);
         System.out.println(">> Uploading done.");
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);

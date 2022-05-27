@@ -1,6 +1,8 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.utils.Utils;
@@ -37,6 +39,7 @@ public class MultipartBuilder {
         }else  {
             builder.addFormDataPart("useUniqueFileName", "false");
         }
+        System.out.println("Here fileCreateRequest:==>" + fileCreateRequest);
         if (null!=fileCreateRequest.tags) {
             builder.addFormDataPart("tags", Utils.listToString(fileCreateRequest.tags));
         }
@@ -53,7 +56,7 @@ public class MultipartBuilder {
             builder.addFormDataPart("responseFields", Utils.listToString(fileCreateRequest.responseFields));
         }
         if (null!=fileCreateRequest.extensions) {
-            builder.addFormDataPart("extensions", Utils.listToString(fileCreateRequest.extensions));
+            builder.addFormDataPart("extensions", fileCreateRequest.extensions.toString());
         }
         if (null!=fileCreateRequest.webhookUrl) {
             builder.addFormDataPart("webhookUrl", fileCreateRequest.webhookUrl);
@@ -71,8 +74,8 @@ public class MultipartBuilder {
             builder.addFormDataPart("overwriteCustomMetadata", "true");
         }
         if (null!=fileCreateRequest.customMetadata) {
-            System.out.println("fileCreateRequest.customMetadata.toString():-->" + fileCreateRequest.customMetadata.toString());
-            builder.addFormDataPart("customMetadata", fileCreateRequest.customMetadata.toString());
+            System.out.println("fileCreateRequest.customMetadata.toString():-->" + fileCreateRequest.customMetadata);
+            builder.addFormDataPart("customMetadata", String.valueOf(new JsonParser().parse(String.valueOf(fileCreateRequest.customMetadata))));
         }
         return builder.build();
     }

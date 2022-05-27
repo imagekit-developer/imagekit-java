@@ -1,5 +1,6 @@
 package io.imagekit.sdk.models;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import io.imagekit.sdk.utils.Utils;
@@ -21,7 +22,7 @@ public class FileCreateRequest {
     public boolean isPrivateFile;
     public String customCoordinates;
     public List<String> responseFields;
-    public List<String> extensions;
+    public JsonArray extensions;
     public String webhookUrl;
     public boolean overwriteFile;
     public boolean overwriteAITags;
@@ -103,11 +104,11 @@ public class FileCreateRequest {
         this.responseFields = responseFields;
     }
 
-    public List<String> getExtensions() {
+    public JsonArray getExtensions() {
         return extensions;
     }
 
-    public void setExtensions(List<String> extensions) {
+    public void setExtensions(JsonArray extensions) {
         this.extensions = extensions;
     }
 
@@ -169,6 +170,13 @@ public class FileCreateRequest {
                 ", isPrivateFile=" + isPrivateFile +
                 ", customCoordinates=" + customCoordinates +
                 ", responseFields=" + responseFields +
+                ", extensions=" + extensions +
+                ", webhookUrl=" + webhookUrl +
+                ", overwriteFile=" + overwriteFile +
+                ", overwriteAITags=" + overwriteAITags +
+                ", overwriteTags=" + overwriteTags +
+                ", overwriteCustomMetadata=" + overwriteCustomMetadata +
+                ", customMetadata=" + customMetadata +
                 '}';
     }
 }

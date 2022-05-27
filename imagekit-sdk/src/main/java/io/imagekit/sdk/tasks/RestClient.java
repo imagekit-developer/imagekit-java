@@ -44,9 +44,12 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
+        System.out.println("HEaders:-->" + headers);
+        System.out.println("crede:-->" + credential);
+
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
 
-        System.out.println("body" + body);
+        System.out.println("body:======> " + body);
         request=new Request.Builder()
                 .url("https://upload.imagekit.io/api/v1/files/upload")
                 .post(body)
