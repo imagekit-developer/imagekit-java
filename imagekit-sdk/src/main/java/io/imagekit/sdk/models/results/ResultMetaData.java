@@ -3,6 +3,7 @@ package io.imagekit.sdk.models.results;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.models.MetaData;
+import io.imagekit.sdk.models.ResponseMetaData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +13,8 @@ public class ResultMetaData {
     private boolean isSuccessful;
     private String message;
     private String help;
-    private String raw;
     private MetaData results;
+    private ResponseMetaData responseMetaData;
 
     public ResultMetaData() {
     }
@@ -42,17 +43,9 @@ public class ResultMetaData {
         this.help = help;
     }
 
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
-
     public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+        if (null!=responseMetaData.getRaw()) {
+            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<Map<String, Object>>() {
             }.getType());
         }
         return new HashMap<>();
@@ -64,6 +57,14 @@ public class ResultMetaData {
 
     public void setResults(MetaData results) {
         this.results = results;
+    }
+
+    public ResponseMetaData getResponseMetaData() {
+        return responseMetaData;
+    }
+
+    public void setResponseMetaData(ResponseMetaData responseMetaData) {
+        this.responseMetaData = responseMetaData;
     }
 
     @Override

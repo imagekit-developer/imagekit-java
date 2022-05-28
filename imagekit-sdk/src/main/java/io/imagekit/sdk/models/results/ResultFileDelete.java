@@ -9,13 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.imagekit.sdk.models.ResponseMetaData;
+
 public class ResultFileDelete {
     private boolean isSuccessful;
     private String message;
     private String help;
-    private String raw;
     private List<String> successfullyDeletedFileIds;
     private List<String> missingFileIds;
+    private ResponseMetaData responseMetaData;
 
     public ResultFileDelete() {
         successfullyDeletedFileIds=new ArrayList<>();
@@ -45,17 +47,10 @@ public class ResultFileDelete {
     public void setHelp(String help) {
         this.help = help;
     }
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
 
     public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+        if (null!=responseMetaData.getRaw()) {
+            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<Map<String, Object>>() {
             }.getType());
         }
         return new HashMap<>();
@@ -75,6 +70,14 @@ public class ResultFileDelete {
 
     public void setMissingFileIds(List<String> missingFileIds) {
         this.missingFileIds = missingFileIds;
+    }
+
+    public ResponseMetaData getResponseMetaData() {
+        return responseMetaData;
+    }
+
+    public void setResponseMetaData(ResponseMetaData responseMetaData) {
+        this.responseMetaData = responseMetaData;
     }
 
     @Override

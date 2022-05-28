@@ -153,7 +153,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getRaw());
+        System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
         System.out.println("\n\n");
@@ -167,7 +167,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getRaw());
+        System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
         System.out.println("\n\n");
@@ -197,7 +197,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getRaw());
+        System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
         System.out.println("\n\n");
@@ -232,7 +232,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getRaw());
+        System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
         System.out.println("\n\n");
@@ -246,7 +246,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getRaw());
+        System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
         System.out.println("\n\n");

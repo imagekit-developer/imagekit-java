@@ -5,7 +5,9 @@ import io.imagekit.sdk.config.Configuration;
 import java.io.*;
 import java.net.URL;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 public class Utils {
@@ -80,6 +82,12 @@ public class Utils {
         config.setPrivateKey(properties.getProperty("PrivateKey"));
         config.validate();
         return config;
+    }
+
+    public static Map<String, String> mapListOfStringToString(Map<String, List<String>> listMap) {
+        Map<String, String> stringMap = new HashMap<>();
+        listMap.forEach((key, value) -> value.forEach(k -> stringMap.put(key, k)));
+        return stringMap;
     }
 
 }

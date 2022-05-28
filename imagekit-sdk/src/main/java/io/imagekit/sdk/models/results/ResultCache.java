@@ -6,12 +6,14 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.imagekit.sdk.models.ResponseMetaData;
+
 public class ResultCache {
     private boolean isSuccessful;
     private String message;
     private String help;
     private String requestId;
-    private String raw;
+    private ResponseMetaData responseMetaData;
 
     public ResultCache() {
     }
@@ -40,17 +42,9 @@ public class ResultCache {
         this.help = help;
     }
 
-    public String getRaw() {
-        return raw;
-    }
-
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
-
     public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+        if (null!=responseMetaData.getRaw()) {
+            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<Map<String, Object>>() {
             }.getType());
         }
         return new HashMap<>();
@@ -62,6 +56,14 @@ public class ResultCache {
 
     public void setRequestId(String requestId) {
         this.requestId = requestId;
+    }
+
+    public ResponseMetaData getResponseMetaData() {
+        return responseMetaData;
+    }
+
+    public void setResponseMetaData(ResponseMetaData responseMetaData) {
+        this.responseMetaData = responseMetaData;
     }
 
     @Override
