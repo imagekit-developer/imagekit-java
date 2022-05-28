@@ -58,11 +58,11 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            
             if (response.code()==200){
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -74,11 +74,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,7 +101,6 @@ public class RestClient {
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -117,11 +112,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -160,7 +151,6 @@ public class RestClient {
                 List<BaseFile> files=new Gson().fromJson(resp,new TypeToken<List<BaseFile>>() {}.getType());
                 resultList.setResults(files);
                 resultList.setSuccessful(true);
-                resultList.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 resultList.setSuccessful(false);
@@ -171,11 +161,7 @@ public class RestClient {
                 resultList=new Gson().fromJson(resp,ResultList.class);
                 resultList.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                resultList.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            resultList.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(resultList.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,7 +190,6 @@ public class RestClient {
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -215,11 +200,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -249,7 +230,6 @@ public class RestClient {
                 MetaData metaData =new Gson().fromJson(resp,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -260,11 +240,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultMetaData.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -294,7 +270,6 @@ public class RestClient {
                 MetaData metaData =new Gson().fromJson(resp,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -305,11 +280,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultMetaData.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -338,7 +309,6 @@ public class RestClient {
                 result.setMessage("File deleted successfully!");
                 result.setFileId(fileId);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(response.body().string());
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -349,11 +319,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -385,7 +351,6 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultFileDelete.class);
                 result.setMessage("File deleted successfully!");
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==404){
                 String resp=response.body().string();
@@ -402,11 +367,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultFileDelete.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -435,7 +396,6 @@ public class RestClient {
                 String resp=response.body().string();
                 result =new Gson().fromJson(resp,ResultCache.class);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -446,11 +406,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultCache.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -479,7 +435,6 @@ public class RestClient {
                 String resp=response.body().string();
                 result =new Gson().fromJson(resp,ResultCacheStatus.class);
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -490,11 +445,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultCacheStatus.class);
                 result.setSuccessful(false);
             }
-            if (response.headers()!=null) {
-                Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
-                result.getResponseMetaData().setHeaders(mappedHeader);
-            }
-            result.getResponseMetaData().setHttpStatusCode(response.code());
+            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }

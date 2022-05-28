@@ -13,10 +13,9 @@ public class Result extends BaseFile {
     private boolean isSuccessful;
     private String message;
     private String help;
-    private ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData = new ResponseMetaData();
 
     public Result() {
-        responseMetaData = new ResponseMetaData();
     }
 
     public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType) {
@@ -59,8 +58,8 @@ public class Result extends BaseFile {
     }
 
     public Map<String,Object> getMap(){
-        if (null!=getResponseMetaData().getRaw()) {
-            return new Gson().fromJson(getResponseMetaData().getRaw(), new TypeToken<Map<String, Object>>() {
+        if (null!=responseMetaData.getRaw()) {
+            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<Map<String, Object>>() {
             }.getType());
         }
         return new HashMap<>();

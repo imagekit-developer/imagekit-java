@@ -14,10 +14,9 @@ public class ResultList {
     private String message;
     private String help;
     private List<BaseFile> results;
-    private ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData = new ResponseMetaData();
 
     public ResultList() {
-        responseMetaData = new ResponseMetaData();
     }
 
     public ResultList(List<BaseFile> results) {

@@ -13,10 +13,9 @@ public class ResultCacheStatus {
     private String message;
     private String help;
     private String status;
-    private ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData = new ResponseMetaData();
 
     public ResultCacheStatus() {
-        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {

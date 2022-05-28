@@ -14,10 +14,9 @@ public class ResultMetaData {
     private String message;
     private String help;
     private MetaData results;
-    private ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData = new ResponseMetaData();
 
     public ResultMetaData() {
-        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {

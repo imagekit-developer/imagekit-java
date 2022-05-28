@@ -17,12 +17,11 @@ public class ResultFileDelete {
     private String help;
     private List<String> successfullyDeletedFileIds;
     private List<String> missingFileIds;
-    private ResponseMetaData responseMetaData;
+    private ResponseMetaData responseMetaData = new ResponseMetaData();
 
     public ResultFileDelete() {
         successfullyDeletedFileIds=new ArrayList<>();
         missingFileIds=new ArrayList<>();
-        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {
