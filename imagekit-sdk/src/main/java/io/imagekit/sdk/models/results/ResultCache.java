@@ -16,6 +16,7 @@ public class ResultCache {
     private ResponseMetaData responseMetaData;
 
     public ResultCache() {
+        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {

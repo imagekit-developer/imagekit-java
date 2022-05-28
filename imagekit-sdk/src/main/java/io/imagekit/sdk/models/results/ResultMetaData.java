@@ -17,6 +17,7 @@ public class ResultMetaData {
     private ResponseMetaData responseMetaData;
 
     public ResultMetaData() {
+        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {

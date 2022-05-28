@@ -16,6 +16,7 @@ public class ResultCacheStatus {
     private ResponseMetaData responseMetaData;
 
     public ResultCacheStatus() {
+        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {

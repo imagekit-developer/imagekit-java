@@ -22,6 +22,7 @@ public class ResultFileDelete {
     public ResultFileDelete() {
         successfullyDeletedFileIds=new ArrayList<>();
         missingFileIds=new ArrayList<>();
+        responseMetaData = new ResponseMetaData();
     }
 
     public boolean isSuccessful() {
