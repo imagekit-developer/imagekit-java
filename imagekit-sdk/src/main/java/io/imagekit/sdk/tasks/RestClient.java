@@ -451,4 +451,28 @@ public class RestClient {
         }
         return result;
     }
+
+    public List<String> addTags(FileCreateRequest fileCreateRequest){
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        MultipartBody body=multipartBuilder.build(fileCreateRequest);
+
+        request=new Request.Builder()
+                .url("https://upload.imagekit.io/api/v1/files/addTags")
+                .post(body)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println("response:===> " + response);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
 }

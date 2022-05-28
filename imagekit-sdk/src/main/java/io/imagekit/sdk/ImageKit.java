@@ -199,4 +199,13 @@ public final class ImageKit {
     public int pHashDistance(String firstHex, String secondHex){
         return Calculation.getHammingDistance(firstHex,secondHex);
     }
+
+    /**
+     *
+     * @param fileCreateRequest is a object which contains fileIds and tags as a parameters
+     * @return ArrayList of String
+     */
+    public List<String> addTags(FileCreateRequest fileCreateRequest){
+        return restClient.addTags(fileCreateRequest);
+    }
 }

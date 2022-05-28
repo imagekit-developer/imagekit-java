@@ -30,6 +30,7 @@ class App{
 //        uploadFromURL();
 //        uploadFromBase64();
         uploadFromBytes();
+        addTags();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -357,6 +358,20 @@ class App{
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void addTags() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62921726c53a6618d796e576");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        tags.add("tag2");
+        FileCreateRequest fileCreateRequest =new FileCreateRequest(fileIds, tags);
+        List<String> result = ImageKit.getInstance().addTags(fileCreateRequest);
+        System.out.println(">> Add Tags done.");
+        System.out.println(Color.ANSI_GREEN+">> Response tags:"+Color.ANSI_RESET);
+        System.out.println(result);
         System.out.println("\n\n");
     }
 }
