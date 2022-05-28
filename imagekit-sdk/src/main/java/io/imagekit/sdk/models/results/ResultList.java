@@ -17,7 +17,7 @@ public class ResultList {
     private ResponseMetaData responseMetaData;
 
     public ResultList() {
-
+        responseMetaData = new ResponseMetaData();
     }
 
     public ResultList(List<BaseFile> results) {

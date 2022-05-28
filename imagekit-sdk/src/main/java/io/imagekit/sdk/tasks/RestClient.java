@@ -61,7 +61,7 @@ public class RestClient {
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.setRaw(resp);
+                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -74,7 +74,9 @@ public class RestClient {
                 result.setSuccessful(false);
             }
             if (response.headers()!=null) {
-            	result.setHeaders(response.headers().toMultimap());
+                Map<String, String> mappedHeader = new HashMap<>();
+                response.headers().toMultimap().forEach((key, value) -> value.forEach(k -> mappedHeader.put(key, k)));
+            	result.getResponseMetaData().setHeaders(mappedHeader);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -102,7 +104,7 @@ public class RestClient {
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.setRaw(resp);
+                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -147,7 +149,6 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            resultList.setResponseMetaData(new ResponseMetaData());
             if (response.code()==200){
                 String resp=response.body().string();
                 List<BaseFile> files=new Gson().fromJson(resp,new TypeToken<List<BaseFile>>() {}.getType());
@@ -198,7 +199,7 @@ public class RestClient {
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(true);
-                result.setRaw(resp);
+                result.getResponseMetaData().setRaw(resp);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -317,7 +318,7 @@ public class RestClient {
                 result.setMessage("File deleted successfully!");
                 result.setFileId(fileId);
                 result.setSuccessful(true);
-                result.setRaw(response.body().string());
+                result.getResponseMetaData().setRaw(response.body().string());
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
