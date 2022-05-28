@@ -547,13 +547,15 @@ ImageKit.getInstance().pHashDistance("a4a65595ac94518b", "7838873e791f8400");
 // output: 37 (dissimilar images)
 ```
 
-**HTTP response of Internal API**
+**HTTP response metadata of Internal API**
 
-HTTP response headers of the internal API call can be accessed using the getHeaders function on the Result object. Example:
+HTTP response metadata of the internal API call can be accessed using the getResponseMetaData function on the Result (or ResultList, ResultCache etc.) object. Example:
 
 ```java
 Result result = ImageKit.getInstance().upload(fileCreateRequest);
-result.getHeaders();
+result.getResponseMetaData().getRaw();
+result.getResponseMetaData().getHeaders();
+result.getResponseMetaData().getHttpStatusCode();
 ```
 
 ## Sample Code Instruction
