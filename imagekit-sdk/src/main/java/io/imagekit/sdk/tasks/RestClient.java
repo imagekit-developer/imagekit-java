@@ -1,6 +1,7 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
@@ -56,12 +57,14 @@ public class RestClient {
                 .headers(Headers.of(headers))
                 .build();
 
+
+        System.out.println("request upload:====> " + request);
         try {
             Response response = client.newCall(request).execute();
-            
+            String respBody = "";
             if (response.code()==200){
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,Result.class);
+                respBody=response.body().string();
+                result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -74,7 +77,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -460,14 +463,16 @@ public class RestClient {
         headers.put("Authorization",credential);
 
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
-
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), String.valueOf(fileCreateRequest));
+        System.out.println("FileCreateRequest:==>" + String.valueOf(fileCreateRequest));
         request=new Request.Builder()
-                .url("https://upload.imagekit.io/api/v1/files/addTags")
+                .url("https://api.imagekit.io/v1/files/addTags")
                 .post(body)
                 .headers(Headers.of(headers))
                 .build();
 
         try {
+            System.out.println("request:==> " + request);
             Response response = client.newCall(request).execute();
             System.out.println("response:===> " + response);
         } catch (IOException e) {

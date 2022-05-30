@@ -29,7 +29,7 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-        uploadFromBytes();
+//        uploadFromBytes();
         addTags();
 //
 //        calculateDistance();
@@ -363,7 +363,7 @@ class App{
 
     private static void addTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("62921726c53a6618d796e576");
+        fileIds.add("6294624d68c3b350325d37f0");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         tags.add("tag2");

@@ -98,10 +98,22 @@ public class Utils {
         }
         return stringMap;
     }
-    
+
     public static void populateResponseMetadata(ResponseMetaData responseMetadata, Response response) throws IOException {
+        if (response.code()==200){
+            String resp=response.body().string();
+            responseMetadata.setRaw(resp);
+        }
+        if (response.headers()!=null) {
+            Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());
+            responseMetadata.setHeaders(mappedHeader);
+        }
+        responseMetadata.setHttpStatusCode(response.code());
+    }
+    
+    public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, Response response) throws IOException {
     	if (response.code()==200){
-    		responseMetadata.setRaw(response.body().string());
+    		responseMetadata.setRaw(respBody);
     	}
         if (response.headers()!=null) {
             Map<String, String> mappedHeader = Utils.mapListOfStringToString(response.headers().toMultimap());

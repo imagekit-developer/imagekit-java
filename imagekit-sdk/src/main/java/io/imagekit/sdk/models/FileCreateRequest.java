@@ -7,6 +7,7 @@ import okhttp3.RequestBody;
 
 import java.net.URL;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class FileCreateRequest {
     public List<String> fileIds;
@@ -111,13 +112,16 @@ public class FileCreateRequest {
     @Override
     public String toString() {
         return "FileCreateRequest{" +
-                "fileName='" + fileName + '\'' +
-                ", useUniqueFileName=" + useUniqueFileName +
-                ", tags=" + tags +
-                ", folder='" + folder + '\'' +
-                ", isPrivateFile=" + isPrivateFile +
-                ", customCoordinates=" + customCoordinates +
-                ", responseFields=" + responseFields +
+//                "fileName='" + fileName + '\'' +
+//                ", useUniqueFileName=" + useUniqueFileName +
+                "fileIds=" + fileIds.stream().map(name -> ('"' + name + '"'))
+                .collect(Collectors.toList()) +
+                ", tags=" + tags.stream().map(name -> ('"' + name + '"'))
+                .collect(Collectors.toList()) +
+//                ", folder='" + folder + '\'' +
+//                ", isPrivateFile=" + isPrivateFile +
+//                ", customCoordinates=" + customCoordinates +
+//                ", responseFields=" + responseFields +
                 '}';
     }
 }

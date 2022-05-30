@@ -11,6 +11,7 @@ import okhttp3.RequestBody;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MultipartBuilder {
     public MultipartBody build(FileCreateRequest fileCreateRequest){
@@ -22,23 +23,27 @@ public class MultipartBuilder {
             builder.addFormDataPart("file", fileCreateRequest.base64);
         } else if (null!=fileCreateRequest.bytes){
             builder.addFormDataPart("file", Utils.bytesToBase64(fileCreateRequest.bytes));
+        } else if (null!=fileCreateRequest.fileIds){
+            builder.addFormDataPart("fileIds", String.join(",", fileCreateRequest.fileIds));
         }
         else {
             throw new RuntimeException("Error: File not provided.");
         }
-        if (null!=fileCreateRequest.fileName) {
-            builder.addFormDataPart("fileName", fileCreateRequest.fileName);
+        if (null!=fileCreateRequest.fileName || null !=fileCreateRequest.fileIds) {
+            if (fileCreateRequest.fileName != null) {
+                builder.addFormDataPart("fileName", fileCreateRequest.fileName);
+            }
         }
         else {
             throw new RuntimeException("Error: Filename not provided");
         }
         if (fileCreateRequest.useUniqueFileName) {
             builder.addFormDataPart("useUniqueFileName", "true");
-        }else  {
+        } else  {
             builder.addFormDataPart("useUniqueFileName", "false");
         }
         if (null!=fileCreateRequest.tags) {
-            builder.addFormDataPart("tags", Utils.listToString(fileCreateRequest.tags));
+            builder.addFormDataPart("tags", String.join(",", fileCreateRequest.tags));
         }
         if (null!=fileCreateRequest.folder) {
             builder.addFormDataPart("folder", fileCreateRequest.folder);
