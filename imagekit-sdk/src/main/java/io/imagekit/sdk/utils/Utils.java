@@ -98,7 +98,6 @@ public class Utils {
         }
         return stringMap;
     }
-
     public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, int responseCode, Map<String, List<String>> responseHeaders) throws IOException {
     	if (responseCode==200){
     		responseMetadata.setRaw(respBody);

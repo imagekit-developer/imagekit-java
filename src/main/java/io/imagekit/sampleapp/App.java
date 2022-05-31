@@ -31,6 +31,7 @@ class App{
 //        uploadFromURL();
 //        uploadFromBase64();
         uploadFromBytes();
+        addTags();
         removeTags();
 //
 //        calculateDistance();
@@ -371,7 +372,7 @@ class App{
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
         ResultTags result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
-        System.out.println(Color.ANSI_GREEN+">> Response tags:"+Color.ANSI_RESET);
+        System.out.println(Color.ANSI_GREEN+">> Response add tags:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println("\n\n");
     }
@@ -381,11 +382,10 @@ class App{
         fileIds.add("62958deef33aa80bdadf7533");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
-        tags.add("tag2");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
         ResultTags result = ImageKit.getInstance().removeTags(tagsRequest);
-        System.out.println(">> Add Tags done.");
-        System.out.println(Color.ANSI_GREEN+">> Response tags:"+Color.ANSI_RESET);
+        System.out.println(">> remove Tags done.");
+        System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println("\n\n");
     }
