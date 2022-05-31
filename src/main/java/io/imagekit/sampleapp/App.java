@@ -30,7 +30,7 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-//        uploadFromBytes();
+        uploadFromBytes();
         addTags();
 //
 //        calculateDistance();
