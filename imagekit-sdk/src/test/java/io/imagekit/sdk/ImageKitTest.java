@@ -5,6 +5,7 @@ import io.imagekit.sdk.constants.Version;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
@@ -626,5 +627,48 @@ public class ImageKitTest {
         assertEquals(Version.VERSION_CODE, matcher.group(2));
         assertFalse(matcher.group(3).trim().isEmpty());
         assertFalse(matcher.group(4).trim().isEmpty());
+    }
+
+    @Test
+    public void add_tags_expectedSuccessWith() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        tags.add("tag2");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        ResultTags result=new ResultTags();
+        result.setSuccessful(true);
+        result.setMessage("Added Tags SuccessFully.");
+        result.getResponseMetaData().setHttpStatusCode(200);
+        when(restClient.manageTags(tagsRequest, "addTags")).thenReturn(result);
+
+        ResultTags resultTags = SUT.addTags(tagsRequest);
+        assertTrue(resultTags.isSuccessful());
+        assertEquals(resultTags.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(result.getMessage(), "Added Tags SuccessFully.");
+    }
+
+    @Test
+    public void remove_tags_expectedSuccessWith() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        ResultTags result=new ResultTags();
+        result.setSuccessful(true);
+        result.setMessage("Removed Tags SuccessFully.");
+        result.getResponseMetaData().setHttpStatusCode(200);
+        when(restClient.manageTags(tagsRequest, "removeTags")).thenReturn(result);
+
+        ResultTags resultTags = SUT.removeTags(tagsRequest);
+        assertTrue(resultTags.isSuccessful());
+        assertEquals(resultTags.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(result.getMessage(), "Removed Tags SuccessFully.");
     }
 }
