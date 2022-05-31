@@ -7,10 +7,8 @@ import okhttp3.RequestBody;
 
 import java.net.URL;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class FileCreateRequest {
-    public List<String> fileIds;
     public URL url;
     public String base64;
     public byte[] bytes;
@@ -38,19 +36,6 @@ public class FileCreateRequest {
         this.bytes = bytes;
         this.fileName = fileName;
         this.useUniqueFileName=true;
-    }
-
-    public FileCreateRequest(List<String> fileIds, List<String> tags) {
-        this.fileIds = fileIds;
-        this.tags = tags;
-    }
-
-    public List<String> getFileIds() {
-        return fileIds;
-    }
-
-    public void setFileIds(List<String> fileIds) {
-        this.fileIds = fileIds;
     }
 
     public String getFileName() {
@@ -112,16 +97,13 @@ public class FileCreateRequest {
     @Override
     public String toString() {
         return "FileCreateRequest{" +
-//                "fileName='" + fileName + '\'' +
-//                ", useUniqueFileName=" + useUniqueFileName +
-                "fileIds=" + fileIds.stream().map(name -> ('"' + name + '"'))
-                .collect(Collectors.toList()) +
-                ", tags=" + tags.stream().map(name -> ('"' + name + '"'))
-                .collect(Collectors.toList()) +
-//                ", folder='" + folder + '\'' +
-//                ", isPrivateFile=" + isPrivateFile +
-//                ", customCoordinates=" + customCoordinates +
-//                ", responseFields=" + responseFields +
+                "fileName='" + fileName + '\'' +
+                ", useUniqueFileName=" + useUniqueFileName +
+                ", tags=" + tags +
+                ", folder='" + folder + '\'' +
+                ", isPrivateFile=" + isPrivateFile +
+                ", customCoordinates=" + customCoordinates +
+                ", responseFields=" + responseFields +
                 '}';
     }
 }

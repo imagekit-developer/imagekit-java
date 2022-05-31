@@ -7,6 +7,7 @@ import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.UrlGen;
 import io.imagekit.sdk.utils.Utils;
@@ -363,12 +364,12 @@ class App{
 
     private static void addTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("6294624d68c3b350325d37f0");
+        fileIds.add("62958deef33aa80bdadf7533");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         tags.add("tag2");
-        FileCreateRequest fileCreateRequest =new FileCreateRequest(fileIds, tags);
-        List<String> result = ImageKit.getInstance().addTags(fileCreateRequest);
+        TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
+        ResultTags result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response tags:"+Color.ANSI_RESET);
         System.out.println(result);

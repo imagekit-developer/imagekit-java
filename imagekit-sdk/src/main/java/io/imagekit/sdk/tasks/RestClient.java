@@ -1,25 +1,22 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
-import io.imagekit.sdk.models.ResponseMetaData;
+import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RestClient {
     private ImageKit imageKit;
@@ -455,29 +452,37 @@ public class RestClient {
         return result;
     }
 
-    public List<String> addTags(FileCreateRequest fileCreateRequest){
+    public ResultTags addTags(TagsRequest tagsRequest) {
+        ResultTags result = new ResultTags();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        MultipartBody body=multipartBuilder.build(fileCreateRequest);
-        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), String.valueOf(fileCreateRequest));
-        System.out.println("FileCreateRequest:==>" + String.valueOf(fileCreateRequest));
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(tagsRequest));
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/files/addTags")
-                .post(body)
+                .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
 
         try {
-            System.out.println("request:==> " + request);
             Response response = client.newCall(request).execute();
-            System.out.println("response:===> " + response);
+            String resp = response.body().string();
+            if (response.code() == 200) {
+                result =new Gson().fromJson(resp, ResultTags.class);
+                result.setSuccessful(true);
+                result.setMessage(response.message().equals("") ? response.message() : "Added Tags SuccessFully.");
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return new ArrayList<>();
+        return result;
     }
 }

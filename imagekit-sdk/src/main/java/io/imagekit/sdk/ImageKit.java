@@ -205,7 +205,7 @@ public final class ImageKit {
      * @param fileCreateRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public List<String> addTags(FileCreateRequest fileCreateRequest){
-        return restClient.addTags(fileCreateRequest);
+    public ResultTags addTags(TagsRequest tagsRequest){
+        return restClient.addTags(tagsRequest);
     }
 }
