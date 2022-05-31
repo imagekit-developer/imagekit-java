@@ -217,12 +217,4 @@ public final class ImageKit {
     public ResultTags removeTags(TagsRequest tagsRequest){
         return restClient.manageTags(tagsRequest, "removeTags");
     }
-
-    /**
-     *
-     * @return a CustomMetaDataResultList that contains CustomMetaDataField's name, label, schema
-     */
-    public CustomMetaDataResultList getCustomMetaDataFields() {
-        return restClient.getCustomMetaDataFields();
-    }
 }
