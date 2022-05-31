@@ -54,11 +54,9 @@ public class RestClient {
                 .headers(Headers.of(headers))
                 .build();
 
-
-        System.out.println("request upload:====> " + request);
         try {
             Response response = client.newCall(request).execute();
-            String respBody = "";
+            String respBody="";
             if (response.code()==200){
                 respBody = response.body().string();
                 result=new Gson().fromJson(respBody,Result.class);
