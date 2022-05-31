@@ -392,7 +392,7 @@ class App{
     }
 
     private static void getCustomMetaDataFields() {
-        CustomMetaDataResultList result = ImageKit.getInstance().getCustomMetaDataFields();
+        ResultCustomMetaData result = ImageKit.getInstance().getCustomMetaDataFields();
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(result);

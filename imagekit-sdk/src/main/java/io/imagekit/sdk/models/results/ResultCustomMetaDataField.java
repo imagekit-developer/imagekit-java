@@ -1,13 +1,15 @@
-package io.imagekit.sdk.models;
+package io.imagekit.sdk.models.results;
 
 
-public class CustomMetaDataFieldRequest {
+import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
+
+public class ResultCustomMetaDataField {
     private String id;
     private String name;
     private String label;
     private CustomMetaDataFieldSchemaObject schema = new CustomMetaDataFieldSchemaObject();
 
-    public CustomMetaDataFieldRequest() {
+    public ResultCustomMetaDataField() {
     }
 
     public String getId() {

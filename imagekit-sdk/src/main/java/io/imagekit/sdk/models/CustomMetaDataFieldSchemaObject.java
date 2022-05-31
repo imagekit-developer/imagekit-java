@@ -4,7 +4,7 @@ package io.imagekit.sdk.models;
 import java.util.List;
 
 public class CustomMetaDataFieldSchemaObject {
-    private String type;
+    private CustomMetaDataTypeEnum type;
     private List<String> selectOptions;
     private String defaultValue;
     private boolean isValueRequired;
@@ -16,11 +16,11 @@ public class CustomMetaDataFieldSchemaObject {
     public CustomMetaDataFieldSchemaObject() {
     }
 
-    public String getType() {
+    public CustomMetaDataTypeEnum getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(CustomMetaDataTypeEnum type) {
         this.type = type;
     }
 
@@ -82,8 +82,9 @@ public class CustomMetaDataFieldSchemaObject {
 
     @Override
     public String toString() {
+        System.out.println("type.getCustomMetaDataTypeEnum().toUpperCase(Locale.ROOT):==> "+ type);
         return "CustomMetaDataFieldSchemaObject{" +
-                "type='" + type +
+                "type=" + type +
                 ", selectOptions=" + selectOptions +
                 ", defaultValue=" + defaultValue +
                 ", isValueRequired='" + isValueRequired +

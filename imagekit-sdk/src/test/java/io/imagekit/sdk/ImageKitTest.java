@@ -3,18 +3,17 @@ package io.imagekit.sdk;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.constants.Version;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
+import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
-import io.imagekit.sdk.tasks.UrlGen;
 import io.imagekit.sdk.utils.Utils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -670,5 +669,34 @@ public class ImageKitTest {
         assertTrue(resultTags.isSuccessful());
         assertEquals(resultTags.getResponseMetaData().getHttpStatusCode(), 200);
         assertEquals(result.getMessage(), "Removed Tags SuccessFully.");
+    }
+
+    @Test
+    public void get_custom_metadata_fields_expectedSuccessWith() {
+        CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.NUMBER);
+        customMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
+        customMetaDataFieldSchemaObject.setMinLength(10);
+        customMetaDataFieldSchemaObject.setMaxLength(10);
+
+        ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
+        resultCustomMetaDataField.setId("id");
+        resultCustomMetaDataField.setName("name");
+        resultCustomMetaDataField.setLabel("label");
+        resultCustomMetaDataField.setSchema(customMetaDataFieldSchemaObject);
+
+        ResultCustomMetaData customMetaData=new ResultCustomMetaData();
+        customMetaData.setSuccessful(true);
+        customMetaData.setMessage("Fetched CustomMetaData SuccessFully.");
+        customMetaData.getResponseMetaData().setHttpStatusCode(200);
+        customMetaData.setResultCustomMetaDataFields(Collections.singletonList(resultCustomMetaDataField));
+
+        when(restClient.getCustomMetaDataFields()).thenReturn(customMetaData);
+
+        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
+        assertTrue(resultCustomMetaData.isSuccessful());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(customMetaData.getMessage(), "Fetched CustomMetaData SuccessFully.");
+        assertEquals(customMetaData.getResultCustomMetaDataFields(), Collections.singletonList(resultCustomMetaDataField));
     }
 }

@@ -640,6 +640,26 @@ public class RestClientTest {
         assertTrue(result.isSuccessful());
     }
 
+    @Test
+    public void getCustomMetaDataFields() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","Fetched CustomMetaData SuccessFully");
+        obj.addProperty("id", "id");
+        obj.addProperty("name", "name");
+        obj.addProperty("label", "label");
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(obj);
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "Fetched CustomMetaData SuccessFully");
+        SUT.setClient(clientStub);
+        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
+        assertNotNull(resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully");
+        assertTrue(resultCustomMetaData.isSuccessful());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+    }
+
     /**
      * Stub OkHttpClient for fake api call
      */

@@ -1,17 +1,15 @@
 package io.imagekit.sdk.models.results;
 
-import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
+import java.util.ArrayList;
+import java.util.List;
+
 import io.imagekit.sdk.models.ResponseMetaData;
 
-public class CustomMetaDataResultList {
+public class ResultCustomMetaData {
     private boolean isSuccessful;
     private String message;
-    private CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
     private ResponseMetaData responseMetaData = new ResponseMetaData();
-
-    public CustomMetaDataResultList() {
-
-    }
+    private List<ResultCustomMetaDataField> resultCustomMetaDataFields = new ArrayList<>();
 
     public boolean isSuccessful() {
         return isSuccessful;
@@ -37,19 +35,11 @@ public class CustomMetaDataResultList {
         this.responseMetaData = responseMetaData;
     }
 
-    public CustomMetaDataFieldRequest getCustomMetaDataFieldRequest() {
-        return customMetaDataFieldRequest;
+    public List<io.imagekit.sdk.models.results.ResultCustomMetaDataField> getResultCustomMetaDataFields() {
+        return resultCustomMetaDataFields;
     }
 
-    public void setCustomMetaDataFieldRequest(CustomMetaDataFieldRequest customMetaDataFieldRequest) {
-        this.customMetaDataFieldRequest = customMetaDataFieldRequest;
-    }
-
-    @Override
-    public String toString() {
-        return "Result{" +
-                "isSuccessful=" + isSuccessful +
-                ", message='" + message + '\'' +
-                '}';
+    public void setResultCustomMetaDataFields(List<io.imagekit.sdk.models.results.ResultCustomMetaDataField> resultCustomMetaDataFields) {
+        this.resultCustomMetaDataFields = resultCustomMetaDataFields;
     }
 }

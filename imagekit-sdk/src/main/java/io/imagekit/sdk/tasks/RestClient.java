@@ -1,12 +1,10 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
-import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
+import io.imagekit.sdk.models.results.ResultCustomMetaDataField;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
@@ -21,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class RestClient {
     private ImageKit imageKit;
@@ -501,8 +498,8 @@ public class RestClient {
         return result;
     }
 
-    public CustomMetaDataResultList getCustomMetaDataFields() {
-        CustomMetaDataResultList customMetaDataResultList = new CustomMetaDataResultList();
+    public ResultCustomMetaData getCustomMetaDataFields() {
+        ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -521,24 +518,22 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                System.out.println("respBody: ===> " + respBody);
-                System.out.println("response:===> " + new Gson().fromJson(respBody, CustomMetaDataFieldRequest.class));
-                customMetaDataResultList.setSuccessful(true);
+                ResultCustomMetaDataField[] requests = new Gson().fromJson(respBody, ResultCustomMetaDataField[].class);
+                List<ResultCustomMetaDataField> resultCustomMetaDataFields = Arrays.asList(requests);
+                resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
+                resultCustomMetaData.setSuccessful(true);
+                resultCustomMetaData.getResponseMetaData().setRaw(respBody);
+                resultCustomMetaData.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
+            } else {
+                resultCustomMetaData.setSuccessful(false);
+                resultCustomMetaData.setMessage("Error: Internal server error.");
             }
-//            else if (response.code()==500) {
-//                customMetaDataResultList.setSuccessful(false);
-//                customMetaDataResultList.setMessage("Error: Internal server error.");
-//            }
-//            else {
-//                String resp=response.body().string();
-//                customMetaDataResultList=new Gson().fromJson(resp,CustomMetaDataResultList.class);
-//                customMetaDataResultList.setSuccessful(false);
-//            }
-            Utils.populateResponseMetadata(respBody, customMetaDataResultList.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return customMetaDataResultList;
+        System.out.println("Here:==> " + resultCustomMetaData.getResultCustomMetaDataFields());
+        return resultCustomMetaData;
 
     }
 }
