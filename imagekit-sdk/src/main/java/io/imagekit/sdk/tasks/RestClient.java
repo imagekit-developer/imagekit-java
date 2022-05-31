@@ -58,10 +58,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,Result.class);
+                respBody = response.body().string();
+                result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -74,7 +74,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -97,9 +97,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,Result.class);
+                respBody=response.body().string();
+                result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -112,7 +113,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -146,9 +147,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                List<BaseFile> files=new Gson().fromJson(resp,new TypeToken<List<BaseFile>>() {}.getType());
+                respBody=response.body().string();
+                List<BaseFile> files=new Gson().fromJson(respBody,new TypeToken<List<BaseFile>>() {}.getType());
                 resultList.setResults(files);
                 resultList.setSuccessful(true);
             }
@@ -161,7 +163,7 @@ public class RestClient {
                 resultList=new Gson().fromJson(resp,ResultList.class);
                 resultList.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(resultList.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, resultList.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -186,9 +188,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,Result.class);
+                respBody=response.body().string();
+                result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -200,7 +203,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -225,9 +228,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                MetaData metaData =new Gson().fromJson(resp,MetaData.class);
+                respBody = response.body().string();
+                MetaData metaData =new Gson().fromJson(respBody,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
             }
@@ -240,7 +244,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultMetaData.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -265,9 +269,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                MetaData metaData =new Gson().fromJson(resp,MetaData.class);
+                respBody=response.body().string();
+                MetaData metaData =new Gson().fromJson(respBody,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
             }
@@ -280,7 +285,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultMetaData.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -305,7 +310,9 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==204){
+                respBody = response.body().string();
                 result.setMessage("File deleted successfully!");
                 result.setFileId(fileId);
                 result.setSuccessful(true);
@@ -319,7 +326,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -346,9 +353,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,ResultFileDelete.class);
+                respBody=response.body().string();
+                result=new Gson().fromJson(respBody,ResultFileDelete.class);
                 result.setMessage("File deleted successfully!");
                 result.setSuccessful(true);
             }
@@ -367,7 +375,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultFileDelete.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -392,9 +400,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200 || response.code()==201){
-                String resp=response.body().string();
-                result =new Gson().fromJson(resp,ResultCache.class);
+                respBody=response.body().string();
+                result =new Gson().fromJson(respBody,ResultCache.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -406,7 +415,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultCache.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -431,9 +440,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            String respBody="";
             if (response.code()==200){
-                String resp=response.body().string();
-                result =new Gson().fromJson(resp,ResultCacheStatus.class);
+                respBody=response.body().string();
+                result =new Gson().fromJson(respBody,ResultCacheStatus.class);
                 result.setSuccessful(true);
             }
             else if (response.code()==500) {
@@ -445,7 +455,7 @@ public class RestClient {
                 result=new Gson().fromJson(resp,ResultCacheStatus.class);
                 result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(result.getResponseMetaData(), response);
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
