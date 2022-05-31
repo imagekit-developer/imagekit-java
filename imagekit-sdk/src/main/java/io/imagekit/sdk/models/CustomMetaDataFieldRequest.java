@@ -1,23 +1,13 @@
-package io.imagekit.sdk.models.results;
+package io.imagekit.sdk.models;
 
 
-import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
-
-public class ResultCustomMetaDataField {
-    private String id;
+public class CustomMetaDataFieldRequest {
     private String name;
     private String label;
     private CustomMetaDataFieldSchemaObject schema = new CustomMetaDataFieldSchemaObject();
 
-    public ResultCustomMetaDataField() {
-    }
+    public CustomMetaDataFieldRequest() {
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -47,8 +37,8 @@ public class ResultCustomMetaDataField {
     @Override
     public String toString() {
         return "CustomMetaDataFieldRequest{" +
-                "name=" + '"' + name + '"' +
-                ", label=" + '"' + label +
+                "name=" + name +
+                ", label=" + label +
                 ", schema=" + schema +
                 '}';
     }

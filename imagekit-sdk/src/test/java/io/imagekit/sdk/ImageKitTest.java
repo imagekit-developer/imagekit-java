@@ -699,4 +699,16 @@ public class ImageKitTest {
         assertEquals(customMetaData.getMessage(), "Fetched CustomMetaData SuccessFully.");
         assertEquals(customMetaData.getResultCustomMetaDataFields(), Collections.singletonList(resultCustomMetaDataField));
     }
+
+    @Test
+    public void deleteCustomMetaDataField_successExpected() {
+        Result result=new Result();
+        result.setSuccessful(true);
+        result.getResponseMetaData().setHttpStatusCode(204);
+        when(restClient.deleteCustomMetaDataField(any(String.class))).thenReturn(result);
+
+        Result result1=SUT.deleteFile("id");
+        assertThat(result.isSuccessful(),is(result.isSuccessful()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
 }

@@ -660,6 +660,22 @@ public class RestClientTest {
         assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
+
+
+    @Test
+    public void deleteCustomMetaDataField_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                204, "Ok");
+        SUT.setClient(clientStub);
+        Result result = SUT.deleteCustomMetaDataField("id");
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/id",SUT.request.url().toString());
+        assertThat("CustomMetaDataField deleted successfully!", is(result.getMessage()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
+
     /**
      * Stub OkHttpClient for fake api call
      */

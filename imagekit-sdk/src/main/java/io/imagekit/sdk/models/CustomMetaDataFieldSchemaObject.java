@@ -83,15 +83,15 @@ public class CustomMetaDataFieldSchemaObject {
     @Override
     public String toString() {
         System.out.println("type.getCustomMetaDataTypeEnum().toUpperCase(Locale.ROOT):==> "+ type);
-        return "CustomMetaDataFieldSchemaObject{" +
-                "type=" + type +
-                ", selectOptions=" + selectOptions +
-                ", defaultValue=" + defaultValue +
-                ", isValueRequired='" + isValueRequired +
-                ", minValue=" + minValue +
-                ", maxValue=" + maxValue +
-                ", minLength=" + minLength +
-                ", maxLength=" + maxLength +
+        return "{" +
+                "type=" + '"' + type + '"' +
+                ", selectOptions=" + '"' + selectOptions + '"' +
+                ", defaultValue=" + '"' + defaultValue + '"' +
+                ", isValueRequired=" + '"' + isValueRequired + '"' +
+                ", minValue=" + '"' + minValue + '"' +
+                ", maxValue=" + '"' + maxValue + '"' +
+                ", minLength=" + '"' + minLength + '"' +
+                ", maxLength=" + '"' + maxLength + '"' +
                 '}';
     }
 }

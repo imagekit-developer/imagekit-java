@@ -5,6 +5,9 @@ import com.google.gson.Gson;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
+import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
@@ -33,7 +36,9 @@ class App{
 //        uploadFromBytes();
 //        addTags();
 //        removeTags();
-        getCustomMetaDataFields();
+//        createCustomMetaDataFields();
+        deleteCustomMetaDataField("6296138e91fa57897758dc37");
+//        getCustomMetaDataFields();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -396,6 +401,36 @@ class App{
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(result);
+        System.out.println("\n\n");
+    }
+
+    private static void createCustomMetaDataFields() {
+        CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
+        schemaObject.setType(CustomMetaDataTypeEnum.NUMBER);
+        schemaObject.setMinLength(10);
+        schemaObject.setMaxLength(100);
+
+        CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
+        customMetaDataFieldRequest.setName("Name");
+        customMetaDataFieldRequest.setLabel("Label");
+        customMetaDataFieldRequest.setSchema(schemaObject);
+
+        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldRequest);
+        System.out.println(">> remove Tags done.");
+        System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(resultCustomMetaData);
+        System.out.println("\n\n");
+    }
+
+    private static void deleteCustomMetaDataField(String id) {
+        Result result=ImageKit.getInstance().deleteCustomMetaDataField(id);
+        System.out.println(">> CustomMetaDataField deleted...");
+        System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getRaw());
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getMap());
         System.out.println("\n\n");
     }
 }

@@ -225,4 +225,22 @@ public final class ImageKit {
     public ResultCustomMetaData getCustomMetaDataFields() {
         return restClient.getCustomMetaDataFields();
     }
+
+    /**
+     *
+     * @param customMetaDataFieldRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
+     * @return ResultCustomMetaData with ResultCustomMetaDataField
+     */
+    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldRequest customMetaDataFieldRequest) {
+        return restClient.createCustomMetaDataFields(customMetaDataFieldRequest);
+    }
+
+    /**
+     *
+     * @param id is a id of customMetaDataFields
+     * @return Result class
+     */
+    public Result deleteCustomMetaDataField(String id){
+        return restClient.deleteCustomMetaDataField(id);
+    }
 }
