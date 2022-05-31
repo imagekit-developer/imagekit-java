@@ -485,7 +485,7 @@ System.out.println(result.getMap());
 **9. Add tags**
 
 Add tags using the FileIds and tags which we want to add in request as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk)
 
 ```java
 List<String> fileIds = new ArrayList<>();
