@@ -503,7 +503,7 @@ System.out.println(result.getResponseMetaData.getRaw());
 **9. Remove tags**
 
 Removed tags using the FileIds and tags which we want to remove from request as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
 
 ```java
 List<String> fileIds = new ArrayList<>();
