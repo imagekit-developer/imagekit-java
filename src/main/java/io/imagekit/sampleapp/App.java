@@ -30,9 +30,10 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-        uploadFromBytes();
-        addTags();
-        removeTags();
+//        uploadFromBytes();
+//        addTags();
+//        removeTags();
+        getCustomMetaDataFields();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -386,6 +387,14 @@ class App{
         ResultTags result = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println("\n\n");
+    }
+
+    private static void getCustomMetaDataFields() {
+        CustomMetaDataResultList result = ImageKit.getInstance().getCustomMetaDataFields();
+        System.out.println(">> Fetch CustomMetaDataFields done.");
+        System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println("\n\n");
     }
