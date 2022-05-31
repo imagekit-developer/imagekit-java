@@ -202,10 +202,19 @@ public final class ImageKit {
 
     /**
      *
-     * @param fileCreateRequest is a object which contains fileIds and tags as a parameters
+     * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
     public ResultTags addTags(TagsRequest tagsRequest){
-        return restClient.addTags(tagsRequest);
+        return restClient.manageTags(tagsRequest, "addTags");
+    }
+
+    /**
+     *
+     * @param tagsRequest is a object which contains fileIds and tags as a parameters
+     * @return ArrayList of String
+     */
+    public ResultTags removeTags(TagsRequest tagsRequest){
+        return restClient.manageTags(tagsRequest, "removeTags");
     }
 }

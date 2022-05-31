@@ -460,7 +460,7 @@ public class RestClient {
         return result;
     }
 
-    public ResultTags addTags(TagsRequest tagsRequest) {
+    public ResultTags manageTags(TagsRequest tagsRequest, String action) {
         ResultTags result = new ResultTags();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -470,7 +470,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(tagsRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/files/addTags")
+                .url(action.equals("removeTags") ? "https://api.imagekit.io/v1/files/removeTags" : "https://api.imagekit.io/v1/files/addTags")
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -482,7 +482,7 @@ public class RestClient {
                 respBody = response.body().string();
                 result =new Gson().fromJson(respBody, ResultTags.class);
                 result.setSuccessful(true);
-                result.setMessage(response.message().equals("") ? response.message() : "Added Tags SuccessFully.");
+                result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());
             } else {
                 result.setSuccessful(false);
                 result.setMessage("Error: Internal server error.");
