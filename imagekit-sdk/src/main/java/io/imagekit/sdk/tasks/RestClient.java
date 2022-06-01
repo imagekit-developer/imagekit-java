@@ -1,13 +1,13 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
-import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.results.ResultCustomMetaDataField;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.MetaData;
@@ -541,7 +541,13 @@ public class RestClient {
         return resultCustomMetaData;
     }
 
-    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldRequest customMetaDataFieldRequest) {
+    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+        if (customMetaDataFieldCreateRequest.getName() == null) {
+            throw new RuntimeException("Error: Name not provided.");
+        }
+        if (customMetaDataFieldCreateRequest.getLabel() == null) {
+            throw new RuntimeException("Error: Label not provided.");
+        }
         ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
@@ -550,7 +556,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldRequest));
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldCreateRequest));
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/customMetadataFields")
                 .post(requestBody)
@@ -568,6 +574,9 @@ public class RestClient {
                 resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
                 resultCustomMetaData.setSuccessful(true);
                 resultCustomMetaData.getResponseMetaData().setRaw(respBody);
+                if (resultCustomMetaData.getMessage() == null) {
+                    resultCustomMetaData.setMessage("CustomMetaData Created SuccessFully.");
+                }
             } else {
                 resultCustomMetaData.setSuccessful(false);
             }
@@ -618,5 +627,48 @@ public class RestClient {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public ResultCustomMetaData updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+        ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldUpdateRequest));
+        String url=String.format(Locale.US,"https://api.imagekit.io/v1/customMetadataFields/%s",customMetaDataFieldUpdateRequest.getId());
+        request=new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody=response.body().string();
+            System.out.println("respBody:==>" + response);
+            System.out.println("respBody:==>" + respBody);
+            JsonElement responseBody = new JsonParser().parse(respBody);
+            resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
+            if (response.code()==201){
+                ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
+                List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
+                resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
+                resultCustomMetaData.setSuccessful(true);
+                resultCustomMetaData.getResponseMetaData().setRaw(respBody);
+                if (resultCustomMetaData.getMessage() == null) {
+                    resultCustomMetaData.setMessage("CustomMetaData Created SuccessFully.");
+                }
+            } else {
+                resultCustomMetaData.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resultCustomMetaData;
     }
 }

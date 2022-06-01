@@ -1,11 +1,11 @@
 package io.imagekit.sdk.models;
 
-public class CustomMetaDataFieldRequest {
+public class CustomMetaDataFieldCreateRequest {
     private String name;
     private String label;
     private CustomMetaDataFieldSchemaObject schema = new CustomMetaDataFieldSchemaObject();
 
-    public CustomMetaDataFieldRequest() {
+    public CustomMetaDataFieldCreateRequest() {
 
     }
 

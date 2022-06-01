@@ -1,23 +1,20 @@
 package io.imagekit.sampleapp;
 
 
-import com.google.gson.Gson;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
-import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
-import io.imagekit.sdk.tasks.UrlGen;
 import io.imagekit.sdk.utils.Utils;
 
 import java.io.File;
-import java.io.IOException;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -34,9 +31,10 @@ class App{
 //        uploadFromURL();
 //        uploadFromBase64();
 //        uploadFromBytes();
-        addTags();
+//        addTags();
 //        removeTags();
-        createCustomMetaDataFields();
+//        createCustomMetaDataFields();
+        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296138e91fa57897758dc37");
 //        getCustomMetaDataFields();
 //
@@ -385,7 +383,7 @@ class App{
 
     private static void removeTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("62958deef33aa80bdadf7533");
+        fileIds.add("62975a6391fa57b6df7400e0");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
@@ -407,12 +405,12 @@ class App{
     private static void createCustomMetaDataFields() {
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100);
 
-        CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
-        customMetaDataFieldRequest.setName("NameCustom8");
-        customMetaDataFieldRequest.setLabel("LabelCustom8");
-        customMetaDataFieldRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
+        CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+        customMetaDataFieldCreateRequest.setName("NameCustom91");
+        customMetaDataFieldCreateRequest.setLabel("LabelCustom91");
+        customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
-        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldRequest);
+        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
@@ -429,6 +427,23 @@ class App{
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void updateCustomMetaDataFields() {
+        CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
+        schemaObject.setMinValue(0);
+        schemaObject.setMaxValue(100);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("62975a6391fa57b6df7400e0");
+        customMetaDataFieldUpdateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
+
+        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        System.out.println(">> remove Tags done.");
+        System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(resultCustomMetaData);
+        System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
         System.out.println("\n\n");
     }
 }

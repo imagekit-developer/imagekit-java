@@ -7,8 +7,6 @@ import io.imagekit.sdk.tasks.Calculation;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -228,11 +226,11 @@ public final class ImageKit {
 
     /**
      *
-     * @param customMetaDataFieldRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
+     * @param customMetaDataFieldCreateRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
      * @return ResultCustomMetaData with ResultCustomMetaDataField
      */
-    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldRequest customMetaDataFieldRequest) {
-        return restClient.createCustomMetaDataFields(customMetaDataFieldRequest);
+    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+        return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
     }
 
     /**
@@ -242,5 +240,14 @@ public final class ImageKit {
      */
     public Result deleteCustomMetaDataField(String id){
         return restClient.deleteCustomMetaDataField(id);
+    }
+
+    /**
+     *
+     * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
+     * @return ResultCustomMetaData with ResultCustomMetaDataField
+     */
+    public ResultCustomMetaData updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+        return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
     }
 }
