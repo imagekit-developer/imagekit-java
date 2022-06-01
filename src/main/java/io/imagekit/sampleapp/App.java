@@ -34,7 +34,7 @@ class App{
 //        uploadFromURL();
 //        uploadFromBase64();
 //        uploadFromBytes();
-//        addTags();
+        addTags();
 //        removeTags();
         createCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296138e91fa57897758dc37");
@@ -405,17 +405,12 @@ class App{
     }
 
     private static void createCustomMetaDataFields() {
-        CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-        schemaObject.setType(CustomMetaDataTypeEnum.Number);
-        schemaObject.setMinLength(10);
-        schemaObject.setMaxLength(100);
-        schemaObject.setMinValue("0");
-        schemaObject.setMaxValue("100");
+        CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100);
 
         CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
-        customMetaDataFieldRequest.setName("NameCustom");
-        customMetaDataFieldRequest.setLabel("LabelCustom");
-        customMetaDataFieldRequest.setSchema(schemaObject);
+        customMetaDataFieldRequest.setName("NameCustom3");
+        customMetaDataFieldRequest.setLabel("LabelCustom3");
+        customMetaDataFieldRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
         ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldRequest);
         System.out.println(">> remove Tags done.");

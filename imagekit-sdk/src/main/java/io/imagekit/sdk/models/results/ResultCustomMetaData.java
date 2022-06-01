@@ -42,4 +42,12 @@ public class ResultCustomMetaData {
     public void setResultCustomMetaDataFields(List<io.imagekit.sdk.models.results.ResultCustomMetaDataField> resultCustomMetaDataFields) {
         this.resultCustomMetaDataFields = resultCustomMetaDataFields;
     }
+
+    @Override
+    public String toString() {
+        return "Result{" +
+                "isSuccessful=" + isSuccessful +
+                ", message='" + message + '\'' +
+                '}';
+    }
 }

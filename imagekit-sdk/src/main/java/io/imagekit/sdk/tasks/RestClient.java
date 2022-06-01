@@ -1,6 +1,9 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
@@ -481,10 +484,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:==>" + response);
-            String respBody="";
+
+            String respBody = response.body().string();
+            result = new Gson().fromJson(respBody, ResultTags.class);
             if (response.code() == 200) {
-                respBody = response.body().string();
                 result =new Gson().fromJson(respBody, ResultTags.class);
                 result.setSuccessful(true);
                 result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());
@@ -547,7 +550,6 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        System.out.println("customMetaDataFieldRequest:--=====> " + new Gson().toJson(customMetaDataFieldRequest));
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldRequest));
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/customMetadataFields")
@@ -557,26 +559,23 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response in create:===> " + response);
+            JsonElement responseBody = new JsonParser().parse(response.body().string());
+            resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                System.out.println("respBody:===> " + respBody);
                 ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
                 List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
                 resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
                 resultCustomMetaData.setSuccessful(true);
                 resultCustomMetaData.getResponseMetaData().setRaw(respBody);
-                resultCustomMetaData.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
             } else {
                 resultCustomMetaData.setSuccessful(false);
-                resultCustomMetaData.setMessage("Error: Internal server error.");
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Here:==> " + resultCustomMetaData.getResultCustomMetaDataFields());
         return resultCustomMetaData;
     }
 

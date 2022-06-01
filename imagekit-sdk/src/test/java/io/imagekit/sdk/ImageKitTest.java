@@ -3,6 +3,7 @@ package io.imagekit.sdk;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.constants.Version;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
@@ -673,42 +674,67 @@ public class ImageKitTest {
 
     @Test
     public void get_custom_metadata_fields_expectedSuccessWith() {
-        CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-        customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
-        customMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
-        customMetaDataFieldSchemaObject.setMinLength(10);
-        customMetaDataFieldSchemaObject.setMaxLength(10);
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
+        mockCustomMetaDataFieldSchemaObject.setMinLength(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxLength(10);
 
-        ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
-        resultCustomMetaDataField.setId("id");
-        resultCustomMetaDataField.setName("name");
-        resultCustomMetaDataField.setLabel("label");
-        resultCustomMetaDataField.setSchema(customMetaDataFieldSchemaObject);
+        ResultCustomMetaDataField mockResultCustomMetaDataField = new ResultCustomMetaDataField();
+        mockResultCustomMetaDataField.setId("id");
+        mockResultCustomMetaDataField.setName("name");
+        mockResultCustomMetaDataField.setLabel("label");
+        mockResultCustomMetaDataField.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        ResultCustomMetaData customMetaData=new ResultCustomMetaData();
-        customMetaData.setSuccessful(true);
-        customMetaData.setMessage("Fetched CustomMetaData SuccessFully.");
-        customMetaData.getResponseMetaData().setHttpStatusCode(200);
-        customMetaData.setResultCustomMetaDataFields(Collections.singletonList(resultCustomMetaDataField));
+        ResultCustomMetaData mockCustomMetaData=new ResultCustomMetaData();
+        mockCustomMetaData.setSuccessful(true);
+        mockCustomMetaData.setMessage("Fetched CustomMetaData SuccessFully.");
+        mockCustomMetaData.getResponseMetaData().setHttpStatusCode(200);
+        mockCustomMetaData.setResultCustomMetaDataFields(Collections.singletonList(mockResultCustomMetaDataField));
 
-        when(restClient.getCustomMetaDataFields()).thenReturn(customMetaData);
+        when(restClient.getCustomMetaDataFields()).thenReturn(mockCustomMetaData);
 
         ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
         assertTrue(resultCustomMetaData.isSuccessful());
         assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
-        assertEquals(customMetaData.getMessage(), "Fetched CustomMetaData SuccessFully.");
-        assertEquals(customMetaData.getResultCustomMetaDataFields(), Collections.singletonList(resultCustomMetaDataField));
+        assertEquals(mockCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully.");
+        assertEquals(mockCustomMetaData.getResultCustomMetaDataFields(), Collections.singletonList(mockResultCustomMetaDataField));
+    }
+
+    @Test
+    public void createCustomMetaDataFields_successExpected() {
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setMinValue(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
+
+        CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
+        customMetaDataFieldRequest.setName("mockName");
+        customMetaDataFieldRequest.setLabel("mockLabel");
+        customMetaDataFieldRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        ResultCustomMetaData mockResultCustomMetaData = new ResultCustomMetaData();
+        mockResultCustomMetaData.setSuccessful(true);
+        mockResultCustomMetaData.setMessage("CustomMetaData created...");
+        mockResultCustomMetaData.getResponseMetaData().setHttpStatusCode(200);
+
+        when(restClient.createCustomMetaDataFields(customMetaDataFieldRequest)).thenReturn(mockResultCustomMetaData);
+
+        ResultCustomMetaData result=SUT.createCustomMetaDataFields(customMetaDataFieldRequest);
+        assertThat(result.isSuccessful(),is(mockResultCustomMetaData.isSuccessful()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), mockResultCustomMetaData.getResponseMetaData().getHttpStatusCode());
+        assertEquals(result.getMessage(), mockResultCustomMetaData.getMessage());
     }
 
     @Test
     public void deleteCustomMetaDataField_successExpected() {
-        Result result=new Result();
-        result.setSuccessful(true);
-        result.getResponseMetaData().setHttpStatusCode(204);
-        when(restClient.deleteCustomMetaDataField(any(String.class))).thenReturn(result);
+        Result mockResult=new Result();
+        mockResult.setSuccessful(true);
+        mockResult.getResponseMetaData().setHttpStatusCode(204);
+        when(restClient.deleteCustomMetaDataField(any(String.class))).thenReturn(mockResult);
 
-        Result result1=SUT.deleteFile("id");
-        assertThat(result.isSuccessful(),is(result.isSuccessful()));
+        Result result=SUT.deleteCustomMetaDataField("id");
+        assertThat(result.isSuccessful(),is(mockResult.isSuccessful()));
         assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
     }
 }

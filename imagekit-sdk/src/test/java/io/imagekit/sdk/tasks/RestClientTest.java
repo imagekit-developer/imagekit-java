@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.models.CustomMetaDataFieldRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
@@ -651,7 +652,7 @@ public class RestClientTest {
         JsonArray jsonArray = new JsonArray();
         jsonArray.add(obj);
 
-        OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "Fetched CustomMetaData SuccessFully");
+        OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "ok");
         SUT.setClient(clientStub);
         ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
         assertNotNull(resultCustomMetaData.getMessage());
@@ -660,7 +661,23 @@ public class RestClientTest {
         assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
+    @Test
+    public void createCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData created SuccessFully");
 
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                201, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
+        ResultCustomMetaData resultCustomMetaData = SUT.createCustomMetaDataFields(customMetaDataFieldRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields",SUT.request.url().toString());
+        System.out.println("resultCustomMetaData.getMessage():-->" + resultCustomMetaData.getMessage());
+        assertEquals("CustomMetaData created SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 201);
+    }
 
     @Test
     public void deleteCustomMetaDataField_valid_request_expect_success() {

@@ -1,6 +1,5 @@
 package io.imagekit.sdk.models;
 
-
 public class CustomMetaDataFieldRequest {
     private String name;
     private String label;

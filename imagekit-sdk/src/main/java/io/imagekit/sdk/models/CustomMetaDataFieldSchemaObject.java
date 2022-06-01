@@ -7,13 +7,21 @@ public class CustomMetaDataFieldSchemaObject {
     private CustomMetaDataTypeEnum type;
     private List<String> selectOptions;
     private String defaultValue;
-    private boolean isValueRequired;
-    private String minValue;
-    private String maxValue;
-    private int minLength;
-    private int maxLength;
+    private Boolean isValueRequired;
+    private Integer minValue;
+    private Integer maxValue;
+    private Integer minLength;
+    private Integer maxLength;
 
     public CustomMetaDataFieldSchemaObject() {
+
+    }
+
+    public CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum type, boolean isValueRequired, int minValue, int maxValue) {
+        this.type = type;
+        this.isValueRequired = isValueRequired;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
     }
 
     public CustomMetaDataTypeEnum getType() {
@@ -48,50 +56,48 @@ public class CustomMetaDataFieldSchemaObject {
         isValueRequired = valueRequired;
     }
 
-    public String getMinValue() {
+    public Integer getMinValue() {
         return minValue;
     }
 
-    public void setMinValue(String minValue) {
+    public void setMinValue(Integer minValue) {
         this.minValue = minValue;
     }
 
-    public String getMaxValue() {
+    public Integer getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(String maxValue) {
+    public void setMaxValue(Integer maxValue) {
         this.maxValue = maxValue;
     }
 
-    public int getMinLength() {
+    public Integer getMinLength() {
         return minLength;
     }
 
-    public void setMinLength(int minLength) {
+    public void setMinLength(Integer minLength) {
         this.minLength = minLength;
     }
 
-    public int getMaxLength() {
+    public Integer getMaxLength() {
         return maxLength;
     }
 
-    public void setMaxLength(int maxLength) {
+    public void setMaxLength(Integer maxLength) {
         this.maxLength = maxLength;
     }
 
     @Override
-    public String toString() {
-        System.out.println("type.getCustomMetaDataTypeEnum().toUpperCase(Locale.ROOT):==> "+ type);
-        return "{" +
-                "type=" + '"' + type + '"' +
-//                ", selectOptions=" + '"' + selectOptions + '"' +
-//                ", defaultValue=" + '"' + defaultValue + '"' +
-//                ", isValueRequired=" + isValueRequired +
-                ", minValue=" + minValue +
-                ", maxValue=" + maxValue +
-                ", minLength=" + minLength +
-                ", maxLength=" + maxLength +
-                '}';
+    public String toString() {return "{" +
+            "type=" + '"' + type + '"' +
+            ", selectOptions=" + '"' + selectOptions + '"' +
+            ", defaultValue=" + '"' + defaultValue + '"' +
+            ", isValueRequired=" + isValueRequired +
+            ", minValue=" + minValue +
+           ", maxValue=" + maxValue +
+            ", minLength=" + minLength +
+            ", maxLength=" + maxLength +
+        '}';
     }
 }
