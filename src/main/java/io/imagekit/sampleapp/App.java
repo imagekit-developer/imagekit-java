@@ -408,14 +408,15 @@ class App{
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100);
 
         CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
-        customMetaDataFieldRequest.setName("NameCustom3");
-        customMetaDataFieldRequest.setLabel("LabelCustom3");
+        customMetaDataFieldRequest.setName("NameCustom8");
+        customMetaDataFieldRequest.setLabel("LabelCustom8");
         customMetaDataFieldRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
         ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
+        System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
         System.out.println("\n\n");
     }
 

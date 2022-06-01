@@ -48,6 +48,8 @@ public class ResultCustomMetaData {
         return "Result{" +
                 "isSuccessful=" + isSuccessful +
                 ", message='" + message + '\'' +
+                ", responseMetaData=" + responseMetaData +
+                ", resultCustomMetaDataFields=" + resultCustomMetaDataFields +
                 '}';
     }
 }

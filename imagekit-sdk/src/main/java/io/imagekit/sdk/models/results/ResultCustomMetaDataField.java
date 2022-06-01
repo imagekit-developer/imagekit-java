@@ -47,8 +47,9 @@ public class ResultCustomMetaDataField {
     @Override
     public String toString() {
         return "CustomMetaDataFieldRequest{" +
-                "name=" + '"' + name + '"' +
-                ", label=" + '"' + label +
+                "id=" + '"' + id + '"' +
+                ", name=" + '"' + name + '"' +
+                ", label=" + '"' + label + '"' +
                 ", schema=" + schema +
                 '}';
     }

@@ -559,11 +559,10 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            JsonElement responseBody = new JsonParser().parse(response.body().string());
+            String respBody=response.body().string();
+            JsonElement responseBody = new JsonParser().parse(respBody);
             resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
-            String respBody="";
-            if (response.code()==200){
-                respBody=response.body().string();
+            if (response.code()==201){
                 ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
                 List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
                 resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
