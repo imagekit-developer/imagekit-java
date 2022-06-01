@@ -674,7 +674,7 @@ public class ImageKitTest {
     @Test
     public void get_custom_metadata_fields_expectedSuccessWith() {
         CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-        customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.NUMBER);
+        customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
         customMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
         customMetaDataFieldSchemaObject.setMinLength(10);
         customMetaDataFieldSchemaObject.setMaxLength(10);

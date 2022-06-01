@@ -547,7 +547,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        System.out.println("customMetaDataFieldRequest:--=====> " + customMetaDataFieldRequest);
+        System.out.println("customMetaDataFieldRequest:--=====> " + new Gson().toJson(customMetaDataFieldRequest));
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldRequest));
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/customMetadataFields")

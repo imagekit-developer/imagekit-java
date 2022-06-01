@@ -4,28 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 public enum CustomMetaDataTypeEnum {
     @SerializedName("Text")
-    TEXT("Text"),
+    TEXT,
     @SerializedName("Textarea")
-    TEXTAREA("Textarea"),
+    TEXTAREA,
     @SerializedName("Number")
-    NUMBER("Number"),
+    Number,
     @SerializedName("Date")
-    DATE("Date"),
+    DATE,
     @SerializedName("Boolean")
-    BOOLEAN("Boolean"),
+    BOOLEAN,
     @SerializedName("SingleSelect")
-    SINGLE_SELECT("SingleSelect"),
+    SINGLE_SELECT,
     @SerializedName("MultiSelect Date")
-    MULTISELECT_DATE("MultiSelect Date");
+    MULTISELECT_DATE;
 
-    private String type;
-
-    private CustomMetaDataTypeEnum(String s) {
-        type = s;
-    }
-
-    public String getCustomMetaDataTypeEnum() {
-        return type;
-    }
-
-    }
+}

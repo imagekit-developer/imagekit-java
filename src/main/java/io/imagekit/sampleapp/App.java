@@ -36,8 +36,8 @@ class App{
 //        uploadFromBytes();
 //        addTags();
 //        removeTags();
-//        createCustomMetaDataFields();
-        deleteCustomMetaDataField("6296138e91fa57897758dc37");
+        createCustomMetaDataFields();
+//        deleteCustomMetaDataField("6296138e91fa57897758dc37");
 //        getCustomMetaDataFields();
 //
 //        calculateDistance();
@@ -406,13 +406,15 @@ class App{
 
     private static void createCustomMetaDataFields() {
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-        schemaObject.setType(CustomMetaDataTypeEnum.NUMBER);
+        schemaObject.setType(CustomMetaDataTypeEnum.Number);
         schemaObject.setMinLength(10);
         schemaObject.setMaxLength(100);
+        schemaObject.setMinValue("0");
+        schemaObject.setMaxValue("100");
 
         CustomMetaDataFieldRequest customMetaDataFieldRequest = new CustomMetaDataFieldRequest();
-        customMetaDataFieldRequest.setName("Name");
-        customMetaDataFieldRequest.setLabel("Label");
+        customMetaDataFieldRequest.setName("NameCustom");
+        customMetaDataFieldRequest.setLabel("LabelCustom");
         customMetaDataFieldRequest.setSchema(schemaObject);
 
         ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldRequest);

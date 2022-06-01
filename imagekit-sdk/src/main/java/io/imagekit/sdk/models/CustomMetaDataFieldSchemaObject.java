@@ -85,13 +85,13 @@ public class CustomMetaDataFieldSchemaObject {
         System.out.println("type.getCustomMetaDataTypeEnum().toUpperCase(Locale.ROOT):==> "+ type);
         return "{" +
                 "type=" + '"' + type + '"' +
-                ", selectOptions=" + '"' + selectOptions + '"' +
-                ", defaultValue=" + '"' + defaultValue + '"' +
-                ", isValueRequired=" + '"' + isValueRequired + '"' +
-                ", minValue=" + '"' + minValue + '"' +
-                ", maxValue=" + '"' + maxValue + '"' +
-                ", minLength=" + '"' + minLength + '"' +
-                ", maxLength=" + '"' + maxLength + '"' +
+//                ", selectOptions=" + '"' + selectOptions + '"' +
+//                ", defaultValue=" + '"' + defaultValue + '"' +
+//                ", isValueRequired=" + isValueRequired +
+                ", minValue=" + minValue +
+                ", maxValue=" + maxValue +
+                ", minLength=" + minLength +
+                ", maxLength=" + maxLength +
                 '}';
     }
 }

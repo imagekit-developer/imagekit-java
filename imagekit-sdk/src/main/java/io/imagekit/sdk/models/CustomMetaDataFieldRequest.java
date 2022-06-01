@@ -37,8 +37,8 @@ public class CustomMetaDataFieldRequest {
     @Override
     public String toString() {
         return "CustomMetaDataFieldRequest{" +
-                "name=" + name +
-                ", label=" + label +
+                "name=" + '"' + name + '"' +
+                ", label=" + '"' + label + '"' +
                 ", schema=" + schema +
                 '}';
     }
