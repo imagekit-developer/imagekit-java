@@ -497,7 +497,7 @@ fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
 tags.add("tag1");
 tags.add("tag2");
-ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "addTags");
+Result result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "addTags");
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -516,7 +516,7 @@ List<String> fileIds = new ArrayList<>();
 fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
 tags.add("tag1");
-ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "removeTags");
+Result result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "removeTags");
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -531,7 +531,7 @@ fetches the metadata as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
-ResultCustomMetaData result=ImageKit.getInstance().getCustomMetaDataFields();
+Result result=ImageKit.getInstance().getCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -555,7 +555,7 @@ CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new customMe
 customMetaDataFieldCreateRequest.setName("Name");
 customMetaDataFieldCreateRequest.setLabel("Label");
 customMetaDataFieldCreateRequest.setSchema(schemaObject);
-ResultCustomMetaData result=ImageKit.getInstance().createCustomMetaDataFields();
+Result result=ImageKit.getInstance().createCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -572,7 +572,7 @@ It deletes the CustomMetaDataFields as per the
 The argument to the `deleteCustomMetaDataField()` method accepts the id of customMetaDataField which we want to be deleted.
 
 ```java
-ResultCustomMetaData result=ImageKit.getInstance().deleteCustomMetaDataField("id");
+Result result=ImageKit.getInstance().deleteCustomMetaDataField("id");
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -596,7 +596,7 @@ CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMe
 customMetaDataFieldUpdateRequest.setId("id");
 customMetaDataFieldUpdateRequest.setLabel("label");
 customMetaDataFieldUpdateRequest.setSchema(schemaObject);
-ResultCustomMetaData result=ImageKit.getInstance().updateCustomMetaDataFields();
+Result result=ImageKit.getInstance().updateCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");

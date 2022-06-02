@@ -31,8 +31,8 @@ public class TagsRequest {
     @Override
     public String toString() {
         return "TagsRequest{" +
-                "fileIds=" + fileIds.stream().map(name -> ('"' + name + '"')).collect(Collectors.toList()) +
-                ", tags=" + tags.stream().map(name -> ('"' + name + '"')).collect(Collectors.toList()) +
+                "fileIds=" + fileIds +
+                ", tags=" + tags +
                 '}';
     }
 }

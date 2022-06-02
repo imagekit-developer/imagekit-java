@@ -32,13 +32,13 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-//        uploadFromBytes();
+        uploadFromBytes();
 //        addTags();
 //        removeTags();
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
-//        deleteCustomMetaDataField("6296138e91fa57897758dc37");
-        getCustomMetaDataFields();
+//        deleteCustomMetaDataField("62988431cd3d7878e486ccad");
+//        getCustomMetaDataFields();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -375,10 +375,11 @@ class App{
 
     private static void addTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("62958deef33aa80bdadf7533");
+        fileIds.add("6298833ad3c4405ddb9253c2");
+        fileIds.add("629883933df4f9fb1d7cef52");
         List<String> tags = new ArrayList<>();
-        tags.add("tag1");
-        tags.add("tag2");
+        tags.add("tag3");
+        tags.add("tag4");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
         Result result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
@@ -391,9 +392,11 @@ class App{
 
     private static void removeTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("62975a6391fa57b6df7400e0");
+        fileIds.add("6298833ad3c4405ddb9253c2");
+        fileIds.add("629883933df4f9fb1d7cef52");
         List<String> tags = new ArrayList<>();
-        tags.add("tag1");
+        tags.add("tag3");
+        tags.add("tag4");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
         Result result = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
@@ -415,11 +418,9 @@ class App{
     }
 
     private static void createCustomMetaDataFields() {
-        CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100);
-
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-        customMetaDataFieldCreateRequest.setName("NameCustom91");
-        customMetaDataFieldCreateRequest.setLabel("LabelCustom91");
+        customMetaDataFieldCreateRequest.setName("NameCus1");
+        customMetaDataFieldCreateRequest.setLabel("LabelCm91");
         customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
         Result result = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
@@ -449,8 +450,8 @@ class App{
         schemaObject.setMaxValue(200);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-        customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808d");
-        customMetaDataFieldUpdateRequest.setLabel("priceLabel");
+        customMetaDataFieldUpdateRequest.setId("62988431cd3d7878e486ccad");
+        customMetaDataFieldUpdateRequest.setLabel("labelPri01");
         customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
         Result result = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
