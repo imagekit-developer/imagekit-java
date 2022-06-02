@@ -537,7 +537,7 @@ System.out.println(result);
 System.out.println("Raw Response:");
 System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(result.getResponseMetaData().getList());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
@@ -545,7 +545,7 @@ System.out.println(result.getResultCustomMetaDataFields());
 
 It creates the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
-The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class which contains name, label, schema and then set the parameters to be created.
+The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class.
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
@@ -585,7 +585,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 It edits the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
-The argument to the `updateCustomMetaDataFields()` method is the object of `CustomMetaDataFieldUpdateRequest` class which contains id(id of customMetaDataFields which we want to update with), label, schema and then set the parameters to be updated.
+The argument to the `updateCustomMetaDataFields()` method is the object of `CustomMetaDataFieldUpdateRequest` class.
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();

@@ -2,13 +2,13 @@ package io.imagekit.sdk.models;
 
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import okhttp3.ResponseBody;
 
 public class ResponseMetaData {
 
@@ -46,5 +46,13 @@ public class ResponseMetaData {
             }.getType());
         }
         return new HashMap<>();
+    }
+
+    public <T> List<T> getList() {
+        if (null!=raw) {
+            return new Gson().fromJson(raw, new TypeToken<T>() {
+            }.getType());
+        }
+        return new ArrayList<>();
     }
 }

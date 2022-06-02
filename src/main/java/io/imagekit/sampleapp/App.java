@@ -32,13 +32,13 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-        uploadFromBytes();
+//        uploadFromBytes();
 //        addTags();
 //        removeTags();
 //        createCustomMetaDataFields();
-        updateCustomMetaDataFields();
+//        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296138e91fa57897758dc37");
-//        getCustomMetaDataFields();
+        getCustomMetaDataFields();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -409,7 +409,7 @@ class App{
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(result.getResponseMetaData().getList());
         System.out.println(result);
         System.out.println("\n\n");
     }
