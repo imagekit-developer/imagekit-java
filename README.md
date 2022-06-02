@@ -500,7 +500,7 @@ System.out.println("Raw Response:");
 System.out.println(result.getResponseMetaData.getRaw());
 ```
 
-**9. Remove tags**
+**10. Remove tags**
 
 Removed tags using the FileIds and tags which we want to remove from request as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
@@ -517,13 +517,72 @@ System.out.println("Raw Response:");
 System.out.println(result.getResponseMetaData.getRaw());
 ```
 
-**10. Get CustomMetaDataFields**
+**11. Get CustomMetaDataFields**
 
 fetches the metadata as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
 ResultCustomMetaData result=ImageKit.getInstance().getCustomMetaDataFields();
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResultCustomMetaDataFields());
+```
+
+**12. Create CustomMetaDataFields**
+
+It creates the CustomMetaDataFields as per the
+[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
+The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class which contains name, label, schema and then set the parameters to be created.
+
+```java
+CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
+schemaObject.setMinValue(10);
+schemaObject.setMaxValue(200);
+CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new customMetaDataFieldCreateRequest();
+customMetaDataFieldCreateRequest.setName("Name");
+customMetaDataFieldCreateRequest.setLabel("Label");
+customMetaDataFieldCreateRequest.setSchema(schemaObject);
+ResultCustomMetaData result=ImageKit.getInstance().createCustomMetaDataFields();
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResultCustomMetaDataFields());
+```
+
+**13. Delete CustomMetaDataFields**
+
+It deletes the CustomMetaDataFields as per the
+[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).
+The argument to the `deleteCustomMetaDataField()` method accepts the id of customMetaDataField which we want to be deleted.
+
+```java
+ResultCustomMetaData result=ImageKit.getInstance().deleteCustomMetaDataField("id");
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+```
+
+**14. Edit CustomMetaDataFields**
+
+It edits the CustomMetaDataFields as per the
+[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
+The argument to the `updateCustomMetaDataFields()` method is the object of `CustomMetaDataFieldUpdateRequest` class which contains id(id of customMetaDataFields which we want to update with), label, schema and then set the parameters to be updated.
+
+```java
+CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
+schemaObject.setMinValue(10);
+schemaObject.setMaxValue(200);
+
+CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+customMetaDataFieldUpdateRequest.setId("id");
+customMetaDataFieldUpdateRequest.setLabel("label");
+customMetaDataFieldUpdateRequest.setSchema(schemaObject);
+ResultCustomMetaData result=ImageKit.getInstance().updateCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
