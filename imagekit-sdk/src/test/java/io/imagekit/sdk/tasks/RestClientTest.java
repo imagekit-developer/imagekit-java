@@ -1,19 +1,17 @@
 package io.imagekit.sdk.tasks;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -24,8 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -638,6 +634,75 @@ public class RestClientTest {
         assertNotNull(result.getMessage());
         assertEquals(result.getMessage(), "Tags removed SuccessFully");
         assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void getCustomMetaDataFields() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","Fetched CustomMetaData SuccessFully");
+        obj.addProperty("id", "id");
+        obj.addProperty("name", "name");
+        obj.addProperty("label", "label");
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(obj);
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "ok");
+        SUT.setClient(clientStub);
+        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
+        assertNotNull(resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully");
+        assertTrue(resultCustomMetaData.isSuccessful());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+    }
+
+    @Test
+    public void createCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData created SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                201, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+        ResultCustomMetaData resultCustomMetaData = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields",SUT.request.url().toString());
+        assertEquals("CustomMetaData created SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 201);
+    }
+
+    @Test
+    public void deleteCustomMetaDataField_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                204, "Ok");
+        SUT.setClient(clientStub);
+        Result result = SUT.deleteCustomMetaDataField("id");
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/id",SUT.request.url().toString());
+        assertThat("CustomMetaDataField deleted successfully!", is(result.getMessage()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
+
+    @Test
+    public void updateCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData edited SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                200, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("mockId");
+        ResultCustomMetaData resultCustomMetaData = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/mockId",SUT.request.url().toString());
+        assertEquals("CustomMetaData edited SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
     /**
