@@ -551,11 +551,11 @@ The argument to the `createCustomMetaDataFields()` method is the object of `Cust
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
 schemaObject.setMinValue(10);
 schemaObject.setMaxValue(200);
-CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new customMetaDataFieldCreateRequest();
+CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
 customMetaDataFieldCreateRequest.setName("Name");
 customMetaDataFieldCreateRequest.setLabel("Label");
 customMetaDataFieldCreateRequest.setSchema(schemaObject);
-Result result=ImageKit.getInstance().createCustomMetaDataFields();
+Result result=ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
@@ -596,7 +596,7 @@ CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMe
 customMetaDataFieldUpdateRequest.setId("id");
 customMetaDataFieldUpdateRequest.setLabel("label");
 customMetaDataFieldUpdateRequest.setSchema(schemaObject);
-Result result=ImageKit.getInstance().updateCustomMetaDataFields();
+Result result=ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");

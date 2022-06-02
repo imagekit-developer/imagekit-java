@@ -65,6 +65,7 @@ public class RestClient {
                 respBody = response.body().string();
                 result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -104,6 +105,7 @@ public class RestClient {
                 respBody=response.body().string();
                 result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result=new Result();
@@ -155,6 +157,7 @@ public class RestClient {
                 List<BaseFile> files=new Gson().fromJson(respBody,new TypeToken<List<BaseFile>>() {}.getType());
                 resultList.setResults(files);
                 resultList.setSuccessful(true);
+                resultList.setRaw(respBody);
             }
             else if (response.code()==500) {
                 resultList.setSuccessful(false);
@@ -195,6 +198,7 @@ public class RestClient {
                 respBody=response.body().string();
                 result=new Gson().fromJson(respBody,Result.class);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -236,6 +240,7 @@ public class RestClient {
                 MetaData metaData =new Gson().fromJson(respBody,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -277,6 +282,7 @@ public class RestClient {
                 MetaData metaData =new Gson().fromJson(respBody,MetaData.class);
                 result.setResults(metaData);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -318,6 +324,7 @@ public class RestClient {
                 result.setMessage("File deleted successfully!");
                 result.setFileId(fileId);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -361,10 +368,12 @@ public class RestClient {
                 result=new Gson().fromJson(respBody,ResultFileDelete.class);
                 result.setMessage("File deleted successfully!");
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==404){
                 String resp=response.body().string();
                 result=new Gson().fromJson(resp,ResultFileDelete.class);
+                result.setRaw(resp);
                 result.getResponseMetaData().setRaw(resp);
                 result.setSuccessful(false);
             }
@@ -407,6 +416,7 @@ public class RestClient {
                 respBody=response.body().string();
                 result =new Gson().fromJson(respBody,ResultCache.class);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
@@ -447,6 +457,7 @@ public class RestClient {
                 respBody=response.body().string();
                 result =new Gson().fromJson(respBody,ResultCacheStatus.class);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
             }
             else if (response.code()==500) {
                 result.setSuccessful(false);
