@@ -1,13 +1,7 @@
 package io.imagekit.sdk.models.results;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.ResponseMetaData;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class ResultMetaData {
     private boolean isSuccessful;

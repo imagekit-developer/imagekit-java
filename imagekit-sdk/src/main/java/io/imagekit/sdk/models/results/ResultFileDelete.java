@@ -1,13 +1,7 @@
 package io.imagekit.sdk.models.results;
 
-import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Preconditions;
-import com.google.gson.reflect.TypeToken;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import io.imagekit.sdk.models.ResponseMetaData;
 

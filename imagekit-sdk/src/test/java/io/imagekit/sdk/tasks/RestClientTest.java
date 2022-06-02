@@ -617,7 +617,7 @@ public class RestClientTest {
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         tags.add("tag2");
-        ResultTags result = SUT.manageTags(new TagsRequest(fileIds, tags), "addTags");
+        Result result = SUT.manageTags(new TagsRequest(fileIds, tags), "addTags");
         assertNotNull(result.getMessage());
         assertEquals(result.getMessage(), "Tags added SuccessFully");
         assertTrue(result.isSuccessful());
@@ -634,7 +634,7 @@ public class RestClientTest {
         fileIds.add("62958deef33aa80bdadf7533");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
-        ResultTags result = SUT.manageTags(new TagsRequest(fileIds, tags), "removeTags");
+        Result result = SUT.manageTags(new TagsRequest(fileIds, tags), "removeTags");
         assertNotNull(result.getMessage());
         assertEquals(result.getMessage(), "Tags removed SuccessFully");
         assertTrue(result.isSuccessful());
@@ -653,11 +653,11 @@ public class RestClientTest {
 
         OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "ok");
         SUT.setClient(clientStub);
-        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
-        assertNotNull(resultCustomMetaData.getMessage());
-        assertEquals(resultCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully");
-        assertTrue(resultCustomMetaData.isSuccessful());
-        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+        Result result = SUT.getCustomMetaDataFields();
+        assertNotNull(result.getMessage());
+        assertEquals(result.getMessage(), "Fetched CustomMetaData SuccessFully");
+        assertTrue(result.isSuccessful());
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
     @Test
@@ -670,11 +670,11 @@ public class RestClientTest {
         SUT.setClient(clientStub);
 
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-        ResultCustomMetaData resultCustomMetaData = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        Result result = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
 
         assertEquals("https://api.imagekit.io/v1/customMetadataFields",SUT.request.url().toString());
-        assertEquals("CustomMetaData created SuccessFully", resultCustomMetaData.getMessage());
-        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 201);
+        assertEquals("CustomMetaData created SuccessFully", result.getMessage());
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 201);
     }
 
     @Test
@@ -702,11 +702,11 @@ public class RestClientTest {
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
         customMetaDataFieldUpdateRequest.setId("mockId");
-        ResultCustomMetaData resultCustomMetaData = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        Result result = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
 
         assertEquals("https://api.imagekit.io/v1/customMetadataFields/mockId",SUT.request.url().toString());
-        assertEquals("CustomMetaData edited SuccessFully", resultCustomMetaData.getMessage());
-        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals("CustomMetaData edited SuccessFully", result.getMessage());
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
     /**

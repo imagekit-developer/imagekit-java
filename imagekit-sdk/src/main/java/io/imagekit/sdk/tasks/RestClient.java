@@ -8,7 +8,6 @@ import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
-import io.imagekit.sdk.models.results.ResultCustomMetaDataField;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
@@ -18,8 +17,6 @@ import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -467,8 +464,8 @@ public class RestClient {
         return result;
     }
 
-    public ResultTags manageTags(TagsRequest tagsRequest, String action) {
-        ResultTags result = new ResultTags();
+    public Result manageTags(TagsRequest tagsRequest, String action) {
+        Result result = new Result();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
@@ -486,9 +483,8 @@ public class RestClient {
             Response response = client.newCall(request).execute();
 
             String respBody = response.body().string();
-            result = new Gson().fromJson(respBody, ResultTags.class);
+            result = new Gson().fromJson(respBody, Result.class);
             if (response.code() == 200) {
-                result =new Gson().fromJson(respBody, ResultTags.class);
                 result.setSuccessful(true);
                 result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());
             } else {
@@ -503,8 +499,8 @@ public class RestClient {
         return result;
     }
 
-    public ResultCustomMetaData getCustomMetaDataFields() {
-        ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
+    public Result getCustomMetaDataFields() {
+        Result result = new Result();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -523,32 +519,28 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                ResultCustomMetaDataField[] requests = new Gson().fromJson(respBody, ResultCustomMetaDataField[].class);
-                List<ResultCustomMetaDataField> resultCustomMetaDataFields = Arrays.asList(requests);
-                resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
-                resultCustomMetaData.setSuccessful(true);
-                resultCustomMetaData.getResponseMetaData().setRaw(respBody);
-                resultCustomMetaData.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
+                result.setSuccessful(true);
+                result.getResponseMetaData().setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
             } else {
-                resultCustomMetaData.setSuccessful(false);
-                resultCustomMetaData.setMessage("Error: Internal server error.");
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
             }
-            Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Here:==> " + resultCustomMetaData.getResultCustomMetaDataFields());
-        return resultCustomMetaData;
+        return result;
     }
 
-    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+    public Result createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
         if (customMetaDataFieldCreateRequest.getName() == null) {
             throw new RuntimeException("Error: Name not provided.");
         }
         if (customMetaDataFieldCreateRequest.getLabel() == null) {
             throw new RuntimeException("Error: Label not provided.");
         }
-        ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
+        Result result = new Result();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -567,24 +559,21 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody=response.body().string();
             JsonElement responseBody = new JsonParser().parse(respBody);
-            resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
+            result = new Gson().fromJson(responseBody, Result.class);
             if (response.code()==201){
-                ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
-                List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
-                resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
-                resultCustomMetaData.setSuccessful(true);
-                resultCustomMetaData.getResponseMetaData().setRaw(respBody);
-                if (resultCustomMetaData.getMessage() == null) {
-                    resultCustomMetaData.setMessage("CustomMetaData Created SuccessFully.");
+                result.setSuccessful(true);
+                result.getResponseMetaData().setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("CustomMetaData Created SuccessFully.");
                 }
             } else {
-                resultCustomMetaData.setSuccessful(false);
+                result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return resultCustomMetaData;
+        return result;
     }
 
     public Result deleteCustomMetaDataField(String id) {
@@ -629,8 +618,8 @@ public class RestClient {
         return result;
     }
 
-    public ResultCustomMetaData updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
-        ResultCustomMetaData resultCustomMetaData = new ResultCustomMetaData();
+    public Result updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+        Result result = new Result();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -650,23 +639,20 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody=response.body().string();
             JsonElement responseBody = new JsonParser().parse(respBody);
-            resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
+            result = new Gson().fromJson(responseBody, Result.class);
             if (response.code()==200){
-                ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
-                List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
-                resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
-                resultCustomMetaData.setSuccessful(true);
-                resultCustomMetaData.getResponseMetaData().setRaw(respBody);
-                if (resultCustomMetaData.getMessage() == null) {
-                    resultCustomMetaData.setMessage("CustomMetaData Edited SuccessFully.");
+                result.setSuccessful(true);
+                result.getResponseMetaData().setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("CustomMetaData Edited SuccessFully.");
                 }
             } else {
-                resultCustomMetaData.setSuccessful(false);
+                result.setSuccessful(false);
             }
-            Utils.populateResponseMetadata(respBody, resultCustomMetaData.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return resultCustomMetaData;
+        return result;
     }
 }

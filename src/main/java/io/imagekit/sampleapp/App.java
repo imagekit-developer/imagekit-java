@@ -36,7 +36,7 @@ class App{
 //        addTags();
 //        removeTags();
 //        createCustomMetaDataFields();
-//        updateCustomMetaDataFields();
+        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296138e91fa57897758dc37");
 //        getCustomMetaDataFields();
 //
@@ -380,7 +380,7 @@ class App{
         tags.add("tag1");
         tags.add("tag2");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
-        ResultTags result = ImageKit.getInstance().addTags(tagsRequest);
+        Result result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response add tags:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
@@ -395,7 +395,7 @@ class App{
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
-        ResultTags result = ImageKit.getInstance().removeTags(tagsRequest);
+        Result result = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
@@ -405,7 +405,7 @@ class App{
     }
 
     private static void getCustomMetaDataFields() {
-        ResultCustomMetaData result = ImageKit.getInstance().getCustomMetaDataFields();
+        Result result = ImageKit.getInstance().getCustomMetaDataFields();
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
@@ -422,13 +422,12 @@ class App{
         customMetaDataFieldCreateRequest.setLabel("LabelCustom91");
         customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
-        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        Result result = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         System.out.println(">> Create CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response create CustomMetaDataFields :"+Color.ANSI_RESET);
-        System.out.println(resultCustomMetaData);
-        System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
+        System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(resultCustomMetaData.getResponseMetaData().getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -446,21 +445,20 @@ class App{
 
     private static void updateCustomMetaDataFields() {
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-        schemaObject.setMinValue(10);
+        schemaObject.setMinValue(1);
         schemaObject.setMaxValue(200);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
         customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808d");
-        customMetaDataFieldUpdateRequest.setLabel("prices");
+        customMetaDataFieldUpdateRequest.setLabel("priceLabel");
         customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
-        ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        Result result = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
         System.out.println(">> Edit CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response edit CustomMetaDataFields :"+Color.ANSI_RESET);
-        System.out.println(resultCustomMetaData);
-        System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
+        System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(resultCustomMetaData.getResponseMetaData().getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 }

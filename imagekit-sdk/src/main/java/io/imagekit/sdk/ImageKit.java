@@ -203,7 +203,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public ResultTags addTags(TagsRequest tagsRequest){
+    public Result addTags(TagsRequest tagsRequest){
         return restClient.manageTags(tagsRequest, "addTags");
     }
 
@@ -212,7 +212,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public ResultTags removeTags(TagsRequest tagsRequest){
+    public Result removeTags(TagsRequest tagsRequest){
         return restClient.manageTags(tagsRequest, "removeTags");
     }
 
@@ -220,7 +220,7 @@ public final class ImageKit {
      *
      * @return a CustomMetaDataResultList that contains CustomMetaDataField's name, label, schema
      */
-    public ResultCustomMetaData getCustomMetaDataFields() {
+    public Result getCustomMetaDataFields() {
         return restClient.getCustomMetaDataFields();
     }
 
@@ -229,7 +229,7 @@ public final class ImageKit {
      * @param customMetaDataFieldCreateRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
      * @return ResultCustomMetaData with ResultCustomMetaDataField
      */
-    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+    public Result createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
         return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
     }
 
@@ -247,7 +247,7 @@ public final class ImageKit {
      * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
      * @return ResultCustomMetaData with ResultCustomMetaDataField
      */
-    public ResultCustomMetaData updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+    public Result updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
         return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
     }
 }

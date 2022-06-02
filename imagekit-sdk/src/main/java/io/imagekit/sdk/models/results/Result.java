@@ -1,13 +1,9 @@
 package io.imagekit.sdk.models.results;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.ResponseMetaData;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Result extends BaseFile {
     private boolean isSuccessful;
