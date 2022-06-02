@@ -7,8 +7,6 @@ import io.imagekit.sdk.tasks.Calculation;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -198,5 +196,58 @@ public final class ImageKit {
      */
     public int pHashDistance(String firstHex, String secondHex){
         return Calculation.getHammingDistance(firstHex,secondHex);
+    }
+
+    /**
+     *
+     * @param tagsRequest is a object which contains fileIds and tags as a parameters
+     * @return ArrayList of String
+     */
+    public ResultTags addTags(TagsRequest tagsRequest){
+        return restClient.manageTags(tagsRequest, "addTags");
+    }
+
+    /**
+     *
+     * @param tagsRequest is a object which contains fileIds and tags as a parameters
+     * @return ArrayList of String
+     */
+    public ResultTags removeTags(TagsRequest tagsRequest){
+        return restClient.manageTags(tagsRequest, "removeTags");
+    }
+
+    /**
+     *
+     * @return a CustomMetaDataResultList that contains CustomMetaDataField's name, label, schema
+     */
+    public ResultCustomMetaData getCustomMetaDataFields() {
+        return restClient.getCustomMetaDataFields();
+    }
+
+    /**
+     *
+     * @param customMetaDataFieldCreateRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
+     * @return ResultCustomMetaData with ResultCustomMetaDataField
+     */
+    public ResultCustomMetaData createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+        return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+    }
+
+    /**
+     *
+     * @param id is a id of customMetaDataFields
+     * @return Result class
+     */
+    public Result deleteCustomMetaDataField(String id){
+        return restClient.deleteCustomMetaDataField(id);
+    }
+
+    /**
+     *
+     * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
+     * @return ResultCustomMetaData with ResultCustomMetaDataField
+     */
+    public ResultCustomMetaData updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+        return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
     }
 }

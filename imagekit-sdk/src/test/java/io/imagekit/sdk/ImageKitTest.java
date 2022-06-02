@@ -3,17 +3,19 @@ package io.imagekit.sdk;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.constants.Version;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
+import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
-import io.imagekit.sdk.tasks.UrlGen;
 import io.imagekit.sdk.utils.Utils;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matcher;
+
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Matchers;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -626,5 +628,139 @@ public class ImageKitTest {
         assertEquals(Version.VERSION_CODE, matcher.group(2));
         assertFalse(matcher.group(3).trim().isEmpty());
         assertFalse(matcher.group(4).trim().isEmpty());
+    }
+
+    @Test
+    public void add_tags_expectedSuccessWith() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        tags.add("tag2");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        ResultTags result=new ResultTags();
+        result.setSuccessful(true);
+        result.setMessage("Added Tags SuccessFully.");
+        result.getResponseMetaData().setHttpStatusCode(200);
+        when(restClient.manageTags(tagsRequest, "addTags")).thenReturn(result);
+
+        ResultTags resultTags = SUT.addTags(tagsRequest);
+        assertTrue(resultTags.isSuccessful());
+        assertEquals(resultTags.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(result.getMessage(), "Added Tags SuccessFully.");
+    }
+
+    @Test
+    public void remove_tags_expectedSuccessWith() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        ResultTags result=new ResultTags();
+        result.setSuccessful(true);
+        result.setMessage("Removed Tags SuccessFully.");
+        result.getResponseMetaData().setHttpStatusCode(200);
+        when(restClient.manageTags(tagsRequest, "removeTags")).thenReturn(result);
+
+        ResultTags resultTags = SUT.removeTags(tagsRequest);
+        assertTrue(resultTags.isSuccessful());
+        assertEquals(resultTags.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(result.getMessage(), "Removed Tags SuccessFully.");
+    }
+
+    @Test
+    public void get_custom_metadata_fields_expectedSuccessWith() {
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
+        mockCustomMetaDataFieldSchemaObject.setMinLength(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxLength(10);
+
+        ResultCustomMetaDataField mockResultCustomMetaDataField = new ResultCustomMetaDataField();
+        mockResultCustomMetaDataField.setId("id");
+        mockResultCustomMetaDataField.setName("name");
+        mockResultCustomMetaDataField.setLabel("label");
+        mockResultCustomMetaDataField.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        ResultCustomMetaData mockCustomMetaData=new ResultCustomMetaData();
+        mockCustomMetaData.setSuccessful(true);
+        mockCustomMetaData.setMessage("Fetched CustomMetaData SuccessFully.");
+        mockCustomMetaData.getResponseMetaData().setHttpStatusCode(200);
+        mockCustomMetaData.setResultCustomMetaDataFields(Collections.singletonList(mockResultCustomMetaDataField));
+
+        when(restClient.getCustomMetaDataFields()).thenReturn(mockCustomMetaData);
+
+        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
+        assertTrue(resultCustomMetaData.isSuccessful());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+        assertEquals(mockCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully.");
+        assertEquals(mockCustomMetaData.getResultCustomMetaDataFields(), Collections.singletonList(mockResultCustomMetaDataField));
+    }
+
+    @Test
+    public void createCustomMetaDataFields_successExpected() {
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setMinValue(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
+
+        CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+        customMetaDataFieldCreateRequest.setName("mockName");
+        customMetaDataFieldCreateRequest.setLabel("mockLabel");
+        customMetaDataFieldCreateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        ResultCustomMetaData mockResultCustomMetaData = new ResultCustomMetaData();
+        mockResultCustomMetaData.setSuccessful(true);
+        mockResultCustomMetaData.setMessage("CustomMetaData created...");
+        mockResultCustomMetaData.getResponseMetaData().setHttpStatusCode(200);
+
+        when(restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest)).thenReturn(mockResultCustomMetaData);
+
+        ResultCustomMetaData result=SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        assertThat(result.isSuccessful(),is(mockResultCustomMetaData.isSuccessful()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), mockResultCustomMetaData.getResponseMetaData().getHttpStatusCode());
+        assertEquals(result.getMessage(), mockResultCustomMetaData.getMessage());
+    }
+
+    @Test
+    public void deleteCustomMetaDataField_successExpected() {
+        Result mockResult=new Result();
+        mockResult.setSuccessful(true);
+        mockResult.getResponseMetaData().setHttpStatusCode(204);
+        when(restClient.deleteCustomMetaDataField(any(String.class))).thenReturn(mockResult);
+
+        Result result=SUT.deleteCustomMetaDataField("id");
+        assertThat(result.isSuccessful(),is(mockResult.isSuccessful()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
+
+    @Test
+    public void updateCustomMetaDataFields_successExpected() {
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setMinValue(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808d");
+        customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
+        customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        ResultCustomMetaData mockResultCustomMetaData = new ResultCustomMetaData();
+        mockResultCustomMetaData.setSuccessful(true);
+        mockResultCustomMetaData.setMessage("CustomMetaData updated...");
+        mockResultCustomMetaData.getResponseMetaData().setHttpStatusCode(200);
+
+        when(restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest)).thenReturn(mockResultCustomMetaData);
+
+        ResultCustomMetaData result=SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        assertThat(result.isSuccessful(),is(mockResultCustomMetaData.isSuccessful()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), mockResultCustomMetaData.getResponseMetaData().getHttpStatusCode());
+        assertEquals(result.getMessage(), mockResultCustomMetaData.getMessage());
     }
 }

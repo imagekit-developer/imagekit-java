@@ -481,6 +481,56 @@ System.out.println(result.getRaw());
 System.out.println("Map Response:");
 System.out.println(result.getMap());
 ```
+
+**9. Add tags**
+
+Add tags using the FileIds and tags which we want to add in request as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk)
+
+```java
+List<String> fileIds = new ArrayList<>();
+fileIds.add("FileId");
+List<String> tags = new ArrayList<>();
+tags.add("tag1");
+tags.add("tag2");
+ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "addTags");
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+```
+
+**9. Remove tags**
+
+Removed tags using the FileIds and tags which we want to remove from request as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
+
+```java
+List<String> fileIds = new ArrayList<>();
+fileIds.add("FileId");
+List<String> tags = new ArrayList<>();
+tags.add("tag1");
+ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "removeTags");
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+```
+
+**10. Get CustomMetaDataFields**
+
+fetches the metadata as per the
+[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
+
+```java
+ResultCustomMetaData result=ImageKit.getInstance().getCustomMetaDataFields();
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResultCustomMetaDataFields());
+```
+
 ## Utility functions
 
 We have included the following commonly used utility functions in this package.

@@ -1,18 +1,17 @@
 package io.imagekit.sdk.tasks;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -23,8 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
@@ -164,7 +161,7 @@ public class RestClientTest {
         FileCreateRequest fileCreateRequest=new FileCreateRequest("f06830ca9f1e3e90","demo.jpg");
         clientStub.setTimeoutException();
         Result result = SUT.upload(fileCreateRequest);
-        assertEquals(resp,result.getRaw());
+        assertEquals(resp,result.getResponseMetaData().getRaw());
     }
 
     @Test
@@ -323,7 +320,7 @@ public class RestClientTest {
         // Asserting endpoint sending to server
         assertEquals("https://api.imagekit.io/v1/files/598821f949c0a938d57563bd/details",SUT.request.url().toString());
         // Asserting mock response getting from server.
-        assertThat(resp, is(result.getRaw()));
+        assertThat(resp, is(result.getResponseMetaData().getRaw()));
     }
 
     @Test
@@ -368,7 +365,7 @@ public class RestClientTest {
         SUT.setClient(clientStub);
         ResultMetaData result = SUT.getFileMetaData("598821f949c0a938d57563bd");
         assertEquals("https://api.imagekit.io/v1/files/598821f949c0a938d57563bd/metadata",SUT.request.url().toString());
-        assertThat(resp, is(result.getRaw()));
+        assertThat(resp, is(result.getResponseMetaData().getRaw()));
     }
 
     @Test
@@ -414,7 +411,7 @@ public class RestClientTest {
         ResultMetaData result = SUT.getRemoteFileMetaData("http://remote_url.example.com/demo.png");
 
         assertEquals("https://api.imagekit.io/v1/metadata?url=http://remote_url.example.com/demo.png",SUT.request.url().toString());
-        assertThat(resp, is(result.getRaw()));
+        assertThat(resp, is(result.getResponseMetaData().getRaw()));
     }
 
     @Test
@@ -494,7 +491,7 @@ public class RestClientTest {
         SUT.setClient(clientStub);
         ResultFileDelete result = SUT.bulkDeleteFiles(fileIds);
         assertThat("File deleted successfully!", is(result.getMessage()));
-        assertThat(resp,is(result.getRaw()));
+        assertThat(resp,is(result.getResponseMetaData().getRaw()));
     }
 
     @Test
@@ -517,7 +514,7 @@ public class RestClientTest {
         SUT.setClient(clientStub);
         ResultFileDelete result = SUT.bulkDeleteFiles(fileIds);
         assertThat("The requested file(s) does not exist.", is(result.getMessage()));
-        assertThat(resp,is(result.getRaw()));
+        assertThat(resp,is(result.getResponseMetaData().getRaw()));
     }
 
     @Test
@@ -602,6 +599,110 @@ public class RestClientTest {
         SUT.setClient(clientStub);
         ResultCacheStatus result = SUT.getPurgeCacheStatus("requestId");
         assertNotNull(result.getMessage());
+    }
+
+    @Test
+    public void add_tags() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","Tags added SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),200, "Tags added SuccessFully");
+        SUT.setClient(clientStub);
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        tags.add("tag2");
+        ResultTags result = SUT.manageTags(new TagsRequest(fileIds, tags), "addTags");
+        assertNotNull(result.getMessage());
+        assertEquals(result.getMessage(), "Tags added SuccessFully");
+        assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void remove_tags() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","Tags removed SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),200, "Tags removed SuccessFully");
+        SUT.setClient(clientStub);
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        ResultTags result = SUT.manageTags(new TagsRequest(fileIds, tags), "removeTags");
+        assertNotNull(result.getMessage());
+        assertEquals(result.getMessage(), "Tags removed SuccessFully");
+        assertTrue(result.isSuccessful());
+    }
+
+    @Test
+    public void getCustomMetaDataFields() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","Fetched CustomMetaData SuccessFully");
+        obj.addProperty("id", "id");
+        obj.addProperty("name", "name");
+        obj.addProperty("label", "label");
+
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(obj);
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(jsonArray.toString(),200, "ok");
+        SUT.setClient(clientStub);
+        ResultCustomMetaData resultCustomMetaData = SUT.getCustomMetaDataFields();
+        assertNotNull(resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getMessage(), "Fetched CustomMetaData SuccessFully");
+        assertTrue(resultCustomMetaData.isSuccessful());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
+    }
+
+    @Test
+    public void createCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData created SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                201, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+        ResultCustomMetaData resultCustomMetaData = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields",SUT.request.url().toString());
+        assertEquals("CustomMetaData created SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 201);
+    }
+
+    @Test
+    public void deleteCustomMetaDataField_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                204, "Ok");
+        SUT.setClient(clientStub);
+        Result result = SUT.deleteCustomMetaDataField("id");
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/id",SUT.request.url().toString());
+        assertThat("CustomMetaDataField deleted successfully!", is(result.getMessage()));
+        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
+
+    @Test
+    public void updateCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData edited SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                200, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("mockId");
+        ResultCustomMetaData resultCustomMetaData = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/mockId",SUT.request.url().toString());
+        assertEquals("CustomMetaData edited SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
     /**
