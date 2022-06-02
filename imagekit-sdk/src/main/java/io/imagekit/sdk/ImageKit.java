@@ -245,9 +245,36 @@ public final class ImageKit {
     /**
      *
      * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
-     * @return ResultCustomMetaData with ResultCustomMetaDataField
+     * @return Result class
      */
     public Result updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
         return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+    }
+
+    /**
+     *
+     * @param copyFolderRequest that contains sourceFolderPath, destinationPath, includeVersions
+     * @return Result class
+     */
+    public Result copyFolder(CopyFolderRequest copyFolderRequest) {
+        return restClient.copyFolder(copyFolderRequest);
+    }
+
+    /**
+     *
+     * @param moveFolderRequest that contains sourceFolderPath, destinationPath
+     * @return Result class
+     */
+    public Result moveFolder(MoveFolderRequest moveFolderRequest) {
+        return restClient.moveFolder(moveFolderRequest);
+    }
+
+    /**
+     *
+     * @param jobId
+     * @return a Result class
+     */
+    public Result getBulkJobStatus(String jobId) {
+        return restClient.getBulkJobStatus(jobId);
     }
 }

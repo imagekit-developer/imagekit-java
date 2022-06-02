@@ -1,17 +1,17 @@
 package io.imagekit.sampleapp;
 
 
-import com.google.gson.JsonObject;
-
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CopyFolderRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
@@ -32,7 +32,10 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-        uploadFromBytes();
+//        uploadFromBytes();
+//        getBulkJobStatus();
+        copyFolder();
+//        moveFolder();
 //        addTags();
 //        removeTags();
 //        createCustomMetaDataFields();
@@ -457,6 +460,43 @@ class App{
         Result result = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
         System.out.println(">> Edit CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response edit CustomMetaDataFields :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void copyFolder() {
+        CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
+        copyFolderRequest.setSourceFolderPath("/Gallery/sub_folder");
+        copyFolderRequest.setDestinationPath("/");
+        Result result = ImageKit.getInstance().copyFolder(copyFolderRequest);
+        System.out.println(">> Copy folder done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void moveFolder() {
+        MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
+        moveFolderRequest.setSourceFolderPath("/test");
+        moveFolderRequest.setDestinationPath("/Gallery");
+        Result result = ImageKit.getInstance().moveFolder(moveFolderRequest);
+        System.out.println(">>Move folder done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void getBulkJobStatus() {
+        String jobId = "629758a291fa57aff773d2c9";
+        Result result = ImageKit.getInstance().getBulkJobStatus(jobId);
+        System.out.println(">> Fetch Bulk job status done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getMap());

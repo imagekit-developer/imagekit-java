@@ -6,9 +6,11 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CopyFolderRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
@@ -497,6 +499,7 @@ public class RestClient {
             result = new Gson().fromJson(respBody, Result.class);
             if (response.code() == 200) {
                 result.setSuccessful(true);
+                result.setRaw(respBody);
                 result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());
             } else {
                 result.setSuccessful(false);
@@ -531,7 +534,7 @@ public class RestClient {
             if (response.code()==200){
                 respBody=response.body().string();
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(respBody);
+                result.setRaw(respBody);
                 result.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
             } else {
                 result.setSuccessful(false);
@@ -573,7 +576,7 @@ public class RestClient {
             result = new Gson().fromJson(responseBody, Result.class);
             if (response.code()==201){
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(respBody);
+                result.setRaw(respBody);
                 if (result.getMessage() == null) {
                     result.setMessage("CustomMetaData Created SuccessFully.");
                 }
@@ -611,6 +614,7 @@ public class RestClient {
                 respBody = response.body().string();
                 System.out.println("respBody:====> " + respBody);
                 result.setSuccessful(true);
+                result.setRaw(respBody);
                 result.setMessage("CustomMetaDataField deleted successfully!");
             }
             else if (response.code()==500) {
@@ -653,12 +657,120 @@ public class RestClient {
             result = new Gson().fromJson(responseBody, Result.class);
             if (response.code()==200){
                 result.setSuccessful(true);
-                result.getResponseMetaData().setRaw(respBody);
+                result.setRaw(respBody);
                 if (result.getMessage() == null) {
                     result.setMessage("CustomMetaData Edited SuccessFully.");
                 }
             } else {
                 result.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result copyFolder(CopyFolderRequest copyFolderRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFolderRequest));
+
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/bulkJobs/moveFolder")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==200){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Copy Folder successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result moveFolder(MoveFolderRequest moveFolderRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFolderRequest));
+
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/bulkJobs/moveFolder")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==200){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Move Folder successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result getBulkJobStatus(String jobId) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        String url=String.format(Locale.US,"https://api.imagekit.io/v1/bulkJobs/%s", jobId);
+
+        request=new Request.Builder()
+                .url(url)
+                .get()
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==200){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Fetched bulk Job status successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
