@@ -42,14 +42,6 @@ public class ResultCache {
         this.help = help;
     }
 
-    public Map<String,Object> getMap(){
-        if (null!=responseMetaData.getRaw()) {
-            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        return new HashMap<>();
-    }
-
     public String getRequestId() {
         return requestId;
     }

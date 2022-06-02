@@ -55,14 +55,6 @@ public class ResultList {
         this.responseMetaData = responseMetaData;
     }
 
-    public List<Map<String,Object>> getMap(){
-        if (null!=responseMetaData.getRaw()) {
-            return new Gson().fromJson(responseMetaData.getRaw(), new TypeToken<List<Map<String, Object>>>() {
-            }.getType());
-        }
-        return new ArrayList<Map<String,Object>>();
-    }
-
     public List<BaseFile> getResults() {
         return results;
     }

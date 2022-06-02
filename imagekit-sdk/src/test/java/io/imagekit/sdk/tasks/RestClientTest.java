@@ -52,6 +52,10 @@ public class RestClientTest {
 
         FileCreateRequest fileCreateRequest=new FileCreateRequest("f06830ca9f1e3e90","demo.jpg");
         fileCreateRequest.setPrivateFile(true);
+        fileCreateRequest.setOverwriteFile(true);
+        fileCreateRequest.setOverwriteAITags(true);
+        fileCreateRequest.setOverwriteTags(true);
+        fileCreateRequest.setOverwriteCustomMetadata(true);
         Result result = SUT.upload(fileCreateRequest);
         assertEquals(fileCreateRequest,ac.getValue());
     }

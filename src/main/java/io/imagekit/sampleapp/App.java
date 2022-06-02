@@ -1,6 +1,8 @@
 package io.imagekit.sampleapp;
 
 
+import com.google.gson.JsonObject;
+
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
@@ -30,11 +32,11 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-//        uploadFromBytes();
+        uploadFromBytes();
 //        addTags();
 //        removeTags();
 //        createCustomMetaDataFields();
-        updateCustomMetaDataFields();
+//        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296138e91fa57897758dc37");
 //        getCustomMetaDataFields();
 //
@@ -162,7 +164,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -176,7 +178,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
         return result;
     }
@@ -191,7 +193,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -206,7 +208,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -227,7 +229,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -241,7 +243,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -255,7 +257,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -269,7 +271,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -287,7 +289,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(resultList.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(resultList.getMap());
+        System.out.println(resultList.getResponseMetaData().getMap());
         System.out.println("\n\n");
         return resultList.getResults();
     }
@@ -326,7 +328,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -344,7 +346,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -354,8 +356,12 @@ class App{
         URL url = App.class.getClassLoader().getResource("sample1.jpg");
         File file=new File(url.getPath());
         byte[] bytes= Utils.fileToBytes(file);
-        FileCreateRequest fileCreateRequest =new FileCreateRequest(bytes, "sample_image.jpg");
+        FileCreateRequest fileCreateRequest =new FileCreateRequest(bytes, "sample_image_th.jpg");
         fileCreateRequest.setUseUniqueFileName(false);
+        fileCreateRequest.setOverwriteFile(true);
+        fileCreateRequest.setOverwriteAITags(true);
+        fileCreateRequest.setOverwriteTags(true);
+        fileCreateRequest.setOverwriteCustomMetadata(true);
         Result result = ImageKit.getInstance().upload(fileCreateRequest);
         System.out.println(">> Uploading done.");
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
@@ -363,7 +369,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -377,6 +383,8 @@ class App{
         ResultTags result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response add tags:"+Color.ANSI_RESET);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println(result);
         System.out.println("\n\n");
     }
@@ -390,6 +398,8 @@ class App{
         ResultTags result = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println(result);
         System.out.println("\n\n");
     }
@@ -398,6 +408,8 @@ class App{
         ResultCustomMetaData result = ImageKit.getInstance().getCustomMetaDataFields();
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println(result);
         System.out.println("\n\n");
     }
@@ -415,6 +427,8 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response create CustomMetaDataFields :"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
         System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(resultCustomMetaData.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -426,7 +440,7 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getMap());
+        System.out.println(result.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -445,6 +459,8 @@ class App{
         System.out.println(Color.ANSI_GREEN+">> Response edit CustomMetaDataFields :"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
         System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(resultCustomMetaData.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 }

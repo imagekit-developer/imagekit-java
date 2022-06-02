@@ -1,6 +1,8 @@
 package io.imagekit.sdk.tasks;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.utils.Utils;
@@ -51,6 +53,18 @@ public class MultipartBuilder {
         }
         if (null!=fileCreateRequest.responseFields) {
             builder.addFormDataPart("responseFields", Utils.listToString(fileCreateRequest.responseFields));
+        }
+        if (fileCreateRequest.overwriteFile) {
+            builder.addFormDataPart("overwriteFile", "true");
+        }
+        if (fileCreateRequest.overwriteAITags) {
+            builder.addFormDataPart("overwriteAITags", "true");
+        }
+        if (fileCreateRequest.overwriteTags) {
+            builder.addFormDataPart("overwriteTags", "true");
+        }
+        if (fileCreateRequest.overwriteCustomMetadata) {
+            builder.addFormDataPart("overwriteCustomMetadata", "true");
         }
         return builder.build();
     }

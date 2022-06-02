@@ -323,13 +323,17 @@ List<String> responseFields=new ArrayList<>();
 responseFields.add("tags");
 responseFields.add("customCoordinates");
 fileCreateRequest.setResponseFields(responseFields); // optional
+fileCreateRequest.setOverwriteFile(true); // optional
+fileCreateRequest.setOverwriteAITags(true); // optional
+fileCreateRequest.setOverwriteTags(true); // optional
+fileCreateRequest.setOverwriteCustomMetadata(true); // optional
 Result result = ImageKit.getInstance().upload(fileCreateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 If the upload is successful, `getMessage()` will be `None`, and the result will be an object of `Result` class that contains the same all the parameters received from ImageKit's servers and `isSuccessful()` will return true.
@@ -353,9 +357,9 @@ ResultList resultList=ImageKit.getInstance().getFileList(10,10);
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultList);
 System.out.println("Raw Response:");
-System.out.println(resultList.getRaw());
+System.out.println(resultList.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(resultList.getMap());
+System.out.println(resultList.getResponseMetaData().getMap());
 ```
 
 **2. Get File Details**
@@ -368,9 +372,9 @@ Result result=ImageKit.getInstance().getFileDetail(fileId);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **3. Get File Metadata**
@@ -382,9 +386,9 @@ ResultMetaData result=ImageKit.getInstance().getFileMetadata(fileId);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 Another way to get metadata from a remote file URL as per the [API documentation here](https://docs.imagekit.io/api-reference/metadata-api/get-image-metadata-from-remote-url). This file should be accessible over the ImageKit.io URL-endpoint.
@@ -394,9 +398,9 @@ ResultMetaData result=ImageKit.getInstance().getRemoteFileMetadata(url);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **4. Update File Details**
@@ -413,9 +417,9 @@ Result result=ImageKit.getInstance().updateFileDetail(fileUpdateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 **5. Delete File**
 
@@ -428,9 +432,9 @@ Result result=ImageKit.getInstance().deleteFile(fileId);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 **6. Delete files (bulk)**
 
@@ -447,9 +451,9 @@ ResultFileDelete result=ImageKit.getInstance().bulkDeleteFiles(fileIds);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **7. Purge Cache**
@@ -461,9 +465,9 @@ ResultCache result=ImageKit.getInstance().purgeCache("https://ik.imagekit.io/ima
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **8. Purge Cache Status**
@@ -477,9 +481,9 @@ ResultCacheStatus result=ImageKit.getInstance().getPurgeCacheStatus(requestId);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getMap());
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **9. Add tags**
@@ -497,7 +501,9 @@ ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileI
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **10. Remove tags**
@@ -514,7 +520,9 @@ ResultCacheStatus result=ImageKit.getInstance().manageTags(new TagsRequest(fileI
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **11. Get CustomMetaDataFields**
@@ -527,7 +535,9 @@ ResultCustomMetaData result=ImageKit.getInstance().getCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
@@ -549,7 +559,9 @@ ResultCustomMetaData result=ImageKit.getInstance().createCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
@@ -564,7 +576,9 @@ ResultCustomMetaData result=ImageKit.getInstance().deleteCustomMetaDataField("id
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 ```
 
 **14. Edit CustomMetaDataFields**
@@ -586,7 +600,9 @@ ResultCustomMetaData result=ImageKit.getInstance().updateCustomMetaDataFields();
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
