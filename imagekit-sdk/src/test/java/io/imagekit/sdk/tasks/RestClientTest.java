@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
+import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.TagsRequest;
@@ -668,7 +669,6 @@ public class RestClientTest {
         ResultCustomMetaData resultCustomMetaData = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
 
         assertEquals("https://api.imagekit.io/v1/customMetadataFields",SUT.request.url().toString());
-        System.out.println("resultCustomMetaData.getMessage():-->" + resultCustomMetaData.getMessage());
         assertEquals("CustomMetaData created SuccessFully", resultCustomMetaData.getMessage());
         assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 201);
     }
@@ -685,6 +685,24 @@ public class RestClientTest {
         assertEquals("https://api.imagekit.io/v1/customMetadataFields/id",SUT.request.url().toString());
         assertThat("CustomMetaDataField deleted successfully!", is(result.getMessage()));
         assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+    }
+
+    @Test
+    public void updateCustomMetaDataFields_valid_request_expect_success() {
+        JsonObject obj=new JsonObject();
+        obj.addProperty("message","CustomMetaData edited SuccessFully");
+
+        OkHttpClientStub clientStub= new OkHttpClientStub(obj.toString(),
+                200, "ok");
+        SUT.setClient(clientStub);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("mockId");
+        ResultCustomMetaData resultCustomMetaData = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+
+        assertEquals("https://api.imagekit.io/v1/customMetadataFields/mockId",SUT.request.url().toString());
+        assertEquals("CustomMetaData edited SuccessFully", resultCustomMetaData.getMessage());
+        assertEquals(resultCustomMetaData.getResponseMetaData().getHttpStatusCode(), 200);
     }
 
     /**

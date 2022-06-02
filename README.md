@@ -517,6 +517,20 @@ System.out.println("Raw Response:");
 System.out.println(result.getResponseMetaData.getRaw());
 ```
 
+**10. Get CustomMetaDataFields**
+
+fetches the metadata as per the
+[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
+
+```java
+ResultCustomMetaData result=ImageKit.getInstance().getCustomMetaDataFields();
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData.getRaw());
+System.out.println(result.getResultCustomMetaDataFields());
+```
+
 ## Utility functions
 
 We have included the following commonly used utility functions in this package.

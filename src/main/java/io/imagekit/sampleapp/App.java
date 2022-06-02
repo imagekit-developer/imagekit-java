@@ -411,8 +411,8 @@ class App{
         customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
         ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
-        System.out.println(">> remove Tags done.");
-        System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(">> Create CustomMetaDataFields done.");
+        System.out.println(Color.ANSI_GREEN+">> Response create CustomMetaDataFields :"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
         System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
         System.out.println("\n\n");
@@ -432,16 +432,17 @@ class App{
 
     private static void updateCustomMetaDataFields() {
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-        schemaObject.setMinValue(0);
-        schemaObject.setMaxValue(100);
+        schemaObject.setMinValue(10);
+        schemaObject.setMaxValue(200);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-        customMetaDataFieldUpdateRequest.setId("62975a6391fa57b6df7400e0");
-        customMetaDataFieldUpdateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
+        customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808d");
+        customMetaDataFieldUpdateRequest.setLabel("prices");
+        customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
         ResultCustomMetaData resultCustomMetaData = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
-        System.out.println(">> remove Tags done.");
-        System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(">> Edit CustomMetaDataFields done.");
+        System.out.println(Color.ANSI_GREEN+">> Response edit CustomMetaDataFields :"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaData);
         System.out.println(resultCustomMetaData.getResultCustomMetaDataFields());
         System.out.println("\n\n");

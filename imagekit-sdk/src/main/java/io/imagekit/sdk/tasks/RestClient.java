@@ -642,25 +642,23 @@ public class RestClient {
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/customMetadataFields/%s",customMetaDataFieldUpdateRequest.getId());
         request=new Request.Builder()
                 .url(url)
-                .post(requestBody)
+                .patch(requestBody)
                 .headers(Headers.of(headers))
                 .build();
 
         try {
             Response response = client.newCall(request).execute();
             String respBody=response.body().string();
-            System.out.println("respBody:==>" + response);
-            System.out.println("respBody:==>" + respBody);
             JsonElement responseBody = new JsonParser().parse(respBody);
             resultCustomMetaData = new Gson().fromJson(responseBody, ResultCustomMetaData.class);
-            if (response.code()==201){
+            if (response.code()==200){
                 ResultCustomMetaDataField requests = new Gson().fromJson(respBody, ResultCustomMetaDataField.class);
                 List<ResultCustomMetaDataField> resultCustomMetaDataFields = Collections.singletonList(requests);
                 resultCustomMetaData.setResultCustomMetaDataFields(resultCustomMetaDataFields);
                 resultCustomMetaData.setSuccessful(true);
                 resultCustomMetaData.getResponseMetaData().setRaw(respBody);
                 if (resultCustomMetaData.getMessage() == null) {
-                    resultCustomMetaData.setMessage("CustomMetaData Created SuccessFully.");
+                    resultCustomMetaData.setMessage("CustomMetaData Edited SuccessFully.");
                 }
             } else {
                 resultCustomMetaData.setSuccessful(false);
