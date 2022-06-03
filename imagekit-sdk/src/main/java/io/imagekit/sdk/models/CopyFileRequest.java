@@ -1,16 +1,16 @@
 package io.imagekit.sdk.models;
 
-public class CopyFolderRequest {
-    public String sourceFolderPath;
+public class CopyFileRequest {
+    public String sourceFilePath;
     public String destinationPath;
     public Boolean includeVersions;
 
-    public String getSourceFolderPath() {
-        return sourceFolderPath;
+    public String getSourceFilePath() {
+        return sourceFilePath;
     }
 
-    public void setSourceFolderPath(String sourceFolderPath) {
-        this.sourceFolderPath = sourceFolderPath;
+    public void setSourceFilePath(String sourceFilePath) {
+        this.sourceFilePath = sourceFilePath;
     }
 
     public String getDestinationPath() {
@@ -31,8 +31,8 @@ public class CopyFolderRequest {
 
     @Override
     public String toString() {
-        return "CopyFolderRequest{" +
-                "sourceFolderPath=" + sourceFolderPath +
+        return "CopyFileRequest{" +
+                "sourceFilePath=" + sourceFilePath +
                 ", destinationPath=" + destinationPath +
                 ", includeVersions=" + includeVersions +
                 '}';

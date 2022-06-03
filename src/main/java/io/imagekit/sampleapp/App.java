@@ -4,14 +4,20 @@ package io.imagekit.sampleapp;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CopyFileRequest;
 import io.imagekit.sdk.models.CopyFolderRequest;
+import io.imagekit.sdk.models.CreateFolderRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
+import io.imagekit.sdk.models.DeleteFileVersionRequest;
+import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.MoveFileRequest;
 import io.imagekit.sdk.models.MoveFolderRequest;
+import io.imagekit.sdk.models.RenameFileRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
@@ -34,7 +40,15 @@ class App{
 //        uploadFromBase64();
 //        uploadFromBytes();
 //        getBulkJobStatus();
-        copyFolder();
+//        deleteFileVersion();
+//        getFileVersions();
+        getFileVersionDetails();
+//        copyFile();
+//        moveFile();
+//        renameFile();
+//        createFolder();
+//        deleteFolder();
+//        copyFolder();
 //        moveFolder();
 //        addTags();
 //        removeTags();
@@ -466,6 +480,86 @@ class App{
         System.out.println("\n\n");
     }
 
+    private static void deleteFileVersion() {
+        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+        deleteFileVersionRequest.setFileId("6299ae01f8b34e6009e32ef3");
+        deleteFileVersionRequest.setVersionId("6299ae01f8b34e6009e32ef3");
+        Result result = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
+        System.out.println(">> Copy file done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Copy File :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void copyFile() {
+        CopyFileRequest copyFileRequest = new CopyFileRequest();
+        copyFileRequest.setSourceFilePath("/sample_imag1.jpg");
+        copyFileRequest.setDestinationPath("/New_Folder/");
+        copyFileRequest.setIncludeVersions(true);
+        Result result = ImageKit.getInstance().copyFile(copyFileRequest);
+        System.out.println(">> Copy file done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Copy File :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void moveFile() {
+        MoveFileRequest moveFileRequest = new MoveFileRequest();
+        moveFileRequest.setSourceFilePath("/sample_imag1.jpg");
+        moveFileRequest.setDestinationPath("/New_Folder/");
+        Result result = ImageKit.getInstance().moveFile(moveFileRequest);
+        System.out.println(">> Move File done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Move File :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void renameFile() {
+        RenameFileRequest renameFileRequest = new RenameFileRequest();
+        renameFileRequest.setFilePath("/sample_image.jpg");
+        renameFileRequest.setNewFileName("sample_image1.jpg");
+        renameFileRequest.setPurgeCache(true);
+        Result result = ImageKit.getInstance().renameFile(renameFileRequest);
+        System.out.println(">> Rename file done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Rename File :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void createFolder() {
+        CreateFolderRequest createFolderRequest = new CreateFolderRequest();
+        createFolderRequest.setFolderName("test1");
+        createFolderRequest.setParentFolderPath("/New_Folder");
+        Result result = ImageKit.getInstance().createFolder(createFolderRequest);
+        System.out.println(">> Create folder done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Create Folder :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void deleteFolder() {
+        String folderPath="/New_Folder";
+        DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
+        deleteFolderRequest.setFolderPath(folderPath);
+        Result result = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
+        System.out.println(">> Delete folder done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Delete Folder :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
     private static void copyFolder() {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/Gallery/sub_folder");
@@ -497,6 +591,29 @@ class App{
         Result result = ImageKit.getInstance().getBulkJobStatus(jobId);
         System.out.println(">> Fetch Bulk job status done.");
         System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println("\n\n");
+    }
+
+    private static void getFileVersions() {
+        String fileId = "6299ae01f8b34e6009e32ef3";
+        Result result = ImageKit.getInstance().getFileVersions(fileId);
+        System.out.println(">> Fetch Get file versions done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Get file versions :"+Color.ANSI_RESET);
+        System.out.println(result);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getList());
+        System.out.println("\n\n");
+    }
+
+    private static void getFileVersionDetails() {
+        String fileId = "6299ae01f8b34e6009e32ef3";
+        String versionId = "6299ae01f8b34e6009e32ef3";
+        Result result = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
+        System.out.println(">> Fetch Get file versions details done.");
+        System.out.println(Color.ANSI_GREEN+">> Response Get file versions details :"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getMap());

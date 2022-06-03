@@ -6,13 +6,19 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CopyFileRequest;
 import io.imagekit.sdk.models.CopyFolderRequest;
+import io.imagekit.sdk.models.CreateFolderRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
+import io.imagekit.sdk.models.DeleteFileVersionRequest;
+import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.MoveFileRequest;
 import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.RenameFileRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
@@ -671,6 +677,226 @@ public class RestClient {
         return result;
     }
 
+    public Result deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions/%s", deleteFileVersionRequest.getFileId(), deleteFileVersionRequest.getVersionId());
+        System.out.println("url:=> " + url);
+        request=new Request.Builder()
+                .url(url)
+                .delete()
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println("response:=> " + response);
+            String respBody="";
+            if (response.code()==204){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("File Copied SuccessFully.");
+                }
+            } else {
+                String resp=response.body().string();
+                result.setSuccessful(false);
+                result.setRaw(resp);
+                result.getResponseMetaData().setRaw(resp);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result copyFile(CopyFileRequest copyFileRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFileRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/files/copy")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==204){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("File Copied SuccessFully.");
+                }
+            } else {
+                result.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result moveFile(MoveFileRequest moveFileRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFileRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/files/move")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==204){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("File Moved SuccessFully.");
+                }
+            } else {
+                result.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result renameFile(RenameFileRequest renameFileRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(renameFileRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/files/rename")
+                .put(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println("response:==> "+ response);
+            String respBody=response.body().string();
+            if (response.code()==200){
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("File Renamed SuccessFully.");
+                }
+            } else {
+                result.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result createFolder(CreateFolderRequest createFolderRequest) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(createFolderRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/folder/")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==201){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                if (result.getMessage() == null) {
+                    result.setMessage("Folder Created SuccessFully.");
+                }
+            } else {
+                result.setSuccessful(false);
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result deleteFolder(DeleteFolderRequest deleteFolderRequest) {
+        Result result = new Result();
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(deleteFolderRequest));
+        System.out.println("requestBody:==> " + new Gson().toJson(deleteFolderRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/folder/")
+                .delete(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            String respBody="";
+            if (response.code()==204){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Delete Folder successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public Result copyFolder(CopyFolderRequest copyFolderRequest) {
         Result result = new Result();
 
@@ -768,6 +994,86 @@ public class RestClient {
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 result.setMessage(response.message().equals("") ? "Fetched bulk Job status successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result getFileVersions(String fileId) {
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions", fileId);
+
+        request=new Request.Builder()
+                .url(url)
+                .get()
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println("response:==> " + response);
+            String respBody="";
+            if (response.code()==200){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Fetched File versions successFully" : response.message());
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public Result getFileVersionDetails(String fileId, String versionId) {
+        if (fileId == null) {
+            throw new RuntimeException("Error: FileId not provided.");
+        }
+        if (versionId == null) {
+            throw new RuntimeException("Error: versionId not provided.");
+        }
+        Result result = new Result();
+
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions/%s", fileId, versionId);
+
+        request=new Request.Builder()
+                .url(url)
+                .get()
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+            System.out.println("response:==> " + response);
+            String respBody="";
+            if (response.code()==200){
+                respBody=response.body().string();
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage(response.message().equals("") ? "Fetched file version details successFully" : response.message());
             } else {
                 result.setSuccessful(false);
                 result.setMessage("Error: Internal server error.");

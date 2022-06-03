@@ -1,15 +1,15 @@
 package io.imagekit.sdk.models;
 
-public class MoveFolderRequest {
-    public String sourceFolderPath;
+public class MoveFileRequest {
+    public String sourceFilePath;
     public String destinationPath;
 
-    public String getSourceFolderPath() {
-        return sourceFolderPath;
+    public String getSourceFilePath() {
+        return sourceFilePath;
     }
 
-    public void setSourceFolderPath(String sourceFolderPath) {
-        this.sourceFolderPath = sourceFolderPath;
+    public void setSourceFilePath(String sourceFilePath) {
+        this.sourceFilePath = sourceFilePath;
     }
 
     public String getDestinationPath() {
@@ -22,8 +22,8 @@ public class MoveFolderRequest {
 
     @Override
     public String toString() {
-        return "MoveFolderRequest{" +
-                "sourceFolderPath=" + sourceFolderPath +
+        return "MoveFileRequest{" +
+                "sourceFilePath=" + sourceFilePath +
                 ", destinationPath=" + destinationPath +
                 '}';
     }

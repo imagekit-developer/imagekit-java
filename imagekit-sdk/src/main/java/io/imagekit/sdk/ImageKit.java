@@ -253,6 +253,60 @@ public final class ImageKit {
 
     /**
      *
+     * @param deleteFileVersionRequest class
+     * @return Result class
+     */
+    public Result deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
+        return restClient.deleteFileVersion(deleteFileVersionRequest);
+    }
+
+    /**
+     *
+     * @param copyFileRequest class
+     * @return Result class
+     */
+    public Result copyFile(CopyFileRequest copyFileRequest) {
+        return restClient.copyFile(copyFileRequest);
+    }
+
+    /**
+     *
+     * @param moveFileRequest class
+     * @return Result class
+     */
+    public Result moveFile(MoveFileRequest moveFileRequest) {
+        return restClient.moveFile(moveFileRequest);
+    }
+
+    /**
+     *
+     * @param renameFileRequest class
+     * @return Result class
+     */
+    public Result renameFile(RenameFileRequest renameFileRequest) {
+        return restClient.renameFile(renameFileRequest);
+    }
+
+    /**
+     *
+     * @param createFolderRequest which contains folderPath that is full path to the folder you want to delete
+     * @return Result class
+     */
+    public Result createFolder(CreateFolderRequest createFolderRequest) {
+        return restClient.createFolder(createFolderRequest);
+    }
+
+    /**
+     *
+     * @param deleteFolderRequest which contains folderPath that is full path to the folder you want to delete
+     * @return Result class
+     */
+    public Result deleteFolder(DeleteFolderRequest deleteFolderRequest) {
+        return restClient.deleteFolder(deleteFolderRequest);
+    }
+
+    /**
+     *
      * @param copyFolderRequest that contains sourceFolderPath, destinationPath, includeVersions
      * @return Result class
      */
@@ -276,5 +330,23 @@ public final class ImageKit {
      */
     public Result getBulkJobStatus(String jobId) {
         return restClient.getBulkJobStatus(jobId);
+    }
+
+    /**
+     *
+     * @param fileId
+     * @return a Result class
+     */
+    public Result getFileVersions(String fileId) {
+        return restClient.getFileVersions(fileId);
+    }
+
+    /**
+     *
+     * @param fileId & versionId
+     * @return a Result class
+     */
+    public Result getFileVersionDetails(String fileId, String versionId) {
+        return restClient.getFileVersionDetails(fileId, versionId);
     }
 }
