@@ -3,6 +3,7 @@ package io.imagekit.sampleapp;
 
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.models.AITagsRequest;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CopyFileRequest;
 import io.imagekit.sdk.models.CopyFolderRequest;
@@ -42,7 +43,7 @@ class App{
 //        getBulkJobStatus();
 //        deleteFileVersion();
 //        getFileVersions();
-        getFileVersionDetails();
+//        getFileVersionDetails();
 //        copyFile();
 //        moveFile();
 //        renameFile();
@@ -52,6 +53,7 @@ class App{
 //        moveFolder();
 //        addTags();
 //        removeTags();
+        removeAITags();
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("62988431cd3d7878e486ccad");
@@ -418,6 +420,23 @@ class App{
         Result result = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response remove tags:"+Color.ANSI_RESET);
+        System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
+        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(result);
+        System.out.println("\n\n");
+    }
+
+    private static void removeAITags() {
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("6299fe884af1071996cc62eb");
+        List<String> aiTags = new ArrayList<>();
+        aiTags.add("Female");
+        AITagsRequest aiTagsRequest =new AITagsRequest();
+        aiTagsRequest.setFileIds(fileIds);
+        aiTagsRequest.setAITags(aiTags);
+        Result result = ImageKit.getInstance().removeAITags(aiTagsRequest);
+        System.out.println(">> remove Tags done.");
+        System.out.println(Color.ANSI_GREEN+">> Response remove aiTags:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getMap());
         System.out.println(result);

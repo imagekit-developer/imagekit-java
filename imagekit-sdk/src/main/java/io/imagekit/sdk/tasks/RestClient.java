@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.models.AITagsRequest;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CopyFileRequest;
 import io.imagekit.sdk.models.CopyFolderRequest;
@@ -519,6 +520,42 @@ public class RestClient {
         return result;
     }
 
+    public Result removeAITags(AITagsRequest aiTagsRequest) {
+        Result result = new Result();
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+
+        RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(aiTagsRequest));
+        request=new Request.Builder()
+                .url("https://api.imagekit.io/v1/files/removeAITags")
+                .post(requestBody)
+                .headers(Headers.of(headers))
+                .build();
+
+        try {
+            Response response = client.newCall(request).execute();
+
+            String respBody = response.body().string();
+            result = new Gson().fromJson(respBody, Result.class);
+            if (response.code() == 200) {
+                result.setSuccessful(true);
+                result.setRaw(respBody);
+                result.setMessage("Removed AITags SuccessFully.");
+            } else {
+                result.setSuccessful(false);
+                result.setMessage("Error: Internal server error.");
+            }
+            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
     public Result getCustomMetaDataFields() {
         Result result = new Result();
 
@@ -614,11 +651,9 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:===> " + response);
             String respBody="";
             if (response.code()==204){
                 respBody = response.body().string();
-                System.out.println("respBody:====> " + respBody);
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 result.setMessage("CustomMetaDataField deleted successfully!");
@@ -696,7 +731,6 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:=> " + response);
             String respBody="";
             if (response.code()==204){
                 respBody=response.body().string();
@@ -808,7 +842,6 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:==> "+ response);
             String respBody=response.body().string();
             if (response.code()==200){
                 result.setSuccessful(true);
@@ -1024,7 +1057,6 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:==> " + response);
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
@@ -1067,7 +1099,6 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:==> " + response);
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();

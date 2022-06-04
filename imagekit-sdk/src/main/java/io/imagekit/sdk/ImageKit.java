@@ -209,6 +209,15 @@ public final class ImageKit {
 
     /**
      *
+     * @param aiTagsRequest is a object which contains fileIds and tags as a parameters
+     * @return ArrayList of String
+     */
+    public Result removeAITags(AITagsRequest aiTagsRequest){
+        return restClient.removeAITags(aiTagsRequest);
+    }
+
+    /**
+     *
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
