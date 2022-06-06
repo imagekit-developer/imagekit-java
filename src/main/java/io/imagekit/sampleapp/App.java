@@ -41,7 +41,7 @@ class App{
 //        uploadFromBase64();
 //        uploadFromBytes();
 //        getBulkJobStatus();
-//        deleteFileVersion();
+        deleteFileVersion();
 //        getFileVersions();
 //        getFileVersionDetails();
 //        copyFile();
@@ -53,7 +53,7 @@ class App{
 //        moveFolder();
 //        addTags();
 //        removeTags();
-        removeAITags();
+//        removeAITags();
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("62988431cd3d7878e486ccad");
@@ -501,11 +501,11 @@ class App{
 
     private static void deleteFileVersion() {
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-        deleteFileVersionRequest.setFileId("6299ae01f8b34e6009e32ef3");
-        deleteFileVersionRequest.setVersionId("6299ae01f8b34e6009e32ef3");
+        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+        deleteFileVersionRequest.setVersionId("629d91878482bae8bed177f2");
         Result result = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
-        System.out.println(">> Copy file done.");
-        System.out.println(Color.ANSI_GREEN+">> Response Copy File :"+Color.ANSI_RESET);
+        System.out.println(">> delete file version done.");
+        System.out.println(Color.ANSI_GREEN+">> Response delete File version :"+Color.ANSI_RESET);
         System.out.println(result);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(result.getResponseMetaData().getMap());

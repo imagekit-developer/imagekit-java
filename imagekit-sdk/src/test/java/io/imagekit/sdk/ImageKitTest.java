@@ -13,10 +13,15 @@ import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.utils.Utils;
+import okhttp3.HttpUrl;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -34,7 +39,7 @@ public class ImageKitTest {
     public void setUp() throws Exception {
         SUT=ImageKit.getInstance();
         SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
-        restClient =mock(RestClient.class);
+        restClient = new RestClient(SUT);
         SUT.setRestClient(restClient);
     }
 
@@ -631,7 +636,8 @@ public class ImageKitTest {
     }
 
     @Test
-    public void add_tags_expectedSuccessWith() {
+    public void add_tags_expectedSuccessWith() throws IOException, InterruptedException {
+
         List<String> fileIds = new ArrayList<>();
         fileIds.add("62958deef33aa80bdadf7533");
         List<String> tags = new ArrayList<>();
@@ -640,16 +646,16 @@ public class ImageKitTest {
 
         TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
 
-        Result mockResult=new Result();
-        mockResult.setSuccessful(true);
-        mockResult.setMessage("Added Tags SuccessFully.");
-        mockResult.getResponseMetaData().setHttpStatusCode(200);
-        when(restClient.manageTags(tagsRequest, "addTags")).thenReturn(mockResult);
-
-        Result result = SUT.addTags(tagsRequest);
-        assertTrue(result.isSuccessful());
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 200);
-        assertEquals(mockResult.getMessage(), "Added Tags SuccessFully.");
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.addTags(tagsRequest);
+        RecordedRequest request1 = server.takeRequest();
+        assertEquals("application/json; charset=utf-8", request1.getHeader("Content-Type"));
     }
 
     @Test
