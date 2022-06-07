@@ -30,6 +30,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.google.gson.Gson;
+
 public class ImageKitTest {
     private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
 
@@ -654,8 +656,14 @@ public class ImageKitTest {
         config.setUrlEndpoint(String.valueOf(baseUrl));
         SUT.setConfig(config);
         SUT.addTags(tagsRequest);
-        RecordedRequest request1 = server.takeRequest();
-        assertEquals("application/json; charset=utf-8", request1.getHeader("Content-Type"));
+        RecordedRequest request = server.takeRequest();
+
+        String tagsRequestJson = new Gson().toJson(tagsRequest);
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(tagsRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
     }
 
     @Test
