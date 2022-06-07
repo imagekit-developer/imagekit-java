@@ -2,13 +2,21 @@ package io.imagekit.sdk;
 
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.constants.Version;
+import io.imagekit.sdk.models.AITagsRequest;
 import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.CopyFileRequest;
+import io.imagekit.sdk.models.CopyFolderRequest;
+import io.imagekit.sdk.models.CreateFolderRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
+import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.MoveFileRequest;
+import io.imagekit.sdk.models.MoveFolderRequest;
+import io.imagekit.sdk.models.RenameFileRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.RestClient;
@@ -667,7 +675,8 @@ public class ImageKitTest {
     }
 
     @Test
-    public void remove_tags_expectedSuccessWith() {
+    public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException {
+
         List<String> fileIds = new ArrayList<>();
         fileIds.add("62958deef33aa80bdadf7533");
         List<String> tags = new ArrayList<>();
@@ -675,41 +684,83 @@ public class ImageKitTest {
 
         TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
 
-        Result mockResult=new Result();
-        mockResult.setSuccessful(true);
-        mockResult.setMessage("Removed Tags SuccessFully.");
-        mockResult.getResponseMetaData().setHttpStatusCode(200);
-        when(restClient.manageTags(tagsRequest, "removeTags")).thenReturn(mockResult);
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.removeTags(tagsRequest);
+        RecordedRequest request = server.takeRequest();
 
-        Result result = SUT.removeTags(tagsRequest);
-        assertTrue(result.isSuccessful());
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 200);
-        assertEquals(mockResult.getMessage(), "Removed Tags SuccessFully.");
+        String tagsRequestJson = "{\"fileIds\":[\"62958deef33aa80bdadf7533\"],\"tags\":[\"tag1\"]}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(tagsRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
     }
 
     @Test
-    public void get_custom_metadata_fields_expectedSuccessWith() {
-        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
-        mockCustomMetaDataFieldSchemaObject.setDefaultValue("defaultValue");
-        mockCustomMetaDataFieldSchemaObject.setMinLength(10);
-        mockCustomMetaDataFieldSchemaObject.setMaxLength(10);
+    public void get_custom_metadata_fields_expectedSuccessWith() throws IOException, InterruptedException {
 
-        Result mockResult=new Result();
-        mockResult.setSuccessful(true);
-        mockResult.setMessage("Fetched CustomMetaData SuccessFully.");
-        mockResult.getResponseMetaData().setHttpStatusCode(200);
-
-        when(restClient.getCustomMetaDataFields()).thenReturn(mockResult);
-
-        Result result = SUT.getCustomMetaDataFields();
-        assertTrue(result.isSuccessful());
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 200);
-        assertEquals(mockResult.getMessage(), "Fetched CustomMetaData SuccessFully.");
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("[\n" +
+                "    {\n" +
+                "        \"id\": \"6291f00890ba008cc27f64d1\",\n" +
+                "        \"name\": \"price\",\n" +
+                "        \"label\": \"Amount\",\n" +
+                "        \"schema\": {\n" +
+                "            \"minValue\": 10,\n" +
+                "            \"maxValue\": 200,\n" +
+                "            \"type\": \"Number\"\n" +
+                "        }\n" +
+                "    },\n" +
+                "    {\n" +
+                "        \"id\": \"6296f91191fa57ccc36b15cf\",\n" +
+                "        \"name\": \"Amount2\",\n" +
+                "        \"label\": \"Amouunt\",\n" +
+                "        \"schema\": {\n" +
+                "            \"type\": \"Number\",\n" +
+                "            \"minValue\": 10,\n" +
+                "            \"maxValue\": 1000\n" +
+                "        }\n" +
+                "    }\n" +
+                "]"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.getCustomMetaDataFields();
+        RecordedRequest request = server.takeRequest();
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
     }
 
     @Test
-    public void createCustomMetaDataFields_successExpected() {
+    public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"id\": \"629f2e2f7eb0fe2eb25f9988\",\n" +
+                "    \"name\": \"test1\",\n" +
+                "    \"label\": \"test1\",\n" +
+                "    \"schema\": {\n" +
+                "        \"type\": \"Number\",\n" +
+                "        \"isValueRequired\": false,\n" +
+                "        \"minValue\": 10,\n" +
+                "        \"maxValue\": 1000\n" +
+                "    }\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+
         CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
         mockCustomMetaDataFieldSchemaObject.setMinValue(10);
@@ -720,53 +771,455 @@ public class ImageKitTest {
         customMetaDataFieldCreateRequest.setLabel("mockLabel");
         customMetaDataFieldCreateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        Result mockResult = new Result();
-        mockResult.setSuccessful(true);
-        mockResult.setMessage("CustomMetaData created...");
-        mockResult.getResponseMetaData().setHttpStatusCode(200);
+        SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        RecordedRequest request = server.takeRequest();
 
-        when(restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest)).thenReturn(mockResult);
-
-        Result result=SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
-        assertThat(result.isSuccessful(),is(mockResult.isSuccessful()));
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), mockResult.getResponseMetaData().getHttpStatusCode());
-        assertEquals(result.getMessage(), mockResult.getMessage());
+        String customMetaDataFieldCreateRequestJson = "{\"name\":\"mockName\",\"label\":\"mockLabel\",\"schema\":{\"type\":\"Number\",\"minValue\":10,\"maxValue\":100}}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
     }
 
     @Test
-    public void deleteCustomMetaDataField_successExpected() {
-        Result mockResult=new Result();
-        mockResult.setSuccessful(true);
-        mockResult.getResponseMetaData().setHttpStatusCode(204);
-        when(restClient.deleteCustomMetaDataField(any(String.class))).thenReturn(mockResult);
+    public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(""));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
 
-        Result result=SUT.deleteCustomMetaDataField("id");
-        assertThat(result.isSuccessful(),is(mockResult.isSuccessful()));
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), 204);
+        SUT.deleteCustomMetaDataField("629f2e2f7eb0fe2eb25f9988");
+        RecordedRequest request = server.takeRequest();
+
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("DELETE /629f2e2f7eb0fe2eb25f9988 HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl.toString().concat("629f2e2f7eb0fe2eb25f9988"),  request.getRequestUrl().toString());
     }
 
     @Test
-    public void updateCustomMetaDataFields_successExpected() {
+    public void updateCustomMetaDataFields_successExpected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"id\": \"6296fd7091fa5768106b808d\",\n" +
+                "    \"name\": \"Amount3\",\n" +
+                "    \"label\": \"testPrices\",\n" +
+                "    \"schema\": {\n" +
+                "        \"minValue\": 0,\n" +
+                "        \"maxValue\": 10,\n" +
+                "        \"type\": \"Number\"\n" +
+                "    }\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+
         CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
         mockCustomMetaDataFieldSchemaObject.setMinValue(10);
         mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-        customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808d");
+        customMetaDataFieldUpdateRequest.setId("628f189d4e4ea318b69efa9d");
         customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
         customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        Result mockResult = new Result();
-        mockResult.setSuccessful(true);
-        mockResult.setMessage("CustomMetaData updated...");
-        mockResult.getResponseMetaData().setHttpStatusCode(200);
+        SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        RecordedRequest request = server.takeRequest();
 
-        when(restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest)).thenReturn(mockResult);
-
-        Result result=SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
-        assertThat(result.isSuccessful(),is(mockResult.isSuccessful()));
-        assertEquals(result.getResponseMetaData().getHttpStatusCode(), mockResult.getResponseMetaData().getHttpStatusCode());
-        assertEquals(result.getMessage(), mockResult.getMessage());
+        String customMetaDataFieldUpdateRequestJson = "{\"id\":\"628f189d4e4ea318b69efa9d\",\"label\":\"mockEditLabel\",\"schema\":{\"type\":\"Number\",\"minValue\":10,\"maxValue\":100}}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(customMetaDataFieldUpdateRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PATCH /628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl.toString().concat("628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
     }
+
+    @Test
+    public void removeAITags_successExpected() throws InterruptedException, IOException {
+
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("62958deef33aa80bdadf7533");
+        List<String> aiTags = new ArrayList<>();
+        aiTags.add("Font");
+
+        AITagsRequest aiTagsRequest = new AITagsRequest();
+        aiTagsRequest.setFileIds(fileIds);
+        aiTagsRequest.setAITags(aiTags);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.removeAITags(aiTagsRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String aiTagsRequestJson = "{\"fileIds\":[\"62958deef33aa80bdadf7533\"],\"AITags\":[\"Font\"]}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(aiTagsRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void copyFile_successExpected() throws InterruptedException, IOException {
+
+        CopyFileRequest copyFileRequest = new CopyFileRequest();
+        copyFileRequest.setSourceFilePath("/car_false.jpeg");
+        copyFileRequest.setDestinationPath("/Gallery/");
+        copyFileRequest.setIncludeVersions(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(""));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.copyFile(copyFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String copyFileRequestJson = "{\"sourceFilePath\":\"/car_false.jpeg\",\"destinationPath\":\"/Gallery/\",\"includeVersions\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(copyFileRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void moveFile_successExpected() throws InterruptedException, IOException {
+
+        MoveFileRequest moveFileRequest = new MoveFileRequest();
+        moveFileRequest.setSourceFilePath("/new_la.jpg");
+        moveFileRequest.setDestinationPath("test");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(""));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.moveFile(moveFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String moveFileRequestJson = "{\"sourceFilePath\":\"/new_la.jpg\",\"destinationPath\":\"test\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(moveFileRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void renameFile_successExpected() throws InterruptedException, IOException {
+
+        RenameFileRequest renameFileRequest = new RenameFileRequest();
+        renameFileRequest.setFilePath("/car_false.jpeg");
+        renameFileRequest.setNewFileName("new_car.jpeg");
+        renameFileRequest.setPurgeCache(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.renameFile(renameFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String renameFileRequestJson = "{\"filePath\":\"/car_false.jpeg\",\"newFileName\":\"new_car.jpeg\",\"purgeCache\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(renameFileRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PUT / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void createFolder_successExpected() throws InterruptedException, IOException {
+
+        CreateFolderRequest createFolderRequest = new CreateFolderRequest();
+        createFolderRequest.setFolderName("testFolder");
+        createFolderRequest.setParentFolderPath("/");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.createFolder(createFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String createFolderRequestJson = "{\"folderName\":\"testFolder\",\"parentFolderPath\":\"/\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(createFolderRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void deleteFolder_successExpected() throws InterruptedException, IOException {
+
+        DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
+        deleteFolderRequest.setFolderPath("testFolder");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(""));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.deleteFolder(deleteFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String deleteFolderRequestJson = "{\"folderPath\":\"testFolder\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(deleteFolderRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("DELETE / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void copyFolder_successExpected() throws InterruptedException, IOException {
+
+        CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
+        copyFolderRequest.setSourceFolderPath("/testFolder");
+        copyFolderRequest.setDestinationPath("/Gallery");
+        copyFolderRequest.setIncludeVersions(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"jobId\": \"629f43017eb0feff5c61f83c\"\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.copyFolder(copyFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/Gallery\",\"includeVersions\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(copyFolderRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void moveFolder_successExpected() throws InterruptedException, IOException {
+
+        MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
+        moveFolderRequest.setSourceFolderPath("/testFolder");
+        moveFolderRequest.setDestinationPath("/Gallery");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"jobId\": \"629f44ac7eb0fe8173622d4b\"\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.moveFolder(moveFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String moveFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/Gallery\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(moveFolderRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST / HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl,  request.getRequestUrl());
+    }
+
+    @Test
+    public void getBulkJobStatus_successExpected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"jobId\": \"629f44ac7eb0fe8173622d4b\",\n" +
+                "    \"type\": \"MOVE_FOLDER\",\n" +
+                "    \"status\": \"Completed\"\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.getBulkJobStatus("629f44ac7eb0fe8173622d4b");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET /629f44ac7eb0fe8173622d4b HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl.toString().concat("629f44ac7eb0fe8173622d4b"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void getFileVersions_successExpected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("[\n" +
+                "    {\n" +
+                "        \"type\": \"file\",\n" +
+                "        \"name\": \"w2_image.png\",\n" +
+                "        \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n" +
+                "        \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n" +
+                "        \"fileId\": \"629f3de17eb0fe4053615450\",\n" +
+                "        \"tags\": [\n" +
+                "            \"tag10\"\n" +
+                "        ],\n" +
+                "        \"AITags\": [\n" +
+                "            {\n" +
+                "                \"name\": \"Colorfulness\",\n" +
+                "                \"confidence\": 96.19,\n" +
+                "                \"source\": \"google-auto-tagging\"\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"name\": \"Purple\",\n" +
+                "                \"confidence\": 86.05,\n" +
+                "                \"source\": \"google-auto-tagging\"\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"name\": \"Violet\",\n" +
+                "                \"confidence\": 81.08,\n" +
+                "                \"source\": \"google-auto-tagging\"\n" +
+                "            },\n" +
+                "            {\n" +
+                "                \"name\": \"Rectangle\",\n" +
+                "                \"confidence\": 80.99,\n" +
+                "                \"source\": \"google-auto-tagging\"\n" +
+                "            }\n" +
+                "        ],\n" +
+                "        \"versionInfo\": {\n" +
+                "            \"id\": \"629f3de17eb0fe4053615450\",\n" +
+                "            \"name\": \"Version 1\"\n" +
+                "        },\n" +
+                "        \"embeddedMetadata\": {\n" +
+                "            \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n" +
+                "            \"ImageWidth\": 1006,\n" +
+                "            \"ImageHeight\": 467,\n" +
+                "            \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" +
+                "        },\n" +
+                "        \"customCoordinates\": null,\n" +
+                "        \"customMetadata\": {},\n" +
+                "        \"isPrivateFile\": false,\n" +
+                "        \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n" +
+                "        \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n" +
+                "        \"fileType\": \"image\",\n" +
+                "        \"filePath\": \"/w2_image.png\",\n" +
+                "        \"height\": 467,\n" +
+                "        \"width\": 1006,\n" +
+                "        \"size\": 47579,\n" +
+                "        \"hasAlpha\": true,\n" +
+                "        \"mime\": \"image/png\"\n" +
+                "    }\n" +
+                "]"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.getFileVersions("629f3de17eb0fe4053615450");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET /629f3de17eb0fe4053615450/versions HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl.toString().concat("629f3de17eb0fe4053615450/versions"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void getFileVersionDetails_successExpected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"type\": \"file\",\n" +
+                "    \"name\": \"w2_image.png\",\n" +
+                "    \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n" +
+                "    \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n" +
+                "    \"fileId\": \"629f3de17eb0fe4053615450\",\n" +
+                "    \"tags\": [\n" +
+                "        \"tag10\"\n" +
+                "    ],\n" +
+                "    \"AITags\": [\n" +
+                "        {\n" +
+                "            \"name\": \"Colorfulness\",\n" +
+                "            \"confidence\": 96.19,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Purple\",\n" +
+                "            \"confidence\": 86.05,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Violet\",\n" +
+                "            \"confidence\": 81.08,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Rectangle\",\n" +
+                "            \"confidence\": 80.99,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"versionInfo\": {\n" +
+                "        \"id\": \"629f3de17eb0fe4053615450\",\n" +
+                "        \"name\": \"Version 1\"\n" +
+                "    },\n" +
+                "    \"embeddedMetadata\": {\n" +
+                "        \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n" +
+                "        \"ImageWidth\": 1006,\n" +
+                "        \"ImageHeight\": 467,\n" +
+                "        \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" +
+                "    },\n" +
+                "    \"customCoordinates\": null,\n" +
+                "    \"customMetadata\": {},\n" +
+                "    \"isPrivateFile\": false,\n" +
+                "    \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n" +
+                "    \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n" +
+                "    \"fileType\": \"image\",\n" +
+                "    \"filePath\": \"/w2_image.png\",\n" +
+                "    \"height\": 467,\n" +
+                "    \"width\": 1006,\n" +
+                "    \"size\": 47579,\n" +
+                "    \"hasAlpha\": true,\n" +
+                "    \"mime\": \"image/png\"\n" +
+                "}"));
+        server.start();
+        HttpUrl baseUrl = server.url("/");
+        Configuration config = SUT.getConfig();
+        config.setUrlEndpoint(String.valueOf(baseUrl));
+        SUT.setConfig(config);
+        SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET /629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1", request.getRequestLine());
+        assertEquals(baseUrl.toString().concat("629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),  request.getRequestUrl().toString());
+    }
+
+
+
 }

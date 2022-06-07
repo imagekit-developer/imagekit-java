@@ -663,8 +663,6 @@ public class RestClient {
                 result.setMessage("Error: Internal server error.");
             }
             else {
-                String resp=response.body().string();
-                result=new Gson().fromJson(resp,Result.class);
                 result.setSuccessful(false);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
@@ -904,7 +902,6 @@ public class RestClient {
         headers.put("Authorization",credential);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(deleteFolderRequest));
-        System.out.println("requestBody:==> " + new Gson().toJson(deleteFolderRequest));
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/folder/")
                 .delete(requestBody)
