@@ -658,7 +658,7 @@ public class ImageKitTest {
         SUT.addTags(tagsRequest);
         RecordedRequest request = server.takeRequest();
 
-        String tagsRequestJson = new Gson().toJson(tagsRequest);
+        String tagsRequestJson = "{\"fileIds\":[\"62958deef33aa80bdadf7533\"],\"tags\":[\"tag1\",\"tag2\"]}";
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(tagsRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
