@@ -11,6 +11,7 @@ import io.imagekit.sdk.models.CustomMetaDataFieldCreateRequest;
 import io.imagekit.sdk.models.CustomMetaDataFieldSchemaObject;
 import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.CustomMetaDataTypeEnum;
+import io.imagekit.sdk.models.DeleteFileVersionRequest;
 import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
 import io.imagekit.sdk.models.FileUpdateRequest;
@@ -19,6 +20,7 @@ import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.RenameFileRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
+import io.imagekit.sdk.tasks.MultipartBuilder;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.HttpUrl;
@@ -29,7 +31,11 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -38,7 +44,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 
 public class ImageKitTest {
     private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
@@ -440,34 +449,56 @@ public class ImageKitTest {
     // Test Case for Upload
 
     @Test
-    public void imageKit_upload_returnSuccess() {
-        FileCreateRequest fileCreateRequest =mock(FileCreateRequest.class);
-        Result result=new Result();
-        result.setSuccessful(true);
-        result.setFilePath("/myfile.jpg");
-        when(restClient.upload(any(FileCreateRequest.class))).thenReturn(result);
-        Result result1 = SUT.upload(fileCreateRequest);
-        assertThat(result1.isSuccessful(),is(result.isSuccessful()));
-    }
+    public void imageKit_upload_returnSuccess() throws IOException, InterruptedException {
+        String imageUrl="https://homepages.cae.wisc.edu/~ece533/images/cat.png";
+        URL url = URI.create(imageUrl).toURL();
+        FileCreateRequest fileCreateRequest = new FileCreateRequest(url, "sample-cat-image.png");
+        List<String> tags=new ArrayList<>();
+        tags.add("Software");
+        tags.add("Developer");
+        tags.add("Engineer");
+        fileCreateRequest.setTags(tags);
+        fileCreateRequest.setFolder("demo1");
+        String customCoordinates="10,10,20,20";
+        fileCreateRequest.setCustomCoordinates(customCoordinates);
 
-    @Test
-    public void imageKit_imageUpload_returnFalse() {
-        FileCreateRequest fileCreateRequest =mock(FileCreateRequest.class);
-        Result result=new Result();
-        result.setSuccessful(false);
-        when(restClient.upload(any(FileCreateRequest.class))).thenReturn(result);
-        Result result1 = SUT.upload(fileCreateRequest);
-        assertThat(result1.isSuccessful(),is(result.isSuccessful()));
-    }
+        List<String> responseFields=new ArrayList<>();
+        responseFields.add("thumbnail");
+        responseFields.add("tags");
+        responseFields.add("customCoordinates");
 
-    @Test(expected = RuntimeException.class)
-    public void imageKit_imageUpload_throwNetworkException() {
-        FileCreateRequest fileCreateRequest =mock(FileCreateRequest.class);
-        Result result=new Result();
-        result.setSuccessful(false);
-        when(restClient.upload(any(FileCreateRequest.class))).thenThrow(new RuntimeException());
-        Result result1 = SUT.upload(fileCreateRequest);
-        assertThat(result1.isSuccessful(),is(result.isSuccessful()));
+        fileCreateRequest.setResponseFields(responseFields);
+        fileCreateRequest.setUseUniqueFileName(false);
+        fileCreateRequest.setPrivateFile(false);
+        fileCreateRequest.setOverwriteFile(false);
+        fileCreateRequest.setOverwriteAITags(false);
+        fileCreateRequest.setOverwriteTags(false);
+        fileCreateRequest.setOverwriteCustomMetadata(false);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"fileId\": \"62a066c427854b7abeacc73b\",\n" +
+                "    \"name\": \"sample-cat-image.png\",\n" +
+                "    \"size\": 51085,\n" +
+                "    \"versionInfo\": {\n" +
+                "        \"id\": \"62a066c427854b7abeacc73b\",\n" +
+                "        \"name\": \"Version 1\"\n" +
+                "    },\n" +
+                "    \"filePath\": \"/demo1/sample-cat-image.png\",\n" +
+                "    \"url\": \"https://ik.imagekit.io/xyxt2lnil/demo1/sample-cat-image.png\",\n" +
+                "    \"fileType\": \"image\",\n" +
+                "    \"height\": 300,\n" +
+                "    \"width\": 300,\n" +
+                "    \"orientation\": 1,\n" +
+                "    \"thumbnailUrl\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/demo1/sample-cat-image.png\",\n" +
+                "    \"AITags\": null\n" +
+                "}"));
+        server.start();
+        RestClient.UPLOAD_BASE_URL = server.url("/").toString();
+        SUT.upload(fileCreateRequest);
+        RecordedRequest request = server.takeRequest();
+        assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -659,10 +690,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.addTags(tagsRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -670,8 +698,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(tagsRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/files/addTags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/addTags"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -687,10 +715,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.removeTags(tagsRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -698,8 +723,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(tagsRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/files/removeTags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeTags"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -729,15 +754,12 @@ public class ImageKitTest {
                 "    }\n" +
                 "]"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.getCustomMetaDataFields();
         RecordedRequest request = server.takeRequest();
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("GET /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -756,10 +778,7 @@ public class ImageKitTest {
                 "    }\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
 
         CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
@@ -778,8 +797,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -787,10 +806,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
 
         SUT.deleteCustomMetaDataField("629f2e2f7eb0fe2eb25f9988");
         RecordedRequest request = server.takeRequest();
@@ -798,8 +814,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals("", utf8RequestBody);
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("DELETE /629f2e2f7eb0fe2eb25f9988 HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl.toString().concat("629f2e2f7eb0fe2eb25f9988"),  request.getRequestUrl().toString());
+        assertEquals("DELETE /v1/customMetadataFields/629f2e2f7eb0fe2eb25f9988 HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/629f2e2f7eb0fe2eb25f9988"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -817,10 +833,7 @@ public class ImageKitTest {
                 "    }\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
 
         CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
@@ -839,8 +852,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(customMetaDataFieldUpdateRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("PATCH /628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl.toString().concat("628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
+        assertEquals("PATCH /v1/customMetadataFields/628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -858,10 +871,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\"successfullyUpdatedFileIds\": [\"62958deef33aa80bdadf7533\"]}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.removeAITags(aiTagsRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -869,8 +879,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(aiTagsRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/files/removeAITags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeAITags"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -884,10 +894,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.copyFile(copyFileRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -895,8 +902,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(copyFileRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/files/copy HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/copy"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -909,10 +916,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.moveFile(moveFileRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -920,8 +924,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(moveFileRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/files/move HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/move"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -935,10 +939,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.renameFile(renameFileRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -946,8 +947,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(renameFileRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("PUT / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("PUT /v1/files/rename HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/rename"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -960,10 +961,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.createFolder(createFolderRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -971,8 +969,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(createFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/folder/ HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -984,10 +982,7 @@ public class ImageKitTest {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.deleteFolder(deleteFolderRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -995,8 +990,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(deleteFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("DELETE / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("DELETE /v1/folder/ HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1012,10 +1007,7 @@ public class ImageKitTest {
                 "    \"jobId\": \"629f43017eb0feff5c61f83c\"\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.copyFolder(copyFolderRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -1023,8 +1015,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(copyFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1039,10 +1031,7 @@ public class ImageKitTest {
                 "    \"jobId\": \"629f44ac7eb0fe8173622d4b\"\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.moveFolder(moveFolderRequest);
         RecordedRequest request = server.takeRequest();
 
@@ -1050,8 +1039,8 @@ public class ImageKitTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(moveFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST / HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl,  request.getRequestUrl());
+        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1064,16 +1053,13 @@ public class ImageKitTest {
                 "    \"status\": \"Completed\"\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.getBulkJobStatus("629f44ac7eb0fe8173622d4b");
         RecordedRequest request = server.takeRequest();
 
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /629f44ac7eb0fe8173622d4b HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl.toString().concat("629f44ac7eb0fe8173622d4b"),  request.getRequestUrl().toString());
+        assertEquals("GET /v1/bulkJobs/629f44ac7eb0fe8173622d4b HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/629f44ac7eb0fe8173622d4b"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1137,16 +1123,13 @@ public class ImageKitTest {
                 "    }\n" +
                 "]"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.getFileVersions("629f3de17eb0fe4053615450");
         RecordedRequest request = server.takeRequest();
 
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /629f3de17eb0fe4053615450/versions HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl.toString().concat("629f3de17eb0fe4053615450/versions"),  request.getRequestUrl().toString());
+        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1208,16 +1191,34 @@ public class ImageKitTest {
                 "    \"mime\": \"image/png\"\n" +
                 "}"));
         server.start();
-        HttpUrl baseUrl = server.url("/");
-        Configuration config = SUT.getConfig();
-        config.setUrlEndpoint(String.valueOf(baseUrl));
-        SUT.setConfig(config);
+        RestClient.API_BASE_URL = server.url("/").toString();
         SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
         RecordedRequest request = server.takeRequest();
 
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1", request.getRequestLine());
-        assertEquals(baseUrl.toString().concat("629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),  request.getRequestUrl().toString());
+        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void deleteFileVersion_expectedSuccessWith() throws IOException, InterruptedException {
+
+        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+        deleteFileVersionRequest.setVersionId("629d91878482bae8bed177f2");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody(""));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.deleteFileVersion(deleteFileVersionRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("DELETE /v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2 HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2"),  request.getRequestUrl().toString());
     }
 
 

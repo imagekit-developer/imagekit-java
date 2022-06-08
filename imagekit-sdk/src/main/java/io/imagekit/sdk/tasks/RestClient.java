@@ -32,6 +32,10 @@ import java.util.Locale;
 import java.util.Map;
 
 public class RestClient {
+
+    public static String API_BASE_URL = "https://api.imagekit.io/";
+    public static String UPLOAD_BASE_URL = "https://upload.imagekit.io/";
+
     private ImageKit imageKit;
     Request request;
     OkHttpClient client;
@@ -62,7 +66,7 @@ public class RestClient {
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
 
         request=new Request.Builder()
-                .url("https://upload.imagekit.io/api/v1/files/upload")
+                .url(UPLOAD_BASE_URL.concat("api/v1/files/upload"))
                 .post(body)
                 .headers(Headers.of(headers))
                 .build();
@@ -494,7 +498,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(tagsRequest));
         request=new Request.Builder()
-                .url(action.equals("removeTags") ? "https://api.imagekit.io/v1/files/removeTags" : "https://api.imagekit.io/v1/files/addTags")
+                .url(action.equals("removeTags") ? API_BASE_URL.concat("v1/files/removeTags") : API_BASE_URL.concat("v1/files/addTags"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -530,7 +534,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(aiTagsRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/files/removeAITags")
+                .url(API_BASE_URL.concat("v1/files/removeAITags"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -566,7 +570,7 @@ public class RestClient {
         headers.put("Authorization",credential);
 
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/customMetadataFields")
+                .url(API_BASE_URL.concat("v1/customMetadataFields"))
                 .get()
                 .headers(Headers.of(headers))
                 .build();
@@ -607,7 +611,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldCreateRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/customMetadataFields")
+                .url(API_BASE_URL.concat("v1/customMetadataFields"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -641,7 +645,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/customMetadataFields/%s",id);
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/customMetadataFields/%s"),id);
 
         request=new Request.Builder()
                 .url(url)
@@ -682,7 +686,7 @@ public class RestClient {
         headers.put("Authorization",credential);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldUpdateRequest));
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/customMetadataFields/%s",customMetaDataFieldUpdateRequest.getId());
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/customMetadataFields/%s"),customMetaDataFieldUpdateRequest.getId());
         request=new Request.Builder()
                 .url(url)
                 .patch(requestBody)
@@ -719,8 +723,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions/%s", deleteFileVersionRequest.getFileId(), deleteFileVersionRequest.getVersionId());
-        System.out.println("url:=> " + url);
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions/%s"), deleteFileVersionRequest.getFileId(), deleteFileVersionRequest.getVersionId());
         request=new Request.Builder()
                 .url(url)
                 .delete()
@@ -735,7 +738,7 @@ public class RestClient {
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 if (result.getMessage() == null) {
-                    result.setMessage("File Copied SuccessFully.");
+                    result.setMessage("File version Deleted SuccessFully.");
                 }
             } else {
                 String resp=response.body().string();
@@ -761,7 +764,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFileRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/files/copy")
+                .url(API_BASE_URL.concat("v1/files/copy"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -797,7 +800,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFileRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/files/move")
+                .url(API_BASE_URL.concat("v1/files/move"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -833,7 +836,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(renameFileRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/files/rename")
+                .url(API_BASE_URL.concat("v1/files/rename"))
                 .put(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -868,7 +871,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(createFolderRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/folder/")
+                .url(API_BASE_URL.concat("v1/folder/"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -903,7 +906,7 @@ public class RestClient {
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(deleteFolderRequest));
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/folder/")
+                .url(API_BASE_URL.concat("v1/folder/"))
                 .delete(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -939,7 +942,7 @@ public class RestClient {
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFolderRequest));
 
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/bulkJobs/moveFolder")
+                .url(API_BASE_URL.concat("v1/bulkJobs/moveFolder"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -975,7 +978,7 @@ public class RestClient {
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFolderRequest));
 
         request=new Request.Builder()
-                .url("https://api.imagekit.io/v1/bulkJobs/moveFolder")
+                .url(API_BASE_URL.concat("v1/bulkJobs/moveFolder"))
                 .post(requestBody)
                 .headers(Headers.of(headers))
                 .build();
@@ -1008,7 +1011,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/bulkJobs/%s", jobId);
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/bulkJobs/%s"), jobId);
 
         request=new Request.Builder()
                 .url(url)
@@ -1044,7 +1047,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions", fileId);
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions"), fileId);
 
         request=new Request.Builder()
                 .url(url)
@@ -1086,7 +1089,7 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
-        String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/versions/%s", fileId, versionId);
+        String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions/%s"), fileId, versionId);
 
         request=new Request.Builder()
                 .url(url)

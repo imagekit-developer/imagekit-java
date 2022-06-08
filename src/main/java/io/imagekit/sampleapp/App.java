@@ -56,7 +56,7 @@ class App{
 //        removeAITags();
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
-//        deleteCustomMetaDataField("62988431cd3d7878e486ccad");
+//        deleteCustomMetaDataField("6296f91191fa57ccc36b15cf");
 //        getCustomMetaDataFields();
 //
 //        calculateDistance();
@@ -394,8 +394,7 @@ class App{
 
     private static void addTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("6298833ad3c4405ddb9253c2");
-        fileIds.add("629883933df4f9fb1d7cef52");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> tags = new ArrayList<>();
         tags.add("tag3");
         tags.add("tag4");
@@ -411,8 +410,7 @@ class App{
 
     private static void removeTags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("6298833ad3c4405ddb9253c2");
-        fileIds.add("629883933df4f9fb1d7cef52");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> tags = new ArrayList<>();
         tags.add("tag3");
         tags.add("tag4");
@@ -428,9 +426,9 @@ class App{
 
     private static void removeAITags() {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("6299fe884af1071996cc62eb");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> aiTags = new ArrayList<>();
-        aiTags.add("Female");
+        aiTags.add("Rectangle");
         AITagsRequest aiTagsRequest =new AITagsRequest();
         aiTagsRequest.setFileIds(fileIds);
         aiTagsRequest.setAITags(aiTags);
@@ -455,8 +453,8 @@ class App{
 
     private static void createCustomMetaDataFields() {
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-        customMetaDataFieldCreateRequest.setName("NameCus1");
-        customMetaDataFieldCreateRequest.setLabel("LabelCm91");
+        customMetaDataFieldCreateRequest.setName("NameCus2");
+        customMetaDataFieldCreateRequest.setLabel("LabelCm2");
         customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
 
         Result result = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
@@ -486,8 +484,8 @@ class App{
         schemaObject.setMaxValue(200);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-        customMetaDataFieldUpdateRequest.setId("62988431cd3d7878e486ccad");
-        customMetaDataFieldUpdateRequest.setLabel("labelPri01");
+        customMetaDataFieldUpdateRequest.setId("62a0425ac10d49989f6d1996");
+        customMetaDataFieldUpdateRequest.setLabel("LabelCM200");
         customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
         Result result = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
@@ -501,8 +499,8 @@ class App{
 
     private static void deleteFileVersion() {
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
-        deleteFileVersionRequest.setVersionId("629d91878482bae8bed177f2");
+        deleteFileVersionRequest.setFileId("629d95278482ba129fd17c97");
+        deleteFileVersionRequest.setVersionId("629d953ebd24e8ceca911a66");
         Result result = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
         System.out.println(">> delete file version done.");
         System.out.println(Color.ANSI_GREEN+">> Response delete File version :"+Color.ANSI_RESET);
@@ -514,8 +512,8 @@ class App{
 
     private static void copyFile() {
         CopyFileRequest copyFileRequest = new CopyFileRequest();
-        copyFileRequest.setSourceFilePath("/sample_imag1.jpg");
-        copyFileRequest.setDestinationPath("/New_Folder/");
+        copyFileRequest.setSourceFilePath("/w2_image.png");
+        copyFileRequest.setDestinationPath("/Gallery/");
         copyFileRequest.setIncludeVersions(true);
         Result result = ImageKit.getInstance().copyFile(copyFileRequest);
         System.out.println(">> Copy file done.");
@@ -528,8 +526,8 @@ class App{
 
     private static void moveFile() {
         MoveFileRequest moveFileRequest = new MoveFileRequest();
-        moveFileRequest.setSourceFilePath("/sample_imag1.jpg");
-        moveFileRequest.setDestinationPath("/New_Folder/");
+        moveFileRequest.setSourceFilePath("/Gallery/w2_image.png");
+        moveFileRequest.setDestinationPath("/");
         Result result = ImageKit.getInstance().moveFile(moveFileRequest);
         System.out.println(">> Move File done.");
         System.out.println(Color.ANSI_GREEN+">> Response Move File :"+Color.ANSI_RESET);
@@ -541,8 +539,8 @@ class App{
 
     private static void renameFile() {
         RenameFileRequest renameFileRequest = new RenameFileRequest();
-        renameFileRequest.setFilePath("/sample_image.jpg");
-        renameFileRequest.setNewFileName("sample_image1.jpg");
+        renameFileRequest.setFilePath("/w2_image.png");
+        renameFileRequest.setNewFileName("w2_image_s.png");
         renameFileRequest.setPurgeCache(true);
         Result result = ImageKit.getInstance().renameFile(renameFileRequest);
         System.out.println(">> Rename file done.");
@@ -556,7 +554,7 @@ class App{
     private static void createFolder() {
         CreateFolderRequest createFolderRequest = new CreateFolderRequest();
         createFolderRequest.setFolderName("test1");
-        createFolderRequest.setParentFolderPath("/New_Folder");
+        createFolderRequest.setParentFolderPath("/");
         Result result = ImageKit.getInstance().createFolder(createFolderRequest);
         System.out.println(">> Create folder done.");
         System.out.println(Color.ANSI_GREEN+">> Response Create Folder :"+Color.ANSI_RESET);
@@ -567,7 +565,7 @@ class App{
     }
 
     private static void deleteFolder() {
-        String folderPath="/New_Folder";
+        String folderPath="/test1";
         DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
         deleteFolderRequest.setFolderPath(folderPath);
         Result result = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
@@ -581,7 +579,7 @@ class App{
 
     private static void copyFolder() {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
-        copyFolderRequest.setSourceFolderPath("/Gallery/sub_folder");
+        copyFolderRequest.setSourceFolderPath("/Gallery/test");
         copyFolderRequest.setDestinationPath("/");
         Result result = ImageKit.getInstance().copyFolder(copyFolderRequest);
         System.out.println(">> Copy folder done.");
@@ -594,8 +592,8 @@ class App{
 
     private static void moveFolder() {
         MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
-        moveFolderRequest.setSourceFolderPath("/test");
-        moveFolderRequest.setDestinationPath("/Gallery");
+        moveFolderRequest.setSourceFolderPath("/Gallery/test");
+        moveFolderRequest.setDestinationPath("/");
         Result result = ImageKit.getInstance().moveFolder(moveFolderRequest);
         System.out.println(">>Move folder done.");
         System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
@@ -606,7 +604,7 @@ class App{
     }
 
     private static void getBulkJobStatus() {
-        String jobId = "629758a291fa57aff773d2c9";
+        String jobId = "629f44ac7eb0fe8173622d4b";
         Result result = ImageKit.getInstance().getBulkJobStatus(jobId);
         System.out.println(">> Fetch Bulk job status done.");
         System.out.println(Color.ANSI_GREEN+">> Response Bulk job status :"+Color.ANSI_RESET);
@@ -617,7 +615,7 @@ class App{
     }
 
     private static void getFileVersions() {
-        String fileId = "6299ae01f8b34e6009e32ef3";
+        String fileId = "62a04834c10d49825c6de9e8";
         Result result = ImageKit.getInstance().getFileVersions(fileId);
         System.out.println(">> Fetch Get file versions done.");
         System.out.println(Color.ANSI_GREEN+">> Response Get file versions :"+Color.ANSI_RESET);
@@ -628,8 +626,8 @@ class App{
     }
 
     private static void getFileVersionDetails() {
-        String fileId = "6299ae01f8b34e6009e32ef3";
-        String versionId = "6299ae01f8b34e6009e32ef3";
+        String fileId = "62a04834c10d49825c6de9e8";
+        String versionId = "62a04834c10d49825c6de9e8";
         Result result = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
         System.out.println(">> Fetch Get file versions details done.");
         System.out.println(Color.ANSI_GREEN+">> Response Get file versions details :"+Color.ANSI_RESET);
