@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class MultipartBuilder {
     public MultipartBody build(FileCreateRequest fileCreateRequest){
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+        MultipartBody.Builder builder = new MultipartBody.Builder("boundary").setType(MultipartBody.FORM);
 
         if (null!=fileCreateRequest.url){
             builder.addFormDataPart("file",fileCreateRequest.url.toString());
@@ -54,17 +54,26 @@ public class MultipartBuilder {
         if (null!=fileCreateRequest.responseFields) {
             builder.addFormDataPart("responseFields", Utils.listToString(fileCreateRequest.responseFields));
         }
-        if (fileCreateRequest.overwriteFile) {
-            builder.addFormDataPart("overwriteFile", "true");
+        if (fileCreateRequest.overwriteFile != null && !fileCreateRequest.overwriteFile) {
+            builder.addFormDataPart("overwriteFile", String.valueOf(true));
         }
-        if (fileCreateRequest.overwriteAITags) {
-            builder.addFormDataPart("overwriteAITags", "true");
+        if (fileCreateRequest.overwriteAITags != null && !fileCreateRequest.overwriteAITags) {
+            builder.addFormDataPart("overwriteAITags", String.valueOf(Boolean.TRUE));
         }
-        if (fileCreateRequest.overwriteTags) {
+        if (fileCreateRequest.overwriteTags != null && !fileCreateRequest.overwriteTags) {
             builder.addFormDataPart("overwriteTags", "true");
         }
-        if (fileCreateRequest.overwriteCustomMetadata) {
+        if (fileCreateRequest.overwriteCustomMetadata != null && !fileCreateRequest.overwriteCustomMetadata) {
             builder.addFormDataPart("overwriteCustomMetadata", "true");
+        }
+        if (null!=fileCreateRequest.extensions) {
+            builder.addFormDataPart("extensions", fileCreateRequest.extensions.toString());
+        }
+        if (null!=fileCreateRequest.webhookUrl) {
+            builder.addFormDataPart("webhookUrl", fileCreateRequest.webhookUrl);
+        }
+        if (null!=fileCreateRequest.customMetadata) {
+            builder.addFormDataPart("customMetadata", String.valueOf(new JsonParser().parse(String.valueOf(fileCreateRequest.customMetadata))));
         }
         return builder.build();
     }

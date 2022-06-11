@@ -20,10 +20,8 @@ import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.RenameFileRequest;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
-import io.imagekit.sdk.tasks.MultipartBuilder;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.utils.Utils;
-import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -31,9 +29,7 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
@@ -44,15 +40,14 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class ImageKitTest {
     private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
 
     private ImageKit SUT;
+    
     RestClient restClient;
     @Before
     public void setUp() throws Exception {
@@ -468,35 +463,154 @@ public class ImageKitTest {
         responseFields.add("customCoordinates");
 
         fileCreateRequest.setResponseFields(responseFields);
+        JsonObject optionsInnerObject = new JsonObject();
+        optionsInnerObject.addProperty("add_shadow", true);
+        JsonObject innerObject1 = new JsonObject();
+        innerObject1.addProperty("name", "remove-bg");
+        innerObject1.add("options", optionsInnerObject);
+        JsonObject innerObject2 = new JsonObject();
+        innerObject2.addProperty("name", "google-auto-tagging");
+        innerObject2.addProperty("minConfidence", 10);
+        innerObject2.addProperty("maxTags", 5);
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(innerObject1);
+        jsonArray.add(innerObject2);
+        fileCreateRequest.setExtensions(jsonArray);
+        fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
         fileCreateRequest.setUseUniqueFileName(false);
         fileCreateRequest.setPrivateFile(false);
         fileCreateRequest.setOverwriteFile(false);
         fileCreateRequest.setOverwriteAITags(false);
         fileCreateRequest.setOverwriteTags(false);
         fileCreateRequest.setOverwriteCustomMetadata(false);
+        JsonObject jsonObjectCustomMetadata = new JsonObject();
+        jsonObjectCustomMetadata.addProperty("test1", 10);
+        fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"fileId\": \"62a066c427854b7abeacc73b\",\n" +
-                "    \"name\": \"sample-cat-image.png\",\n" +
-                "    \"size\": 51085,\n" +
+                "    \"fileId\": \"62a465d245a84a0ef3852968\",\n" +
+                "    \"name\": \"sample-cat-image_GG0_X8GOn.jpg\",\n" +
+                "    \"size\": 23023,\n" +
                 "    \"versionInfo\": {\n" +
-                "        \"id\": \"62a066c427854b7abeacc73b\",\n" +
+                "        \"id\": \"62a465d245a84a0ef3852968\",\n" +
                 "        \"name\": \"Version 1\"\n" +
                 "    },\n" +
-                "    \"filePath\": \"/demo1/sample-cat-image.png\",\n" +
-                "    \"url\": \"https://ik.imagekit.io/xyxt2lnil/demo1/sample-cat-image.png\",\n" +
+                "    \"filePath\": \"/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n" +
+                "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n" +
                 "    \"fileType\": \"image\",\n" +
-                "    \"height\": 300,\n" +
-                "    \"width\": 300,\n" +
-                "    \"orientation\": 1,\n" +
-                "    \"thumbnailUrl\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/demo1/sample-cat-image.png\",\n" +
-                "    \"AITags\": null\n" +
+                "    \"height\": 354,\n" +
+                "    \"width\": 236,\n" +
+                "    \"thumbnailUrl\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n" +
+                "    \"AITags\": [\n" +
+                "        {\n" +
+                "            \"name\": \"Clothing\",\n" +
+                "            \"confidence\": 98.77,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Plant\",\n" +
+                "            \"confidence\": 96.51,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Smile\",\n" +
+                "            \"confidence\": 95.31,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Shoe\",\n" +
+                "            \"confidence\": 95.2,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        },\n" +
+                "        {\n" +
+                "            \"name\": \"Street light\",\n" +
+                "            \"confidence\": 91.05,\n" +
+                "            \"source\": \"google-auto-tagging\"\n" +
+                "        }\n" +
+                "    ],\n" +
+                "    \"extensionStatus\": {\n" +
+                "        \"remove-bg\": \"pending\",\n" +
+                "        \"google-auto-tagging\": \"success\"\n" +
+                "    }\n" +
                 "}"));
         server.start();
         RestClient.UPLOAD_BASE_URL = server.url("/").toString();
         SUT.upload(fileCreateRequest);
         RecordedRequest request = server.takeRequest();
+        String json = "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"file\"\r\n" +
+                "Content-Length: 53\r\n" +
+                "\r\n" +
+                "https://homepages.cae.wisc.edu/~ece533/images/cat.png\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"fileName\"\r\n" +
+                "Content-Length: 20\r\n" +
+                "\r\n" +
+                "sample-cat-image.png\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"useUniqueFileName\"\r\n" +
+                "Content-Length: 5\r\n" +
+                "\r\n" +
+                "false\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"tags\"\r\n" +
+                "Content-Length: 27\r\n" +
+                "\r\n" +
+                "Software,Developer,Engineer\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"folder\"\r\n" +
+                "Content-Length: 5\r\n" +
+                "\r\n" +
+                "demo1\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"customCoordinates\"\r\n" +
+                "Content-Length: 11\r\n" +
+                "\r\n" +
+                "10,10,20,20\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"responseFields\"\r\n" +
+                "Content-Length: 32\r\n" +
+                "\r\n" +
+                "thumbnail,tags,customCoordinates\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"overwriteFile\"\r\n" +
+                "Content-Length: 4\r\n" +
+                "\r\n" +
+                "true\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"overwriteAITags\"\r\n" +
+                "Content-Length: 4\r\n" +
+                "\r\n" +
+                "true\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"overwriteTags\"\r\n" +
+                "Content-Length: 4\r\n" +
+                "\r\n" +
+                "true\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"overwriteCustomMetadata\"\r\n" +
+                "Content-Length: 4\r\n" +
+                "\r\n" +
+                "true\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"extensions\"\r\n" +
+                "Content-Length: 114\r\n" +
+                "\r\n" +
+                "[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true}},{\"name\":\"google-auto-tagging\",\"minConfidence\":10,\"maxTags\":5}]\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"webhookUrl\"\r\n" +
+                "Content-Length: 57\r\n" +
+                "\r\n" +
+                "https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e\r\n" +
+                "--boundary\r\n" +
+                "Content-Disposition: form-data; name=\"customMetadata\"\r\n" +
+                "Content-Length: 12\r\n" +
+                "\r\n" +
+                "{\"test1\":10}\r\n" +
+                "--boundary--";
+        assertEquals(json, request.getBody().readUtf8().trim());
+//        System.out.println("request.getBody().readUtf8().trim():==> " + request.getBody().readUtf8().trim());
         assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"),  request.getRequestUrl().toString());
     }

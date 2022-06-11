@@ -1,5 +1,8 @@
 package io.imagekit.sdk.models;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 public class BaseFile {
@@ -15,11 +18,16 @@ public class BaseFile {
     protected boolean isPrivateFile;
     protected String customCoordinates;
     protected String fileType;
+    protected JsonArray aiTags;
+    protected JsonObject versionInfo;
+    protected JsonObject customMetadata;
+    protected JsonObject embeddedMetadata;
+    protected JsonObject extensionStatus;
 
     public BaseFile() {
     }
 
-    public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType) {
+    public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus) {
         this.fileId = fileId;
         this.name = name;
         this.url = url;
@@ -32,6 +40,12 @@ public class BaseFile {
         this.isPrivateFile = isPrivateFile;
         this.customCoordinates = customCoordinates;
         this.fileType = fileType;
+        this.aiTags = aiTags;
+        this.versionInfo = versionInfo;
+        this.customMetadata = customMetadata;
+        this.embeddedMetadata = embeddedMetadata;
+        this.extensionStatus = extensionStatus;
+
     }
 
     public String getFileId() {
@@ -130,6 +144,46 @@ public class BaseFile {
         this.fileType = fileType;
     }
 
+    public JsonArray getAiTags() {
+        return aiTags;
+    }
+
+    public void setAiTags(JsonArray aiTags) {
+        this.aiTags = aiTags;
+    }
+
+    public JsonObject getVersionInfo() {
+        return versionInfo;
+    }
+
+    public void setVersionInfo(JsonObject versionInfo) {
+        this.versionInfo = versionInfo;
+    }
+
+    public JsonObject getCustomMetadata() {
+        return customMetadata;
+    }
+
+    public void setCustomMetadata(JsonObject customMetadata) {
+        this.customMetadata = customMetadata;
+    }
+
+    public JsonObject getEmbeddedMetadata() {
+        return embeddedMetadata;
+    }
+
+    public void setEmbeddedMetadata(JsonObject embeddedMetadata) {
+        this.embeddedMetadata = embeddedMetadata;
+    }
+
+    public JsonObject getExtensionStatus() {
+        return extensionStatus;
+    }
+
+    public void setExtensionStatus(JsonObject extensionStatus) {
+        this.extensionStatus = extensionStatus;
+    }
+
     @Override
     public String toString() {
         return "BaseFile{" +
@@ -145,6 +199,11 @@ public class BaseFile {
                 ", isPrivateFile=" + isPrivateFile +
                 ", customCoordinates='" + customCoordinates +'\''+
                 ", fileType='" + fileType + '\'' +
+                ", aiTags=" + aiTags +
+                ", versionInfo=" + versionInfo +
+                ", customMetadata=" + customMetadata +
+                ", embeddedMetadata=" + embeddedMetadata +
+                ", extensionStatus=" + extensionStatus +
                 '}';
     }
 }

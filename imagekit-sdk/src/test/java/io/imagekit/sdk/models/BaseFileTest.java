@@ -8,6 +8,9 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 public class BaseFileTest {
     private BaseFile SUT;
 
@@ -19,7 +22,7 @@ public class BaseFileTest {
     @Test
     public void constructor_test() {
         List<String> tags=mock(List.class);
-        SUT=new BaseFile("fileId", "name", "url", "thumbnail", 10, 10, 20, "filePath", tags,true, "0,0,10,20", "image");
+        SUT=new BaseFile("fileId", "name", "url", "thumbnail", 10, 10, 20, "filePath", tags,true, "0,0,10,20", "image", new JsonArray(), new JsonObject(), new JsonObject(), new JsonObject(), new JsonObject());
         assertNotNull(SUT);
     }
 

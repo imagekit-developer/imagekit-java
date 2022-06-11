@@ -1,6 +1,8 @@
 package io.imagekit.sdk.models.results;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 
 import io.imagekit.sdk.models.BaseFile;
@@ -21,7 +23,7 @@ public class Result extends BaseFile {
     public Result() {
     }
 
-    public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType) {
+    public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus) {
         this.fileId = fileId;
         this.name = name;
         this.url = url;
@@ -34,6 +36,11 @@ public class Result extends BaseFile {
         this.isPrivateFile = isPrivateFile;
         this.customCoordinates = customCoordinates;
         this.fileType = fileType;
+        this.aiTags = aiTags;
+        this.versionInfo = versionInfo;
+        this.customMetadata = customMetadata;
+        this.embeddedMetadata = embeddedMetadata;
+        this.extensionStatus = extensionStatus;
     }
 
     public boolean isSuccessful() {
@@ -199,6 +206,11 @@ public class Result extends BaseFile {
                 ", isPrivateFile=" + isPrivateFile +
                 ", customCoordinates='" + customCoordinates +'\''+
                 ", fileType='" + fileType + '\'' +
+                ", aiTags=" + aiTags +
+                ", versionInfo=" + versionInfo +
+                ", customMetadata=" + customMetadata +
+                ", embeddedMetadata=" + embeddedMetadata +
+                ", extensionStatus=" + extensionStatus +
                 '}';
     }
 }

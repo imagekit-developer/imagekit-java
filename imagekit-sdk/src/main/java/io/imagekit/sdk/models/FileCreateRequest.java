@@ -22,10 +22,13 @@ public class FileCreateRequest {
     public boolean isPrivateFile;
     public String customCoordinates;
     public List<String> responseFields;
-    public boolean overwriteFile;
-    public boolean overwriteAITags;
-    public boolean overwriteTags;
-    public boolean overwriteCustomMetadata;
+    public JsonArray extensions;
+    public String webhookUrl;
+    public Boolean overwriteFile;
+    public Boolean overwriteAITags;
+    public Boolean overwriteTags;
+    public Boolean overwriteCustomMetadata;
+    public JsonObject customMetadata;
 
     public FileCreateRequest(URL url, String fileName) {
         this.url = url;
@@ -101,36 +104,60 @@ public class FileCreateRequest {
         this.responseFields = responseFields;
     }
 
-    public boolean isOverwriteFile() {
+    public JsonArray getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(JsonArray extensions) {
+        this.extensions = extensions;
+    }
+
+    public String getWebhookUrl() {
+        return webhookUrl;
+    }
+
+    public void setWebhookUrl(String webhookUrl) {
+        this.webhookUrl = webhookUrl;
+    }
+
+    public Boolean isOverwriteFile() {
         return overwriteFile;
     }
 
-    public void setOverwriteFile(boolean overwriteFile) {
+    public void setOverwriteFile(Boolean overwriteFile) {
         this.overwriteFile = overwriteFile;
     }
 
-    public boolean isOverwriteAITags() {
+    public Boolean isOverwriteAITags() {
         return overwriteAITags;
     }
 
-    public void setOverwriteAITags(boolean overwriteAITags) {
+    public void setOverwriteAITags(Boolean overwriteAITags) {
         this.overwriteAITags = overwriteAITags;
     }
 
-    public boolean isOverwriteTags() {
+    public Boolean isOverwriteTags() {
         return overwriteTags;
     }
 
-    public void setOverwriteTags(boolean overwriteTags) {
+    public void setOverwriteTags(Boolean overwriteTags) {
         this.overwriteTags = overwriteTags;
     }
 
-    public boolean isOverwriteCustomMetadata() {
+    public Boolean isOverwriteCustomMetadata() {
         return overwriteCustomMetadata;
     }
 
-    public void setOverwriteCustomMetadata(boolean overwriteCustomMetadata) {
+    public void setOverwriteCustomMetadata(Boolean overwriteCustomMetadata) {
         this.overwriteCustomMetadata = overwriteCustomMetadata;
+    }
+
+    public JsonObject getCustomMetadata() {
+        return customMetadata;
+    }
+
+    public void setCustomMetadata(JsonObject customMetadata) {
+        this.customMetadata = customMetadata;
     }
 
     @Override
@@ -143,10 +170,13 @@ public class FileCreateRequest {
                 ", isPrivateFile=" + isPrivateFile +
                 ", customCoordinates=" + customCoordinates +
                 ", responseFields=" + responseFields +
+                ", extensions=" + extensions +
+                ", webhookUrl='" + webhookUrl + '\'' +
                 ", overwriteFile=" + overwriteFile +
                 ", overwriteAITags=" + overwriteAITags +
                 ", overwriteTags=" + overwriteTags +
                 ", overwriteCustomMetadata=" + overwriteCustomMetadata +
+                ", customMetadata=" + customMetadata +
                 '}';
     }
 }

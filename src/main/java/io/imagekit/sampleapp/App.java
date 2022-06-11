@@ -1,6 +1,9 @@
 package io.imagekit.sampleapp;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.models.AITagsRequest;
@@ -39,9 +42,9 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-//        uploadFromBytes();
+        uploadFromBytes();
 //        getBulkJobStatus();
-        deleteFileVersion();
+//        deleteFileVersion();
 //        getFileVersions();
 //        getFileVersionDetails();
 //        copyFile();
@@ -372,15 +375,32 @@ class App{
     private static void uploadFromBytes() {
         System.out.println(Color.ANSI_CYAN+">> Uploading Image from file:"+Color.ANSI_RESET);
         System.out.println(">> Start uploading...");
-        URL url = App.class.getClassLoader().getResource("sample1.jpg");
+        URL url = App.class.getClassLoader().getResource("i1.jpg");
         File file=new File(url.getPath());
         byte[] bytes= Utils.fileToBytes(file);
         FileCreateRequest fileCreateRequest =new FileCreateRequest(bytes, "sample_image_th.jpg");
         fileCreateRequest.setUseUniqueFileName(false);
+        JsonObject optionsInnerObject = new JsonObject();
+        optionsInnerObject.addProperty("add_shadow", true);
+        JsonObject innerObject1 = new JsonObject();
+        innerObject1.addProperty("name", "remove-bg");
+        innerObject1.add("options", optionsInnerObject);
+        JsonObject innerObject2 = new JsonObject();
+        innerObject2.addProperty("name", "google-auto-tagging");
+        innerObject2.addProperty("minConfidence", 10);
+        innerObject2.addProperty("maxTags", 5);
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(innerObject1);
+        jsonArray.add(innerObject2);
+        fileCreateRequest.setExtensions(jsonArray);
+        fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
         fileCreateRequest.setOverwriteFile(true);
         fileCreateRequest.setOverwriteAITags(true);
         fileCreateRequest.setOverwriteTags(true);
         fileCreateRequest.setOverwriteCustomMetadata(true);
+        JsonObject jsonObjectCustomMetadata = new JsonObject();
+        jsonObjectCustomMetadata.addProperty("test1", 10);
+        fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);
         Result result = ImageKit.getInstance().upload(fileCreateRequest);
         System.out.println(">> Uploading done.");
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);

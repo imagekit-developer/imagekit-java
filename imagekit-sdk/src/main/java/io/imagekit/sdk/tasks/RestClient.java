@@ -63,6 +63,8 @@ public class RestClient {
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 
+        System.out.println("Auth:==> " + credential);
+
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
 
         request=new Request.Builder()
