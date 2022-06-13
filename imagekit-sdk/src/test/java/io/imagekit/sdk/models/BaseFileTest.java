@@ -3,6 +3,7 @@ package io.imagekit.sdk.models;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -22,7 +23,7 @@ public class BaseFileTest {
     @Test
     public void constructor_test() {
         List<String> tags=mock(List.class);
-        SUT=new BaseFile("fileId", "name", "url", "thumbnail", 10, 10, 20, "filePath", tags,true, "0,0,10,20", "image", new JsonArray(), new JsonObject(), new JsonObject(), new JsonObject(), new JsonObject());
+        SUT=new BaseFile("fileId", "name", "url", "thumbnail", 10, 10, 20, "filePath", tags,true, "0,0,10,20", "image", new JsonArray(), new JsonObject(), new JsonObject(), new JsonObject(), new JsonObject(), "file", "image/jpeg", false, new Date(), new Date());
         assertNotNull(SUT);
     }
 

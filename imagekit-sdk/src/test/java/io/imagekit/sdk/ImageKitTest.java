@@ -30,8 +30,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -443,10 +447,38 @@ public class ImageKitTest {
 
     // Test Case for Upload
 
+    @Test(expected = UnknownHostException.class)
+    public void imageKit_upload_expect_UnknownHostException() throws UnknownHostException {
+        String imageUrl="https://homepagesabc.cae.wisc.edu/~ece533/images/12.png";
+        try {
+            URL url = new URL(imageUrl);
+
+            HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+            urlConnect.getContent();
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            throw e;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     public void imageKit_upload_returnSuccess() throws IOException, InterruptedException {
         String imageUrl="https://homepages.cae.wisc.edu/~ece533/images/cat.png";
-        URL url = URI.create(imageUrl).toURL();
+        URL url = null;
+        try {
+            //make a URL to a known source
+            url = new URL(imageUrl);
+
+            HttpURLConnection urlConnect = (HttpURLConnection)url.openConnection();
+            Object objData = urlConnect.getContent();
+
+        } catch (UnknownHostException e) {
+            System.out.println("CONNECTION FAILED:==> " + e);
+            e.printStackTrace();
+        }
         FileCreateRequest fileCreateRequest = new FileCreateRequest(url, "sample-cat-image.png");
         List<String> tags=new ArrayList<>();
         tags.add("Software");
@@ -610,7 +642,6 @@ public class ImageKitTest {
                 "{\"test1\":10}\r\n" +
                 "--boundary--";
         assertEquals(json, request.getBody().readUtf8().trim());
-//        System.out.println("request.getBody().readUtf8().trim():==> " + request.getBody().readUtf8().trim());
         assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"),  request.getRequestUrl().toString());
     }

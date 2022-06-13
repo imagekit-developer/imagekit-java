@@ -2,7 +2,9 @@ package io.imagekit.sdk.models;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.util.Date;
 import java.util.List;
 
 public class BaseFile {
@@ -23,11 +25,16 @@ public class BaseFile {
     protected JsonObject customMetadata;
     protected JsonObject embeddedMetadata;
     protected JsonObject extensionStatus;
+    protected String type;
+    protected String mime;
+    protected Boolean hasAlpha;
+    protected Date createdAt;
+    protected Date updatedAt;
 
     public BaseFile() {
     }
 
-    public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus) {
+    public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
         this.fileId = fileId;
         this.name = name;
         this.url = url;
@@ -45,7 +52,11 @@ public class BaseFile {
         this.customMetadata = customMetadata;
         this.embeddedMetadata = embeddedMetadata;
         this.extensionStatus = extensionStatus;
-
+        this.type = type;
+        this.mime = mime;
+        this.hasAlpha = hasAlpha;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getFileId() {
@@ -184,6 +195,47 @@ public class BaseFile {
         this.extensionStatus = extensionStatus;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getMime() {
+        return mime;
+    }
+
+    public void setMime(String mime) {
+        this.mime = mime;
+    }
+
+    public Boolean getHasAlpha() {
+        return hasAlpha;
+    }
+
+    public void setHasAlpha(Boolean hasAlpha) {
+        this.hasAlpha = hasAlpha;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Date updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+
     @Override
     public String toString() {
         return "BaseFile{" +
@@ -204,6 +256,13 @@ public class BaseFile {
                 ", customMetadata=" + customMetadata +
                 ", embeddedMetadata=" + embeddedMetadata +
                 ", extensionStatus=" + extensionStatus +
+                ", type='" + type + '\'' +
+                ", mime='" + mime + '\'' +
+                ", hasAlpha=" + hasAlpha +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
+
+
 }

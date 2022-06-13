@@ -375,7 +375,7 @@ class App{
     private static void uploadFromBytes() {
         System.out.println(Color.ANSI_CYAN+">> Uploading Image from file:"+Color.ANSI_RESET);
         System.out.println(">> Start uploading...");
-        URL url = App.class.getClassLoader().getResource("i1.jpg");
+        URL url = App.class.getClassLoader().getResource("sample1.jpg");
         File file=new File(url.getPath());
         byte[] bytes= Utils.fileToBytes(file);
         FileCreateRequest fileCreateRequest =new FileCreateRequest(bytes, "sample_image_th.jpg");

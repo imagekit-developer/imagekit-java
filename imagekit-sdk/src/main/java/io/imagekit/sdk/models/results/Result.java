@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.ResponseMetaData;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public class Result extends BaseFile {
     public Result() {
     }
 
-    public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus) {
+    public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType, JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata, JsonObject extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
         this.fileId = fileId;
         this.name = name;
         this.url = url;
@@ -41,6 +42,11 @@ public class Result extends BaseFile {
         this.customMetadata = customMetadata;
         this.embeddedMetadata = embeddedMetadata;
         this.extensionStatus = extensionStatus;
+        this.type = type;
+        this.mime = mime;
+        this.hasAlpha = hasAlpha;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public boolean isSuccessful() {
@@ -211,6 +217,11 @@ public class Result extends BaseFile {
                 ", customMetadata=" + customMetadata +
                 ", embeddedMetadata=" + embeddedMetadata +
                 ", extensionStatus=" + extensionStatus +
+                ", type='" + type + '\'' +
+                ", mime='" + mime + '\'' +
+                ", hasAlpha=" + hasAlpha +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
