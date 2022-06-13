@@ -544,9 +544,10 @@ public class RestClient {
         try {
             Response response = client.newCall(request).execute();
 
-            String respBody = response.body().string();
-            result = new Gson().fromJson(respBody, Result.class);
+            String respBody = "";
             if (response.code() == 200) {
+                respBody = response.body().string();
+                result = new Gson().fromJson(respBody, Result.class);
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 result.setMessage("Removed AITags SuccessFully.");
@@ -620,10 +621,11 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            String respBody=response.body().string();
-            JsonElement responseBody = new JsonParser().parse(respBody);
-            result = new Gson().fromJson(responseBody, Result.class);
+            String respBody="";
             if (response.code()==201){
+                respBody = response.body().string();
+                JsonElement responseBody = new JsonParser().parse(respBody);
+                result = new Gson().fromJson(responseBody, Result.class);
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 if (result.getMessage() == null) {
@@ -697,10 +699,11 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            String respBody=response.body().string();
-            JsonElement responseBody = new JsonParser().parse(respBody);
-            result = new Gson().fromJson(responseBody, Result.class);
+            String respBody="";
             if (response.code()==200){
+                respBody=response.body().string();
+                JsonElement responseBody = new JsonParser().parse(respBody);
+                result = new Gson().fromJson(responseBody, Result.class);
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 if (result.getMessage() == null) {

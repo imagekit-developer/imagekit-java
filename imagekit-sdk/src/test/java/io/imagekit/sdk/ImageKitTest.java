@@ -882,6 +882,36 @@ public class ImageKitTest {
     }
 
     @Test
+    public void remove_tags_expected_400_bad_request() throws IOException, InterruptedException {
+
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("mockFileIds");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        MockWebServer server = new MockWebServer();
+        String tagsResponseJson = "{\n" +
+                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody(tagsResponseJson));
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.removeTags(tagsRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String tagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"tags\":[\"tag1\"]}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(tagsRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/files/removeTags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeTags"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException {
 
         List<String> fileIds = new ArrayList<>();
@@ -942,6 +972,44 @@ public class ImageKitTest {
     }
 
     @Test
+    public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        String responseJson = "{\n" +
+                "    \"message\": \"A custom metadata field with this name already exists\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody(responseJson));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setMinValue(10);
+        mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
+
+        CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+        customMetaDataFieldCreateRequest.setName("mockName");
+        customMetaDataFieldCreateRequest.setLabel("mockLabel");
+        customMetaDataFieldCreateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        Result result = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        RecordedRequest request = server.takeRequest();
+        System.out.println("res:--> " + result.getRaw() );
+        System.out.println("res 1:--> " + result.getMap() );
+        System.out.println("res 2:--> " + result.getResponseMetaData().getRaw());
+        System.out.println("res 3:--> " + result.getResponseMetaData().getMap());
+        String customMetaDataFieldCreateRequestJson = "{\"name\":\"mockName\",\"label\":\"mockLabel\",\"schema\":{\"type\":\"Number\",\"minValue\":10,\"maxValue\":100}}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException {
 
         MockWebServer server = new MockWebServer();
@@ -981,6 +1049,28 @@ public class ImageKitTest {
     }
 
     @Test
+    public void deleteCustomMetaDataField_400_Expected() throws IOException, InterruptedException {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"Your request contains invalid ID parameter.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+
+        Result result = SUT.deleteCustomMetaDataField("fileId");
+        RecordedRequest request = server.takeRequest();
+
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("DELETE /v1/customMetadataFields/fileId HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/fileId"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
@@ -995,6 +1085,41 @@ public class ImageKitTest {
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("DELETE /v1/customMetadataFields/629f2e2f7eb0fe2eb25f9988 HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/629f2e2f7eb0fe2eb25f9988"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"Invalid schema object\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"errors\": {\n" +
+                "        \"minLength\": \"not allowed for this type\"\n" +
+                "    }\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setMinLength(10);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("628f189d4e4ea318b69efa9d");
+        customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
+        customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        Result result = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String customMetaDataFieldUpdateRequestJson = "{\"id\":\"628f189d4e4ea318b69efa9d\",\"label\":\"mockEditLabel\",\"schema\":{\"minLength\":10}}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(customMetaDataFieldUpdateRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PATCH /v1/customMetadataFields/628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1033,6 +1158,38 @@ public class ImageKitTest {
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("PATCH /v1/customMetadataFields/628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void removeAITags_400_Expected() throws InterruptedException, IOException {
+
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("mockFileIds");
+        List<String> aiTags = new ArrayList<>();
+        aiTags.add("Font");
+
+        AITagsRequest aiTagsRequest = new AITagsRequest();
+        aiTagsRequest.setFileIds(fileIds);
+        aiTagsRequest.setAITags(aiTags);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.removeAITags(aiTagsRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String aiTagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"AITags\":[\"Font\"]}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(aiTagsRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/files/removeAITags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeAITags"),  request.getRequestUrl().toString());
     }
 
     @Test
