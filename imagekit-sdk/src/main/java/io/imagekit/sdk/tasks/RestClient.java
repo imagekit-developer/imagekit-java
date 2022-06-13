@@ -509,8 +509,8 @@ public class RestClient {
             Response response = client.newCall(request).execute();
 
             String respBody = response.body().string();
-            result = new Gson().fromJson(respBody, Result.class);
             if (response.code() == 200) {
+                result = new Gson().fromJson(respBody, Result.class);
                 result.setSuccessful(true);
                 result.setRaw(respBody);
                 result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());

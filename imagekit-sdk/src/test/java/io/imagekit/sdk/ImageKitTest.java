@@ -44,6 +44,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -819,6 +820,39 @@ public class ImageKitTest {
         assertEquals(Version.VERSION_CODE, matcher.group(2));
         assertFalse(matcher.group(3).trim().isEmpty());
         assertFalse(matcher.group(4).trim().isEmpty());
+    }
+
+    @Test
+    public void add_tags_expected_400_bad_request() throws IOException, InterruptedException {
+
+        List<String> fileIds = new ArrayList<>();
+        fileIds.add("mockFileIds");
+        List<String> tags = new ArrayList<>();
+        tags.add("tag1");
+        tags.add("tag2");
+
+        TagsRequest tagsRequest = new TagsRequest(fileIds, tags);
+
+        MockWebServer server = new MockWebServer();
+        String tagsResponseJson = "{\n" +
+                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody(tagsResponseJson));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.addTags(tagsRequest);
+
+        RecordedRequest request = server.takeRequest();
+
+        String tagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"tags\":[\"tag1\",\"tag2\"]}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(tagsRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/files/addTags HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/addTags"),  request.getRequestUrl().toString());
     }
 
     @Test
