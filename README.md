@@ -323,10 +323,25 @@ List<String> responseFields=new ArrayList<>();
 responseFields.add("tags");
 responseFields.add("customCoordinates");
 fileCreateRequest.setResponseFields(responseFields); // optional
+JsonObject innerObject1 = new JsonObject();
+innerObject1.addProperty("name", "remove-bg");
+innerObject1.add("options", optionsInnerObject);
+JsonObject innerObject2 = new JsonObject();
+innerObject2.addProperty("name", "google-auto-tagging");
+innerObject2.addProperty("minConfidence", 10);
+innerObject2.addProperty("maxTags", 5);
+JsonArray jsonArray = new JsonArray();
+jsonArray.add(innerObject1);
+jsonArray.add(innerObject2);
+fileCreateRequest.setExtensions(jsonArray); // optional
+fileCreateRequest.setWebhookUrl("Your webhook url"); // optional
 fileCreateRequest.setOverwriteFile(true); // optional
 fileCreateRequest.setOverwriteAITags(true); // optional
 fileCreateRequest.setOverwriteTags(true); // optional
 fileCreateRequest.setOverwriteCustomMetadata(true); // optional
+JsonObject jsonObjectCustomMetadata = new JsonObject();
+jsonObjectCustomMetadata.addProperty("test1", 10);
+fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata); // optional
 Result result = ImageKit.getInstance().upload(fileCreateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
@@ -525,7 +540,29 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-**11. Get CustomMetaDataFields**
+**11. Remove AI tags**
+
+Removed AITags using the FileIds and AITags which we want to remove from request as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk)
+
+```java
+List<String> fileIds = new ArrayList<>();
+fileIds.add("629f3de17eb0fe4053615450");
+List<String> aiTags = new ArrayList<>();
+aiTags.add("Rectangle");
+AITagsRequest aiTagsRequest =new AITagsRequest();
+aiTagsRequest.setFileIds(fileIds);
+aiTagsRequest.setAITags(aiTags);
+Result result = ImageKit.getInstance().removeAITags(aiTagsRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**12. Get CustomMetaDataFields**
 
 fetches the metadata as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
@@ -541,7 +578,7 @@ System.out.println(result.getResponseMetaData().getList());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
-**12. Create CustomMetaDataFields**
+**13. Create CustomMetaDataFields**
 
 It creates the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
@@ -565,7 +602,7 @@ System.out.println(result.getResponseMetaData().getMap());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
 
-**13. Delete CustomMetaDataFields**
+**14. Delete CustomMetaDataFields**
 
 It deletes the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).
@@ -581,7 +618,7 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-**14. Edit CustomMetaDataFields**
+**15. Edit CustomMetaDataFields**
 
 It edits the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
@@ -605,6 +642,213 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 System.out.println(result.getResultCustomMetaDataFields());
 ```
+
+**16. Delete FileVersion**
+
+It deletes the FileVersion as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version).
+The argument to the `deleteFileVersion()` method accepts the id of file and versionID to delete particular version of the file except current version which we want to be deleted.
+
+```java
+DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+deleteFileVersionRequest.setFileId("629d95278482ba129fd17c97");
+deleteFileVersionRequest.setVersionId("629d953ebd24e8ceca911a66");
+Result result = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**17. Copy file**
+
+It Copies the File as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
+The argument to the `copyFile()` method accepts the sourceFilePath and destinationPath that where we want to be copied it.
+
+```java
+CopyFileRequest copyFileRequest = new CopyFileRequest();
+copyFileRequest.setSourceFilePath("/w2_image.png");
+copyFileRequest.setDestinationPath("/Gallery/");
+copyFileRequest.setIncludeVersions(true);
+Result result = ImageKit.getInstance().copyFile(copyFileRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**18. Move file**
+
+It Moves the File as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/move-file).
+The argument to the `moveFile()` method accepts the sourceFilePath and destinationPath that where we want to be moved it.
+
+```java
+MoveFileRequest moveFileRequest = new MoveFileRequest();
+moveFileRequest.setSourceFilePath("/Gallery/w2_image.png");
+moveFileRequest.setDestinationPath("/");
+Result result = ImageKit.getInstance().moveFile(moveFileRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**19. Rename file**
+
+It Renames the File as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file).
+The argument to the `renameFile()` method accepts the filePath for which you wants to rename and newFileName that with which you want to renamed it with purgeCache boolean.
+
+```java
+RenameFileRequest renameFileRequest = new RenameFileRequest();
+renameFileRequest.setFilePath("/w2_image.png");
+renameFileRequest.setNewFileName("w2_image_s.png");
+renameFileRequest.setPurgeCache(true);
+Result result = ImageKit.getInstance().renameFile(renameFileRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**20. Create Folder**
+
+It Creates the Folder as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder).
+The argument to the `createFolder()` method accepts the folderName and parentFolderPath.
+
+```java
+RenameFileRequest renameFileRequest = new RenameFileRequest();
+renameFileRequest.setFilePath("/w2_image.png");
+renameFileRequest.setNewFileName("w2_image_s.png");
+renameFileRequest.setPurgeCache(true);
+Result result = ImageKit.getInstance().renameFile(renameFileRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**21. Delete Folder**
+
+It Deletes the Folder as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder).
+The argument to the `deleteFolder()` method accepts the folderPath for which the folder has to be deleted.
+
+```java
+DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
+deleteFolderRequest.setFolderPath("/test1");
+Result result = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**22. Copy Folder**
+
+It Copies the Folder as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
+The argument to the `copyFolder()` method accepts the sourceFolderPath, destinationPath and includeVersions for which the folder has to be copied.
+
+```java
+CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
+copyFolderRequest.setSourceFolderPath("/Gallery/test");
+copyFolderRequest.setDestinationPath("/");
+Result result = ImageKit.getInstance().copyFolder(copyFolderRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**23. Move Folder**
+
+It Moves the Folder as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder).
+The argument to the `moveFolder()` method accepts the sourceFolderPath, destinationPath for which the folder has to be moved.
+
+```java
+MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
+moveFolderRequest.setSourceFolderPath("/Gallery/test");
+moveFolderRequest.setDestinationPath("/");
+Result result = ImageKit.getInstance().moveFolder(moveFolderRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**24. Get Bulk Job Status**
+
+It Gets the Job status as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-move-folder-status).
+The argument to the `getBulkJobStatus()` method accepts the jobId for which job has to be get or Fetched the status.
+
+```java
+String jobId = "629f44ac7eb0fe8173622d4b";
+Result result = ImageKit.getInstance().getBulkJobStatus(jobId);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**25. Get File Versions**
+
+It Gets the File versions as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-versions).
+The argument to the `getFileVersions()` method accepts the fileId for which file has to be get or Fetched the versions.
+
+```java
+String fileId = "62a04834c10d49825c6de9e8";
+Result result = ImageKit.getInstance().getFileVersions(fileId);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**26. Get File Version details**
+
+It Gets the File version details as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
+The argument to the `getFileVersionDetails()` method accepts the fileId and versionId for which file has to be get or Fetched with particular version.
+
+```java
+String fileId = "62a04834c10d49825c6de9e8";
+String versionId = "62a04834c10d49825c6de9e8";
+Result result = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
 
 ## Utility functions
 
