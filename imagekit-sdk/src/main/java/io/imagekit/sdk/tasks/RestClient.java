@@ -563,7 +563,7 @@ public class RestClient {
         return result;
     }
 
-    public Result getCustomMetaDataFields() {
+    public Result getCustomMetaDataFields(boolean includeDeleted) {
         Result result = new Result();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
@@ -573,7 +573,7 @@ public class RestClient {
         headers.put("Authorization",credential);
 
         request=new Request.Builder()
-                .url(API_BASE_URL.concat("v1/customMetadataFields"))
+                .url(API_BASE_URL.concat("v1/customMetadataFields?includeDeleted=" + includeDeleted))
                 .get()
                 .headers(Headers.of(headers))
                 .build();

@@ -42,7 +42,7 @@ class App{
 
 //        uploadFromURL();
 //        uploadFromBase64();
-        uploadFromBytes();
+//        uploadFromBytes();
 //        getBulkJobStatus();
 //        deleteFileVersion();
 //        getFileVersions();
@@ -60,7 +60,7 @@ class App{
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
 //        deleteCustomMetaDataField("6296f91191fa57ccc36b15cf");
-//        getCustomMetaDataFields();
+        getCustomMetaDataFields();
 //
 //        calculateDistance();
 //        generatingAuthParams();
@@ -382,13 +382,14 @@ class App{
         fileCreateRequest.setUseUniqueFileName(false);
         JsonObject optionsInnerObject = new JsonObject();
         optionsInnerObject.addProperty("add_shadow", true);
+        optionsInnerObject.addProperty("bg_colour", "green");
         JsonObject innerObject1 = new JsonObject();
         innerObject1.addProperty("name", "remove-bg");
         innerObject1.add("options", optionsInnerObject);
         JsonObject innerObject2 = new JsonObject();
         innerObject2.addProperty("name", "google-auto-tagging");
-        innerObject2.addProperty("minConfidence", 10);
-        innerObject2.addProperty("maxTags", 5);
+        innerObject2.addProperty("minConfidence", 5);
+        innerObject2.addProperty("maxTags", 95);
         JsonArray jsonArray = new JsonArray();
         jsonArray.add(innerObject1);
         jsonArray.add(innerObject2);
@@ -419,6 +420,8 @@ class App{
         tags.add("tag3");
         tags.add("tag4");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
+        tagsRequest.setFileIds(fileIds);
+        tagsRequest.setTags(tags);
         Result result = ImageKit.getInstance().addTags(tagsRequest);
         System.out.println(">> Add Tags done.");
         System.out.println(Color.ANSI_GREEN+">> Response add tags:"+Color.ANSI_RESET);
@@ -462,7 +465,7 @@ class App{
     }
 
     private static void getCustomMetaDataFields() {
-        Result result = ImageKit.getInstance().getCustomMetaDataFields();
+        Result result = ImageKit.getInstance().getCustomMetaDataFields(false);
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
@@ -472,10 +475,16 @@ class App{
     }
 
     private static void createCustomMetaDataFields() {
+        CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        customMetaDataFieldSchemaObject.setValueRequired(false);
+        customMetaDataFieldSchemaObject.setMaxValue(2);
+        customMetaDataFieldSchemaObject.setMinValue(29);
+
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
         customMetaDataFieldCreateRequest.setName("NameCus2");
         customMetaDataFieldCreateRequest.setLabel("LabelCm2");
-        customMetaDataFieldCreateRequest.setSchema(new CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum.Number, false, 0, 100));
+        customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
 
         Result result = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         System.out.println(">> Create CustomMetaDataFields done.");

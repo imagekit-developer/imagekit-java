@@ -964,7 +964,7 @@ public class ImageKitTest {
                 "]"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.getCustomMetaDataFields();
+        SUT.getCustomMetaDataFields(false);
         RecordedRequest request = server.takeRequest();
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("GET /v1/customMetadataFields HTTP/1.1", request.getRequestLine());

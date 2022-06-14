@@ -229,8 +229,8 @@ public final class ImageKit {
      *
      * @return a CustomMetaDataResultList that contains CustomMetaDataField's name, label, schema
      */
-    public Result getCustomMetaDataFields() {
-        return restClient.getCustomMetaDataFields();
+    public Result getCustomMetaDataFields(boolean includeDeleted) {
+        return restClient.getCustomMetaDataFields(includeDeleted);
     }
 
     /**
