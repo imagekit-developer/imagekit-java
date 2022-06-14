@@ -1220,6 +1220,35 @@ public class ImageKitTest {
     }
 
     @Test
+    public void copyFile_404_Expected() throws InterruptedException, IOException {
+
+        CopyFileRequest copyFileRequest = new CopyFileRequest();
+        copyFileRequest.setSourceFilePath("/car.jpeg");
+        copyFileRequest.setDestinationPath("/Gallery/");
+        copyFileRequest.setIncludeVersions(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"No file found with filePath /sample_image.jpg\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"SOURCE_FILE_MISSING\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.copyFile(copyFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String copyFileRequestJson = "{\"sourceFilePath\":\"/car.jpeg\",\"destinationPath\":\"/Gallery/\",\"includeVersions\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(copyFileRequestJson, utf8RequestBody);
+        assertEquals(404, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/files/copy HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/copy"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void copyFile_successExpected() throws InterruptedException, IOException {
 
         CopyFileRequest copyFileRequest = new CopyFileRequest();
@@ -1243,6 +1272,34 @@ public class ImageKitTest {
     }
 
     @Test
+    public void moveFile_400_Expected() throws InterruptedException, IOException {
+
+        MoveFileRequest moveFileRequest = new MoveFileRequest();
+        moveFileRequest.setSourceFilePath("/");
+        moveFileRequest.setDestinationPath("test");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"sourceFilePath parameter is missing.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"MISSING_PARAMETER\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.moveFile(moveFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String moveFileRequestJson = "{\"sourceFilePath\":\"/\",\"destinationPath\":\"test\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(moveFileRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("POST /v1/files/move HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/move"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void moveFile_successExpected() throws InterruptedException, IOException {
 
         MoveFileRequest moveFileRequest = new MoveFileRequest();
@@ -1262,6 +1319,35 @@ public class ImageKitTest {
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("POST /v1/files/move HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/move"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void renameFile_400_Expected() throws InterruptedException, IOException {
+
+        RenameFileRequest renameFileRequest = new RenameFileRequest();
+        renameFileRequest.setFilePath("/");
+        renameFileRequest.setNewFileName("new_car.jpeg");
+        renameFileRequest.setPurgeCache(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"Your request is missing filePath parameter\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"MISSING_PARAMETER\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.renameFile(renameFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String renameFileRequestJson = "{\"filePath\":\"/\",\"newFileName\":\"new_car.jpeg\",\"purgeCache\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(renameFileRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PUT /v1/files/rename HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/rename"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1288,6 +1374,33 @@ public class ImageKitTest {
     }
 
     @Test
+    public void createFolder_400_Expected() throws InterruptedException, IOException {
+
+        CreateFolderRequest createFolderRequest = new CreateFolderRequest();
+        createFolderRequest.setFolderName("/testFolder");
+        createFolderRequest.setParentFolderPath("/");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"folderName parameter cannot have a slash.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.createFolder(createFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String createFolderRequestJson = "{\"folderName\":\"/testFolder\",\"parentFolderPath\":\"/\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(createFolderRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/folder/ HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void createFolder_successExpected() throws InterruptedException, IOException {
 
         CreateFolderRequest createFolderRequest = new CreateFolderRequest();
@@ -1306,6 +1419,33 @@ public class ImageKitTest {
         assertEquals(createFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("POST /v1/folder/ HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void deleteFolder_404_Expected() throws InterruptedException, IOException {
+
+        DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
+        deleteFolderRequest.setFolderPath("testFolder");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"No folder found with folderPath test/\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"FOLDER_NOT_FOUND\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.deleteFolder(deleteFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String deleteFolderRequestJson = "{\"folderPath\":\"testFolder\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(deleteFolderRequestJson, utf8RequestBody);
+        assertEquals(404, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("DELETE /v1/folder/ HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
     }
 
@@ -1331,6 +1471,35 @@ public class ImageKitTest {
     }
 
     @Test
+    public void copyFolder_400_Expected() throws InterruptedException, IOException {
+
+        CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
+        copyFolderRequest.setSourceFolderPath("/testFolder");
+        copyFolderRequest.setDestinationPath("/");
+        copyFolderRequest.setIncludeVersions(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"The parent directory of source and destination folder should be different.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"SAME_SOURCE_AND_DESTINATION\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.copyFolder(copyFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/\",\"includeVersions\":true}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(copyFolderRequestJson, utf8RequestBody);
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void copyFolder_successExpected() throws InterruptedException, IOException {
 
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
@@ -1350,6 +1519,34 @@ public class ImageKitTest {
         String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/Gallery\",\"includeVersions\":true}";
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(copyFolderRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void moveFolder_404_Expected() throws InterruptedException, IOException {
+
+        MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
+        moveFolderRequest.setSourceFolderPath("/testFolder/");
+        moveFolderRequest.setDestinationPath("/Gallery");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"No files & folder found at sourceFolderPath /testFolder/\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"NO_FILES_FOLDER\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.moveFolder(moveFolderRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String moveFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder/\",\"destinationPath\":\"/Gallery\"}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(moveFolderRequestJson, utf8RequestBody);
+        assertEquals(404, result.getResponseMetaData().getHttpStatusCode());
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
@@ -1380,6 +1577,26 @@ public class ImageKitTest {
     }
 
     @Test
+    public void getBulkJobStatus_500_Expected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(500));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"We have experienced an internal error while processing your request.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.getBulkJobStatus("jobId");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals(500, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET /v1/bulkJobs/jobId HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/jobId"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void getBulkJobStatus_successExpected() throws InterruptedException, IOException {
 
         MockWebServer server = new MockWebServer();
@@ -1396,6 +1613,26 @@ public class ImageKitTest {
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("GET /v1/bulkJobs/629f44ac7eb0fe8173622d4b HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/629f44ac7eb0fe8173622d4b"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void getFileVersions_400_Expected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"Your request contains invalid fileId parameter.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.getFileVersions("id");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("GET /v1/files/id/versions HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/id/versions"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -1469,6 +1706,26 @@ public class ImageKitTest {
     }
 
     @Test
+    public void getFileVersionDetails_400_Expected() throws InterruptedException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"Your request contains invalid versionId parameter.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "id");
+        RecordedRequest request = server.takeRequest();
+
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/id HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/id"),  request.getRequestUrl().toString());
+    }
+
+    @Test
     public void getFileVersionDetails_successExpected() throws InterruptedException, IOException {
 
         MockWebServer server = new MockWebServer();
@@ -1534,6 +1791,32 @@ public class ImageKitTest {
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),  request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException {
+
+        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+        deleteFileVersionRequest.setVersionId("id");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400));
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"message\": \"The requested file version does not exist.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Result result = SUT.deleteFileVersion(deleteFileVersionRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals("DELETE /v1/files/629d90768482ba272ed17628/versions/id HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/id"),  request.getRequestUrl().toString());
     }
 
     @Test
