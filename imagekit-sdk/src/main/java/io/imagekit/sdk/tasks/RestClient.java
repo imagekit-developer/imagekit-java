@@ -490,8 +490,8 @@ public class RestClient {
         return result;
     }
 
-    public Result manageTags(TagsRequest tagsRequest, String action) {
-        Result result = new Result();
+    public ResultTags manageTags(TagsRequest tagsRequest, String action) {
+        ResultTags resultTags = new ResultTags();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
@@ -507,27 +507,21 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-
-            String respBody = response.body().string();
-            if (response.code() == 200) {
-                result = new Gson().fromJson(respBody, Result.class);
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? action.equals("removeTags") ? "Removed Tags SuccessFully." : "Added Tags SuccessFully." : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+            String respBody = "";
+            if (response.code() == 200 || response.code() == 207) {
+                respBody = response.body().string();
+                resultTags = new Gson().fromJson(respBody, ResultTags.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(), response.headers().toMultimap());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultTags;
     }
 
-    public Result removeAITags(AITagsRequest aiTagsRequest) {
-        Result result = new Result();
+    public ResultTags removeAITags(AITagsRequest aiTagsRequest) {
+        ResultTags resultTags = new ResultTags();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
@@ -543,24 +537,17 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-
             String respBody = "";
-            if (response.code() == 200) {
+            if (response.code() == 200 || response.code() == 207) {
                 respBody = response.body().string();
-                result = new Gson().fromJson(respBody, Result.class);
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage("Removed AITags SuccessFully.");
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                resultTags = new Gson().fromJson(respBody, ResultTags.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(), response.headers().toMultimap());
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultTags;
     }
 
     public Result getCustomMetaDataFields(boolean includeDeleted) {
@@ -719,8 +706,8 @@ public class RestClient {
         return result;
     }
 
-    public Result deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
-        Result result = new Result();
+    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
+        ResultNoContent resultNoContent = new ResultNoContent();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -739,27 +726,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==204){
-                respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("File version Deleted SuccessFully.");
-                }
-            } else {
-                String resp=response.body().string();
-                result.setSuccessful(false);
-                result.setRaw(resp);
-                result.getResponseMetaData().setRaw(resp);
+                String respString = response.body().string();
+                respBody = respString == null ? "" : respString;
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultNoContent;
     }
 
-    public Result copyFile(CopyFileRequest copyFileRequest) {
-        Result result = new Result();
+    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) {
+        ResultNoContent resultNoContent = new ResultNoContent();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -778,24 +756,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==204){
-                respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("File Copied SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                String respString = response.body().string();
+                respBody = respString == null ? "" : respString ;
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultNoContent;
     }
 
-    public Result moveFile(MoveFileRequest moveFileRequest) {
-        Result result = new Result();
+    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) {
+        ResultNoContent resultNoContent = new ResultNoContent();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -814,24 +786,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==204){
-                respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("File Moved SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                String respString = response.body().string();
+                respBody = respString == null ? "" : respString ;
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultNoContent;
     }
 
-    public Result renameFile(RenameFileRequest renameFileRequest) {
-        Result result = new Result();
+    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) {
+        ResultRenameFile resultRenameFile = new ResultRenameFile();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -848,25 +814,21 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            String respBody=response.body().string();
+            String respBody="";
             if (response.code()==200){
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("File Renamed SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                String respString = response.body().string();
+                respBody = respString == null || respString.equals("") ? "{}" : respString;
+                resultRenameFile = new Gson().fromJson(respBody, ResultRenameFile.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultRenameFile.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultRenameFile;
     }
 
-    public Result createFolder(CreateFolderRequest createFolderRequest) {
-        Result result = new Result();
+    public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) {
+        ResultEmptyBlock resultEmptyBlock = new ResultEmptyBlock();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -885,24 +847,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==201){
-                respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("Folder Created SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                String respString = response.body().string();
+                respBody = respString == null || respString.equals("") ? "{}" : respString ;
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultEmptyBlock.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultEmptyBlock;
     }
 
-    public Result deleteFolder(DeleteFolderRequest deleteFolderRequest) {
-        Result result = new Result();
+    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) {
+        ResultNoContent resultNoContent = new ResultNoContent();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
@@ -920,23 +876,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==204){
-                respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Delete Folder successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                String respString = response.body().string();
+                respBody = respString == null ? "" : respString;
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultNoContent;
     }
 
-    public Result copyFolder(CopyFolderRequest copyFolderRequest) {
-        Result result = new Result();
+    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) {
+        ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -957,22 +908,17 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Copy Folder successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultOfFolderActions;
     }
 
-    public Result moveFolder(MoveFolderRequest moveFolderRequest) {
-        Result result = new Result();
+    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) {
+        ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -993,22 +939,17 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Move Folder successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultOfFolderActions;
     }
 
-    public Result getBulkJobStatus(String jobId) {
-        Result result = new Result();
+    public ResultBulkJobStatus getBulkJobStatus(String jobId) {
+        ResultBulkJobStatus resultBulkJobStatus = new ResultBulkJobStatus();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -1029,26 +970,20 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Fetched bulk Job status successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                resultBulkJobStatus = new Gson().fromJson(respBody, ResultBulkJobStatus.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultBulkJobStatus.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultBulkJobStatus;
     }
 
     public Result getFileVersions(String fileId) {
         Result result = new Result();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
+        Map<String, String> headers=new HashMap<>();headers.put("Accept-Encoding","application/json");
         headers.put("Content-Type","application/json");
         headers.put("Authorization",credential);
 

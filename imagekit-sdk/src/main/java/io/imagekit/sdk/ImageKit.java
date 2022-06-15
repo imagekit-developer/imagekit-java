@@ -203,7 +203,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public Result addTags(TagsRequest tagsRequest){
+    public ResultTags addTags(TagsRequest tagsRequest){
         return restClient.manageTags(tagsRequest, "addTags");
     }
 
@@ -212,7 +212,7 @@ public final class ImageKit {
      * @param aiTagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public Result removeAITags(AITagsRequest aiTagsRequest){
+    public ResultTags removeAITags(AITagsRequest aiTagsRequest){
         return restClient.removeAITags(aiTagsRequest);
     }
 
@@ -221,7 +221,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public Result removeTags(TagsRequest tagsRequest){
+    public ResultTags removeTags(TagsRequest tagsRequest){
         return restClient.manageTags(tagsRequest, "removeTags");
     }
 
@@ -265,7 +265,7 @@ public final class ImageKit {
      * @param deleteFileVersionRequest class
      * @return Result class
      */
-    public Result deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
+    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
         return restClient.deleteFileVersion(deleteFileVersionRequest);
     }
 
@@ -274,7 +274,7 @@ public final class ImageKit {
      * @param copyFileRequest class
      * @return Result class
      */
-    public Result copyFile(CopyFileRequest copyFileRequest) {
+    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) {
         return restClient.copyFile(copyFileRequest);
     }
 
@@ -283,7 +283,7 @@ public final class ImageKit {
      * @param moveFileRequest class
      * @return Result class
      */
-    public Result moveFile(MoveFileRequest moveFileRequest) {
+    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) {
         return restClient.moveFile(moveFileRequest);
     }
 
@@ -292,7 +292,7 @@ public final class ImageKit {
      * @param renameFileRequest class
      * @return Result class
      */
-    public Result renameFile(RenameFileRequest renameFileRequest) {
+    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) {
         return restClient.renameFile(renameFileRequest);
     }
 
@@ -301,7 +301,7 @@ public final class ImageKit {
      * @param createFolderRequest which contains folderPath that is full path to the folder you want to delete
      * @return Result class
      */
-    public Result createFolder(CreateFolderRequest createFolderRequest) {
+    public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) {
         return restClient.createFolder(createFolderRequest);
     }
 
@@ -310,7 +310,7 @@ public final class ImageKit {
      * @param deleteFolderRequest which contains folderPath that is full path to the folder you want to delete
      * @return Result class
      */
-    public Result deleteFolder(DeleteFolderRequest deleteFolderRequest) {
+    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) {
         return restClient.deleteFolder(deleteFolderRequest);
     }
 
@@ -319,7 +319,7 @@ public final class ImageKit {
      * @param copyFolderRequest that contains sourceFolderPath, destinationPath, includeVersions
      * @return Result class
      */
-    public Result copyFolder(CopyFolderRequest copyFolderRequest) {
+    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) {
         return restClient.copyFolder(copyFolderRequest);
     }
 
@@ -328,7 +328,7 @@ public final class ImageKit {
      * @param moveFolderRequest that contains sourceFolderPath, destinationPath
      * @return Result class
      */
-    public Result moveFolder(MoveFolderRequest moveFolderRequest) {
+    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) {
         return restClient.moveFolder(moveFolderRequest);
     }
 
@@ -337,7 +337,7 @@ public final class ImageKit {
      * @param jobId
      * @return a Result class
      */
-    public Result getBulkJobStatus(String jobId) {
+    public ResultBulkJobStatus getBulkJobStatus(String jobId) {
         return restClient.getBulkJobStatus(jobId);
     }
 
