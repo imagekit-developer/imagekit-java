@@ -550,8 +550,8 @@ public class RestClient {
         return resultTags;
     }
 
-    public Result getCustomMetaDataFields(boolean includeDeleted) {
-        Result result = new Result();
+    public ResultCustomMetaDataFieldList getCustomMetaDataFields(boolean includeDeleted) {
+        ResultCustomMetaDataFieldList resultCustomMetaDataFieldList = new ResultCustomMetaDataFieldList();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -570,28 +570,24 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Fetched customMetadata successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                List<ResultCustomMetaDataField> resultCustomMetaDataFields=new Gson().fromJson(respBody, new TypeToken<List<ResultCustomMetaDataField>>() {}.getType());
+                resultCustomMetaDataFieldList.setResultCustomMetaDataFieldList(resultCustomMetaDataFields);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultCustomMetaDataFieldList.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultCustomMetaDataFieldList;
     }
 
-    public Result createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
         if (customMetaDataFieldCreateRequest.getName() == null) {
             throw new RuntimeException("Error: Name not provided.");
         }
         if (customMetaDataFieldCreateRequest.getLabel() == null) {
             throw new RuntimeException("Error: Label not provided.");
         }
-        Result result = new Result();
+        ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -612,24 +608,17 @@ public class RestClient {
             if (response.code()==201){
                 respBody = response.body().string();
                 JsonElement responseBody = new JsonParser().parse(respBody);
-                result = new Gson().fromJson(responseBody, Result.class);
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("CustomMetaData Created SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                resultCustomMetaDataField = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultCustomMetaDataField;
     }
 
-    public Result deleteCustomMetaDataField(String id) {
-        Result result=new Result();
+    public ResultNoContent deleteCustomMetaDataField(String id) {
+        ResultNoContent resultNoContent=new ResultNoContent();
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
         headers.put("Accept-Encoding","application/json");
@@ -648,27 +637,18 @@ public class RestClient {
             Response response = client.newCall(request).execute();
             String respBody="";
             if (response.code()==204){
-                respBody = response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage("CustomMetaDataField deleted successfully!");
+                String respString = response.body().string();
+                respBody = respString == null ? "" : respString;
             }
-            else if (response.code()==500) {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
-            }
-            else {
-                result.setSuccessful(false);
-            }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultNoContent;
     }
 
-    public Result updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
-        Result result = new Result();
+    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+        ResultCustomMetaDataField result = new ResultCustomMetaDataField();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -686,18 +666,12 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
+            System.out.println("response:==> " + response);
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
                 JsonElement responseBody = new JsonParser().parse(respBody);
-                result = new Gson().fromJson(responseBody, Result.class);
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                if (result.getMessage() == null) {
-                    result.setMessage("CustomMetaData Edited SuccessFully.");
-                }
-            } else {
-                result.setSuccessful(false);
+                result = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -815,7 +789,7 @@ public class RestClient {
         try {
             Response response = client.newCall(request).execute();
             String respBody="";
-            if (response.code()==200){
+            if (response.code()==200 || response.code() == 207){
                 String respString = response.body().string();
                 respBody = respString == null || respString.equals("") ? "{}" : respString;
                 resultRenameFile = new Gson().fromJson(respBody, ResultRenameFile.class);
@@ -979,8 +953,8 @@ public class RestClient {
         return resultBulkJobStatus;
     }
 
-    public Result getFileVersions(String fileId) {
-        Result result = new Result();
+    public ResultFileVersions getFileVersions(String fileId) {
+        ResultFileVersions resultFileVersions = new ResultFileVersions();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();headers.put("Accept-Encoding","application/json");
@@ -1000,28 +974,26 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Fetched File versions successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                List<ResultFileVersionDetails> resultFileVersionDetailsList=new Gson().fromJson(respBody,new TypeToken<List<ResultFileVersionDetails>>() {}.getType());
+                resultFileVersions.setResultFileVersionDetailsList(resultFileVersionDetailsList);
+                System.out.println("ALL:-->" + resultFileVersions.getResultFileVersionDetailsList());
+                System.out.println("1 from ALL:-->" + resultFileVersions.getResultFileVersionDetailsList().get(0));
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultFileVersions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultFileVersions;
     }
 
-    public Result getFileVersionDetails(String fileId, String versionId) {
+    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) {
         if (fileId == null) {
             throw new RuntimeException("Error: FileId not provided.");
         }
         if (versionId == null) {
             throw new RuntimeException("Error: versionId not provided.");
         }
-        Result result = new Result();
+        ResultFileVersionDetails resultFileVersionDetails = new ResultFileVersionDetails();
 
         String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
         Map<String, String> headers=new HashMap<>();
@@ -1042,17 +1014,12 @@ public class RestClient {
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
-                result.setSuccessful(true);
-                result.setRaw(respBody);
-                result.setMessage(response.message().equals("") ? "Fetched file version details successFully" : response.message());
-            } else {
-                result.setSuccessful(false);
-                result.setMessage("Error: Internal server error.");
+                resultFileVersionDetails = new Gson().fromJson(respBody, ResultFileVersionDetails.class);
             }
-            Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+            Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result;
+        return resultFileVersionDetails;
     }
 }

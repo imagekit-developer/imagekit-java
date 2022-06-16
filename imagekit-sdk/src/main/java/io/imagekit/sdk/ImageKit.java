@@ -229,7 +229,7 @@ public final class ImageKit {
      *
      * @return a CustomMetaDataResultList that contains CustomMetaDataField's name, label, schema
      */
-    public Result getCustomMetaDataFields(boolean includeDeleted) {
+    public ResultCustomMetaDataFieldList getCustomMetaDataFields(boolean includeDeleted) {
         return restClient.getCustomMetaDataFields(includeDeleted);
     }
 
@@ -238,7 +238,7 @@ public final class ImageKit {
      * @param customMetaDataFieldCreateRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
      * @return ResultCustomMetaData with ResultCustomMetaDataField
      */
-    public Result createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
         return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
     }
 
@@ -247,7 +247,7 @@ public final class ImageKit {
      * @param id is a id of customMetaDataFields
      * @return Result class
      */
-    public Result deleteCustomMetaDataField(String id){
+    public ResultNoContent deleteCustomMetaDataField(String id){
         return restClient.deleteCustomMetaDataField(id);
     }
 
@@ -256,7 +256,7 @@ public final class ImageKit {
      * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
      * @return Result class
      */
-    public Result updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
         return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
     }
 
@@ -346,7 +346,7 @@ public final class ImageKit {
      * @param fileId
      * @return a Result class
      */
-    public Result getFileVersions(String fileId) {
+    public ResultFileVersions getFileVersions(String fileId) {
         return restClient.getFileVersions(fileId);
     }
 
@@ -355,7 +355,7 @@ public final class ImageKit {
      * @param fileId & versionId
      * @return a Result class
      */
-    public Result getFileVersionDetails(String fileId, String versionId) {
+    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) {
         return restClient.getFileVersionDetails(fileId, versionId);
     }
 }

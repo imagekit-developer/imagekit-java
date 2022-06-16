@@ -45,9 +45,9 @@ class App{
 //        uploadFromBase64();
 //        uploadFromBytes();
 //        getBulkJobStatus();
-        deleteFileVersion();
+//        deleteFileVersion();
 //        getFileVersions();
-//        getFileVersionDetails();
+        getFileVersionDetails();
 //        copyFile();
 //        moveFile();
 //        renameFile();
@@ -465,12 +465,12 @@ class App{
     }
 
     private static void getCustomMetaDataFields() {
-        Result result = ImageKit.getInstance().getCustomMetaDataFields(false);
+        ResultCustomMetaDataFieldList resultCustomMetaDataFieldList = ImageKit.getInstance().getCustomMetaDataFields(false);
         System.out.println(">> Fetch CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Fetch CustomMetaDataFields Response:"+Color.ANSI_RESET);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getList());
-        System.out.println(result);
+        System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getList());
+        System.out.println(resultCustomMetaDataFieldList);
         System.out.println("\n\n");
     }
 
@@ -478,32 +478,32 @@ class App{
         CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
         customMetaDataFieldSchemaObject.setValueRequired(false);
-        customMetaDataFieldSchemaObject.setMaxValue(2);
-        customMetaDataFieldSchemaObject.setMinValue(29);
+        customMetaDataFieldSchemaObject.setMinValue(10);
+        customMetaDataFieldSchemaObject.setMaxValue(100);
 
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-        customMetaDataFieldCreateRequest.setName("NameCus2");
-        customMetaDataFieldCreateRequest.setLabel("LabelCm2");
+        customMetaDataFieldCreateRequest.setName("NameHe");
+        customMetaDataFieldCreateRequest.setLabel("LabelHe");
         customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
 
-        Result result = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         System.out.println(">> Create CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response create CustomMetaDataFields :"+Color.ANSI_RESET);
-        System.out.println(result);
+        System.out.println(resultCustomMetaDataField.get);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
     private static void deleteCustomMetaDataField(String id) {
-        Result result=ImageKit.getInstance().deleteCustomMetaDataField(id);
+        ResultNoContent resultNoContent=ImageKit.getInstance().deleteCustomMetaDataField(id);
         System.out.println(">> CustomMetaDataField deleted...");
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
-        System.out.println(result);
+        System.out.println(resultNoContent);
         System.out.println(Color.ANSI_GREEN+">> Raw Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getRaw());
+        System.out.println(resultNoContent.getResponseMetaData().getRaw());
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(resultNoContent.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -513,16 +513,16 @@ class App{
         schemaObject.setMaxValue(200);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-        customMetaDataFieldUpdateRequest.setId("62a0425ac10d49989f6d1996");
-        customMetaDataFieldUpdateRequest.setLabel("LabelCM200");
+        customMetaDataFieldUpdateRequest.setId("62aab5a9db4851797a8f8ff9");
+        customMetaDataFieldUpdateRequest.setLabel("LabelHE200");
         customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
-        Result result = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
         System.out.println(">> Edit CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response edit CustomMetaDataFields :"+Color.ANSI_RESET);
-        System.out.println(result);
+        System.out.println(resultCustomMetaDataField);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
@@ -644,25 +644,25 @@ class App{
     }
 
     private static void getFileVersions() {
-        String fileId = "62a04834c10d49825c6de9e8";
-        Result result = ImageKit.getInstance().getFileVersions(fileId);
+        String fileId = "62a9b446663ef7b5c15951ba";
+        ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
         System.out.println(">> Fetch Get file versions done.");
         System.out.println(Color.ANSI_GREEN+">> Response Get file versions :"+Color.ANSI_RESET);
-        System.out.println(result);
+        System.out.println(resultFileVersions);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getList());
+        System.out.println(resultFileVersions.getResponseMetaData().getList());
         System.out.println("\n\n");
     }
 
     private static void getFileVersionDetails() {
-        String fileId = "62a04834c10d49825c6de9e8";
-        String versionId = "62a04834c10d49825c6de9e8";
-        Result result = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
+        String fileId = "62a9b446663ef7b5c15951ba";
+        String versionId = "62a9b446663ef7b5c15951ba";
+        ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
         System.out.println(">> Fetch Get file versions details done.");
         System.out.println(Color.ANSI_GREEN+">> Response Get file versions details :"+Color.ANSI_RESET);
-        System.out.println(result);
+        System.out.println(resultFileVersionDetails);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
-        System.out.println(result.getResponseMetaData().getMap());
+        System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 }

@@ -882,7 +882,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void remove_tags_expected_400_bad_request() throws IOException, InterruptedException {
+    public void remove_tags_expected_400_bad_request() throws InterruptedException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("mockFileIds");
@@ -967,8 +967,8 @@ public class ImageKitTest {
         SUT.getCustomMetaDataFields(false);
         RecordedRequest request = server.takeRequest();
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"),  request.getRequestUrl().toString());
+        assertEquals("GET /v1/customMetadataFields?includeDeleted=false HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields?includeDeleted=false"),  request.getRequestUrl().toString());
     }
 
     @Test
@@ -994,15 +994,11 @@ public class ImageKitTest {
         customMetaDataFieldCreateRequest.setLabel("mockLabel");
         customMetaDataFieldCreateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        Result result = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+        ResultCustomMetaDataField resultCustomMetaDataField = SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         RecordedRequest request = server.takeRequest();
-        System.out.println("res:--> " + result.getRaw() );
-        System.out.println("res 1:--> " + result.getMap() );
-        System.out.println("res 2:--> " + result.getResponseMetaData().getRaw());
-        System.out.println("res 3:--> " + result.getResponseMetaData().getMap());
         String customMetaDataFieldCreateRequestJson = "{\"name\":\"mockName\",\"label\":\"mockLabel\",\"schema\":{\"type\":\"Number\",\"minValue\":10,\"maxValue\":100}}";
         String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(400, resultCustomMetaDataField.getResponseMetaData().getHttpStatusCode());
         assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
@@ -1059,12 +1055,12 @@ public class ImageKitTest {
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
 
-        Result result = SUT.deleteCustomMetaDataField("fileId");
+        ResultNoContent resultNoContent = SUT.deleteCustomMetaDataField("fileId");
         RecordedRequest request = server.takeRequest();
 
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals("", utf8RequestBody);
-        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(400, resultNoContent.getResponseMetaData().getHttpStatusCode());
         assertEquals("application/json", request.getHeader("Content-Type"));
         assertEquals("DELETE /v1/customMetadataFields/fileId HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/fileId"),  request.getRequestUrl().toString());
@@ -1110,13 +1106,13 @@ public class ImageKitTest {
         customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
         customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        Result result = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        ResultCustomMetaDataField resultCustomMetaDataField = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
         RecordedRequest request = server.takeRequest();
 
         String customMetaDataFieldUpdateRequestJson = "{\"id\":\"628f189d4e4ea318b69efa9d\",\"label\":\"mockEditLabel\",\"schema\":{\"minLength\":10}}";
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(customMetaDataFieldUpdateRequestJson, utf8RequestBody);
-        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(400, resultCustomMetaDataField.getResponseMetaData().getHttpStatusCode());
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
         assertEquals("PATCH /v1/customMetadataFields/628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
@@ -1626,11 +1622,11 @@ public class ImageKitTest {
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        Result result = SUT.getFileVersions("id");
+        ResultFileVersions resultFileVersions = SUT.getFileVersions("id");
         RecordedRequest request = server.takeRequest();
 
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(400, resultFileVersions.getResponseMetaData().getHttpStatusCode());
         assertEquals("GET /v1/files/id/versions HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/id/versions"),  request.getRequestUrl().toString());
     }
@@ -1716,11 +1712,11 @@ public class ImageKitTest {
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        Result result = SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "id");
+        ResultFileVersionDetails resultFileVersionDetails = SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "id");
         RecordedRequest request = server.takeRequest();
 
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals(400, result.getResponseMetaData().getHttpStatusCode());
+        assertEquals(400, resultFileVersionDetails.getResponseMetaData().getHttpStatusCode());
         assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/id HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/id"),  request.getRequestUrl().toString());
     }

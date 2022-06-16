@@ -510,15 +510,15 @@ Add tags using the FileIds and tags which we want to add in request as per the
 List<String> fileIds = new ArrayList<>();
 fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
-tags.add("tag1");
-tags.add("tag2");
-Result result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "addTags");
+tags.add("tag-to-add-1");
+tags.add("tag-to-add-2");
+ResultTags resultTags=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "addTags");
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultTags);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultTags.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultTags.getResponseMetaData().getMap());
 ```
 
 **10. Remove tags**
@@ -530,14 +530,15 @@ Removed tags using the FileIds and tags which we want to remove from request as 
 List<String> fileIds = new ArrayList<>();
 fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
-tags.add("tag1");
-Result result=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "removeTags");
+tags.add("tag-to-remove-1");
+tags.add("tag-to-remove-2");
+ResultTags resultTags=ImageKit.getInstance().manageTags(new TagsRequest(fileIds, tags), "removeTags");
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultTags);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultTags.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultTags.getResponseMetaData().getMap());
 ```
 
 **11. Remove AI tags**
@@ -553,13 +554,13 @@ aiTags.add("Rectangle");
 AITagsRequest aiTagsRequest =new AITagsRequest();
 aiTagsRequest.setFileIds(fileIds);
 aiTagsRequest.setAITags(aiTags);
-Result result = ImageKit.getInstance().removeAITags(aiTagsRequest);
+ResultTags resultTags = ImageKit.getInstance().removeAITags(aiTagsRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultTags);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultTags.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultTags.getResponseMetaData().getMap());
 ```
 
 **12. Get CustomMetaDataFields**
@@ -568,14 +569,14 @@ fetches the metadata as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
-Result result=ImageKit.getInstance().getCustomMetaDataFields();
+ResultCustomMetaDataFieldList resultCustomMetaDataFieldList=ImageKit.getInstance().getCustomMetaDataFields(false);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultCustomMetaDataFieldList);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getList());
-System.out.println(result.getResultCustomMetaDataFields());
+System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getList());
+System.out.println(resultCustomMetaDataFieldList.getResultCustomMetaDataFields());
 ```
 
 **13. Create CustomMetaDataFields**
@@ -592,14 +593,13 @@ CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMe
 customMetaDataFieldCreateRequest.setName("Name");
 customMetaDataFieldCreateRequest.setLabel("Label");
 customMetaDataFieldCreateRequest.setSchema(schemaObject);
-Result result=ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+ResultCustomMetaDataField resultCustomMetaDataField=ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultCustomMetaDataField);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultCustomMetaDataField.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
-System.out.println(result.getResultCustomMetaDataFields());
+System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 ```
 
 **14. Delete CustomMetaDataFields**
@@ -609,13 +609,13 @@ It deletes the CustomMetaDataFields as per the
 The argument to the `deleteCustomMetaDataField()` method accepts the id of customMetaDataField which we want to be deleted.
 
 ```java
-Result result=ImageKit.getInstance().deleteCustomMetaDataField("id");
+ResultNoContent resultNoContent=ImageKit.getInstance().deleteCustomMetaDataField("id");
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultNoContent);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultNoContent.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
 **15. Edit CustomMetaDataFields**
@@ -633,14 +633,13 @@ CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMe
 customMetaDataFieldUpdateRequest.setId("id");
 customMetaDataFieldUpdateRequest.setLabel("label");
 customMetaDataFieldUpdateRequest.setSchema(schemaObject);
-Result result=ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+ResultCustomMetaDataField resultCustomMetaDataField=ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultCustomMetaDataField);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultCustomMetaDataField.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
-System.out.println(result.getResultCustomMetaDataFields());
+System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 ```
 
 **16. Delete FileVersion**
@@ -653,13 +652,13 @@ The argument to the `deleteFileVersion()` method accepts the id of file and vers
 DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 deleteFileVersionRequest.setFileId("629d95278482ba129fd17c97");
 deleteFileVersionRequest.setVersionId("629d953ebd24e8ceca911a66");
-Result result = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
+ResultNoContent resultNoContent = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultNoContent);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultNoContent.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
 **17. Copy file**
@@ -673,13 +672,13 @@ CopyFileRequest copyFileRequest = new CopyFileRequest();
 copyFileRequest.setSourceFilePath("/w2_image.png");
 copyFileRequest.setDestinationPath("/Gallery/");
 copyFileRequest.setIncludeVersions(true);
-Result result = ImageKit.getInstance().copyFile(copyFileRequest);
+ResultNoContent resultNoContent = ImageKit.getInstance().copyFile(copyFileRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultNoContent);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultNoContent.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
 **18. Move file**
@@ -692,13 +691,13 @@ The argument to the `moveFile()` method accepts the sourceFilePath and destinati
 MoveFileRequest moveFileRequest = new MoveFileRequest();
 moveFileRequest.setSourceFilePath("/Gallery/w2_image.png");
 moveFileRequest.setDestinationPath("/");
-Result result = ImageKit.getInstance().moveFile(moveFileRequest);
+ResultNoContent resultNoContent = ImageKit.getInstance().moveFile(moveFileRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultNoContent);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultNoContent.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
 **19. Rename file**
@@ -712,13 +711,13 @@ RenameFileRequest renameFileRequest = new RenameFileRequest();
 renameFileRequest.setFilePath("/w2_image.png");
 renameFileRequest.setNewFileName("w2_image_s.png");
 renameFileRequest.setPurgeCache(true);
-Result result = ImageKit.getInstance().renameFile(renameFileRequest);
+ResultRenameFile resultRenameFile = ImageKit.getInstance().renameFile(renameFileRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultRenameFile);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultRenameFile.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultRenameFile.getResponseMetaData().getMap());
 ```
 
 **20. Create Folder**
@@ -728,17 +727,16 @@ It Creates the Folder as per the
 The argument to the `createFolder()` method accepts the folderName and parentFolderPath.
 
 ```java
-RenameFileRequest renameFileRequest = new RenameFileRequest();
-renameFileRequest.setFilePath("/w2_image.png");
-renameFileRequest.setNewFileName("w2_image_s.png");
-renameFileRequest.setPurgeCache(true);
-Result result = ImageKit.getInstance().renameFile(renameFileRequest);
+CreateFolderRequest createFolderRequest = new CreateFolderRequest();
+createFolderRequest.setFolderName("test1");
+createFolderRequest.setParentFolderPath("/");
+ResultEmptyBlock resultEmptyBlock = ImageKit.getInstance().createFolder(createFolderRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultEmptyBlock);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultEmptyBlock.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultEmptyBlock.getResponseMetaData().getMap());
 ```
 
 **21. Delete Folder**
@@ -750,13 +748,13 @@ The argument to the `deleteFolder()` method accepts the folderPath for which the
 ```java
 DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 deleteFolderRequest.setFolderPath("/test1");
-Result result = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
+ResultNoContent resultNoContent = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultNoContent);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultNoContent.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
 **22. Copy Folder**
@@ -769,13 +767,13 @@ The argument to the `copyFolder()` method accepts the sourceFolderPath, destinat
 CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 copyFolderRequest.setSourceFolderPath("/Gallery/test");
 copyFolderRequest.setDestinationPath("/");
-Result result = ImageKit.getInstance().copyFolder(copyFolderRequest);
+ResultOfFolderActions resultOfFolderActions = ImageKit.getInstance().copyFolder(copyFolderRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultOfFolderActions);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultOfFolderActions.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 ```
 
 **23. Move Folder**
@@ -788,13 +786,13 @@ The argument to the `moveFolder()` method accepts the sourceFolderPath, destinat
 MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 moveFolderRequest.setSourceFolderPath("/Gallery/test");
 moveFolderRequest.setDestinationPath("/");
-Result result = ImageKit.getInstance().moveFolder(moveFolderRequest);
+ResultOfFolderActions resultOfFolderActions = ImageKit.getInstance().moveFolder(moveFolderRequest);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultOfFolderActions);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultOfFolderActions.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 ```
 
 **24. Get Bulk Job Status**
@@ -805,13 +803,13 @@ The argument to the `getBulkJobStatus()` method accepts the jobId for which job 
 
 ```java
 String jobId = "629f44ac7eb0fe8173622d4b";
-Result result = ImageKit.getInstance().getBulkJobStatus(jobId);
+ResultBulkJobStatus resultBulkJobStatus = ImageKit.getInstance().getBulkJobStatus(jobId);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultBulkJobStatus);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultBulkJobStatus.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultBulkJobStatus.getResponseMetaData().getMap());
 ```
 
 **25. Get File Versions**
@@ -822,13 +820,13 @@ The argument to the `getFileVersions()` method accepts the fileId for which file
 
 ```java
 String fileId = "62a04834c10d49825c6de9e8";
-Result result = ImageKit.getInstance().getFileVersions(fileId);
+ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultFileVersions);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultFileVersions.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultFileVersions.getResponseMetaData().getMap());
 ```
 
 **26. Get File Version details**
@@ -840,13 +838,13 @@ The argument to the `getFileVersionDetails()` method accepts the fileId and vers
 ```java
 String fileId = "62a04834c10d49825c6de9e8";
 String versionId = "62a04834c10d49825c6de9e8";
-Result result = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
+ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
 System.out.println("======FINAL RESULT=======");
-System.out.println(result);
+System.out.println(resultFileVersionDetails);
 System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
+System.out.println(resultFileVersionDetails.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
 ```
 
 
