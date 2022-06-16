@@ -99,7 +99,7 @@ public class Utils {
         return stringMap;
     }
     public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, int responseCode, Map<String, List<String>> responseHeaders) throws IOException {
-    	if (responseCode==200 || responseCode==201 || responseCode==204 || responseCode==207){
+    	if (responseCode==200 || responseCode==201 || responseCode==204){
     		responseMetadata.setRaw(respBody);
     	}
         if (responseHeaders!=null) {

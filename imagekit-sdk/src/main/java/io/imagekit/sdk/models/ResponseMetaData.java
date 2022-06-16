@@ -55,4 +55,13 @@ public class ResponseMetaData {
         }
         return new ArrayList<>();
     }
+
+    @Override
+    public String toString() {
+        return "ResponseMetaData{" +
+                "raw='" + raw + '\'' +
+                ", httpStatusCode=" + httpStatusCode +
+                ", headers=" + headers +
+                '}';
+    }
 }

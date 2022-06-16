@@ -1,6 +1,10 @@
 package io.imagekit.sdk;
 
 import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.exceptions.BadRequestException;
+import io.imagekit.sdk.exceptions.ConflictException;
+import io.imagekit.sdk.exceptions.NotFoundException;
+import io.imagekit.sdk.exceptions.PartialSuccessException;
 import io.imagekit.sdk.models.*;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.Calculation;
@@ -203,7 +207,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public ResultTags addTags(TagsRequest tagsRequest){
+    public ResultTags addTags(TagsRequest tagsRequest) throws NotFoundException, PartialSuccessException {
         return restClient.manageTags(tagsRequest, "addTags");
     }
 
@@ -212,7 +216,7 @@ public final class ImageKit {
      * @param aiTagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public ResultTags removeAITags(AITagsRequest aiTagsRequest){
+    public ResultTags removeAITags(AITagsRequest aiTagsRequest) throws PartialSuccessException, NotFoundException {
         return restClient.removeAITags(aiTagsRequest);
     }
 
@@ -221,7 +225,7 @@ public final class ImageKit {
      * @param tagsRequest is a object which contains fileIds and tags as a parameters
      * @return ArrayList of String
      */
-    public ResultTags removeTags(TagsRequest tagsRequest){
+    public ResultTags removeTags(TagsRequest tagsRequest) throws NotFoundException, PartialSuccessException {
         return restClient.manageTags(tagsRequest, "removeTags");
     }
 
@@ -238,7 +242,7 @@ public final class ImageKit {
      * @param customMetaDataFieldCreateRequest that contains CustomMetaDataField's name, label, schema with type, minLength, maxLength
      * @return ResultCustomMetaData with ResultCustomMetaDataField
      */
-    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) {
+    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) throws BadRequestException {
         return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
     }
 
@@ -247,7 +251,7 @@ public final class ImageKit {
      * @param id is a id of customMetaDataFields
      * @return Result class
      */
-    public ResultNoContent deleteCustomMetaDataField(String id){
+    public ResultNoContent deleteCustomMetaDataField(String id) throws NotFoundException {
         return restClient.deleteCustomMetaDataField(id);
     }
 
@@ -256,7 +260,7 @@ public final class ImageKit {
      * @param customMetaDataFieldUpdateRequest that contains CustomMetaDataField's id, schema with type, minLength, maxLength
      * @return Result class
      */
-    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) {
+    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) throws BadRequestException, NotFoundException {
         return restClient.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
     }
 
@@ -265,7 +269,7 @@ public final class ImageKit {
      * @param deleteFileVersionRequest class
      * @return Result class
      */
-    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) {
+    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) throws BadRequestException, NotFoundException {
         return restClient.deleteFileVersion(deleteFileVersionRequest);
     }
 
@@ -274,7 +278,7 @@ public final class ImageKit {
      * @param copyFileRequest class
      * @return Result class
      */
-    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) {
+    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) throws NotFoundException {
         return restClient.copyFile(copyFileRequest);
     }
 
@@ -283,7 +287,7 @@ public final class ImageKit {
      * @param moveFileRequest class
      * @return Result class
      */
-    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) {
+    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) throws NotFoundException {
         return restClient.moveFile(moveFileRequest);
     }
 
@@ -292,7 +296,7 @@ public final class ImageKit {
      * @param renameFileRequest class
      * @return Result class
      */
-    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) {
+    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) throws ConflictException, PartialSuccessException, NotFoundException {
         return restClient.renameFile(renameFileRequest);
     }
 
@@ -310,7 +314,7 @@ public final class ImageKit {
      * @param deleteFolderRequest which contains folderPath that is full path to the folder you want to delete
      * @return Result class
      */
-    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) {
+    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) throws NotFoundException {
         return restClient.deleteFolder(deleteFolderRequest);
     }
 
@@ -319,7 +323,7 @@ public final class ImageKit {
      * @param copyFolderRequest that contains sourceFolderPath, destinationPath, includeVersions
      * @return Result class
      */
-    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) {
+    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) throws NotFoundException {
         return restClient.copyFolder(copyFolderRequest);
     }
 
@@ -328,7 +332,7 @@ public final class ImageKit {
      * @param moveFolderRequest that contains sourceFolderPath, destinationPath
      * @return Result class
      */
-    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) {
+    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) throws NotFoundException {
         return restClient.moveFolder(moveFolderRequest);
     }
 
@@ -346,7 +350,7 @@ public final class ImageKit {
      * @param fileId
      * @return a Result class
      */
-    public ResultFileVersions getFileVersions(String fileId) {
+    public ResultFileVersions getFileVersions(String fileId) throws NotFoundException {
         return restClient.getFileVersions(fileId);
     }
 
@@ -355,7 +359,7 @@ public final class ImageKit {
      * @param fileId & versionId
      * @return a Result class
      */
-    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) {
+    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) throws NotFoundException {
         return restClient.getFileVersionDetails(fileId, versionId);
     }
 }

@@ -1,12 +1,15 @@
 package io.imagekit.sampleapp;
 
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.exceptions.BadRequestException;
+import io.imagekit.sdk.exceptions.ConflictException;
+import io.imagekit.sdk.exceptions.NotFoundException;
+import io.imagekit.sdk.exceptions.PartialSuccessException;
 import io.imagekit.sdk.models.AITagsRequest;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CopyFileRequest;
@@ -47,7 +50,7 @@ class App{
 //        getBulkJobStatus();
 //        deleteFileVersion();
 //        getFileVersions();
-        getFileVersionDetails();
+//        getFileVersionDetails();
 //        copyFile();
 //        moveFile();
 //        renameFile();
@@ -60,7 +63,7 @@ class App{
 //        removeAITags();
 //        createCustomMetaDataFields();
 //        updateCustomMetaDataFields();
-//        deleteCustomMetaDataField("6296f91191fa57ccc36b15cf");
+        deleteCustomMetaDataField("629f3de17eb0fe4053615450");
 //        getCustomMetaDataFields();
 //
 //        calculateDistance();
@@ -414,9 +417,9 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void addTags() {
+    private static void addTags() throws NotFoundException, PartialSuccessException {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("62a46afc0997a24ac1385502");
+        fileIds.add("62a9b446663ef7b5c15951ba");
         List<String> tags = new ArrayList<>();
         tags.add("tag-to-add-4");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
@@ -431,12 +434,11 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void removeTags() {
+    private static void removeTags() throws NotFoundException, PartialSuccessException {
         List<String> fileIds = new ArrayList<>();
         fileIds.add("629f3de17eb0fe4053615450");
         List<String> tags = new ArrayList<>();
-        tags.add("tag3");
-        tags.add("tag4");
+        tags.add("tag-to-add-4");
         TagsRequest tagsRequest =new TagsRequest(fileIds, tags);
         ResultTags resultTags = ImageKit.getInstance().removeTags(tagsRequest);
         System.out.println(">> remove Tags done.");
@@ -447,11 +449,11 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void removeAITags() {
+    private static void removeAITags() throws PartialSuccessException, NotFoundException {
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("629f3de17eb0fe4053615450");
+        fileIds.add("62a9b446663ef7b5c15951ba");
         List<String> aiTags = new ArrayList<>();
-        aiTags.add("Rectangle");
+        aiTags.add("Shoe");
         AITagsRequest aiTagsRequest =new AITagsRequest();
         aiTagsRequest.setFileIds(fileIds);
         aiTagsRequest.setAITags(aiTags);
@@ -474,7 +476,7 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void createCustomMetaDataFields() {
+    private static void createCustomMetaDataFields() throws BadRequestException {
         CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
         customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
         customMetaDataFieldSchemaObject.setValueRequired(false);
@@ -482,20 +484,20 @@ class App{
         customMetaDataFieldSchemaObject.setMaxValue(100);
 
         CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-        customMetaDataFieldCreateRequest.setName("NameHe");
-        customMetaDataFieldCreateRequest.setLabel("LabelHe");
+        customMetaDataFieldCreateRequest.setName("NameHe1");
+        customMetaDataFieldCreateRequest.setLabel("LabelHe1");
         customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
 
         ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
         System.out.println(">> Create CustomMetaDataFields done.");
         System.out.println(Color.ANSI_GREEN+">> Response create CustomMetaDataFields :"+Color.ANSI_RESET);
-        System.out.println(resultCustomMetaDataField.get);
+        System.out.println(resultCustomMetaDataField);
         System.out.println(Color.ANSI_GREEN+">> Map Response:"+Color.ANSI_RESET);
         System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
         System.out.println("\n\n");
     }
 
-    private static void deleteCustomMetaDataField(String id) {
+    private static void deleteCustomMetaDataField(String id) throws NotFoundException {
         ResultNoContent resultNoContent=ImageKit.getInstance().deleteCustomMetaDataField(id);
         System.out.println(">> CustomMetaDataField deleted...");
         System.out.println(Color.ANSI_GREEN+">> Response:"+Color.ANSI_RESET);
@@ -507,14 +509,15 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void updateCustomMetaDataFields() {
+    private static void updateCustomMetaDataFields() throws BadRequestException, NotFoundException {
         CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
         schemaObject.setMinValue(1);
         schemaObject.setMaxValue(200);
+        schemaObject.setMinLength(1);
 
         CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
         customMetaDataFieldUpdateRequest.setId("62aab5a9db4851797a8f8ff9");
-        customMetaDataFieldUpdateRequest.setLabel("LabelHE200");
+        customMetaDataFieldUpdateRequest.setLabel("LabelHE100");
         customMetaDataFieldUpdateRequest.setSchema(schemaObject);
 
         ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
@@ -526,10 +529,10 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void deleteFileVersion() {
+    private static void deleteFileVersion() throws BadRequestException, NotFoundException {
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
         deleteFileVersionRequest.setFileId("62a9b446663ef7b5c15951ba");
-        deleteFileVersionRequest.setVersionId("62a9b446663ef731105951c0");
+        deleteFileVersionRequest.setVersionId("62aac9b47db937233eee762f");
         ResultNoContent resultNoContent = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
         System.out.println(">> delete file version done.");
         System.out.println(Color.ANSI_GREEN+">> Response delete File version :"+Color.ANSI_RESET);
@@ -539,9 +542,9 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void copyFile() {
+    private static void copyFile() throws NotFoundException {
         CopyFileRequest copyFileRequest = new CopyFileRequest();
-        copyFileRequest.setSourceFilePath("/new_car.jpg");
+        copyFileRequest.setSourceFilePath("/new_car11.jpg");
         copyFileRequest.setDestinationPath("/demo1/");
         copyFileRequest.setIncludeVersions(true);
         ResultNoContent resultNoContent = ImageKit.getInstance().copyFile(copyFileRequest);
@@ -553,10 +556,10 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void moveFile() {
+    private static void moveFile() throws NotFoundException {
         MoveFileRequest moveFileRequest = new MoveFileRequest();
-        moveFileRequest.setSourceFilePath("/demo1/new_car.jpg");
-        moveFileRequest.setDestinationPath("/");
+        moveFileRequest.setSourceFilePath("/new_car11.jpg");
+        moveFileRequest.setDestinationPath("/demo1");
         ResultNoContent resultNoContent = ImageKit.getInstance().moveFile(moveFileRequest);
         System.out.println(">> Move File done.");
         System.out.println(Color.ANSI_GREEN+">> Response Move File :"+Color.ANSI_RESET);
@@ -566,9 +569,9 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void renameFile() {
+    private static void renameFile() throws ConflictException, PartialSuccessException, NotFoundException {
         RenameFileRequest renameFileRequest = new RenameFileRequest();
-        renameFileRequest.setFilePath("/new.jpg");
+        renameFileRequest.setFilePath("/new12.jpg");
         renameFileRequest.setNewFileName("new_car.jpg");
         renameFileRequest.setPurgeCache(true);
         ResultRenameFile resultRenameFile = ImageKit.getInstance().renameFile(renameFileRequest);
@@ -593,7 +596,7 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void deleteFolder() {
+    private static void deleteFolder() throws NotFoundException {
         String folderPath="/test1";
         DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
         deleteFolderRequest.setFolderPath(folderPath);
@@ -606,7 +609,7 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void copyFolder() {
+    private static void copyFolder() throws NotFoundException {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/test1");
         copyFolderRequest.setDestinationPath("/demo1");
@@ -619,7 +622,7 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void moveFolder() {
+    private static void moveFolder() throws NotFoundException {
         MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
         moveFolderRequest.setSourceFolderPath("/demo1/test1");
         moveFolderRequest.setDestinationPath("/");
@@ -643,8 +646,8 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void getFileVersions() {
-        String fileId = "62a9b446663ef7b5c15951ba";
+    private static void getFileVersions() throws NotFoundException {
+        String fileId = "629f3de17eb0fe4053615450";
         ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
         System.out.println(">> Fetch Get file versions done.");
         System.out.println(Color.ANSI_GREEN+">> Response Get file versions :"+Color.ANSI_RESET);
@@ -654,7 +657,7 @@ class App{
         System.out.println("\n\n");
     }
 
-    private static void getFileVersionDetails() {
+    private static void getFileVersionDetails() throws NotFoundException {
         String fileId = "62a9b446663ef7b5c15951ba";
         String versionId = "62a9b446663ef7b5c15951ba";
         ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
