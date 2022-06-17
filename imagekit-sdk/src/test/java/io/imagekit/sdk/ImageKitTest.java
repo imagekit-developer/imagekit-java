@@ -822,11 +822,11 @@ public class ImageKitTest {
         assertFalse(matcher.group(4).trim().isEmpty());
     }
 
-    @Test
-    public void add_tags_expected_400_bad_request() throws IOException, InterruptedException, NotFoundException, PartialSuccessException {
+    @Test(expected = NotFoundException.class)
+    public void add_tags_expected_404() throws IOException, InterruptedException, NotFoundException, PartialSuccessException {
 
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("mockFileIds");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
         tags.add("tag2");
@@ -835,24 +835,18 @@ public class ImageKitTest {
 
         MockWebServer server = new MockWebServer();
         String tagsResponseJson = "{\n" +
-                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
-                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "    \"message\": \"The requested file(s) does not exist.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"missingFileIds\": [\n" +
+                "        \"629f3de17eb0fe4053615450\"\n" +
+                "    ]\n" +
                 "}";
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody(tagsResponseJson));
+        server.enqueue(new MockResponse().setResponseCode(404).setBody(tagsResponseJson));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultTags resultTags = SUT.addTags(tagsRequest);
+        SUT.addTags(tagsRequest);
 
-        RecordedRequest request = server.takeRequest();
-
-        String tagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"tags\":[\"tag1\",\"tag2\"]}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(tagsRequestJson, utf8RequestBody);
-        assertEquals(400, resultTags.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/files/addTags HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/addTags"),  request.getRequestUrl().toString());
+        server.takeRequest();
     }
 
     @Test
@@ -881,11 +875,11 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/addTags"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void remove_tags_expected_400_bad_request() throws InterruptedException, NotFoundException, PartialSuccessException {
+    @Test(expected = NotFoundException.class)
+    public void remove_tags_expected_404_bad_request() throws InterruptedException, NotFoundException, PartialSuccessException {
 
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("mockFileIds");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> tags = new ArrayList<>();
         tags.add("tag1");
 
@@ -893,22 +887,16 @@ public class ImageKitTest {
 
         MockWebServer server = new MockWebServer();
         String tagsResponseJson = "{\n" +
-                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
-                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "    \"message\": \"The requested file(s) does not exist.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"missingFileIds\": [\n" +
+                "        \"629f3de17eb0fe4053615450\"\n" +
+                "    ]\n" +
                 "}";
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody(tagsResponseJson));
+        server.enqueue(new MockResponse().setResponseCode(404).setBody(tagsResponseJson));
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultTags resultTags = SUT.removeTags(tagsRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String tagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"tags\":[\"tag1\"]}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(tagsRequestJson, utf8RequestBody);
-        assertEquals(400, resultTags.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/files/removeTags HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeTags"),  request.getRequestUrl().toString());
+        SUT.removeTags(tagsRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -971,21 +959,24 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields?includeDeleted=false"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException, BadRequestException {
 
         MockWebServer server = new MockWebServer();
         String responseJson = "{\n" +
-                "    \"message\": \"A custom metadata field with this name already exists\",\n" +
-                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "    \"message\": \"Invalid schema object\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"errors\": {\n" +
+                "        \"minValue\": \"not allowed for this type\",\n" +
+                "        \"maxValue\": \"not allowed for this type\"\n" +
+                "    }\n" +
                 "}";
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody(responseJson));
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
 
         CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
+        mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Text);
         mockCustomMetaDataFieldSchemaObject.setMinValue(10);
         mockCustomMetaDataFieldSchemaObject.setMaxValue(100);
 
@@ -1044,26 +1035,18 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void deleteCustomMetaDataField_400_Expected() throws IOException, InterruptedException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void deleteCustomMetaDataField_404_Expected() throws IOException, InterruptedException, NotFoundException {
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"Your request contains invalid ID parameter.\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No such custom metadata field exists\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
 
-        ResultNoContent resultNoContent = SUT.deleteCustomMetaDataField("fileId");
-        RecordedRequest request = server.takeRequest();
-
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals("", utf8RequestBody);
-        assertEquals(400, resultNoContent.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("DELETE /v1/customMetadataFields/fileId HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/fileId"),  request.getRequestUrl().toString());
+        SUT.deleteCustomMetaDataField("6296fd7091fa5768106b808E");
+        server.takeRequest();
     }
 
     @Test
@@ -1083,12 +1066,34 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/629f2e2f7eb0fe2eb25f9988"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
+    public void updateCustomMetaDataFields_404_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No such custom metadata field exists\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+
+        CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+        mockCustomMetaDataFieldSchemaObject.setMinLength(10);
+
+        CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
+        customMetaDataFieldUpdateRequest.setId("6296fd7091fa5768106b808E");
+        customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
+        customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+        SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        server.takeRequest();
+    }
+
+    @Test(expected = BadRequestException.class)
     public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException {
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("{\n" +
                 "    \"message\": \"Invalid schema object\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
                 "    \"errors\": {\n" +
@@ -1106,16 +1111,8 @@ public class ImageKitTest {
         customMetaDataFieldUpdateRequest.setLabel("mockEditLabel");
         customMetaDataFieldUpdateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
 
-        ResultCustomMetaDataField resultCustomMetaDataField = SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String customMetaDataFieldUpdateRequestJson = "{\"id\":\"628f189d4e4ea318b69efa9d\",\"label\":\"mockEditLabel\",\"schema\":{\"minLength\":10}}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(customMetaDataFieldUpdateRequestJson, utf8RequestBody);
-        assertEquals(400, resultCustomMetaDataField.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("PATCH /v1/customMetadataFields/628f189d4e4ea318b69efa9d HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
+        SUT.updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1156,11 +1153,11 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields/628f189d4e4ea318b69efa9d"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void removeAITags_400_Expected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void removeAITags_404_Expected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException {
 
         List<String> fileIds = new ArrayList<>();
-        fileIds.add("mockFileIds");
+        fileIds.add("629f3de17eb0fe4053615450");
         List<String> aiTags = new ArrayList<>();
         aiTags.add("Font");
 
@@ -1169,23 +1166,17 @@ public class ImageKitTest {
         aiTagsRequest.setAITags(aiTags);
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"mockFileIds is not a valid fileId.\",\n" +
-                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"The requested file(s) does not exist.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"missingFileIds\": [\n" +
+                "        \"629f3de17eb0fe4053615450\"\n" +
+                "    ]\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultTags resultTags = SUT.removeAITags(aiTagsRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String aiTagsRequestJson = "{\"fileIds\":[\"mockFileIds\"],\"AITags\":[\"Font\"]}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(aiTagsRequestJson, utf8RequestBody);
-        assertEquals(400, resultTags.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/files/removeAITags HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeAITags"),  request.getRequestUrl().toString());
+        SUT.removeAITags(aiTagsRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1215,33 +1206,24 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/removeAITags"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void copyFile_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         CopyFileRequest copyFileRequest = new CopyFileRequest();
-        copyFileRequest.setSourceFilePath("/car.jpeg");
+        copyFileRequest.setSourceFilePath("/sample_image.jpg");
         copyFileRequest.setDestinationPath("/Gallery/");
         copyFileRequest.setIncludeVersions(true);
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404));
-        server.enqueue(new MockResponse().setBody("{\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
                 "    \"message\": \"No file found with filePath /sample_image.jpg\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
                 "    \"reason\": \"SOURCE_FILE_MISSING\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultNoContent resultNoContent = SUT.copyFile(copyFileRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String copyFileRequestJson = "{\"sourceFilePath\":\"/car.jpeg\",\"destinationPath\":\"/Gallery/\",\"includeVersions\":true}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(copyFileRequestJson, utf8RequestBody);
-        assertEquals(404, resultNoContent.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/files/copy HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/copy"),  request.getRequestUrl().toString());
+        SUT.copyFile(copyFileRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1267,32 +1249,23 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/copy"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void moveFile_400_Expected() throws InterruptedException, IOException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void moveFile_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         MoveFileRequest moveFileRequest = new MoveFileRequest();
-        moveFileRequest.setSourceFilePath("/");
-        moveFileRequest.setDestinationPath("test");
+        moveFileRequest.setSourceFilePath("/demo1/sample_image_th.jpg");
+        moveFileRequest.setDestinationPath("/");
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"sourceFilePath parameter is missing.\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No file found with filePath /demo1/sample_image_th.jpg\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
-                "    \"reason\": \"MISSING_PARAMETER\"\n" +
+                "    \"reason\": \"SOURCE_FILE_MISSING\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultNoContent resultNoContent = SUT.moveFile(moveFileRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String moveFileRequestJson = "{\"sourceFilePath\":\"/\",\"destinationPath\":\"test\"}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(moveFileRequestJson, utf8RequestBody);
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals(400, resultNoContent.getResponseMetaData().getHttpStatusCode());
-        assertEquals("POST /v1/files/move HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/move"),  request.getRequestUrl().toString());
+        SUT.moveFile(moveFileRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1317,33 +1290,44 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/move"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void renameFile_400_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void renameFile_404_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
 
         RenameFileRequest renameFileRequest = new RenameFileRequest();
-        renameFileRequest.setFilePath("/");
-        renameFileRequest.setNewFileName("new_car.jpeg");
+        renameFileRequest.setFilePath("/sample_image_th.jpg");
+        renameFileRequest.setNewFileName("new_car.jpg");
         renameFileRequest.setPurgeCache(true);
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"Your request is missing filePath parameter\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No file found in media library with filePath /sample_image_th.jpg\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
-                "    \"reason\": \"MISSING_PARAMETER\"\n" +
+                "    \"reason\": \"FILE_MISSING\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultRenameFile resultRenameFile = SUT.renameFile(renameFileRequest);
-        RecordedRequest request = server.takeRequest();
+        SUT.renameFile(renameFileRequest);
+        server.takeRequest();
+    }
 
-        String renameFileRequestJson = "{\"filePath\":\"/\",\"newFileName\":\"new_car.jpeg\",\"purgeCache\":true}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(renameFileRequestJson, utf8RequestBody);
-        assertEquals(400, resultRenameFile.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("PUT /v1/files/rename HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/rename"),  request.getRequestUrl().toString());
+    @Test(expected = ConflictException.class)
+    public void renameFile_409_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
+
+        RenameFileRequest renameFileRequest = new RenameFileRequest();
+        renameFileRequest.setFilePath("/new1.jpg");
+        renameFileRequest.setNewFileName("new_car.jpg");
+        renameFileRequest.setPurgeCache(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(409).setBody("{\n" +
+                "    \"message\": \"File with name new_car.jpg already exists at the same location.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"reason\": \"FILE_ALREADY_EXISTS\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.renameFile(renameFileRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1384,16 +1368,8 @@ public class ImageKitTest {
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultEmptyBlock resultEmptyBlock = SUT.createFolder(createFolderRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String createFolderRequestJson = "{\"folderName\":\"/testFolder\",\"parentFolderPath\":\"/\"}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(createFolderRequestJson, utf8RequestBody);
-        assertEquals(400, resultEmptyBlock.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/folder/ HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
+        SUT.createFolder(createFolderRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1418,31 +1394,22 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void deleteFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
-        deleteFolderRequest.setFolderPath("testFolder");
+        deleteFolderRequest.setFolderPath("/testFolder");
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"No folder found with folderPath test/\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No folder found with folderPath testFolder/\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
                 "    \"reason\": \"FOLDER_NOT_FOUND\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultNoContent resultNoContent = SUT.deleteFolder(deleteFolderRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String deleteFolderRequestJson = "{\"folderPath\":\"testFolder\"}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(deleteFolderRequestJson, utf8RequestBody);
-        assertEquals(404, resultNoContent.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("DELETE /v1/folder/ HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
+        SUT.deleteFolder(deleteFolderRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1466,33 +1433,24 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void copyFolder_400_Expected() throws InterruptedException, IOException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void copyFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/testFolder");
-        copyFolderRequest.setDestinationPath("/");
+        copyFolderRequest.setDestinationPath("/test");
         copyFolderRequest.setIncludeVersions(true);
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"The parent directory of source and destination folder should be different.\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No files & folder found at sourceFolderPath /testFolder\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
-                "    \"reason\": \"SAME_SOURCE_AND_DESTINATION\"\n" +
+                "    \"reason\": \"NO_FILES_FOLDER\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultOfFolderActions resultOfFolderActions = SUT.copyFolder(copyFolderRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/\",\"includeVersions\":true}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(copyFolderRequestJson, utf8RequestBody);
-        assertEquals(400, resultOfFolderActions.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
+        SUT.copyFolder(copyFolderRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1520,7 +1478,7 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void moveFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
@@ -1528,24 +1486,15 @@ public class ImageKitTest {
         moveFolderRequest.setDestinationPath("/Gallery");
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"No files & folder found at sourceFolderPath /testFolder/\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"No files & folder found at sourceFolderPath /testFolder\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
                 "    \"reason\": \"NO_FILES_FOLDER\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultOfFolderActions resultOfFolderActions = SUT.moveFolder(moveFolderRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String moveFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder/\",\"destinationPath\":\"/Gallery\"}";
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals(moveFolderRequestJson, utf8RequestBody);
-        assertEquals(404, resultOfFolderActions.getResponseMetaData().getHttpStatusCode());
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("POST /v1/bulkJobs/moveFolder HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/moveFolder"),  request.getRequestUrl().toString());
+        SUT.moveFolder(moveFolderRequest);
+        server.takeRequest();
     }
 
     @Test
@@ -1611,25 +1560,18 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/bulkJobs/629f44ac7eb0fe8173622d4b"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void getFileVersions_400_Expected() throws InterruptedException, IOException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void getFileVersions_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"Your request contains invalid fileId parameter.\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"The requested asset does not exist.\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultFileVersions resultFileVersions = SUT.getFileVersions("id");
-        RecordedRequest request = server.takeRequest();
-
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals(400, resultFileVersions.getResponseMetaData().getHttpStatusCode());
-        assertEquals("GET /v1/files/id/versions HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/id/versions"),  request.getRequestUrl().toString());
-    }
+        SUT.getFileVersions("id");
+        server.takeRequest();}
 
     @Test
     public void getFileVersions_successExpected() throws InterruptedException, IOException, NotFoundException {
@@ -1701,24 +1643,18 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions"),  request.getRequestUrl().toString());
     }
 
-    @Test
-    public void getFileVersionDetails_400_Expected() throws InterruptedException, IOException, NotFoundException {
+    @Test(expected = NotFoundException.class)
+    public void getFileVersionDetails_404_Expected() throws InterruptedException, IOException, NotFoundException {
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"message\": \"Your request contains invalid versionId parameter.\",\n" +
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"The requested asset does not exist.\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultFileVersionDetails resultFileVersionDetails = SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "id");
-        RecordedRequest request = server.takeRequest();
-
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals(400, resultFileVersionDetails.getResponseMetaData().getHttpStatusCode());
-        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/id HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/id"),  request.getRequestUrl().toString());
+        SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
+        server.takeRequest();
     }
 
     @Test
@@ -1789,7 +1725,7 @@ public class ImageKitTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),  request.getRequestUrl().toString());
     }
 
-    @Test
+    @Test(expected = BadRequestException.class)
     public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException {
 
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
@@ -1797,22 +1733,32 @@ public class ImageKitTest {
         deleteFileVersionRequest.setVersionId("id");
 
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400));
-        server.enqueue(new MockResponse().setBody("{\n" +
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("{\n" +
+                "    \"message\": \"Your request contains invalid versionId parameter.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.deleteFileVersion(deleteFileVersionRequest);
+        server.takeRequest();
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteFileVersion_404_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException {
+
+        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+        deleteFileVersionRequest.setVersionId("62a9c403d89eedb81721102b");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
                 "    \"message\": \"The requested file version does not exist.\",\n" +
                 "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
                 "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
-        ResultNoContent resultNoContent = SUT.deleteFileVersion(deleteFileVersionRequest);
-        RecordedRequest request = server.takeRequest();
-
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals("", utf8RequestBody);
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals(400, resultNoContent.getResponseMetaData().getHttpStatusCode());
-        assertEquals("DELETE /v1/files/629d90768482ba272ed17628/versions/id HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/id"),  request.getRequestUrl().toString());
+        SUT.deleteFileVersion(deleteFileVersionRequest);
+        server.takeRequest();
     }
 
     @Test
