@@ -25,123 +25,129 @@ import java.util.stream.Collectors;
 
 public class Utils {
 
-    public static String listToString(List<String> list){
-        StringBuilder builder=new StringBuilder();
-        for (int i=0; i<list.size(); i++){
-            if (null!=list.get(i)) {
-                builder.append(list.get(i));
-                if (i < list.size() - 1) {
-                    builder.append(",");
-                }
-            }
-        }
-        return builder.toString();
-    }
+	public static String listToString(List<String> list) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < list.size(); i++) {
+			if (null != list.get(i)) {
+				builder.append(list.get(i));
+				if (i < list.size() - 1) {
+					builder.append(",");
+				}
+			}
+		}
+		return builder.toString();
+	}
 
-    public static String fileToBase64(File file){
-        String base64File = "";
-        try (FileInputStream imageInFile = new FileInputStream(file)) {
-            // Reading a file from file system
-            byte fileData[] = new byte[(int) file.length()];
-            imageInFile.read(fileData);
-            base64File = Base64.getEncoder().encodeToString(fileData);
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found" + e);
-        } catch (IOException ioe) {
-            System.out.println("Exception while reading the file " + ioe);
-        }
-        return base64File;
-    }
+	public static String fileToBase64(File file) {
+		String base64File = "";
+		try (FileInputStream imageInFile = new FileInputStream(file)) {
+			// Reading a file from file system
+			byte fileData[] = new byte[(int) file.length()];
+			imageInFile.read(fileData);
+			base64File = Base64.getEncoder().encodeToString(fileData);
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found" + e);
+		} catch (IOException ioe) {
+			System.out.println("Exception while reading the file " + ioe);
+		}
+		return base64File;
+	}
 
-    public static byte[] fileToBytes(File file) {
-        byte[] bytes=null;
-        try (FileInputStream imageInFile = new FileInputStream(file)) {
-            // Reading a file from file system
-            bytes = new byte[(int) file.length()];
-            imageInFile.read(bytes);
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found" + e);
-        } catch (IOException ioe) {
-            System.out.println("Exception while reading the file " + ioe);
-        }
-        return bytes;
-    }
+	public static byte[] fileToBytes(File file) {
+		byte[] bytes = null;
+		try (FileInputStream imageInFile = new FileInputStream(file)) {
+			// Reading a file from file system
+			bytes = new byte[(int) file.length()];
+			imageInFile.read(bytes);
+		} catch (FileNotFoundException e) {
+			System.out.println("File not found" + e);
+		} catch (IOException ioe) {
+			System.out.println("Exception while reading the file " + ioe);
+		}
+		return bytes;
+	}
 
-    public static String bytesToBase64(byte[] fileData){
-        String base64File = "";
-        base64File = Base64.getEncoder().encodeToString(fileData);
-        return base64File;
-    }
+	public static String bytesToBase64(byte[] fileData) {
+		String base64File = "";
+		base64File = Base64.getEncoder().encodeToString(fileData);
+		return base64File;
+	}
 
-    /**
-     *
-     * @param cls is a Class name from which this method will invoke
-     * @return it will return object of Configuration class
-     * @throws IOException if config.properties file doesn't exists
-     */
-    public static Configuration getSystemConfig(Class<?> cls) throws IOException{
-        Properties properties=new Properties();
-        String configFile="config.properties";
-        InputStream is=cls.getClassLoader().getResourceAsStream(configFile);
-        if (null!=is){
-            properties.load(is);
-        }
-        else {
-            throw new FileNotFoundException("Property file '"+configFile+"' not found in classpath");
-        }
-        Configuration config=new Configuration();
-        config.setUrlEndpoint(properties.getProperty("UrlEndpoint"));
-        config.setPublicKey(properties.getProperty("PublicKey"));
-        config.setPrivateKey(properties.getProperty("PrivateKey"));
-        config.validate();
-        return config;
-    }
+	/**
+	 *
+	 * @param cls is a Class name from which this method will invoke
+	 * @return it will return object of Configuration class
+	 * @throws IOException if config.properties file doesn't exists
+	 */
+	public static Configuration getSystemConfig(Class<?> cls) throws IOException {
+		Properties properties = new Properties();
+		String configFile = "config.properties";
+		InputStream is = cls.getClassLoader().getResourceAsStream(configFile);
+		if (null != is) {
+			properties.load(is);
+		} else {
+			throw new FileNotFoundException("Property file '" + configFile + "' not found in classpath");
+		}
+		Configuration config = new Configuration();
+		config.setUrlEndpoint(properties.getProperty("UrlEndpoint"));
+		config.setPublicKey(properties.getProperty("PublicKey"));
+		config.setPrivateKey(properties.getProperty("PrivateKey"));
+		config.validate();
+		return config;
+	}
 
-    public static Map<String, String> mapListOfStringToString(Map<String, List<String>> listMap) {
-        Map<String, String> stringMap = new HashMap<>();
-        Set<Entry<String, List<String>>> listMapEntries = listMap.entrySet();
-        for (Entry<String, List<String>> entry : listMapEntries) {
-        	stringMap.put(entry.getKey(), entry.getValue().stream().collect(Collectors.joining(",")));
-        	
-        }
-        return stringMap;
-    }
-    public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, int responseCode, Map<String, List<String>> responseHeaders) throws IOException {
-    	if (responseCode==200 || responseCode==201 || responseCode==204){
-    		responseMetadata.setRaw(respBody);
-    	}
-        if (responseHeaders!=null) {
-            Map<String, String> mappedHeader = Utils.mapListOfStringToString(responseHeaders);
-            responseMetadata.setHeaders(mappedHeader);
-        }
-        responseMetadata.setHttpStatusCode(responseCode);
-    }
+	public static Map<String, String> mapListOfStringToString(Map<String, List<String>> listMap) {
+		Map<String, String> stringMap = new HashMap<>();
+		Set<Entry<String, List<String>>> listMapEntries = listMap.entrySet();
+		for (Entry<String, List<String>> entry : listMapEntries) {
+			stringMap.put(entry.getKey(), entry.getValue().stream().collect(Collectors.joining(",")));
 
-    public static Map<String, String> getHeaders(ImageKit imageKit) {
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
-        return headers;
-    }
+		}
+		return stringMap;
+	}
 
-    public static void throwException(Response response) throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
-        String resp = response.body().string();
-        ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-        populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-        if (response.code() == 207) {
-            throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-        }
-        if (response.code() == 400) {
-            throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-        }
-        if (response.code() == 404) {
-            throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-        }
-        if (response.code() == 409) {
-            throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-        }
-    }
+	public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, int responseCode,
+			Map<String, List<String>> responseHeaders) throws IOException {
+		if (responseCode == 200 || responseCode == 201 || responseCode == 204) {
+			responseMetadata.setRaw(respBody);
+		}
+		if (responseHeaders != null) {
+			Map<String, String> mappedHeader = Utils.mapListOfStringToString(responseHeaders);
+			responseMetadata.setHeaders(mappedHeader);
+		}
+		responseMetadata.setHttpStatusCode(responseCode);
+	}
+
+	public static Map<String, String> getHeaders(ImageKit imageKit) {
+		String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(), "");
+		Map<String, String> headers = new HashMap<>();
+		headers.put("Accept-Encoding", "application/json");
+		headers.put("Content-Type", "application/json");
+		headers.put("Authorization", credential);
+		return headers;
+	}
+
+	public static void throwException(Response response)
+			throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
+		String resp = response.body().string();
+		ResultCache result = new Gson().fromJson(resp, ResultCache.class);
+		populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+		if (response.code() == 207) {
+			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		}
+		if (response.code() == 400) {
+			throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		}
+		if (response.code() == 404) {
+			throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		}
+		if (response.code() == 409) {
+			throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		}
+	}
 
 }
