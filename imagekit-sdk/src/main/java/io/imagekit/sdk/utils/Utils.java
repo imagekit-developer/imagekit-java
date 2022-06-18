@@ -1,11 +1,19 @@
 package io.imagekit.sdk.utils;
 
+import com.google.gson.Gson;
+
+import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.exceptions.BadRequestException;
+import io.imagekit.sdk.exceptions.ConflictException;
+import io.imagekit.sdk.exceptions.NotFoundException;
+import io.imagekit.sdk.exceptions.PartialSuccessException;
 import io.imagekit.sdk.models.ResponseMetaData;
+import io.imagekit.sdk.models.results.ResultCache;
+import okhttp3.Credentials;
 import okhttp3.Response;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -107,6 +115,33 @@ public class Utils {
             responseMetadata.setHeaders(mappedHeader);
         }
         responseMetadata.setHttpStatusCode(responseCode);
+    }
+
+    public static Map<String, String> getHeaders(ImageKit imageKit) {
+        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
+        Map<String, String> headers=new HashMap<>();
+        headers.put("Accept-Encoding","application/json");
+        headers.put("Content-Type","application/json");
+        headers.put("Authorization",credential);
+        return headers;
+    }
+
+    public static void throwException(Response response) throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
+        String resp = response.body().string();
+        ResultCache result = new Gson().fromJson(resp, ResultCache.class);
+        populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+        if (response.code() == 207) {
+            throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
+        }
+        if (response.code() == 400) {
+            throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
+        }
+        if (response.code() == 404) {
+            throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
+        }
+        if (response.code() == 409) {
+            throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
+        }
     }
 
 }

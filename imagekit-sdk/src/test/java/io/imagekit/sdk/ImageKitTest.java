@@ -823,7 +823,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void add_tags_expected_404() throws IOException, InterruptedException, NotFoundException, PartialSuccessException {
+    public void add_tags_expected_404() throws IOException, InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("629f3de17eb0fe4053615450");
@@ -850,7 +850,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void add_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException, PartialSuccessException {
+    public void add_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("62958deef33aa80bdadf7533");
@@ -876,7 +876,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void remove_tags_expected_404_bad_request() throws InterruptedException, NotFoundException, PartialSuccessException {
+    public void remove_tags_expected_404_bad_request() throws InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("629f3de17eb0fe4053615450");
@@ -900,7 +900,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException, PartialSuccessException {
+    public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("62958deef33aa80bdadf7533");
@@ -960,7 +960,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException, BadRequestException {
+    public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException, BadRequestException, PartialSuccessException, NotFoundException, ConflictException {
 
         MockWebServer server = new MockWebServer();
         String responseJson = "{\n" +
@@ -997,7 +997,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException, BadRequestException {
+    public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException, BadRequestException, PartialSuccessException, NotFoundException, ConflictException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\n" +
@@ -1036,7 +1036,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteCustomMetaDataField_404_Expected() throws IOException, InterruptedException, NotFoundException {
+    public void deleteCustomMetaDataField_404_Expected() throws IOException, InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
                 "    \"message\": \"No such custom metadata field exists\",\n" +
@@ -1050,7 +1050,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException, NotFoundException {
+    public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody(""));
         server.start();
@@ -1067,7 +1067,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void updateCustomMetaDataFields_404_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException {
+    public void updateCustomMetaDataFields_404_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
@@ -1090,7 +1090,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException {
+    public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(400).setBody("{\n" +
@@ -1116,7 +1116,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void updateCustomMetaDataFields_successExpected() throws InterruptedException, IOException, BadRequestException, NotFoundException {
+    public void updateCustomMetaDataFields_successExpected() throws InterruptedException, IOException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\n" +
@@ -1154,7 +1154,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void removeAITags_404_Expected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException {
+    public void removeAITags_404_Expected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("629f3de17eb0fe4053615450");
@@ -1180,7 +1180,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void removeAITags_successExpected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException {
+    public void removeAITags_successExpected() throws InterruptedException, IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
 
         List<String> fileIds = new ArrayList<>();
         fileIds.add("62958deef33aa80bdadf7533");
@@ -1207,7 +1207,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void copyFile_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void copyFile_404_Expected() throws InterruptedException, IOException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         CopyFileRequest copyFileRequest = new CopyFileRequest();
         copyFileRequest.setSourceFilePath("/sample_image.jpg");
@@ -1227,7 +1227,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void copyFile_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void copyFile_successExpected() throws InterruptedException, IOException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         CopyFileRequest copyFileRequest = new CopyFileRequest();
         copyFileRequest.setSourceFilePath("/car_false.jpeg");
@@ -1250,7 +1250,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void moveFile_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void moveFile_404_Expected() throws InterruptedException, IOException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         MoveFileRequest moveFileRequest = new MoveFileRequest();
         moveFileRequest.setSourceFilePath("/demo1/sample_image_th.jpg");
@@ -1269,7 +1269,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void moveFile_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void moveFile_successExpected() throws InterruptedException, IOException, NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
 
         MoveFileRequest moveFileRequest = new MoveFileRequest();
         moveFileRequest.setSourceFilePath("/new_la.jpg");
@@ -1291,7 +1291,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void renameFile_404_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
+    public void renameFile_404_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException, BadRequestException {
 
         RenameFileRequest renameFileRequest = new RenameFileRequest();
         renameFileRequest.setFilePath("/sample_image_th.jpg");
@@ -1311,7 +1311,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = ConflictException.class)
-    public void renameFile_409_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
+    public void renameFile_409_Expected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException, BadRequestException {
 
         RenameFileRequest renameFileRequest = new RenameFileRequest();
         renameFileRequest.setFilePath("/new1.jpg");
@@ -1331,7 +1331,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void renameFile_successExpected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException {
+    public void renameFile_successExpected() throws InterruptedException, IOException, ConflictException, PartialSuccessException, NotFoundException, BadRequestException {
 
         RenameFileRequest renameFileRequest = new RenameFileRequest();
         renameFileRequest.setFilePath("/car_false.jpeg");
@@ -1395,7 +1395,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void deleteFolder_404_Expected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
         deleteFolderRequest.setFolderPath("/testFolder");
@@ -1413,7 +1413,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void deleteFolder_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void deleteFolder_successExpected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
         deleteFolderRequest.setFolderPath("testFolder");
@@ -1434,7 +1434,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void copyFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void copyFolder_404_Expected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1454,7 +1454,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void copyFolder_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void copyFolder_successExpected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1479,7 +1479,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void moveFolder_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void moveFolder_404_Expected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
         moveFolderRequest.setSourceFolderPath("/testFolder/");
@@ -1498,7 +1498,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void moveFolder_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void moveFolder_successExpected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
         moveFolderRequest.setSourceFolderPath("/testFolder");
@@ -1561,7 +1561,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void getFileVersions_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void getFileVersions_404_Expected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
@@ -1574,7 +1574,7 @@ public class ImageKitTest {
         server.takeRequest();}
 
     @Test
-    public void getFileVersions_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void getFileVersions_successExpected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("[\n" +
@@ -1644,7 +1644,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void getFileVersionDetails_404_Expected() throws InterruptedException, IOException, NotFoundException {
+    public void getFileVersionDetails_404_Expected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
@@ -1658,7 +1658,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void getFileVersionDetails_successExpected() throws InterruptedException, IOException, NotFoundException {
+    public void getFileVersionDetails_successExpected() throws InterruptedException, IOException, NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\n" +
@@ -1726,7 +1726,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = BadRequestException.class)
-    public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException {
+    public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
         deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1744,7 +1744,7 @@ public class ImageKitTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteFileVersion_404_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException {
+    public void deleteFileVersion_404_SuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
         deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1762,7 +1762,7 @@ public class ImageKitTest {
     }
 
     @Test
-    public void deleteFileVersion_expectedSuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException {
+    public void deleteFileVersion_expectedSuccessWith() throws IOException, InterruptedException, BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
 
         DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
         deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");

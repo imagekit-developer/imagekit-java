@@ -2,7 +2,6 @@ package io.imagekit.sdk.models;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.util.Date;
 import java.util.List;

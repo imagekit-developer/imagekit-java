@@ -24,14 +24,12 @@ import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.FileUpdateRequest;
 import io.imagekit.sdk.models.RenameFileRequest;
-import io.imagekit.sdk.models.ResponseMetaData;
 import io.imagekit.sdk.models.TagsRequest;
 import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,13 +60,7 @@ public class RestClient {
 
     public Result upload(FileCreateRequest fileCreateRequest){
         Result result=null;
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
-
-        System.out.println("Auth:==> " + credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         MultipartBody body=multipartBuilder.build(fileCreateRequest);
 
@@ -106,11 +98,7 @@ public class RestClient {
 
     public Result updateDetail(FileUpdateRequest fileUpdateRequest){
         Result result=null;
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/details",fileUpdateRequest.getFileId());
         request=new Request.Builder()
                 .url(url)
@@ -146,11 +134,7 @@ public class RestClient {
 
     public ResultList getFileList(Map<String, String> options){
         ResultList resultList=new ResultList();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         QueryMaker queryMaker=new QueryMaker();
 
@@ -197,11 +181,7 @@ public class RestClient {
 
     public Result getFileDetail(String fileId){
         Result result=new Result();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/details",fileId);
 
@@ -238,11 +218,7 @@ public class RestClient {
 
     public ResultMetaData getFileMetaData(String fileId){
         ResultMetaData result=new ResultMetaData();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s/metadata",fileId);
 
@@ -280,11 +256,7 @@ public class RestClient {
 
     public ResultMetaData getRemoteFileMetaData(String url){
         ResultMetaData result=new ResultMetaData();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String apiURL="https://api.imagekit.io/v1/metadata?url="+url;
 
@@ -322,11 +294,7 @@ public class RestClient {
 
     public Result deleteFile(String fileId){
         Result result=new Result();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/%s",fileId);
 
@@ -364,11 +332,7 @@ public class RestClient {
 
     public ResultFileDelete bulkDeleteFiles(List<String> fileIds){
         ResultFileDelete result=new ResultFileDelete();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url="https://api.imagekit.io/v1/files/batch/deleteByFileIds";
 
@@ -415,11 +379,7 @@ public class RestClient {
 
     public ResultCache purgeCache(String url){
         ResultCache result=new ResultCache();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         request=new Request.Builder()
                 .url("https://api.imagekit.io/v1/files/purge")
@@ -456,11 +416,7 @@ public class RestClient {
 
     public ResultCacheStatus getPurgeCacheStatus(String requestId){
         ResultCacheStatus result=new ResultCacheStatus();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,"https://api.imagekit.io/v1/files/purge/%s",requestId);
 
@@ -495,13 +451,9 @@ public class RestClient {
         return result;
     }
 
-    public ResultTags manageTags(TagsRequest tagsRequest, String action) throws NotFoundException, PartialSuccessException {
+    public ResultTags manageTags(TagsRequest tagsRequest, String action) throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
         ResultTags resultTags = new ResultTags();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(tagsRequest));
         request=new Request.Builder()
@@ -517,17 +469,7 @@ public class RestClient {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
             } else {
-                if (response.code() == 207 || response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    if (response.code() == 207) {
-                        throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 404) {
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -536,13 +478,9 @@ public class RestClient {
         return resultTags;
     }
 
-    public ResultTags removeAITags(AITagsRequest aiTagsRequest) throws PartialSuccessException, NotFoundException {
+    public ResultTags removeAITags(AITagsRequest aiTagsRequest) throws PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
         ResultTags resultTags = new ResultTags();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(aiTagsRequest));
         request=new Request.Builder()
@@ -558,17 +496,7 @@ public class RestClient {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
             } else {
-                if (response.code() == 207 || response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    if (response.code() == 207) {
-                        throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 404) {
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(), response.headers().toMultimap());
 
@@ -581,11 +509,7 @@ public class RestClient {
     public ResultCustomMetaDataFieldList getCustomMetaDataFields(boolean includeDeleted) {
         ResultCustomMetaDataFieldList resultCustomMetaDataFieldList = new ResultCustomMetaDataFieldList();
 
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         request=new Request.Builder()
                 .url(API_BASE_URL.concat("v1/customMetadataFields?includeDeleted=" + includeDeleted))
@@ -608,7 +532,7 @@ public class RestClient {
         return resultCustomMetaDataFieldList;
     }
 
-    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) throws BadRequestException {
+    public ResultCustomMetaDataField createCustomMetaDataFields(CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) throws BadRequestException, PartialSuccessException, NotFoundException, ConflictException {
         if (customMetaDataFieldCreateRequest.getName() == null) {
             throw new RuntimeException("Error: Name not provided.");
         }
@@ -616,12 +540,7 @@ public class RestClient {
             throw new RuntimeException("Error: Label not provided.");
         }
         ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldCreateRequest));
         request=new Request.Builder()
@@ -638,12 +557,7 @@ public class RestClient {
                 JsonElement responseBody = new JsonParser().parse(respBody);
                 resultCustomMetaDataField = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             } else {
-                if (response.code() == 400) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -652,13 +566,9 @@ public class RestClient {
         return resultCustomMetaDataField;
     }
 
-    public ResultNoContent deleteCustomMetaDataField(String id) throws NotFoundException {
+    public ResultNoContent deleteCustomMetaDataField(String id) throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
         ResultNoContent resultNoContent=new ResultNoContent();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/customMetadataFields/%s"),id);
 
@@ -675,12 +585,7 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -689,14 +594,10 @@ public class RestClient {
         return resultNoContent;
     }
 
-    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) throws BadRequestException, NotFoundException {
+    public ResultCustomMetaDataField updateCustomMetaDataFields(CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest) throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
         ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
 
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(customMetaDataFieldUpdateRequest));
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/customMetadataFields/%s"),customMetaDataFieldUpdateRequest.getId());
@@ -708,24 +609,13 @@ public class RestClient {
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("response:==> " + response);
             String respBody="";
             if (response.code()==200){
                 respBody=response.body().string();
                 JsonElement responseBody = new JsonParser().parse(respBody);
                 resultCustomMetaDataField = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             } else {
-                if (response.code() == 400 || response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    if (response.code() == 400) {
-                        throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 404) {
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -734,14 +624,10 @@ public class RestClient {
         return resultCustomMetaDataField;
     }
 
-    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) throws BadRequestException, NotFoundException {
+    public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest) throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
         ResultNoContent resultNoContent = new ResultNoContent();
 
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions/%s"), deleteFileVersionRequest.getFileId(), deleteFileVersionRequest.getVersionId());
         request=new Request.Builder()
@@ -757,17 +643,7 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
             } else {
-                if (response.code() == 400 || response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    if (response.code() == 400) {
-                        throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 404) {
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -776,14 +652,9 @@ public class RestClient {
         return resultNoContent;
     }
 
-    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) throws NotFoundException {
+    public ResultNoContent copyFile(CopyFileRequest copyFileRequest) throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
         ResultNoContent resultNoContent = new ResultNoContent();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFileRequest));
         request=new Request.Builder()
@@ -799,12 +670,7 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString ;
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -813,14 +679,9 @@ public class RestClient {
         return resultNoContent;
     }
 
-    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) throws NotFoundException {
+    public ResultNoContent moveFile(MoveFileRequest moveFileRequest) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         ResultNoContent resultNoContent = new ResultNoContent();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFileRequest));
         request=new Request.Builder()
@@ -836,12 +697,7 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString ;
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -850,14 +706,9 @@ public class RestClient {
         return resultNoContent;
     }
 
-    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) throws PartialSuccessException, ConflictException, NotFoundException {
+    public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) throws PartialSuccessException, ConflictException, NotFoundException, BadRequestException {
         ResultRenameFile resultRenameFile = new ResultRenameFile();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(renameFileRequest));
         request=new Request.Builder()
@@ -874,20 +725,7 @@ public class RestClient {
                 respBody = respString == null || respString.equals("") ? "{}" : respString;
                 resultRenameFile = new Gson().fromJson(respBody, ResultRenameFile.class);
             } else {
-                if (response.code() == 207 || response.code() == 404 || response.code() == 409) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    if (response.code() == 207) {
-                        throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 404) {
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                    if (response.code() == 409) {
-                        throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultRenameFile.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -898,12 +736,7 @@ public class RestClient {
 
     public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) {
         ResultEmptyBlock resultEmptyBlock = new ResultEmptyBlock();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(createFolderRequest));
         request=new Request.Builder()
@@ -926,13 +759,9 @@ public class RestClient {
         return resultEmptyBlock;
     }
 
-    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) throws NotFoundException {
+    public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         ResultNoContent resultNoContent = new ResultNoContent();
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(deleteFolderRequest));
         request=new Request.Builder()
@@ -948,12 +777,7 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
                 } else {
-                    if (response.code() == 404) {
-                        String resp = response.body().string();
-                        ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                        Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                    }
+                    Utils.throwException(response);
                 }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -962,14 +786,9 @@ public class RestClient {
         return resultNoContent;
     }
 
-    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) throws NotFoundException {
+    public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(copyFolderRequest));
 
@@ -986,12 +805,7 @@ public class RestClient {
                 respBody=response.body().string();
                 resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -1000,14 +814,9 @@ public class RestClient {
         return resultOfFolderActions;
     }
 
-    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) throws NotFoundException {
+    public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), new Gson().toJson(moveFolderRequest));
 
@@ -1024,12 +833,7 @@ public class RestClient {
                 respBody=response.body().string();
                 resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -1041,11 +845,7 @@ public class RestClient {
     public ResultBulkJobStatus getBulkJobStatus(String jobId) {
         ResultBulkJobStatus resultBulkJobStatus = new ResultBulkJobStatus();
 
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/bulkJobs/%s"), jobId);
 
@@ -1069,13 +869,9 @@ public class RestClient {
         return resultBulkJobStatus;
     }
 
-    public ResultFileVersions getFileVersions(String fileId) throws NotFoundException {
+    public ResultFileVersions getFileVersions(String fileId) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         ResultFileVersions resultFileVersions = new ResultFileVersions();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions"), fileId);
 
@@ -1093,12 +889,7 @@ public class RestClient {
                 List<ResultFileVersionDetails> resultFileVersionDetailsList=new Gson().fromJson(respBody,new TypeToken<List<ResultFileVersionDetails>>() {}.getType());
                 resultFileVersions.setResultFileVersionDetailsList(resultFileVersionDetailsList);
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersions.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
@@ -1107,7 +898,7 @@ public class RestClient {
         return resultFileVersions;
     }
 
-    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) throws NotFoundException {
+    public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId) throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
         if (fileId == null) {
             throw new RuntimeException("Error: FileId not provided.");
         }
@@ -1115,12 +906,7 @@ public class RestClient {
             throw new RuntimeException("Error: versionId not provided.");
         }
         ResultFileVersionDetails resultFileVersionDetails = new ResultFileVersionDetails();
-
-        String credential = Credentials.basic(imageKit.getConfig().getPrivateKey(),"");
-        Map<String, String> headers=new HashMap<>();
-        headers.put("Accept-Encoding","application/json");
-        headers.put("Content-Type","application/json");
-        headers.put("Authorization",credential);
+        Map<String, String> headers=Utils.getHeaders(imageKit);
 
         String url=String.format(Locale.US,API_BASE_URL.concat("v1/files/%s/versions/%s"), fileId, versionId);
 
@@ -1137,12 +923,7 @@ public class RestClient {
                 respBody=response.body().string();
                 resultFileVersionDetails = new Gson().fromJson(respBody, ResultFileVersionDetails.class);
             } else {
-                if (response.code() == 404) {
-                    String resp = response.body().string();
-                    ResultCache result = new Gson().fromJson(resp, ResultCache.class);
-                    Utils.populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(), result.getResponseMetaData());
-                }
+                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(), response.headers().toMultimap());
         } catch (IOException e) {
