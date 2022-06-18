@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ResultList {
-	private boolean isSuccessful;
-	private String message;
 	private String help;
 	@Deprecated
 	private String raw;
@@ -24,22 +22,6 @@ public class ResultList {
 
 	public ResultList(List<BaseFile> results) {
 		this.results = results;
-	}
-
-	public boolean isSuccessful() {
-		return isSuccessful;
-	}
-
-	public void setSuccessful(boolean successful) {
-		isSuccessful = successful;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getHelp() {
@@ -85,7 +67,11 @@ public class ResultList {
 
 	@Override
 	public String toString() {
-		return "ResultList{" + "isSuccessful=" + isSuccessful + ", message='" + message + '\'' + ", help='" + help
-				+ '\'' + ", results=" + results + '}';
+		return "ResultList{" +
+				"help='" + help + '\'' +
+				", raw='" + raw + '\'' +
+				", results=" + results +
+				", responseMetaData=" + responseMetaData +
+				'}';
 	}
 }

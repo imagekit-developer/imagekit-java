@@ -9,8 +9,6 @@ import java.util.Map;
 import io.imagekit.sdk.models.ResponseMetaData;
 
 public class ResultCache {
-	private boolean isSuccessful;
-	private String message;
 	private String help;
 	private String requestId;
 	@Deprecated
@@ -18,22 +16,6 @@ public class ResultCache {
 	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
 	public ResultCache() {
-	}
-
-	public boolean isSuccessful() {
-		return isSuccessful;
-	}
-
-	public void setSuccessful(boolean successful) {
-		isSuccessful = successful;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getHelp() {
@@ -79,7 +61,11 @@ public class ResultCache {
 
 	@Override
 	public String toString() {
-		return "ResultCache{" + "isSuccessful=" + isSuccessful + ", message='" + message + '\'' + ", help='" + help
-				+ '\'' + ", requestId='" + requestId + '\'' + '}';
+		return "ResultCache{" +
+				"help='" + help + '\'' +
+				", requestId='" + requestId + '\'' +
+				", raw='" + raw + '\'' +
+				", responseMetaData=" + responseMetaData +
+				'}';
 	}
 }

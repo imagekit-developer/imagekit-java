@@ -6,10 +6,16 @@ import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.exceptions.BadRequestException;
 import io.imagekit.sdk.exceptions.ConflictException;
+import io.imagekit.sdk.exceptions.ForbiddenException;
+import io.imagekit.sdk.exceptions.InternalServerException;
 import io.imagekit.sdk.exceptions.NotFoundException;
 import io.imagekit.sdk.exceptions.PartialSuccessException;
+import io.imagekit.sdk.exceptions.TooManyRequestsException;
+import io.imagekit.sdk.exceptions.UnauthorizedException;
+import io.imagekit.sdk.exceptions.UnknownException;
 import io.imagekit.sdk.models.ResponseMetaData;
 import io.imagekit.sdk.models.results.ResultCache;
+import io.imagekit.sdk.models.results.ResultException;
 import okhttp3.Credentials;
 import okhttp3.Response;
 
@@ -128,24 +134,36 @@ public class Utils {
 	}
 
 	public static void throwException(Response response)
-			throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
+			throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, UnauthorizedException, ForbiddenException, TooManyRequestsException {
 		String resp = response.body().string();
-		ResultCache result = new Gson().fromJson(resp, ResultCache.class);
+		ResultException result = new Gson().fromJson(resp, ResultException.class);
 		populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
 		if (response.code() == 207) {
 			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),
 					result.getHelp(), result.getResponseMetaData());
-		}
-		if (response.code() == 400) {
+		} else if (response.code() == 400) {
 			throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
 					result.getHelp(), result.getResponseMetaData());
-		}
-		if (response.code() == 404) {
+		} else if (response.code() == 401) {
+			throw new UnauthorizedException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		} else if (response.code() == 403) {
+			throw new ForbiddenException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		} else if (response.code() == 404) {
 			throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
 					result.getResponseMetaData());
-		}
-		if (response.code() == 409) {
+		} else if (response.code() == 409) {
 			throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		} else if (response.code() == 429) {
+			throw new TooManyRequestsException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		} else if (response.code() == 500 || response.code() == 502 || response.code() == 503 || response.code() == 504) {
+			throw new InternalServerException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		} else {
+			throw new UnknownException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
 					result.getResponseMetaData());
 		}
 	}

@@ -10,8 +10,6 @@ import io.imagekit.sdk.models.MetaData;
 import io.imagekit.sdk.models.ResponseMetaData;
 
 public class ResultMetaData {
-	private boolean isSuccessful;
-	private String message;
 	private String help;
 	@Deprecated
 	private String raw;
@@ -19,22 +17,6 @@ public class ResultMetaData {
 	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
 	public ResultMetaData() {
-	}
-
-	public boolean isSuccessful() {
-		return isSuccessful;
-	}
-
-	public void setSuccessful(boolean successful) {
-		isSuccessful = successful;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getHelp() {
@@ -80,7 +62,11 @@ public class ResultMetaData {
 
 	@Override
 	public String toString() {
-		return "ResultMetaData{" + "isSuccessful=" + isSuccessful + ", message='" + message + '\'' + ", help='" + help
-				+ '\'' + ", results=" + results + '}';
+		return "ResultMetaData{" +
+				"help='" + help + '\'' +
+				", raw='" + raw + '\'' +
+				", results=" + results +
+				", responseMetaData=" + responseMetaData +
+				'}';
 	}
 }

@@ -15,8 +15,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MultipartBuilder {
+	private static final String RANDOM_BOUNDARY = "randomBoundary-------------------";
 	public MultipartBody build(FileCreateRequest fileCreateRequest) {
-		MultipartBody.Builder builder = new MultipartBody.Builder("boundary").setType(MultipartBody.FORM);
+		MultipartBody.Builder builder = new MultipartBody.Builder(RANDOM_BOUNDARY).setType(MultipartBody.FORM);
 
 		if (null != fileCreateRequest.url) {
 			builder.addFormDataPart("file", fileCreateRequest.url.toString());

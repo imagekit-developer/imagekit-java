@@ -11,8 +11,6 @@ import java.util.Map;
 import io.imagekit.sdk.models.ResponseMetaData;
 
 public class ResultFileDelete {
-	private boolean isSuccessful;
-	private String message;
 	private String help;
 	@Deprecated
 	private String raw;
@@ -23,22 +21,6 @@ public class ResultFileDelete {
 	public ResultFileDelete() {
 		successfullyDeletedFileIds = new ArrayList<>();
 		missingFileIds = new ArrayList<>();
-	}
-
-	public boolean isSuccessful() {
-		return isSuccessful;
-	}
-
-	public void setSuccessful(boolean successful) {
-		isSuccessful = successful;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getHelp() {
@@ -92,8 +74,12 @@ public class ResultFileDelete {
 
 	@Override
 	public String toString() {
-		return "ResultFileDelete{" + "isSuccessful=" + isSuccessful + ", message='" + message + '\'' + ", help='" + help
-				+ '\'' + ", successfullyDeletedFileIds=" + successfullyDeletedFileIds + ", missingFileIds="
-				+ missingFileIds + '}';
+		return "ResultFileDelete{" +
+				"help='" + help + '\'' +
+				", raw='" + raw + '\'' +
+				", successfullyDeletedFileIds=" + successfullyDeletedFileIds +
+				", missingFileIds=" + missingFileIds +
+				", responseMetaData=" + responseMetaData +
+				'}';
 	}
 }

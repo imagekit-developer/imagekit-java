@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Result extends BaseFile {
-	private boolean isSuccessful;
-	private String message;
 	private String help;
 	@Deprecated
 	private String raw;
@@ -50,22 +48,6 @@ public class Result extends BaseFile {
 		this.hasAlpha = hasAlpha;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
-	}
-
-	public boolean isSuccessful() {
-		return isSuccessful;
-	}
-
-	public void setSuccessful(boolean successful) {
-		isSuccessful = successful;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public void setMessage(String message) {
-		this.message = message;
 	}
 
 	public String getHelp() {
@@ -199,14 +181,32 @@ public class Result extends BaseFile {
 
 	@Override
 	public String toString() {
-		return "Result{" + "isSuccessful=" + isSuccessful + ", message='" + message + '\'' + ", help='" + help + '\''
-				+ ", fileId='" + fileId + '\'' + ", name='" + name + '\'' + ", url='" + url + '\'' + ", thumbnail='"
-				+ thumbnail + '\'' + ", height=" + height + ", width=" + width + ", size=" + size + ", filePath='"
-				+ filePath + '\'' + ", tags='" + tags + '\'' + ", isPrivateFile=" + isPrivateFile
-				+ ", customCoordinates='" + customCoordinates + '\'' + ", fileType='" + fileType + '\'' + ", aiTags="
-				+ aiTags + ", versionInfo=" + versionInfo + ", customMetadata=" + customMetadata + ", embeddedMetadata="
-				+ embeddedMetadata + ", extensionStatus=" + extensionStatus + ", type='" + type + '\'' + ", mime='"
-				+ mime + '\'' + ", hasAlpha=" + hasAlpha + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ '}';
+		return "Result{" +
+				"fileId='" + fileId + '\'' +
+				", name='" + name + '\'' +
+				", url='" + url + '\'' +
+				", thumbnail='" + thumbnail + '\'' +
+				", height=" + height +
+				", width=" + width +
+				", size=" + size +
+				", filePath='" + filePath + '\'' +
+				", tags=" + tags +
+				", isPrivateFile=" + isPrivateFile +
+				", customCoordinates='" + customCoordinates + '\'' +
+				", fileType='" + fileType + '\'' +
+				", aiTags=" + aiTags +
+				", versionInfo=" + versionInfo +
+				", customMetadata=" + customMetadata +
+				", embeddedMetadata=" + embeddedMetadata +
+				", extensionStatus=" + extensionStatus +
+				", type='" + type + '\'' +
+				", mime='" + mime + '\'' +
+				", hasAlpha=" + hasAlpha +
+				", createdAt=" + createdAt +
+				", updatedAt=" + updatedAt +
+				", help='" + help + '\'' +
+				", raw='" + raw + '\'' +
+				", responseMetaData=" + responseMetaData +
+				'}';
 	}
 }

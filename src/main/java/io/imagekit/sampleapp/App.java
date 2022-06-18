@@ -7,8 +7,13 @@ import io.imagekit.sdk.config.Configuration;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.exceptions.BadRequestException;
 import io.imagekit.sdk.exceptions.ConflictException;
+import io.imagekit.sdk.exceptions.ForbiddenException;
+import io.imagekit.sdk.exceptions.InternalServerException;
 import io.imagekit.sdk.exceptions.NotFoundException;
 import io.imagekit.sdk.exceptions.PartialSuccessException;
+import io.imagekit.sdk.exceptions.TooManyRequestsException;
+import io.imagekit.sdk.exceptions.UnauthorizedException;
+import io.imagekit.sdk.exceptions.UnknownException;
 import io.imagekit.sdk.models.AITagsRequest;
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CopyFileRequest;
@@ -169,7 +174,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getPurgeCacheStatus(String requestId) {
+	private static void getPurgeCacheStatus(String requestId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Fetching cache status:" + Color.ANSI_RESET);
 		System.out.println(">> Sending request...");
 		ResultCacheStatus result = ImageKit.getInstance().getPurgeCacheStatus(requestId);
@@ -183,7 +188,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static ResultCache purgeCache(String filePath) {
+	private static ResultCache purgeCache(String filePath) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Purging cache:" + Color.ANSI_RESET);
 		System.out.println(">> Sending request...");
 		ResultCache result = ImageKit.getInstance().purgeCache(filePath);
@@ -198,7 +203,7 @@ class App {
 		return result;
 	}
 
-	private static void deleteFile(String fileId) {
+	private static void deleteFile(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Deleting file:" + Color.ANSI_RESET);
 		System.out.println(">> Sending file id: " + fileId);
 		Result result = ImageKit.getInstance().deleteFile(fileId);
@@ -212,7 +217,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void deleteFiles(List<BaseFile> files) {
+	private static void deleteFiles(List<BaseFile> files) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		List<String> fileIds = files.stream().map(baseFile -> baseFile.getFileId()).collect(Collectors.toList());
 		System.out.println(Color.ANSI_CYAN + ">> Deleting file:" + Color.ANSI_RESET);
 		System.out.println(">> Sending file id: " + fileIds);
@@ -227,7 +232,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void updateDetails(String fileId) {
+	private static void updateDetails(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Updating file details:" + Color.ANSI_RESET);
 		System.out.println(">> Updating file details...");
 		List<String> tags = new ArrayList<>();
@@ -248,7 +253,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getFileMetaData(String fileId) {
+	private static void getFileMetaData(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Get file Metadata:" + Color.ANSI_RESET);
 		System.out.println(">> Fetching Metadata...");
 		ResultMetaData result = ImageKit.getInstance().getFileMetadata(fileId);
@@ -262,7 +267,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getRemoteFileMetaData(String url) {
+	private static void getRemoteFileMetaData(String url) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Get Remote file Metadata:" + Color.ANSI_RESET);
 		System.out.println(">> Fetching Metadata...");
 		ResultMetaData result = ImageKit.getInstance().getRemoteFileMetadata(url);
@@ -276,7 +281,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getFileDetail(String fileId) {
+	private static void getFileDetail(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Get file details:" + Color.ANSI_RESET);
 		System.out.println(">> Fetching details...");
 		Result result = ImageKit.getInstance().getFileDetail(fileId);
@@ -290,7 +295,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static List<BaseFile> getList(int skip, int limit) {
+	private static List<BaseFile> getList(int skip, int limit) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		System.out.println(Color.ANSI_CYAN + ">> Get Uploaded file as List:" + Color.ANSI_RESET);
 		System.out.println(">> Fetching list...");
 		Map<String, String> options = new HashMap<>();
@@ -310,7 +315,7 @@ class App {
 		return resultList.getResults();
 	}
 
-	private static void uploadFromURL() {
+	private static void uploadFromURL() throws ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		System.out.println(Color.ANSI_CYAN + ">> Uploading from URL:" + Color.ANSI_RESET);
 		System.out.println(">> Start uploading...");
 		String imageUrl = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
@@ -345,7 +350,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void uploadFromBase64() {
+	private static void uploadFromBase64() throws ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		System.out.println(Color.ANSI_CYAN + ">> Uploading Base64 Image:" + Color.ANSI_RESET);
 		System.out.println(">> Start uploading...");
 		URL url = App.class.getClassLoader().getResource("sample1.jpg");
@@ -363,7 +368,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void uploadFromBytes() {
+	private static void uploadFromBytes() throws ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		System.out.println(Color.ANSI_CYAN + ">> Uploading Image from file:" + Color.ANSI_RESET);
 		System.out.println(">> Start uploading...");
 		URL url = App.class.getClassLoader().getResource("sample1.jpg");
@@ -405,7 +410,7 @@ class App {
 	}
 
 	private static void addTags()
-			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62a9b446663ef7b5c15951ba");
 		List<String> tags = new ArrayList<>();
@@ -423,7 +428,7 @@ class App {
 	}
 
 	private static void removeTags()
-			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
 		List<String> tags = new ArrayList<>();
@@ -439,7 +444,7 @@ class App {
 	}
 
 	private static void removeAITags()
-			throws PartialSuccessException, NotFoundException, BadRequestException, ConflictException {
+			throws PartialSuccessException, NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62a9b446663ef7b5c15951ba");
 		List<String> aiTags = new ArrayList<>();
@@ -456,7 +461,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getCustomMetaDataFields() {
+	private static void getCustomMetaDataFields() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		ResultCustomMetaDataFieldList resultCustomMetaDataFieldList = ImageKit.getInstance()
 				.getCustomMetaDataFields(false);
 		System.out.println(">> Fetch CustomMetaDataFields done.");
@@ -468,7 +473,7 @@ class App {
 	}
 
 	private static void createCustomMetaDataFields()
-			throws BadRequestException, PartialSuccessException, NotFoundException, ConflictException {
+			throws BadRequestException, PartialSuccessException, NotFoundException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
 		customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Number);
 		customMetaDataFieldSchemaObject.setValueRequired(false);
@@ -491,7 +496,7 @@ class App {
 	}
 
 	private static void deleteCustomMetaDataField(String id)
-			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		ResultNoContent resultNoContent = ImageKit.getInstance().deleteCustomMetaDataField(id);
 		System.out.println(">> CustomMetaDataField deleted...");
 		System.out.println(Color.ANSI_GREEN + ">> Response:" + Color.ANSI_RESET);
@@ -504,7 +509,7 @@ class App {
 	}
 
 	private static void updateCustomMetaDataFields()
-			throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
+			throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
 		schemaObject.setMinValue(1);
 		schemaObject.setMaxValue(200);
@@ -526,7 +531,7 @@ class App {
 	}
 
 	private static void deleteFileVersion()
-			throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException {
+			throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("62a9b446663ef7b5c15951ba");
 		deleteFileVersionRequest.setVersionId("62aac9b47db937233eee762f");
@@ -540,7 +545,7 @@ class App {
 	}
 
 	private static void copyFile()
-			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		CopyFileRequest copyFileRequest = new CopyFileRequest();
 		copyFileRequest.setSourceFilePath("/new_car11.jpg");
 		copyFileRequest.setDestinationPath("/demo1/");
@@ -555,7 +560,7 @@ class App {
 	}
 
 	private static void moveFile()
-			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		MoveFileRequest moveFileRequest = new MoveFileRequest();
 		moveFileRequest.setSourceFilePath("/new_car11.jpg");
 		moveFileRequest.setDestinationPath("/demo1");
@@ -569,7 +574,7 @@ class App {
 	}
 
 	private static void renameFile()
-			throws ConflictException, PartialSuccessException, NotFoundException, BadRequestException {
+			throws ConflictException, PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		RenameFileRequest renameFileRequest = new RenameFileRequest();
 		renameFileRequest.setFilePath("/new12.jpg");
 		renameFileRequest.setNewFileName("new_car.jpg");
@@ -583,7 +588,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void createFolder() {
+	private static void createFolder() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		CreateFolderRequest createFolderRequest = new CreateFolderRequest();
 		createFolderRequest.setFolderName("test1");
 		createFolderRequest.setParentFolderPath("/");
@@ -597,7 +602,7 @@ class App {
 	}
 
 	private static void deleteFolder()
-			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
+			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		String folderPath = "/test1";
 		DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 		deleteFolderRequest.setFolderPath(folderPath);
@@ -611,7 +616,7 @@ class App {
 	}
 
 	private static void copyFolder()
-			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
+			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 		copyFolderRequest.setSourceFolderPath("/test1");
 		copyFolderRequest.setDestinationPath("/demo1");
@@ -625,7 +630,7 @@ class App {
 	}
 
 	private static void moveFolder()
-			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
+			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 		moveFolderRequest.setSourceFolderPath("/demo1/test1");
 		moveFolderRequest.setDestinationPath("/");
@@ -638,7 +643,7 @@ class App {
 		System.out.println("\n\n");
 	}
 
-	private static void getBulkJobStatus() {
+	private static void getBulkJobStatus() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		String jobId = "62a9b9d5663ef7fd985c6fcb";
 		ResultBulkJobStatus resultBulkJobStatus = ImageKit.getInstance().getBulkJobStatus(jobId);
 		System.out.println(">> Fetch Bulk job status done.");
@@ -650,7 +655,7 @@ class App {
 	}
 
 	private static void getFileVersions()
-			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
+			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		String fileId = "629f3de17eb0fe4053615450";
 		ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
 		System.out.println(">> Fetch Get file versions done.");
@@ -662,7 +667,7 @@ class App {
 	}
 
 	private static void getFileVersionDetails()
-			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException {
+			throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		String fileId = "62a9b446663ef7b5c15951ba";
 		String versionId = "62a9b446663ef7b5c15951ba";
 		ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId,
