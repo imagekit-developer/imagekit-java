@@ -94,7 +94,7 @@ public class RestClient {
     public Result updateDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
         Result result = null;
         Map<String, String> headers = Utils.getHeaders(imageKit);
-        String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/%s/details",
+        String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/details"),
                 fileUpdateRequest.getFileId());
         request = new Request.Builder().url(url).patch(multipartBuilder.build(fileUpdateRequest))
                 .headers(Headers.of(headers)).build();
@@ -127,14 +127,12 @@ public class RestClient {
             queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
         }
 
-        String url = String.format(Locale.US, "https://api.imagekit.io/v1/files?%s", queryMaker.get());
-//        System.out.println(url);
+        String url = String.format(Locale.US, API_BASE_URL.concat("v1/files?%s"), queryMaker.get());
 
         request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
         try {
             Response response = client.newCall(request).execute();
-            System.out.println("here res:==> " + response);
             String respBody = "";
             if (response.code() == 200) {
                 respBody = response.body().string();
@@ -157,7 +155,7 @@ public class RestClient {
         Result result = new Result();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/%s/details", fileId);
+        String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/details"), fileId);
 
         request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
@@ -210,7 +208,7 @@ public class RestClient {
         ResultMetaData result = new ResultMetaData();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        String apiURL = "https://api.imagekit.io/v1/metadata?url=" + url;
+        String apiURL = API_BASE_URL.concat("v1/metadata?url=") + url;
 
         request = new Request.Builder().url(apiURL).get().headers(Headers.of(headers)).build();
 
@@ -237,7 +235,7 @@ public class RestClient {
         Result result = new Result();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/%s", fileId);
+        String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s"), fileId);
 
         request = new Request.Builder().url(url).delete().headers(Headers.of(headers)).build();
 
@@ -263,7 +261,7 @@ public class RestClient {
         ResultFileDelete result = new ResultFileDelete();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        String url = "https://api.imagekit.io/v1/files/batch/deleteByFileIds";
+        String url = API_BASE_URL.concat("v1/files/batch/deleteByFileIds");
 
         request = new Request.Builder().url(url)
                 .post(multipartBuilder.build(String.format("{\"fileIds\":%s}", new Gson().toJson(fileIds))))
@@ -291,12 +289,13 @@ public class RestClient {
         ResultCache result = new ResultCache();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        request = new Request.Builder().url("https://api.imagekit.io/v1/files/purge")
+        request = new Request.Builder().url(API_BASE_URL.concat("v1/files/purge"))
                 .post(multipartBuilder.build(String.format("{\"url\":\"%s\"}", url))).headers(Headers.of(headers))
                 .build();
 
         try {
             Response response = client.newCall(request).execute();
+            System.out.println("res:==> " + response.request().body());
             String respBody = "";
             if (response.code() == 200 || response.code() == 201) {
                 respBody = response.body().string();
@@ -317,7 +316,7 @@ public class RestClient {
         ResultCacheStatus result = new ResultCacheStatus();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
-        String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/purge/%s", requestId);
+        String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/purge/%s"), requestId);
 
         request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 

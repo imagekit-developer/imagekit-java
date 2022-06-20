@@ -54,10 +54,10 @@ public class MultipartBuilder {
 			builder.addFormDataPart("responseFields", Utils.listToString(fileCreateRequest.responseFields));
 		}
 		if (fileCreateRequest.overwriteFile != null && !fileCreateRequest.overwriteFile) {
-			builder.addFormDataPart("overwriteFile", String.valueOf(true));
+			builder.addFormDataPart("overwriteFile", "true");
 		}
 		if (fileCreateRequest.overwriteAITags != null && !fileCreateRequest.overwriteAITags) {
-			builder.addFormDataPart("overwriteAITags", String.valueOf(Boolean.TRUE));
+			builder.addFormDataPart("overwriteAITags", "true");
 		}
 		if (fileCreateRequest.overwriteTags != null && !fileCreateRequest.overwriteTags) {
 			builder.addFormDataPart("overwriteTags", "true");
@@ -72,8 +72,7 @@ public class MultipartBuilder {
 			builder.addFormDataPart("webhookUrl", fileCreateRequest.webhookUrl);
 		}
 		if (null != fileCreateRequest.customMetadata) {
-			builder.addFormDataPart("customMetadata",
-					String.valueOf(new JsonParser().parse(String.valueOf(fileCreateRequest.customMetadata))));
+			builder.addFormDataPart("customMetadata", fileCreateRequest.customMetadata.toString());
 		}
 		return builder.build();
 	}

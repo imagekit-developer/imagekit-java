@@ -12,7 +12,6 @@ import io.imagekit.sdk.exceptions.TooManyRequestsException;
 import io.imagekit.sdk.exceptions.UnauthorizedException;
 import io.imagekit.sdk.exceptions.UnknownException;
 import io.imagekit.sdk.models.AITagsRequest;
-import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.CopyFileRequest;
 import io.imagekit.sdk.models.CopyFolderRequest;
 import io.imagekit.sdk.models.CreateFolderRequest;
@@ -47,8 +46,6 @@ import java.util.regex.Pattern;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -608,7 +605,7 @@ public class ImageKitTest {
 				"    \"message\": \"The requested file does not exist.\",\n" +
 				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
 				"}";
-		server.enqueue(new MockResponse().setBody(responseJson));
+		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
 		SUT.updateFileDetail(fileUpdateRequest);
@@ -669,60 +666,160 @@ public class ImageKitTest {
 		SUT.updateFileDetail(fileUpdateRequest);
 		RecordedRequest request = server.takeRequest();
 
-		String tagsRequestJson = "{\"fileIds\":[\"62958deef33aa80bdadf7533\"],\"tags\":[\"tag1\",\"tag2\"]}";
+		String requestJson = "{\"fileId\":\"62a9c3ccd875ec6fd658c854\",\"tags\":[\"Software\",\"Developer\",\"Engineer\"]}";
 		String utf8RequestBody = request.getBody().readUtf8();
-		System.out.println("utf8RequestBody:--> " + utf8RequestBody);
-//		assertEquals(tagsRequestJson, utf8RequestBody);
+		assertEquals(requestJson, utf8RequestBody);
 		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-		assertEquals("POST /v1/files/62a9c3ccd875ec6fd658c854/details HTTP/1.1", request.getRequestLine());
+		assertEquals("PATCH /v1/files/62a9c3ccd875ec6fd658c854/details HTTP/1.1", request.getRequestLine());
 		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62a9c3ccd875ec6fd658c854/details"), request.getRequestUrl().toString());
 	}
 
-	@Test(expected = NotFoundException.class)
+	@Test
 	public void imageKit_getFileList_returnList() throws InterruptedException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException {
 
 		MockWebServer server = new MockWebServer();
-		String tagsResponseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
-				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n"
-				+ "    \"missingFileIds\": [\n" + "        \"629f3de17eb0fe4053615450\"\n" + "    ]\n" + "}";
-		server.enqueue(new MockResponse().setResponseCode(404).setBody(tagsResponseJson));
+		String responseJson = "[\n" +
+				"    {\n" +
+				"        \"type\": \"file\",\n" +
+				"        \"name\": \"default-image.jpg\",\n" +
+				"        \"createdAt\": \"2022-06-11T07:26:19.294Z\",\n" +
+				"        \"updatedAt\": \"2022-06-11T07:26:19.600Z\",\n" +
+				"        \"fileId\": \"62a4439bce686814dfcce65c\",\n" +
+				"        \"tags\": null,\n" +
+				"        \"AITags\": null,\n" +
+				"        \"versionInfo\": {\n" +
+				"            \"id\": \"62a4439bce686814dfcce65c\",\n" +
+				"            \"name\": \"Version 1\"\n" +
+				"        },\n" +
+				"        \"embeddedMetadata\": {\n" +
+				"            \"DateCreated\": \"2022-06-11T07:26:19.599Z\",\n" +
+				"            \"DateTimeCreated\": \"2022-06-11T07:26:19.600Z\"\n" +
+				"        },\n" +
+				"        \"customCoordinates\": null,\n" +
+				"        \"customMetadata\": {},\n" +
+				"        \"isPrivateFile\": false,\n" +
+				"        \"url\": \"https://ik.imagekit.io/zv3rkhsym/default-image.jpg\",\n" +
+				"        \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/default-image.jpg\",\n" +
+				"        \"fileType\": \"image\",\n" +
+				"        \"filePath\": \"/default-image.jpg\",\n" +
+				"        \"height\": 1000,\n" +
+				"        \"width\": 1000,\n" +
+				"        \"size\": 147022,\n" +
+				"        \"hasAlpha\": false,\n" +
+				"        \"mime\": \"image/jpeg\"\n" +
+				"    }\n" +
+				"]";
+		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
 		Map<String, String> options = new HashMap<>();
-		options.put("skip", "" + 0);
-		options.put("limit", "" + 10);
+		options.put("limit", "" + 1);
 		SUT.getFileList(options);
+
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/files?limit=1 HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files?limit=1"), request.getRequestUrl().toString());
+
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void imageKit_getFileDetail__expected_404() throws IOException, InterruptedException, NotFoundException,
+			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"message\": \"The requested file does not exist.\",\n" +
+				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileDetail("629f3de17eb0fe4053615450");
 
 		server.takeRequest();
 	}
 
-//	@Test
-//	public void imageKit_getFileDetail_successExpected() {
-//		Result result = new Result();
-//		result.setSuccessful(true);
-//		when(restClient.getFileDetail(any(String.class))).thenReturn(result);
-//
-//		Result result1 = SUT.getFileDetail("fileId");
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//	}
+	@Test
+	public void imageKit_getFileDetail_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"type\": \"file\",\n" +
+				"    \"name\": \"sample-image11_g1Qv0wpqP.jpg\",\n" +
+				"    \"createdAt\": \"2022-06-20T05:00:41.830Z\",\n" +
+				"    \"updatedAt\": \"2022-06-20T05:00:43.263Z\",\n" +
+				"    \"fileId\": \"62affef97db937b028f3b47a\",\n" +
+				"    \"tags\": [\n" +
+				"        \"Software\",\n" +
+				"        \"Developer\",\n" +
+				"        \"Engineer\"\n" +
+				"    ],\n" +
+				"    \"AITags\": null,\n" +
+				"    \"versionInfo\": {\n" +
+				"        \"id\": \"62affef97db937b028f3b47a\",\n" +
+				"        \"name\": \"Version 1\"\n" +
+				"    },\n" +
+				"    \"embeddedMetadata\": {},\n" +
+				"    \"customCoordinates\": null,\n" +
+				"    \"customMetadata\": {},\n" +
+				"    \"isPrivateFile\": false,\n" +
+				"    \"url\": \"https://ik.imagekit.io/zv3rkhsym/sample-image11_g1Qv0wpqP.jpg\",\n" +
+				"    \"thumbnail\": \"https://ik.imagekit.io/demo/img/static-file-1.png\",\n" +
+				"    \"fileType\": \"non-image\",\n" +
+				"    \"filePath\": \"/sample-image11_g1Qv0wpqP.jpg\",\n" +
+				"    \"size\": 169170\n" +
+				"}";
+		server.enqueue(new MockResponse().setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileDetail("62affef97db937b028f3b47a");
 
-//	@Test
-//	public void imageKit_getFileMetaData_successExpected() {
-//		ResultMetaData result = new ResultMetaData();
-//		result.setSuccessful(true);
-//		when(restClient.getFileMetaData(any(String.class))).thenReturn(result);
-//
-//		ResultMetaData result1 = SUT.getFileMetadata("fileId");
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//	}
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/files/62affef97db937b028f3b47a/details HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a/details"), request.getRequestUrl().toString());
+	}
 
 	@Test
+	public void imageKit_getFileMetaData_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"height\": 1000,\n" +
+				"    \"width\": 1000,\n" +
+				"    \"size\": 147022,\n" +
+				"    \"format\": \"jpg\",\n" +
+				"    \"hasColorProfile\": false,\n" +
+				"    \"quality\": 0,\n" +
+				"    \"density\": 72,\n" +
+				"    \"hasTransparency\": false,\n" +
+				"    \"exif\": {},\n" +
+				"    \"pHash\": \"e0d52b612ad538f6\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getRemoteFileMetadata("https://ik.imagekit.io/zv3rkhsym/default-image.jpg");
+
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg"), request.getRequestUrl().toString());
+
+	}
+
+	@Test(expected = NotFoundException.class)
 	public void imageKit_getRemoteFileMetaData_404_Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
-		String tagsResponseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
+		String responseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
 				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n"
 				+ "    \"missingFileIds\": [\n" + "        \"629f3de17eb0fe4053615450\"\n" + "    ]\n" + "}";
-		server.enqueue(new MockResponse().setResponseCode(404).setBody(tagsResponseJson));
+		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
 		SUT.getRemoteFileMetadata("remote_url");
@@ -730,54 +827,149 @@ public class ImageKitTest {
 		server.takeRequest();
 	}
 
-//	@Test
-//	public void imageKit_deleteFile_successExpected() {
-//		Result result = new Result();
-//		result.setSuccessful(true);
-//		when(restClient.deleteFile(any(String.class))).thenReturn(result);
-//
-//		Result result1 = SUT.deleteFile("fileId");
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//	}
+	@Test(expected = NotFoundException.class)
+	public void imageKit_deleteFile_404_Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"message\": \"The requested file does not exist.\",\n" +
+				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.deleteFile("629f3de17eb0fe4053615450");
 
-//	@Test
-//	public void imageKit_bulkDeleteFiles_successExpected() {
-//		List<String> fileIds = new ArrayList<>();
-//		fileIds.add("file_id_1");
-//		fileIds.add("file_id_2");
-//		fileIds.add("file_id_3");
-//
-//		ResultFileDelete result = new ResultFileDelete();
-//		result.setSuccessfullyDeletedFileIds(fileIds);
-//		result.setSuccessful(true);
-//		when(restClient.bulkDeleteFiles(any())).thenReturn(result);
-//		ResultFileDelete result1 = SUT.bulkDeleteFiles(fileIds);
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//	}
+		server.takeRequest();
+	}
 
-//	@Test
-//	public void imageKit_purgeCache_successExpected() {
-//		ResultCache result = new ResultCache();
-//		result.setSuccessful(true);
-//		result.setRequestId("requestId");
-//		when(restClient.purgeCache(any(String.class))).thenReturn(result);
-//
-//		ResultCache result1 = SUT.purgeCache("fileId");
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//		assertThat(result1.getRequestId(), is(result.getRequestId()));
-//	}
+	@Test
+	public void imageKit_deleteFile_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "";
+		server.enqueue(new MockResponse().setResponseCode(204).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.deleteFile("62affef97db937b028f3b47a");
 
-//	@Test
-//	public void imageKit_getPurgeCacheStatus_successExpected() {
-//		ResultCacheStatus result = new ResultCacheStatus();
-//		result.setSuccessful(true);
-//		result.setStatus("Complete");
-//		when(restClient.getPurgeCacheStatus(any(String.class))).thenReturn(result);
-//
-//		ResultCacheStatus result1 = SUT.getPurgeCacheStatus("requestId");
-//		assertThat(result1.isSuccessful(), is(result.isSuccessful()));
-//		assertThat(result1.getStatus(), is(result.getStatus()));
-//	}
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("DELETE /v1/files/62affef97db937b028f3b47a HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a"), request.getRequestUrl().toString());
+	}
+
+	@Test(expected = NotFoundException.class)
+	public void imageKit_bulkDeleteFiles_404Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+		List<String> fileIds = new ArrayList<>();
+		fileIds.add("file_id_1");
+		fileIds.add("file_id_2");
+		fileIds.add("file_id_3");
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"message\": \"The requested file(s) does not exist.\",\n" +
+				"    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+				"    \"missingFileIds\": [\n" +
+				"        \"62ad9ece7db937e35ef18dda\"\n" +
+				"    ]\n" +
+				"}";
+		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.bulkDeleteFiles(fileIds);
+
+		server.takeRequest();
+	}
+
+	@Test
+	public void imageKit_bulkDeleteFiles_successExpected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+		List<String> fileIds = new ArrayList<>();
+		fileIds.add("62ad9ece7db937e35ef18dda");
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"successfullyDeletedFileIds\": [\n" +
+				"        \"62ad9ece7db937e35ef18dda\"\n" +
+				"    ]\n" +
+				"}";
+		server.enqueue(new MockResponse().setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.bulkDeleteFiles(fileIds);
+
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("{\"fileIds\":[\"62ad9ece7db937e35ef18dda\"]}", utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/files/batch/deleteByFileIds HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/batch/deleteByFileIds"), request.getRequestUrl().toString());
+	}
+
+	@Test(expected = BadRequestException.class)
+	public void imageKit_purgeCache_404Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"message\": \"Invalid url\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.purgeCache("url");
+
+		server.takeRequest();
+	}
+
+	@Test
+	public void imageKit_purgeCache_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"requestId\": \"62b01f15214dfbdf3692dd0a\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.purgeCache("https://ik.imagekit.io/zv3rkhsym/sample-image11_g1Qv0wpqP.jpg");
+
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("{\"url\":\"https://ik.imagekit.io/zv3rkhsym/sample-image11_g1Qv0wpqP.jpg\"}", utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/files/purge HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/purge"), request.getRequestUrl().toString());
+	}
+
+	@Test(expected = BadRequestException.class)
+	public void imageKit_getPurgeCacheStatus_400Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"message\": \"No request found for this requestId.\",\n" +
+				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getPurgeCacheStatus("62b01f15214dfbdf3692dd0b");
+
+		server.takeRequest();
+	}
+
+	@Test
+	public void imageKit_getPurgeCacheStatus_successExpected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+		MockWebServer server = new MockWebServer();
+		String responseJson = "{\n" +
+				"    \"status\": \"Completed\"\n" +
+				"}";
+		server.enqueue(new MockResponse().setBody(responseJson));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getPurgeCacheStatus("62b01f15214dfbdf3692dd0a");
+
+		RecordedRequest request = server.takeRequest();
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/files/purge/62b01f15214dfbdf3692dd0a HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/purge/62b01f15214dfbdf3692dd0a"), request.getRequestUrl().toString());
+	}
 
 	@Test
 	public void withoutToken_getAuthenticationParameters_successExpected() {
