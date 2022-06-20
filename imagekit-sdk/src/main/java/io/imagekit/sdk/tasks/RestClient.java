@@ -56,14 +56,6 @@ public class RestClient {
         this.multipartBuilder = new MultipartBuilder();
     }
 
-    public void setClient(OkHttpClient client) {
-        this.client = client;
-    }
-
-    public void setMultipartBuilder(MultipartBuilder builder) {
-        this.multipartBuilder = builder;
-    }
-
     public Result upload(FileCreateRequest fileCreateRequest) throws ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         Result result = null;
         Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -86,7 +78,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -112,7 +104,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -146,7 +138,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultList.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultList;
     }
@@ -172,7 +164,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -199,7 +191,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -226,7 +218,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -252,7 +244,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -280,7 +272,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -307,7 +299,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -333,7 +325,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return result;
     }
@@ -362,7 +354,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultTags;
     }
@@ -390,7 +382,7 @@ public class RestClient {
                     response.headers().toMultimap());
 
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultTags;
     }
@@ -419,7 +411,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataFieldList.getResponseMetaData(),
                     response.code(), response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultCustomMetaDataFieldList;
     }
@@ -454,7 +446,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultCustomMetaDataField;
     }
@@ -480,7 +472,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -511,7 +503,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultCustomMetaDataField;
     }
@@ -538,7 +530,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -565,7 +557,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -592,7 +584,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -620,7 +612,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultRenameFile.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultRenameFile;
     }
@@ -646,7 +638,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultEmptyBlock.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultEmptyBlock;
     }
@@ -673,7 +665,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -701,7 +693,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultOfFolderActions;
     }
@@ -729,7 +721,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultOfFolderActions;
     }
@@ -755,7 +747,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultBulkJobStatus.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultBulkJobStatus;
     }
@@ -784,7 +776,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultFileVersions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultFileVersions;
     }
@@ -816,7 +808,7 @@ public class RestClient {
             Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new UnknownException(e.getCause().getMessage(), e.getCause());
         }
         return resultFileVersionDetails;
     }

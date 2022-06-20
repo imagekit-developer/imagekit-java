@@ -390,7 +390,7 @@ class App {
 		JsonArray jsonArray = new JsonArray();
 		jsonArray.add(innerObject1);
 		jsonArray.add(innerObject2);
-//		fileCreateRequest.setExtensions(jsonArray);
+		fileCreateRequest.setExtensions(jsonArray);
 		fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
 		fileCreateRequest.setOverwriteFile(true);
 		fileCreateRequest.setOverwriteAITags(true);

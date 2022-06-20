@@ -8,6 +8,10 @@ public class UnknownException extends Exception {
     private String help;
     private ResponseMetaData responseMetaData;
 
+    public UnknownException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public UnknownException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
                             String message1, String help, ResponseMetaData responseMetaData) {
         super(message, cause, enableSuppression, writableStackTrace);
