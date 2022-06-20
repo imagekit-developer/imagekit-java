@@ -56,7 +56,7 @@ public class RestClient {
         this.multipartBuilder = new MultipartBuilder();
     }
 
-    public Result upload(FileCreateRequest fileCreateRequest) throws ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+    public Result upload(FileCreateRequest fileCreateRequest) throws InternalServerException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         Result result = null;
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -73,17 +73,17 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public Result updateDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public Result updateDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         Result result = null;
         Map<String, String> headers = Utils.getHeaders(imageKit);
         String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/details"),
@@ -99,17 +99,17 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultList resultList = new ResultList();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -133,17 +133,17 @@ public class RestClient {
                 resultList.setResults(files);
                 resultList.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultList.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultList;
     }
 
-    public Result getFileDetail(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public Result getFileDetail(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         Result result = new Result();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -159,17 +159,17 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultMetaData getFileMetaData(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultMetaData getFileMetaData(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultMetaData result = new ResultMetaData();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -186,17 +186,17 @@ public class RestClient {
                 result.setResults(metaData);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultMetaData getRemoteFileMetaData(String url) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultMetaData getRemoteFileMetaData(String url) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultMetaData result = new ResultMetaData();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -213,17 +213,17 @@ public class RestClient {
                 result.setResults(metaData);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public Result deleteFile(String fileId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public Result deleteFile(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         Result result = new Result();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -239,17 +239,17 @@ public class RestClient {
                 result.setFileId(fileId);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultFileDelete bulkDeleteFiles(List<String> fileIds) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultFileDelete bulkDeleteFiles(List<String> fileIds) throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
         ResultFileDelete result = new ResultFileDelete();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -266,18 +266,20 @@ public class RestClient {
                 respBody = response.body().string();
                 result = new Gson().fromJson(respBody, ResultFileDelete.class);
                 result.setRaw(respBody);
-            } else {
+            } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwException(response);
+            } else {
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultCache purgeCache(String url) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultCache purgeCache(String url) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultCache result = new ResultCache();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -294,17 +296,17 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, ResultCache.class);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
-    public ResultCacheStatus getPurgeCacheStatus(String requestId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultCacheStatus getPurgeCacheStatus(String requestId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultCacheStatus result = new ResultCacheStatus();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -320,18 +322,18 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, ResultCacheStatus.class);
                 result.setRaw(respBody);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return result;
     }
 
     public ResultTags manageTags(TagsRequest tagsRequest, String action)
-            throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultTags resultTags = new ResultTags();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -348,19 +350,21 @@ public class RestClient {
             if (response.code() == 200) {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
-            } else {
+            } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwException(response);
+            } else {
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultTags;
     }
 
     public ResultTags removeAITags(AITagsRequest aiTagsRequest)
-            throws PartialSuccessException, NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultTags resultTags = new ResultTags();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -375,19 +379,21 @@ public class RestClient {
             if (response.code() == 200) {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
-            } else {
+            } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwException(response);
+            } else {
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
 
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultTags;
     }
 
-    public ResultCustomMetaDataFieldList getCustomMetaDataFields(boolean includeDeleted) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultCustomMetaDataFieldList getCustomMetaDataFields(boolean includeDeleted) throws UnknownException {
         ResultCustomMetaDataFieldList resultCustomMetaDataFieldList = new ResultCustomMetaDataFieldList();
 
         Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -405,20 +411,18 @@ public class RestClient {
                         new TypeToken<List<ResultCustomMetaDataField>>() {
                         }.getType());
                 resultCustomMetaDataFieldList.setResultCustomMetaDataFieldList(resultCustomMetaDataFields);
-            } else {
-                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataFieldList.getResponseMetaData(),
                     response.code(), response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultCustomMetaDataFieldList;
     }
 
     public ResultCustomMetaDataField createCustomMetaDataFields(
             CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest)
-            throws BadRequestException, PartialSuccessException, NotFoundException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws BadRequestException, UnknownException {
         if (customMetaDataFieldCreateRequest.getName() == null) {
             throw new RuntimeException("Error: Name not provided.");
         }
@@ -441,18 +445,21 @@ public class RestClient {
                 JsonElement responseBody = new JsonParser().parse(respBody);
                 resultCustomMetaDataField = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             } else {
-                Utils.throwException(response);
+                if (response.code() == 400) {
+                    ResultException result = Utils.populateResult(response);
+                    throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
+                            result.getHelp(), result.getResponseMetaData());
+                }
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultCustomMetaDataField;
     }
 
-    public ResultNoContent deleteCustomMetaDataField(String id)
-            throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+    public ResultNoContent deleteCustomMetaDataField(String id) throws NotFoundException, UnknownException {
         ResultNoContent resultNoContent = new ResultNoContent();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -467,19 +474,23 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
             } else {
-                Utils.throwException(response);
+                if (response.code() == 404) {
+                    ResultException result = Utils.populateResult(response);
+                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                            result.getHelp(), result.getResponseMetaData());
+                }
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultNoContent;
     }
 
     public ResultCustomMetaDataField updateCustomMetaDataFields(
             CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest)
-            throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws BadRequestException, NotFoundException, UnknownException {
         ResultCustomMetaDataField resultCustomMetaDataField = new ResultCustomMetaDataField();
 
         Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -498,18 +509,27 @@ public class RestClient {
                 JsonElement responseBody = new JsonParser().parse(respBody);
                 resultCustomMetaDataField = new Gson().fromJson(responseBody, ResultCustomMetaDataField.class);
             } else {
-                Utils.throwException(response);
+                if (response.code() == 400 || response.code() == 404) {
+                    ResultException result = Utils.populateResult(response);
+                    if (response.code() == 400) {
+                        throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
+                                result.getHelp(), result.getResponseMetaData());
+                    } else {
+                        throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                                result.getHelp(), result.getResponseMetaData());
+                    }
+                }
             }
             Utils.populateResponseMetadata(respBody, resultCustomMetaDataField.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultCustomMetaDataField;
     }
 
     public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest)
-            throws BadRequestException, NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws BadRequestException, NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultNoContent resultNoContent = new ResultNoContent();
 
         Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -524,19 +544,28 @@ public class RestClient {
             if (response.code() == 204) {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
+            } else if (response.code() == 400 || response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                if (response.code() == 400) {
+                    throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
+                            result.getHelp(), result.getResponseMetaData());
+                } else {
+                    throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                            result.getHelp(), result.getResponseMetaData());
+                }
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultNoContent;
     }
 
     public ResultNoContent copyFile(CopyFileRequest copyFileRequest)
-            throws NotFoundException, PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultNoContent resultNoContent = new ResultNoContent();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -551,19 +580,23 @@ public class RestClient {
             if (response.code() == 204) {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultNoContent;
     }
 
     public ResultNoContent moveFile(MoveFileRequest moveFileRequest)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultNoContent resultNoContent = new ResultNoContent();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -578,13 +611,17 @@ public class RestClient {
             if (response.code() == 204) {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultNoContent;
     }
@@ -606,18 +643,24 @@ public class RestClient {
                 String respString = response.body().string();
                 respBody = respString == null || respString.equals("") ? "{}" : respString;
                 resultRenameFile = new Gson().fromJson(respBody, ResultRenameFile.class);
-            } else {
+            } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwException(response);
+            } else if (response.code() == 409) {
+                ResultException result = Utils.populateResult(response);
+                throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+                        result.getResponseMetaData());
+            } else {
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultRenameFile.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultRenameFile;
     }
 
-    public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) throws UnknownException {
         ResultEmptyBlock resultEmptyBlock = new ResultEmptyBlock();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -632,19 +675,17 @@ public class RestClient {
             if (response.code() == 201) {
                 String respString = response.body().string();
                 respBody = respString == null || respString.equals("") ? "{}" : respString;
-            } else {
-                Utils.throwException(response);
             }
             Utils.populateResponseMetadata(respBody, resultEmptyBlock.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultEmptyBlock;
     }
 
     public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultNoContent resultNoContent = new ResultNoContent();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -659,19 +700,23 @@ public class RestClient {
             if (response.code() == 204) {
                 String respString = response.body().string();
                 respBody = respString == null ? "" : respString;
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultNoContent;
     }
 
     public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -687,19 +732,23 @@ public class RestClient {
             if (response.code() == 200) {
                 respBody = response.body().string();
                 resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultOfFolderActions;
     }
 
     public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultOfFolderActions resultOfFolderActions = new ResultOfFolderActions();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -715,18 +764,22 @@ public class RestClient {
             if (response.code() == 200) {
                 respBody = response.body().string();
                 resultOfFolderActions = new Gson().fromJson(respBody, ResultOfFolderActions.class);
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultOfFolderActions;
     }
 
-    public ResultBulkJobStatus getBulkJobStatus(String jobId) throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+    public ResultBulkJobStatus getBulkJobStatus(String jobId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
         ResultBulkJobStatus resultBulkJobStatus = new ResultBulkJobStatus();
 
         Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -742,18 +795,18 @@ public class RestClient {
                 respBody = response.body().string();
                 resultBulkJobStatus = new Gson().fromJson(respBody, ResultBulkJobStatus.class);
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultBulkJobStatus.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultBulkJobStatus;
     }
 
     public ResultFileVersions getFileVersions(String fileId)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         ResultFileVersions resultFileVersions = new ResultFileVersions();
         Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -770,19 +823,23 @@ public class RestClient {
                         new TypeToken<List<ResultFileVersionDetails>>() {
                         }.getType());
                 resultFileVersions.setResultFileVersionDetailsList(resultFileVersionDetailsList);
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultFileVersions;
     }
 
     public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId)
-            throws NotFoundException, ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+            throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
         if (fileId == null) {
             throw new RuntimeException("Error: FileId not provided.");
         }
@@ -802,13 +859,17 @@ public class RestClient {
             if (response.code() == 200) {
                 respBody = response.body().string();
                 resultFileVersionDetails = new Gson().fromJson(respBody, ResultFileVersionDetails.class);
+            } else if (response.code() == 404) {
+                ResultException result = Utils.populateResult(response);
+                throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+                        result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.throwException(response);
+                Utils.ManageApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
         } catch (IOException e) {
-            throw new UnknownException(e.getCause().getMessage(), e.getCause());
+            throw new UnknownException(e.getMessage(), e.getCause());
         }
         return resultFileVersionDetails;
     }

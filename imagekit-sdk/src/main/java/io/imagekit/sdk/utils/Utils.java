@@ -1,6 +1,8 @@
 package io.imagekit.sdk.utils;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
@@ -20,6 +22,7 @@ import okhttp3.Credentials;
 import okhttp3.Response;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -133,15 +136,10 @@ public class Utils {
 		return headers;
 	}
 
-	public static void throwException(Response response)
-			throws IOException, PartialSuccessException, NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, UnauthorizedException, ForbiddenException, TooManyRequestsException {
-		String resp = response.body().string();
-		ResultException result = new Gson().fromJson(resp, ResultException.class);
-		populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
-		if (response.code() == 207) {
-			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),
-					result.getHelp(), result.getResponseMetaData());
-		} else if (response.code() == 400) {
+	public static void ManageApiThrowException(Response response)
+			throws IOException, BadRequestException, InternalServerException, UnknownException, UnauthorizedException, ForbiddenException, TooManyRequestsException {
+		ResultException result = populateResult(response);
+		if (response.code() == 400) {
 			throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
 					result.getHelp(), result.getResponseMetaData());
 		} else if (response.code() == 401) {
@@ -150,12 +148,6 @@ public class Utils {
 		} else if (response.code() == 403) {
 			throw new ForbiddenException(result.getMessage(), null, false, false, result.getMessage(),
 					result.getHelp(), result.getResponseMetaData());
-		} else if (response.code() == 404) {
-			throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
-					result.getResponseMetaData());
-		} else if (response.code() == 409) {
-			throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
-					result.getResponseMetaData());
 		} else if (response.code() == 429) {
 			throw new TooManyRequestsException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
 					result.getResponseMetaData());
@@ -166,6 +158,27 @@ public class Utils {
 			throw new UnknownException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
 					result.getResponseMetaData());
 		}
+	}
+
+	public static void throwException(Response response) throws IOException, PartialSuccessException, NotFoundException, UnknownException {
+		ResultException result = populateResult(response);
+		if (response.code() == 207) {
+			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		} else if (response.code() == 404) {
+			throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		} else {
+			throw new UnknownException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
+		}
+	}
+
+	public static ResultException populateResult(Response response) throws IOException {
+		String resp = response.body().string();
+		ResultException result = new Gson().fromJson(resp, ResultException.class);
+		populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
+		return result;
 	}
 
 }
