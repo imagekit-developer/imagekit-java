@@ -267,7 +267,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, ResultFileDelete.class);
                 result.setRaw(respBody);
             } else if (response.code() == 207 || response.code() == 404) {
-                Utils.throwException(response);
+                Utils.throwOtherException(response);
             } else {
                 Utils.ManageApiThrowException(response);
             }
@@ -351,7 +351,7 @@ public class RestClient {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
             } else if (response.code() == 207 || response.code() == 404) {
-                Utils.throwException(response);
+                Utils.throwOtherException(response);
             } else {
                 Utils.ManageApiThrowException(response);
             }
@@ -380,7 +380,7 @@ public class RestClient {
                 respBody = response.body().string();
                 resultTags = new Gson().fromJson(respBody, ResultTags.class);
             } else if (response.code() == 207 || response.code() == 404) {
-                Utils.throwException(response);
+                Utils.throwOtherException(response);
             } else {
                 Utils.ManageApiThrowException(response);
             }
@@ -644,7 +644,7 @@ public class RestClient {
                 respBody = respString == null || respString.equals("") ? "{}" : respString;
                 resultRenameFile = new Gson().fromJson(respBody, ResultRenameFile.class);
             } else if (response.code() == 207 || response.code() == 404) {
-                Utils.throwException(response);
+                Utils.throwOtherException(response);
             } else if (response.code() == 409) {
                 ResultException result = Utils.populateResult(response);
                 throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),

@@ -487,7 +487,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_upload_returnSuccess() throws IOException, InterruptedException, ConflictException, InternalServerException, PartialSuccessException, NotFoundException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_upload_returnSuccess() throws IOException, InterruptedException, InternalServerException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		String imageUrl = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
 		URL url = null;
 		try {
@@ -596,8 +596,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_updateDetails_expected_404() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_updateDetails_expected_404() throws IOException, InterruptedException,
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("62a9c3ccd875ec6fd658c804");
 		MockWebServer server = new MockWebServer();
@@ -613,8 +613,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_updateDetails_returnTrue() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_updateDetails_returnTrue() throws IOException, InterruptedException,
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 
 		MockWebServer server = new MockWebServer();
@@ -675,7 +675,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getFileList_returnList() throws InterruptedException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException {
+	public void imageKit_getFileList_returnList() throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "[\n" +
@@ -726,8 +726,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_getFileDetail__expected_404() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_getFileDetail__expected_404() throws IOException, InterruptedException,
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
@@ -743,7 +743,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getFileDetail_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_getFileDetail_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"type\": \"file\",\n" +
@@ -785,7 +785,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getFileMetaData_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_getFileMetaData_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"height\": 1000,\n" +
@@ -814,7 +814,7 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_getRemoteFileMetaData_404_Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getRemoteFileMetaData_404_Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
 				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n"
@@ -828,7 +828,7 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_deleteFile_404_Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_deleteFile_404_Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"message\": \"The requested file does not exist.\",\n" +
@@ -843,7 +843,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_deleteFile_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_deleteFile_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "";
 		server.enqueue(new MockResponse().setResponseCode(204).setBody(responseJson));
@@ -860,7 +860,7 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_bulkDeleteFiles_404Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+	public void imageKit_bulkDeleteFiles_404Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("file_id_1");
 		fileIds.add("file_id_2");
@@ -882,7 +882,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_bulkDeleteFiles_successExpected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+	public void imageKit_bulkDeleteFiles_successExpected() throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62ad9ece7db937e35ef18dda");
 		MockWebServer server = new MockWebServer();
@@ -905,7 +905,7 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void imageKit_purgeCache_404Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_purgeCache_404Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"message\": \"Invalid url\"\n" +
@@ -919,7 +919,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_purgeCache_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_purgeCache_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"requestId\": \"62b01f15214dfbdf3692dd0a\"\n" +
@@ -938,7 +938,7 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void imageKit_getPurgeCacheStatus_400Expected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getPurgeCacheStatus_400Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"message\": \"No request found for this requestId.\",\n" +
@@ -953,7 +953,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getPurgeCacheStatus_successExpected() throws ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getPurgeCacheStatus_successExpected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" +
 				"    \"status\": \"Completed\"\n" +
@@ -1032,7 +1032,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void add_tags_expected_404() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1056,7 +1056,7 @@ public class ImageKitTest {
 
 	@Test
 	public void add_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1083,7 +1083,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void remove_tags_expected_404_bad_request() throws InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1104,7 +1104,7 @@ public class ImageKitTest {
 
 	@Test
 	public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1129,7 +1129,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void get_custom_metadata_fields_expectedSuccessWith() throws IOException, InterruptedException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public void get_custom_metadata_fields_expectedSuccessWith() throws IOException, InterruptedException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"id\": \"6291f00890ba008cc27f64d1\",\n"
@@ -1152,7 +1152,7 @@ public class ImageKitTest {
 
 	@Test(expected = BadRequestException.class)
 	public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException, BadRequestException,
-			PartialSuccessException, NotFoundException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" + "    \"message\": \"Invalid schema object\",\n"
@@ -1187,7 +1187,7 @@ public class ImageKitTest {
 
 	@Test
 	public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException,
-			BadRequestException, PartialSuccessException, NotFoundException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"id\": \"629f2e2f7eb0fe2eb25f9988\",\n"
@@ -1220,7 +1220,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void deleteCustomMetaDataField_404_Expected() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			UnknownException {
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
 				.setBody("{\n" + "    \"message\": \"No such custom metadata field exists\",\n"
@@ -1234,7 +1234,7 @@ public class ImageKitTest {
 
 	@Test
 	public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			UnknownException {
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody(""));
 		server.start();
@@ -1253,7 +1253,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void updateCustomMetaDataFields_404_Expected() throws InterruptedException, IOException, BadRequestException,
-			NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1276,7 +1276,7 @@ public class ImageKitTest {
 
 	@Test(expected = BadRequestException.class)
 	public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException, BadRequestException,
-			NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(400)
@@ -1301,7 +1301,7 @@ public class ImageKitTest {
 
 	@Test
 	public void updateCustomMetaDataFields_successExpected() throws InterruptedException, IOException,
-			BadRequestException, NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse()
@@ -1335,7 +1335,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void removeAITags_404_Expected() throws InterruptedException, IOException, PartialSuccessException,
-			NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1359,7 +1359,7 @@ public class ImageKitTest {
 
 	@Test
 	public void removeAITags_successExpected() throws InterruptedException, IOException, PartialSuccessException,
-			NotFoundException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1387,7 +1387,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void copyFile_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFileRequest copyFileRequest = new CopyFileRequest();
 		copyFileRequest.setSourceFilePath("/sample_image.jpg");
@@ -1407,7 +1407,7 @@ public class ImageKitTest {
 
 	@Test
 	public void copyFile_successExpected() throws InterruptedException, IOException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFileRequest copyFileRequest = new CopyFileRequest();
 		copyFileRequest.setSourceFilePath("/car_false.jpeg");
@@ -1431,7 +1431,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void moveFile_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFileRequest moveFileRequest = new MoveFileRequest();
 		moveFileRequest.setSourceFilePath("/demo1/sample_image_th.jpg");
@@ -1450,7 +1450,7 @@ public class ImageKitTest {
 
 	@Test
 	public void moveFile_successExpected() throws InterruptedException, IOException, NotFoundException,
-			PartialSuccessException, BadRequestException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFileRequest moveFileRequest = new MoveFileRequest();
 		moveFileRequest.setSourceFilePath("/new_la.jpg");
@@ -1538,7 +1538,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void createFolder_400_Expected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public void createFolder_400_Expected() throws InterruptedException, IOException, UnknownException {
 
 		CreateFolderRequest createFolderRequest = new CreateFolderRequest();
 		createFolderRequest.setFolderName("/testFolder");
@@ -1556,7 +1556,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void createFolder_successExpected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public void createFolder_successExpected() throws InterruptedException, IOException, UnknownException {
 
 		CreateFolderRequest createFolderRequest = new CreateFolderRequest();
 		createFolderRequest.setFolderName("testFolder");
@@ -1579,7 +1579,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void deleteFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 		deleteFolderRequest.setFolderPath("/testFolder");
@@ -1597,7 +1597,7 @@ public class ImageKitTest {
 
 	@Test
 	public void deleteFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 		deleteFolderRequest.setFolderPath("testFolder");
@@ -1619,7 +1619,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void copyFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 		copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1639,7 +1639,7 @@ public class ImageKitTest {
 
 	@Test
 	public void copyFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 		copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1663,7 +1663,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void moveFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 		moveFolderRequest.setSourceFolderPath("/testFolder/");
@@ -1682,7 +1682,7 @@ public class ImageKitTest {
 
 	@Test
 	public void moveFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 		moveFolderRequest.setSourceFolderPath("/testFolder");
@@ -1704,7 +1704,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getBulkJobStatus_500_Expected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public void getBulkJobStatus_500_Expected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(500));
@@ -1723,7 +1723,7 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getBulkJobStatus_successExpected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, ConflictException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public void getBulkJobStatus_successExpected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"jobId\": \"629f44ac7eb0fe8173622d4b\",\n"
@@ -1741,7 +1741,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void getFileVersions_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1755,7 +1755,7 @@ public class ImageKitTest {
 
 	@Test
 	public void getFileVersions_successExpected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"type\": \"file\",\n"
@@ -1796,7 +1796,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void getFileVersionDetails_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1810,7 +1810,7 @@ public class ImageKitTest {
 
 	@Test
 	public void getFileVersionDetails_successExpected() throws InterruptedException, IOException, NotFoundException,
-			ConflictException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
@@ -1852,7 +1852,7 @@ public class ImageKitTest {
 
 	@Test(expected = BadRequestException.class)
 	public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1870,7 +1870,7 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void deleteFileVersion_404_SuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1888,7 +1888,7 @@ public class ImageKitTest {
 
 	@Test
 	public void deleteFileVersion_expectedSuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, PartialSuccessException, ConflictException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");

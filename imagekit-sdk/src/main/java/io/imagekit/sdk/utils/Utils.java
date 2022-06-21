@@ -160,7 +160,7 @@ public class Utils {
 		}
 	}
 
-	public static void throwException(Response response) throws IOException, PartialSuccessException, NotFoundException, UnknownException {
+	public static void throwOtherException(Response response) throws IOException, PartialSuccessException, NotFoundException, UnknownException {
 		ResultException result = populateResult(response);
 		if (response.code() == 207) {
 			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),
