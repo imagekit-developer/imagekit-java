@@ -136,7 +136,7 @@ public class Utils {
 		return headers;
 	}
 
-	public static void ManageApiThrowException(Response response)
+	public static void generalApiThrowException(Response response)
 			throws IOException, BadRequestException, InternalServerException, UnknownException, UnauthorizedException, ForbiddenException, TooManyRequestsException {
 		ResultException result = populateResult(response);
 		if (response.code() == 400) {

@@ -73,7 +73,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -99,7 +99,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -133,7 +133,7 @@ public class RestClient {
                 resultList.setResults(files);
                 resultList.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultList.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -159,7 +159,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, Result.class);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -186,7 +186,7 @@ public class RestClient {
                 result.setResults(metaData);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -213,7 +213,7 @@ public class RestClient {
                 result.setResults(metaData);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -239,7 +239,7 @@ public class RestClient {
                 result.setFileId(fileId);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -269,7 +269,7 @@ public class RestClient {
             } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwOtherException(response);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -296,7 +296,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, ResultCache.class);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -322,7 +322,7 @@ public class RestClient {
                 result = new Gson().fromJson(respBody, ResultCacheStatus.class);
                 result.setRaw(respBody);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, result.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -353,7 +353,7 @@ public class RestClient {
             } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwOtherException(response);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -382,7 +382,7 @@ public class RestClient {
             } else if (response.code() == 207 || response.code() == 404) {
                 Utils.throwOtherException(response);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultTags.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -554,7 +554,7 @@ public class RestClient {
                             result.getHelp(), result.getResponseMetaData());
                 }
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -585,7 +585,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -616,7 +616,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -650,7 +650,7 @@ public class RestClient {
                 throw new ConflictException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
                         result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultRenameFile.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -705,7 +705,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultNoContent.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -737,7 +737,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -769,7 +769,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultOfFolderActions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -795,7 +795,7 @@ public class RestClient {
                 respBody = response.body().string();
                 resultBulkJobStatus = new Gson().fromJson(respBody, ResultBulkJobStatus.class);
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultBulkJobStatus.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -828,7 +828,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersions.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
@@ -864,7 +864,7 @@ public class RestClient {
                 throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
                         result.getHelp(), result.getResponseMetaData());
             } else {
-                Utils.ManageApiThrowException(response);
+                Utils.generalApiThrowException(response);
             }
             Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(),
                     response.headers().toMultimap());
