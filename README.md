@@ -17,6 +17,7 @@ Table of contents -
  * [Installation](#installation)
  * [Initialization](#initialization)
  * [Usage](#usage)
+ * [Versioning](#versioning)
  * [URL generation](#url-generation)
  * [File upload](#file-upload)
  * [File management](#file-management)
@@ -93,6 +94,35 @@ class App {
 ## Usage
 You can use this Java SDK for 3 different kinds of methods - URL generation, file upload, and file management.
 The usage of the SDK has been explained below.
+
+## Versioning
+This document presents a list of changes that break existing functionality of ${Version.VERSION_CODE} version. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in a major version that is ${Version.VERSION_CODE + 1} version.
+### Breaking History:
+
+### Title
+- Result object raw and getMap() properties:
+
+**What changed**
+- raw and getMap() has been deprecated.
+
+**Who is affected?**
+- This affects any development that uses the raw or getMap() from response object of APIs that is Result object.
+
+**How should I update my code?**
+- If you still need to use raw and getMap(), write it with using it with result's internal property such as result.getResponseMetaData().getRaw(). 
+ 
+### Title
+- Result object message and isSuccessful boolean properties:
+
+**What changed**
+- message and isSuccessful has been replaced with custom exceptions according to response code.
+
+**Who is affected?**
+- This affects any development that uses the message or isSuccessful from response object of APIs that is Result object.
+
+**How should I update my code?**
+- If you still need to use message it will be there in custom exception and could be raised isSuccessful properties in your own code from status code which is coming in the response or custom exception.
+
 
 ## URL generation
 
