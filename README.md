@@ -97,13 +97,12 @@ The usage of the SDK has been explained below.
 
 ## Versioning
 This document presents a list of changes that break existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in major versions.
+
 ### Breaking History:
 
-Even under this circumstance, we will not modify versioned releases. 
-For example, if we release a breaking change in 1.0.3, we will not simply overwrite version 1.0.3; we will release a new version 1.0.4 that fixes the breaking change.
+Changes from 1.0.3 -> 2.0.0 are listed below
 
-### Title
-- Result object raw and getMap() properties:
+1. Result object raw and getMap() properties:
 
 **What changed**
 - raw and getMap() has been deprecated.
@@ -114,8 +113,7 @@ For example, if we release a breaking change in 1.0.3, we will not simply overwr
 **How should I update my code?**
 - If you still need to use raw and getMap(), write it with using it with result's internal property such as result.getResponseMetaData().getRaw(). 
  
-### Title
-- Result object message and isSuccessful boolean properties:
+2. Result object message and isSuccessful boolean properties:
 
 **What changed**
 - message and isSuccessful has been replaced with custom exceptions according to response code.
