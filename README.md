@@ -96,7 +96,7 @@ You can use this Java SDK for 3 different kinds of methods - URL generation, fil
 The usage of the SDK has been explained below.
 
 ## Versioning
-This document presents a list of changes that break existing functionality of ${Version.VERSION_CODE} version. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in a major version that is ${Version.VERSION_CODE + 1} version.
+This document presents a list of changes that break existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in major versions.
 ### Breaking History:
 
 ### Title
