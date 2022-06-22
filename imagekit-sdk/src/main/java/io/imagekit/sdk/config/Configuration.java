@@ -26,7 +26,7 @@ public class Configuration {
         this.publicKey = publicKey;
     }
 
-    public String getPrivateKey() {
+    public String   getPrivateKey() {
         return privateKey;
     }
 
