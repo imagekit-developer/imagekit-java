@@ -61,11 +61,7 @@ public class ResultCache {
 
 	@Override
 	public String toString() {
-		return "ResultCache{" +
-				"help='" + help + '\'' +
-				", requestId='" + requestId + '\'' +
-				", raw='" + raw + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultCache{" + "help='" + help + '\'' + ", requestId='" + requestId + '\'' + ", raw='" + raw + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

@@ -479,7 +479,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_upload_returnSuccess() throws IOException, InterruptedException, InternalServerException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_upload_returnSuccess() throws IOException, InterruptedException, InternalServerException,
+			BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		String imageUrl = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
 		URL url = new URL(imageUrl);
 		FileCreateRequest fileCreateRequest = new FileCreateRequest(url, "sample-cat-image.png");
@@ -547,45 +548,50 @@ public class ImageKitTest {
 		RestClient.UPLOAD_BASE_URL = server.url("/").toString();
 		SUT.upload(fileCreateRequest);
 		RecordedRequest request = server.takeRequest();
-		String json = "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"file\"\r\n" + "Content-Length: 53\r\n"
-				+ "\r\n" + "https://homepages.cae.wisc.edu/~ece533/images/cat.png\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"fileName\"\r\n" + "Content-Length: 20\r\n" + "\r\n"
-				+ "sample-cat-image.png\r\n" + "--randomBoundary-------------------\r\n"
+		String json = "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"file\"\r\n"
+				+ "Content-Length: 53\r\n" + "\r\n" + "https://homepages.cae.wisc.edu/~ece533/images/cat.png\r\n"
+				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"fileName\"\r\n"
+				+ "Content-Length: 20\r\n" + "\r\n" + "sample-cat-image.png\r\n"
+				+ "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"useUniqueFileName\"\r\n" + "Content-Length: 5\r\n" + "\r\n"
-				+ "false\r\n" + "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"tags\"\r\n"
-				+ "Content-Length: 27\r\n" + "\r\n" + "Software,Developer,Engineer\r\n" + "--randomBoundary-------------------\r\n"
+				+ "false\r\n" + "--randomBoundary-------------------\r\n"
+				+ "Content-Disposition: form-data; name=\"tags\"\r\n" + "Content-Length: 27\r\n" + "\r\n"
+				+ "Software,Developer,Engineer\r\n" + "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"folder\"\r\n" + "Content-Length: 5\r\n" + "\r\n" + "demo1\r\n"
-				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"customCoordinates\"\r\n"
-				+ "Content-Length: 11\r\n" + "\r\n" + "10,10,20,20\r\n" + "--randomBoundary-------------------\r\n"
+				+ "--randomBoundary-------------------\r\n"
+				+ "Content-Disposition: form-data; name=\"customCoordinates\"\r\n" + "Content-Length: 11\r\n" + "\r\n"
+				+ "10,10,20,20\r\n" + "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"responseFields\"\r\n" + "Content-Length: 32\r\n" + "\r\n"
 				+ "thumbnail,tags,customCoordinates\r\n" + "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"overwriteFile\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-				+ "true\r\n" + "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"overwriteAITags\"\r\n"
-				+ "Content-Length: 4\r\n" + "\r\n" + "true\r\n" + "--randomBoundary-------------------\r\n"
+				+ "true\r\n" + "--randomBoundary-------------------\r\n"
+				+ "Content-Disposition: form-data; name=\"overwriteAITags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
+				+ "true\r\n" + "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"overwriteTags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-				+ "true\r\n" + "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"overwriteCustomMetadata\"\r\n"
-				+ "Content-Length: 4\r\n" + "\r\n" + "true\r\n" + "--randomBoundary-------------------\r\n"
+				+ "true\r\n" + "--randomBoundary-------------------\r\n"
+				+ "Content-Disposition: form-data; name=\"overwriteCustomMetadata\"\r\n" + "Content-Length: 4\r\n"
+				+ "\r\n" + "true\r\n" + "--randomBoundary-------------------\r\n"
 				+ "Content-Disposition: form-data; name=\"extensions\"\r\n" + "Content-Length: 114\r\n" + "\r\n"
 				+ "[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true}},{\"name\":\"google-auto-tagging\",\"minConfidence\":10,\"maxTags\":5}]\r\n"
 				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"webhookUrl\"\r\n"
 				+ "Content-Length: 57\r\n" + "\r\n" + "https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e\r\n"
-				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"customMetadata\"\r\n"
-				+ "Content-Length: 12\r\n" + "\r\n" + "{\"test1\":10}\r\n" + "--randomBoundary---------------------";
+				+ "--randomBoundary-------------------\r\n"
+				+ "Content-Disposition: form-data; name=\"customMetadata\"\r\n" + "Content-Length: 12\r\n" + "\r\n"
+				+ "{\"test1\":10}\r\n" + "--randomBoundary---------------------";
 		assertEquals(json, request.getBody().readUtf8().trim());
 		assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
 		assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"), request.getRequestUrl().toString());
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_updateDetails_expected_404() throws IOException, InterruptedException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_updateDetails_expected_404()
+			throws IOException, InterruptedException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("62a9c3ccd875ec6fd658c804");
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"The requested file does not exist.\",\n" +
-				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"The requested file does not exist.\",\n"
+				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -594,47 +600,27 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_updateDetails_returnTrue() throws IOException, InterruptedException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
-
+	public void imageKit_updateDetails_returnTrue()
+			throws IOException, InterruptedException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
-		server.enqueue(new MockResponse().setBody("{\n" +
-				"    \"type\": \"file\",\n" +
-				"    \"name\": \"new_car.jpg\",\n" +
-				"    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n" +
-				"    \"updatedAt\": \"2022-06-18T12:14:07.070Z\",\n" +
-				"    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" +
-				"    \"tags\": [\n" +
-				"        \"tagg\",\n" +
-				"        \"tagg1\"\n" +
-				"    ],\n" +
-				"    \"AITags\": null,\n" +
-				"    \"versionInfo\": {\n" +
-				"        \"id\": \"62a9c3ccd875ec6fd658c854\",\n" +
-				"        \"name\": \"Version 1\"\n" +
-				"    },\n" +
-				"    \"embeddedMetadata\": {\n" +
-				"        \"XResolution\": 250,\n" +
-				"        \"YResolution\": 250,\n" +
-				"        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n" +
-				"        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" +
-				"    },\n" +
-				"    \"customCoordinates\": \"10,10,20,20\",\n" +
-				"    \"customMetadata\": {\n" +
-				"        \"test100\": 10\n" +
-				"    },\n" +
-				"    \"isPrivateFile\": false,\n" +
-				"    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n" +
-				"    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n" +
-				"    \"fileType\": \"image\",\n" +
-				"    \"filePath\": \"/new_car.jpg\",\n" +
-				"    \"height\": 354,\n" +
-				"    \"width\": 236,\n" +
-				"    \"size\": 23023,\n" +
-				"    \"hasAlpha\": false,\n" +
-				"    \"mime\": \"image/jpeg\"\n" +
-				"}"));
+		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
+				+ "    \"name\": \"new_car.jpg\",\n" + "    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n"
+				+ "    \"updatedAt\": \"2022-06-18T12:14:07.070Z\",\n"
+				+ "    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" + "    \"tags\": [\n" + "        \"tagg\",\n"
+				+ "        \"tagg1\"\n" + "    ],\n" + "    \"AITags\": null,\n" + "    \"versionInfo\": {\n"
+				+ "        \"id\": \"62a9c3ccd875ec6fd658c854\",\n" + "        \"name\": \"Version 1\"\n" + "    },\n"
+				+ "    \"embeddedMetadata\": {\n" + "        \"XResolution\": 250,\n"
+				+ "        \"YResolution\": 250,\n" + "        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n"
+				+ "        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" + "    },\n"
+				+ "    \"customCoordinates\": \"10,10,20,20\",\n" + "    \"customMetadata\": {\n"
+				+ "        \"test100\": 10\n" + "    },\n" + "    \"isPrivateFile\": false,\n"
+				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n"
+				+ "    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n"
+				+ "    \"fileType\": \"image\",\n" + "    \"filePath\": \"/new_car.jpg\",\n" + "    \"height\": 354,\n"
+				+ "    \"width\": 236,\n" + "    \"size\": 23023,\n" + "    \"hasAlpha\": false,\n"
+				+ "    \"mime\": \"image/jpeg\"\n" + "}"));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
 		FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("62a9c3ccd875ec6fd658c854");
@@ -652,44 +638,33 @@ public class ImageKitTest {
 		assertEquals(requestJson, utf8RequestBody);
 		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
 		assertEquals("PATCH /v1/files/62a9c3ccd875ec6fd658c854/details HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62a9c3ccd875ec6fd658c854/details"), request.getRequestUrl().toString());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62a9c3ccd875ec6fd658c854/details"),
+				request.getRequestUrl().toString());
 	}
 
 	@Test
-	public void imageKit_getFileList_returnList() throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IOException {
+	public void imageKit_getFileList_returnList()
+			throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException,
+			UnauthorizedException, BadRequestException, UnknownException, IOException {
 
 		MockWebServer server = new MockWebServer();
-		String responseJson = "[\n" +
-				"    {\n" +
-				"        \"type\": \"file\",\n" +
-				"        \"name\": \"default-image.jpg\",\n" +
-				"        \"createdAt\": \"2022-06-11T07:26:19.294Z\",\n" +
-				"        \"updatedAt\": \"2022-06-11T07:26:19.600Z\",\n" +
-				"        \"fileId\": \"62a4439bce686814dfcce65c\",\n" +
-				"        \"tags\": null,\n" +
-				"        \"AITags\": null,\n" +
-				"        \"versionInfo\": {\n" +
-				"            \"id\": \"62a4439bce686814dfcce65c\",\n" +
-				"            \"name\": \"Version 1\"\n" +
-				"        },\n" +
-				"        \"embeddedMetadata\": {\n" +
-				"            \"DateCreated\": \"2022-06-11T07:26:19.599Z\",\n" +
-				"            \"DateTimeCreated\": \"2022-06-11T07:26:19.600Z\"\n" +
-				"        },\n" +
-				"        \"customCoordinates\": null,\n" +
-				"        \"customMetadata\": {},\n" +
-				"        \"isPrivateFile\": false,\n" +
-				"        \"url\": \"https://ik.imagekit.io/zv3rkhsym/default-image.jpg\",\n" +
-				"        \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/default-image.jpg\",\n" +
-				"        \"fileType\": \"image\",\n" +
-				"        \"filePath\": \"/default-image.jpg\",\n" +
-				"        \"height\": 1000,\n" +
-				"        \"width\": 1000,\n" +
-				"        \"size\": 147022,\n" +
-				"        \"hasAlpha\": false,\n" +
-				"        \"mime\": \"image/jpeg\"\n" +
-				"    }\n" +
-				"]";
+		String responseJson = "[\n" + "    {\n" + "        \"type\": \"file\",\n"
+				+ "        \"name\": \"default-image.jpg\",\n"
+				+ "        \"createdAt\": \"2022-06-11T07:26:19.294Z\",\n"
+				+ "        \"updatedAt\": \"2022-06-11T07:26:19.600Z\",\n"
+				+ "        \"fileId\": \"62a4439bce686814dfcce65c\",\n" + "        \"tags\": null,\n"
+				+ "        \"AITags\": null,\n" + "        \"versionInfo\": {\n"
+				+ "            \"id\": \"62a4439bce686814dfcce65c\",\n" + "            \"name\": \"Version 1\"\n"
+				+ "        },\n" + "        \"embeddedMetadata\": {\n"
+				+ "            \"DateCreated\": \"2022-06-11T07:26:19.599Z\",\n"
+				+ "            \"DateTimeCreated\": \"2022-06-11T07:26:19.600Z\"\n" + "        },\n"
+				+ "        \"customCoordinates\": null,\n" + "        \"customMetadata\": {},\n"
+				+ "        \"isPrivateFile\": false,\n"
+				+ "        \"url\": \"https://ik.imagekit.io/zv3rkhsym/default-image.jpg\",\n"
+				+ "        \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/default-image.jpg\",\n"
+				+ "        \"fileType\": \"image\",\n" + "        \"filePath\": \"/default-image.jpg\",\n"
+				+ "        \"height\": 1000,\n" + "        \"width\": 1000,\n" + "        \"size\": 147022,\n"
+				+ "        \"hasAlpha\": false,\n" + "        \"mime\": \"image/jpeg\"\n" + "    }\n" + "]";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -707,14 +682,13 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_getFileDetail__expected_404() throws IOException, InterruptedException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void imageKit_getFileDetail__expected_404()
+			throws IOException, InterruptedException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"The requested file does not exist.\",\n" +
-				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"The requested file does not exist.\",\n"
+				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -724,34 +698,23 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getFileDetail_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_getFileDetail_successExpected()
+			throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+			UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"type\": \"file\",\n" +
-				"    \"name\": \"sample-image11_g1Qv0wpqP.jpg\",\n" +
-				"    \"createdAt\": \"2022-06-20T05:00:41.830Z\",\n" +
-				"    \"updatedAt\": \"2022-06-20T05:00:43.263Z\",\n" +
-				"    \"fileId\": \"62affef97db937b028f3b47a\",\n" +
-				"    \"tags\": [\n" +
-				"        \"Software\",\n" +
-				"        \"Developer\",\n" +
-				"        \"Engineer\"\n" +
-				"    ],\n" +
-				"    \"AITags\": null,\n" +
-				"    \"versionInfo\": {\n" +
-				"        \"id\": \"62affef97db937b028f3b47a\",\n" +
-				"        \"name\": \"Version 1\"\n" +
-				"    },\n" +
-				"    \"embeddedMetadata\": {},\n" +
-				"    \"customCoordinates\": null,\n" +
-				"    \"customMetadata\": {},\n" +
-				"    \"isPrivateFile\": false,\n" +
-				"    \"url\": \"https://ik.imagekit.io/zv3rkhsym/sample-image11_g1Qv0wpqP.jpg\",\n" +
-				"    \"thumbnail\": \"https://ik.imagekit.io/demo/img/static-file-1.png\",\n" +
-				"    \"fileType\": \"non-image\",\n" +
-				"    \"filePath\": \"/sample-image11_g1Qv0wpqP.jpg\",\n" +
-				"    \"size\": 169170\n" +
-				"}";
+		String responseJson = "{\n" + "    \"type\": \"file\",\n" + "    \"name\": \"sample-image11_g1Qv0wpqP.jpg\",\n"
+				+ "    \"createdAt\": \"2022-06-20T05:00:41.830Z\",\n"
+				+ "    \"updatedAt\": \"2022-06-20T05:00:43.263Z\",\n"
+				+ "    \"fileId\": \"62affef97db937b028f3b47a\",\n" + "    \"tags\": [\n" + "        \"Software\",\n"
+				+ "        \"Developer\",\n" + "        \"Engineer\"\n" + "    ],\n" + "    \"AITags\": null,\n"
+				+ "    \"versionInfo\": {\n" + "        \"id\": \"62affef97db937b028f3b47a\",\n"
+				+ "        \"name\": \"Version 1\"\n" + "    },\n" + "    \"embeddedMetadata\": {},\n"
+				+ "    \"customCoordinates\": null,\n" + "    \"customMetadata\": {},\n"
+				+ "    \"isPrivateFile\": false,\n"
+				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/sample-image11_g1Qv0wpqP.jpg\",\n"
+				+ "    \"thumbnail\": \"https://ik.imagekit.io/demo/img/static-file-1.png\",\n"
+				+ "    \"fileType\": \"non-image\",\n" + "    \"filePath\": \"/sample-image11_g1Qv0wpqP.jpg\",\n"
+				+ "    \"size\": 169170\n" + "}";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -762,24 +725,19 @@ public class ImageKitTest {
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
 		assertEquals("GET /v1/files/62affef97db937b028f3b47a/details HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a/details"), request.getRequestUrl().toString());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a/details"),
+				request.getRequestUrl().toString());
 	}
 
 	@Test
-	public void imageKit_getFileMetaData_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_getFileMetaData_successExpected()
+			throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+			UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"height\": 1000,\n" +
-				"    \"width\": 1000,\n" +
-				"    \"size\": 147022,\n" +
-				"    \"format\": \"jpg\",\n" +
-				"    \"hasColorProfile\": false,\n" +
-				"    \"quality\": 0,\n" +
-				"    \"density\": 72,\n" +
-				"    \"hasTransparency\": false,\n" +
-				"    \"exif\": {},\n" +
-				"    \"pHash\": \"e0d52b612ad538f6\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"height\": 1000,\n" + "    \"width\": 1000,\n" + "    \"size\": 147022,\n"
+				+ "    \"format\": \"jpg\",\n" + "    \"hasColorProfile\": false,\n" + "    \"quality\": 0,\n"
+				+ "    \"density\": 72,\n" + "    \"hasTransparency\": false,\n" + "    \"exif\": {},\n"
+				+ "    \"pHash\": \"e0d52b612ad538f6\"\n" + "}";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -789,13 +747,18 @@ public class ImageKitTest {
 		String utf8RequestBody = request.getBody().readUtf8();
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
-		assertEquals("GET /v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg"), request.getRequestUrl().toString());
+		assertEquals("GET /v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg HTTP/1.1",
+				request.getRequestLine());
+		assertEquals(
+				RestClient.API_BASE_URL.concat("v1/metadata?url=https://ik.imagekit.io/zv3rkhsym/default-image.jpg"),
+				request.getRequestUrl().toString());
 
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_getRemoteFileMetaData_404_Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getRemoteFileMetaData_404_Expected()
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
 				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n"
@@ -809,12 +772,12 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_deleteFile_404_Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_deleteFile_404_Expected()
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"The requested file does not exist.\",\n" +
-				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"The requested file does not exist.\",\n"
+				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -824,7 +787,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_deleteFile_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_deleteFile_successExpected()
+			throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+			UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
 		String responseJson = "";
 		server.enqueue(new MockResponse().setResponseCode(204).setBody(responseJson));
@@ -837,23 +802,22 @@ public class ImageKitTest {
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
 		assertEquals("DELETE /v1/files/62affef97db937b028f3b47a HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a"), request.getRequestUrl().toString());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/62affef97db937b028f3b47a"),
+				request.getRequestUrl().toString());
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void imageKit_bulkDeleteFiles_404Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+	public void imageKit_bulkDeleteFiles_404Expected() throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException,
+			BadRequestException, UnknownException, IOException, InterruptedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("file_id_1");
 		fileIds.add("file_id_2");
 		fileIds.add("file_id_3");
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"The requested file(s) does not exist.\",\n" +
-				"    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
-				"    \"missingFileIds\": [\n" +
-				"        \"62ad9ece7db937e35ef18dda\"\n" +
-				"    ]\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"The requested file(s) does not exist.\",\n"
+				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n"
+				+ "    \"missingFileIds\": [\n" + "        \"62ad9ece7db937e35ef18dda\"\n" + "    ]\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(404).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -863,15 +827,14 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_bulkDeleteFiles_successExpected() throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException, IOException, InterruptedException {
+	public void imageKit_bulkDeleteFiles_successExpected() throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException,
+			BadRequestException, UnknownException, IOException, InterruptedException {
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62ad9ece7db937e35ef18dda");
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"successfullyDeletedFileIds\": [\n" +
-				"        \"62ad9ece7db937e35ef18dda\"\n" +
-				"    ]\n" +
-				"}";
+		String responseJson = "{\n" + "    \"successfullyDeletedFileIds\": [\n"
+				+ "        \"62ad9ece7db937e35ef18dda\"\n" + "    ]\n" + "}";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -882,15 +845,16 @@ public class ImageKitTest {
 		assertEquals("{\"fileIds\":[\"62ad9ece7db937e35ef18dda\"]}", utf8RequestBody);
 		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
 		assertEquals("POST /v1/files/batch/deleteByFileIds HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/files/batch/deleteByFileIds"), request.getRequestUrl().toString());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/batch/deleteByFileIds"),
+				request.getRequestUrl().toString());
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void imageKit_purgeCache_404Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_purgeCache_404Expected()
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"Invalid url\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"Invalid url\"\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -900,11 +864,11 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_purgeCache_successExpected() throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+	public void imageKit_purgeCache_successExpected()
+			throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+			UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"requestId\": \"62b01f15214dfbdf3692dd0a\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"requestId\": \"62b01f15214dfbdf3692dd0a\"\n" + "}";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -919,12 +883,12 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void imageKit_getPurgeCacheStatus_400Expected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getPurgeCacheStatus_400Expected()
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"message\": \"No request found for this requestId.\",\n" +
-				"    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"message\": \"No request found for this requestId.\",\n"
+				+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}";
 		server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -934,11 +898,11 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void imageKit_getPurgeCacheStatus_successExpected() throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InterruptedException, IOException {
+	public void imageKit_getPurgeCacheStatus_successExpected()
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException, InterruptedException, IOException {
 		MockWebServer server = new MockWebServer();
-		String responseJson = "{\n" +
-				"    \"status\": \"Completed\"\n" +
-				"}";
+		String responseJson = "{\n" + "    \"status\": \"Completed\"\n" + "}";
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
@@ -949,7 +913,8 @@ public class ImageKitTest {
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
 		assertEquals("GET /v1/files/purge/62b01f15214dfbdf3692dd0a HTTP/1.1", request.getRequestLine());
-		assertEquals(RestClient.API_BASE_URL.concat("v1/files/purge/62b01f15214dfbdf3692dd0a"), request.getRequestUrl().toString());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/purge/62b01f15214dfbdf3692dd0a"),
+				request.getRequestUrl().toString());
 	}
 
 	@Test
@@ -1013,7 +978,8 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void add_tags_expected_404() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1037,7 +1003,8 @@ public class ImageKitTest {
 
 	@Test
 	public void add_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1064,7 +1031,8 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void remove_tags_expected_404_bad_request() throws InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1085,7 +1053,8 @@ public class ImageKitTest {
 
 	@Test
 	public void remove_tags_expectedSuccessWith() throws IOException, InterruptedException, NotFoundException,
-			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1110,7 +1079,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void get_custom_metadata_fields_expectedSuccessWith() throws IOException, InterruptedException, UnknownException {
+	public void get_custom_metadata_fields_expectedSuccessWith()
+			throws IOException, InterruptedException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"id\": \"6291f00890ba008cc27f64d1\",\n"
@@ -1132,8 +1102,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void createCustomMetaDataFields_expected_400() throws InterruptedException, IOException, BadRequestException,
-			UnknownException {
+	public void createCustomMetaDataFields_expected_400()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n" + "    \"message\": \"Invalid schema object\",\n"
@@ -1167,8 +1137,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void createCustomMetaDataFields_successExpected() throws InterruptedException, IOException,
-			BadRequestException, UnknownException {
+	public void createCustomMetaDataFields_successExpected()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"id\": \"629f2e2f7eb0fe2eb25f9988\",\n"
@@ -1200,8 +1170,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void deleteCustomMetaDataField_404_Expected() throws IOException, InterruptedException, NotFoundException,
-			UnknownException {
+	public void deleteCustomMetaDataField_404_Expected()
+			throws IOException, InterruptedException, NotFoundException, UnknownException {
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
 				.setBody("{\n" + "    \"message\": \"No such custom metadata field exists\",\n"
@@ -1214,8 +1184,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void deleteCustomMetaDataField_successExpected() throws IOException, InterruptedException, NotFoundException,
-			UnknownException {
+	public void deleteCustomMetaDataField_successExpected()
+			throws IOException, InterruptedException, NotFoundException, UnknownException {
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody(""));
 		server.start();
@@ -1233,8 +1203,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void updateCustomMetaDataFields_404_Expected() throws InterruptedException, IOException, BadRequestException,
-			NotFoundException, UnknownException {
+	public void updateCustomMetaDataFields_404_Expected()
+			throws InterruptedException, IOException, BadRequestException, NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1256,8 +1226,8 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void updateCustomMetaDataFields_400_Expected() throws InterruptedException, IOException, BadRequestException,
-			NotFoundException, UnknownException {
+	public void updateCustomMetaDataFields_400_Expected()
+			throws InterruptedException, IOException, BadRequestException, NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(400)
@@ -1281,8 +1251,8 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void updateCustomMetaDataFields_successExpected() throws InterruptedException, IOException,
-			BadRequestException, NotFoundException, UnknownException {
+	public void updateCustomMetaDataFields_successExpected()
+			throws InterruptedException, IOException, BadRequestException, NotFoundException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse()
@@ -1316,7 +1286,8 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void removeAITags_404_Expected() throws InterruptedException, IOException, PartialSuccessException,
-			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("629f3de17eb0fe4053615450");
@@ -1340,7 +1311,8 @@ public class ImageKitTest {
 
 	@Test
 	public void removeAITags_successExpected() throws InterruptedException, IOException, PartialSuccessException,
-			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException,
+			TooManyRequestsException, UnauthorizedException {
 
 		List<String> fileIds = new ArrayList<>();
 		fileIds.add("62958deef33aa80bdadf7533");
@@ -1367,8 +1339,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void copyFile_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void copyFile_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFileRequest copyFileRequest = new CopyFileRequest();
 		copyFileRequest.setSourceFilePath("/sample_image.jpg");
@@ -1387,8 +1360,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void copyFile_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void copyFile_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFileRequest copyFileRequest = new CopyFileRequest();
 		copyFileRequest.setSourceFilePath("/car_false.jpeg");
@@ -1411,8 +1385,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void moveFile_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void moveFile_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFileRequest moveFileRequest = new MoveFileRequest();
 		moveFileRequest.setSourceFilePath("/demo1/sample_image_th.jpg");
@@ -1430,8 +1405,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void moveFile_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void moveFile_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFileRequest moveFileRequest = new MoveFileRequest();
 		moveFileRequest.setSourceFilePath("/new_la.jpg");
@@ -1454,7 +1430,8 @@ public class ImageKitTest {
 
 	@Test(expected = NotFoundException.class)
 	public void renameFile_404_Expected() throws InterruptedException, IOException, ConflictException,
-			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		RenameFileRequest renameFileRequest = new RenameFileRequest();
 		renameFileRequest.setFilePath("/sample_image_th.jpg");
@@ -1475,7 +1452,8 @@ public class ImageKitTest {
 
 	@Test(expected = ConflictException.class)
 	public void renameFile_409_Expected() throws InterruptedException, IOException, ConflictException,
-			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		RenameFileRequest renameFileRequest = new RenameFileRequest();
 		renameFileRequest.setFilePath("/new1.jpg");
@@ -1496,7 +1474,8 @@ public class ImageKitTest {
 
 	@Test
 	public void renameFile_successExpected() throws InterruptedException, IOException, ConflictException,
-			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		RenameFileRequest renameFileRequest = new RenameFileRequest();
 		renameFileRequest.setFilePath("/car_false.jpeg");
@@ -1559,8 +1538,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void deleteFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void deleteFolder_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 		deleteFolderRequest.setFolderPath("/testFolder");
@@ -1577,8 +1557,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void deleteFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void deleteFolder_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
 		deleteFolderRequest.setFolderPath("testFolder");
@@ -1599,8 +1580,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void copyFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void copyFolder_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 		copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1619,8 +1601,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void copyFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void copyFolder_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
 		copyFolderRequest.setSourceFolderPath("/testFolder");
@@ -1643,8 +1626,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void moveFolder_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void moveFolder_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 		moveFolderRequest.setSourceFolderPath("/testFolder/");
@@ -1662,8 +1646,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void moveFolder_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void moveFolder_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
 		moveFolderRequest.setSourceFolderPath("/testFolder");
@@ -1685,7 +1670,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getBulkJobStatus_500_Expected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public void getBulkJobStatus_500_Expected()
+			throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(500));
@@ -1704,7 +1691,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getBulkJobStatus_successExpected() throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public void getBulkJobStatus_successExpected()
+			throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"jobId\": \"629f44ac7eb0fe8173622d4b\",\n"
@@ -1721,8 +1710,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void getFileVersions_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void getFileVersions_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1735,8 +1725,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getFileVersions_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void getFileVersions_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"type\": \"file\",\n"
@@ -1776,8 +1767,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void getFileVersionDetails_404_Expected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void getFileVersionDetails_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setResponseCode(404)
@@ -1790,8 +1782,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void getFileVersionDetails_successExpected() throws InterruptedException, IOException, NotFoundException,
-			BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void getFileVersionDetails_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
 		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
@@ -1832,8 +1825,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = BadRequestException.class)
-	public void deleteFileVersion_400_SuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void deleteFileVersion_400_SuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1850,8 +1844,9 @@ public class ImageKitTest {
 	}
 
 	@Test(expected = NotFoundException.class)
-	public void deleteFileVersion_404_SuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void deleteFileVersion_404_SuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
@@ -1868,8 +1863,9 @@ public class ImageKitTest {
 	}
 
 	@Test
-	public void deleteFileVersion_expectedSuccessWith() throws IOException, InterruptedException, BadRequestException,
-			NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public void deleteFileVersion_expectedSuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
 		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");

@@ -87,7 +87,8 @@ public final class ImageKit {
 	 * @param fileCreateRequest is a object which contains file and other parameters
 	 * @return object of Result class
 	 */
-	public Result upload(FileCreateRequest fileCreateRequest) throws InternalServerException, BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public Result upload(FileCreateRequest fileCreateRequest) throws InternalServerException, BadRequestException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.upload(fileCreateRequest);
 	}
 
@@ -96,7 +97,9 @@ public final class ImageKit {
 	 * @param fileUpdateRequest is a object which contains parameters and fileId
 	 * @return object of Result class
 	 */
-	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest)
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException {
 		return restClient.updateDetail(fileUpdateRequest);
 	}
 
@@ -106,7 +109,8 @@ public final class ImageKit {
 	 *                "includeFolder", "name", "limit", "skip"]
 	 * @return ResultList class that contains list of BaseFile
 	 */
-	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getFileList(options);
 	}
 
@@ -115,7 +119,8 @@ public final class ImageKit {
 	 * @param fileId is a unique file id
 	 * @return Result class
 	 */
-	public Result getFileDetail(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public Result getFileDetail(String fileId) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getFileDetail(fileId);
 	}
 
@@ -124,7 +129,8 @@ public final class ImageKit {
 	 * @param fileId is a unique file id
 	 * @return ResultMetaData class
 	 */
-	public ResultMetaData getFileMetadata(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultMetaData getFileMetadata(String fileId) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getFileMetaData(fileId);
 	}
 
@@ -133,7 +139,8 @@ public final class ImageKit {
 	 * @param url is a remote image url
 	 * @return ResultMetaData class
 	 */
-	public ResultMetaData getRemoteFileMetadata(String url) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultMetaData getRemoteFileMetadata(String url) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getRemoteFileMetaData(url);
 	}
 
@@ -142,7 +149,8 @@ public final class ImageKit {
 	 * @param fileId is a unique file id
 	 * @return Result class
 	 */
-	public Result deleteFile(String fileId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public Result deleteFile(String fileId) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.deleteFile(fileId);
 	}
 
@@ -151,7 +159,9 @@ public final class ImageKit {
 	 * @param fileIds is a list of unique file id
 	 * @return Result class
 	 */
-	public ResultFileDelete bulkDeleteFiles(List<String> fileIds) throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException, UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
+	public ResultFileDelete bulkDeleteFiles(List<String> fileIds)
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, PartialSuccessException,
+			UnauthorizedException, NotFoundException, BadRequestException, UnknownException {
 		return restClient.bulkDeleteFiles(fileIds);
 	}
 
@@ -160,7 +170,8 @@ public final class ImageKit {
 	 * @param url is image url
 	 * @return ResultCache class
 	 */
-	public ResultCache purgeCache(String url) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultCache purgeCache(String url) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.purgeCache(url);
 	}
 
@@ -169,7 +180,8 @@ public final class ImageKit {
 	 * @param requestId is cache request id
 	 * @return ResultCacheStatus class
 	 */
-	public ResultCacheStatus getPurgeCacheStatus(String requestId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultCacheStatus getPurgeCacheStatus(String requestId) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getPurgeCacheStatus(requestId);
 	}
 
@@ -218,7 +230,8 @@ public final class ImageKit {
 	 * @return ArrayList of String
 	 */
 	public ResultTags addTags(TagsRequest tagsRequest)
-			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.manageTags(tagsRequest, "addTags");
 	}
 
@@ -229,7 +242,8 @@ public final class ImageKit {
 	 * @return ArrayList of String
 	 */
 	public ResultTags removeAITags(AITagsRequest aiTagsRequest)
-			throws PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws PartialSuccessException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.removeAITags(aiTagsRequest);
 	}
 
@@ -240,7 +254,8 @@ public final class ImageKit {
 	 * @return ArrayList of String
 	 */
 	public ResultTags removeTags(TagsRequest tagsRequest)
-			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.manageTags(tagsRequest, "removeTags");
 	}
 
@@ -261,7 +276,8 @@ public final class ImageKit {
 	 * @return ResultCustomMetaData with ResultCustomMetaDataField
 	 */
 	public ResultCustomMetaDataField createCustomMetaDataFields(
-			CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest) throws BadRequestException, UnknownException {
+			CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest)
+			throws BadRequestException, UnknownException {
 		return restClient.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
 	}
 
@@ -293,7 +309,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultNoContent deleteFileVersion(DeleteFileVersionRequest deleteFileVersionRequest)
-			throws BadRequestException, NotFoundException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws BadRequestException, NotFoundException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.deleteFileVersion(deleteFileVersionRequest);
 	}
 
@@ -303,7 +320,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultNoContent copyFile(CopyFileRequest copyFileRequest)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.copyFile(copyFileRequest);
 	}
 
@@ -313,7 +331,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultNoContent moveFile(MoveFileRequest moveFileRequest)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.moveFile(moveFileRequest);
 	}
 
@@ -322,8 +341,9 @@ public final class ImageKit {
 	 * @param renameFileRequest class
 	 * @return Result class
 	 */
-	public ResultRenameFile renameFile(RenameFileRequest renameFileRequest)
-			throws ConflictException, PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	public ResultRenameFile renameFile(RenameFileRequest renameFileRequest) throws ConflictException,
+			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.renameFile(renameFileRequest);
 	}
 
@@ -344,7 +364,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultNoContent deleteFolder(DeleteFolderRequest deleteFolderRequest)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.deleteFolder(deleteFolderRequest);
 	}
 
@@ -355,7 +376,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.copyFolder(copyFolderRequest);
 	}
 
@@ -365,7 +387,8 @@ public final class ImageKit {
 	 * @return Result class
 	 */
 	public ResultOfFolderActions moveFolder(MoveFolderRequest moveFolderRequest)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.moveFolder(moveFolderRequest);
 	}
 
@@ -374,7 +397,8 @@ public final class ImageKit {
 	 * @param jobId
 	 * @return a Result class
 	 */
-	public ResultBulkJobStatus getBulkJobStatus(String jobId) throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultBulkJobStatus getBulkJobStatus(String jobId) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		return restClient.getBulkJobStatus(jobId);
 	}
 
@@ -384,7 +408,8 @@ public final class ImageKit {
 	 * @return a Result class
 	 */
 	public ResultFileVersions getFileVersions(String fileId)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.getFileVersions(fileId);
 	}
 
@@ -394,7 +419,8 @@ public final class ImageKit {
 	 * @return a Result class
 	 */
 	public ResultFileVersionDetails getFileVersionDetails(String fileId, String versionId)
-			throws NotFoundException, BadRequestException, InternalServerException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.getFileVersionDetails(fileId, versionId);
 	}
 }

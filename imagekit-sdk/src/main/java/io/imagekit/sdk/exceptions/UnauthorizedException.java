@@ -9,7 +9,7 @@ public class UnauthorizedException extends Exception {
 	private ResponseMetaData responseMetaData;
 
 	public UnauthorizedException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-                                 String message1, String help, ResponseMetaData responseMetaData) {
+			String message1, String help, ResponseMetaData responseMetaData) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.message = message1;
 		this.help = help;
@@ -18,10 +18,7 @@ public class UnauthorizedException extends Exception {
 
 	@Override
 	public String toString() {
-		return "UnauthorizedException{" +
-				"message='" + message + '\'' +
-				", help='" + help + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "UnauthorizedException{" + "message='" + message + '\'' + ", help='" + help + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

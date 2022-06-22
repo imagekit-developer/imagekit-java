@@ -61,11 +61,7 @@ public class ResultCacheStatus {
 
 	@Override
 	public String toString() {
-		return "ResultCacheStatus{" +
-				"help='" + help + '\'' +
-				", status='" + status + '\'' +
-				", raw='" + raw + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultCacheStatus{" + "help='" + help + '\'' + ", status='" + status + '\'' + ", raw='" + raw + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

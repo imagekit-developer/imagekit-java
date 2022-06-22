@@ -8,8 +8,8 @@ public class TooManyRequestsException extends Exception {
 	private String help;
 	private ResponseMetaData responseMetaData;
 
-	public TooManyRequestsException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-                                    String message1, String help, ResponseMetaData responseMetaData) {
+	public TooManyRequestsException(String message, Throwable cause, boolean enableSuppression,
+			boolean writableStackTrace, String message1, String help, ResponseMetaData responseMetaData) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.message = message1;
 		this.help = help;
@@ -18,10 +18,7 @@ public class TooManyRequestsException extends Exception {
 
 	@Override
 	public String toString() {
-		return "TooManyRequestsException{" +
-				"message='" + message + '\'' +
-				", help='" + help + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "TooManyRequestsException{" + "message='" + message + '\'' + ", help='" + help + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

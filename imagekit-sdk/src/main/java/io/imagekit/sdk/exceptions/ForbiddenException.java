@@ -9,7 +9,7 @@ public class ForbiddenException extends Exception {
 	private ResponseMetaData responseMetaData;
 
 	public ForbiddenException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-                              String message1, String help, ResponseMetaData responseMetaData) {
+			String message1, String help, ResponseMetaData responseMetaData) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.message = message1;
 		this.help = help;
@@ -18,10 +18,7 @@ public class ForbiddenException extends Exception {
 
 	@Override
 	public String toString() {
-		return "ForbiddenException{" +
-				"message='" + message + '\'' +
-				", help='" + help + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ForbiddenException{" + "message='" + message + '\'' + ", help='" + help + '\'' + ", responseMetaData="
+				+ responseMetaData + '}';
 	}
 }

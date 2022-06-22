@@ -74,12 +74,8 @@ public class ResultFileDelete {
 
 	@Override
 	public String toString() {
-		return "ResultFileDelete{" +
-				"help='" + help + '\'' +
-				", raw='" + raw + '\'' +
-				", successfullyDeletedFileIds=" + successfullyDeletedFileIds +
-				", missingFileIds=" + missingFileIds +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultFileDelete{" + "help='" + help + '\'' + ", raw='" + raw + '\'' + ", successfullyDeletedFileIds="
+				+ successfullyDeletedFileIds + ", missingFileIds=" + missingFileIds + ", responseMetaData="
+				+ responseMetaData + '}';
 	}
 }

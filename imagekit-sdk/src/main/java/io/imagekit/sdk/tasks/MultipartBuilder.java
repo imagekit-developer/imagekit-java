@@ -16,6 +16,7 @@ import java.util.Map;
 
 public class MultipartBuilder {
 	private static final String RANDOM_BOUNDARY = "randomBoundary-------------------";
+
 	public MultipartBody build(FileCreateRequest fileCreateRequest) {
 		MultipartBody.Builder builder = new MultipartBody.Builder(RANDOM_BOUNDARY).setType(MultipartBody.FORM);
 

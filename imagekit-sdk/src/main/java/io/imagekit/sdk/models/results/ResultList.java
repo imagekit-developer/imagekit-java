@@ -67,11 +67,7 @@ public class ResultList {
 
 	@Override
 	public String toString() {
-		return "ResultList{" +
-				"help='" + help + '\'' +
-				", raw='" + raw + '\'' +
-				", results=" + results +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultList{" + "help='" + help + '\'' + ", raw='" + raw + '\'' + ", results=" + results
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

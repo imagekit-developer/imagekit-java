@@ -135,7 +135,8 @@ public class Utils {
 	}
 
 	public static void generalApiThrowException(Response response)
-			throws IOException, BadRequestException, InternalServerException, UnknownException, UnauthorizedException, ForbiddenException, TooManyRequestsException {
+			throws IOException, BadRequestException, InternalServerException, UnknownException, UnauthorizedException,
+			ForbiddenException, TooManyRequestsException {
 		ResultException result = populateResult(response);
 		if (response.code() == 400) {
 			throw new BadRequestException(result.getMessage(), null, false, false, result.getMessage(),
@@ -144,21 +145,23 @@ public class Utils {
 			throw new UnauthorizedException(result.getMessage(), null, false, false, result.getMessage(),
 					result.getHelp(), result.getResponseMetaData());
 		} else if (response.code() == 403) {
-			throw new ForbiddenException(result.getMessage(), null, false, false, result.getMessage(),
-					result.getHelp(), result.getResponseMetaData());
+			throw new ForbiddenException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
+					result.getResponseMetaData());
 		} else if (response.code() == 429) {
-			throw new TooManyRequestsException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
-					result.getResponseMetaData());
-		} else if (response.code() == 500 || response.code() == 502 || response.code() == 503 || response.code() == 504) {
-			throw new InternalServerException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
-					result.getResponseMetaData());
+			throw new TooManyRequestsException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
+		} else if (response.code() == 500 || response.code() == 502 || response.code() == 503
+				|| response.code() == 504) {
+			throw new InternalServerException(result.getMessage(), null, false, false, result.getMessage(),
+					result.getHelp(), result.getResponseMetaData());
 		} else {
 			throw new UnknownException(result.getMessage(), null, false, false, result.getMessage(), result.getHelp(),
 					result.getResponseMetaData());
 		}
 	}
 
-	public static void throwOtherException(Response response) throws IOException, PartialSuccessException, NotFoundException, UnknownException {
+	public static void throwOtherException(Response response)
+			throws IOException, PartialSuccessException, NotFoundException, UnknownException {
 		ResultException result = populateResult(response);
 		if (response.code() == 207) {
 			throw new PartialSuccessException(result.getMessage(), null, false, false, result.getMessage(),

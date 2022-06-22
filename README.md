@@ -44,7 +44,7 @@ allprojects {
 Step 2. Add the dependency on project's `build.gradle`:
 ```
 dependencies {
-        implementation 'com.github.imagekit-developer:imagekit-java:1.0.3'
+        implementation 'com.github.imagekit-developer:imagekit-java:2.0.0'
 }
 ```
 ### Maven users
@@ -62,7 +62,7 @@ Step 2. Add the dependency in POM file:
 <dependency>
     <groupId>com.github.imagekit-developer</groupId>
     <artifactId>imagekit-java</artifactId>
-    <version>1.0.3</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 

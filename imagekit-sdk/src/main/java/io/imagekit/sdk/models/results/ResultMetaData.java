@@ -62,11 +62,7 @@ public class ResultMetaData {
 
 	@Override
 	public String toString() {
-		return "ResultMetaData{" +
-				"help='" + help + '\'' +
-				", raw='" + raw + '\'' +
-				", results=" + results +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultMetaData{" + "help='" + help + '\'' + ", raw='" + raw + '\'' + ", results=" + results
+				+ ", responseMetaData=" + responseMetaData + '}';
 	}
 }

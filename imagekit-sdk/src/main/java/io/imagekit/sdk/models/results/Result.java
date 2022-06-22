@@ -181,32 +181,13 @@ public class Result extends BaseFile {
 
 	@Override
 	public String toString() {
-		return "Result{" +
-				"fileId='" + fileId + '\'' +
-				", name='" + name + '\'' +
-				", url='" + url + '\'' +
-				", thumbnail='" + thumbnail + '\'' +
-				", height=" + height +
-				", width=" + width +
-				", size=" + size +
-				", filePath='" + filePath + '\'' +
-				", tags=" + tags +
-				", isPrivateFile=" + isPrivateFile +
-				", customCoordinates='" + customCoordinates + '\'' +
-				", fileType='" + fileType + '\'' +
-				", aiTags=" + aiTags +
-				", versionInfo=" + versionInfo +
-				", customMetadata=" + customMetadata +
-				", embeddedMetadata=" + embeddedMetadata +
-				", extensionStatus=" + extensionStatus +
-				", type='" + type + '\'' +
-				", mime='" + mime + '\'' +
-				", hasAlpha=" + hasAlpha +
-				", createdAt=" + createdAt +
-				", updatedAt=" + updatedAt +
-				", help='" + help + '\'' +
-				", raw='" + raw + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "Result{" + "fileId='" + fileId + '\'' + ", name='" + name + '\'' + ", url='" + url + '\''
+				+ ", thumbnail='" + thumbnail + '\'' + ", height=" + height + ", width=" + width + ", size=" + size
+				+ ", filePath='" + filePath + '\'' + ", tags=" + tags + ", isPrivateFile=" + isPrivateFile
+				+ ", customCoordinates='" + customCoordinates + '\'' + ", fileType='" + fileType + '\'' + ", aiTags="
+				+ aiTags + ", versionInfo=" + versionInfo + ", customMetadata=" + customMetadata + ", embeddedMetadata="
+				+ embeddedMetadata + ", extensionStatus=" + extensionStatus + ", type='" + type + '\'' + ", mime='"
+				+ mime + '\'' + ", hasAlpha=" + hasAlpha + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", help='" + help + '\'' + ", raw='" + raw + '\'' + ", responseMetaData=" + responseMetaData + '}';
 	}
 }

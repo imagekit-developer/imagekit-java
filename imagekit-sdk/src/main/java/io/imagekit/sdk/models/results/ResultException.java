@@ -36,10 +36,7 @@ public class ResultException {
 
 	@Override
 	public String toString() {
-		return "ResultException{" +
-				"message='" + message + '\'' +
-				", help='" + help + '\'' +
-				", responseMetaData=" + responseMetaData +
-				'}';
+		return "ResultException{" + "message='" + message + '\'' + ", help='" + help + '\'' + ", responseMetaData="
+				+ responseMetaData + '}';
 	}
 }
