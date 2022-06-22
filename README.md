@@ -99,6 +99,9 @@ The usage of the SDK has been explained below.
 This document presents a list of changes that break existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in major versions.
 ### Breaking History:
 
+Even under this circumstance, we will not modify versioned releases. 
+For example, if we release a breaking change in 1.0.3, we will not simply overwrite version 1.0.3; we will release a new version 1.0.4 that fixes the breaking change.
+
 ### Title
 - Result object raw and getMap() properties:
 
