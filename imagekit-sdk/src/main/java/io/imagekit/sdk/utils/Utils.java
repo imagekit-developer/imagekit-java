@@ -117,9 +117,7 @@ public class Utils {
 
 	public static void populateResponseMetadata(String respBody, ResponseMetaData responseMetadata, int responseCode,
 			Map<String, List<String>> responseHeaders) throws IOException {
-		if (responseCode == 200 || responseCode == 201 || responseCode == 204) {
-			responseMetadata.setRaw(respBody);
-		}
+		responseMetadata.setRaw(respBody);
 		if (responseHeaders != null) {
 			Map<String, String> mappedHeader = Utils.mapListOfStringToString(responseHeaders);
 			responseMetadata.setHeaders(mappedHeader);
