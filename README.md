@@ -91,11 +91,31 @@ class App {
 }
 ```
 
+or
+
+ ```java
+import io.imagekit.sdk.ImageKit;
+import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.utils.Utils;
+class App {
+    public static void main(String[] args) {
+        ImageKit imageKit = ImageKit.getInstance();
+        Configuration config = new Configuration("your_public_key", "your_private_key", "your_url_endpoint");
+        imageKit.setConfig(config);
+    }
+}
+```
+
 ## Usage
-You can use this Java SDK for 3 different kinds of methods - URL generation, file upload, and file management.
+You can use this Java SDK for 3 different kinds of methods:
+
+* URL generation
+* file upload
+* file management
+* 
 The usage of the SDK has been explained below.
 
-## Versioning
+## Change log
 This document presents a list of changes that break existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in major versions.
 
 ### Breaking History:
@@ -142,6 +162,7 @@ List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
 Map<String, String> scale=new HashMap<>();
 scale.put("height","600");
 scale.put("width","400");
+scale.put("raw", "ar-4-3,q-40");
 transformation.add(scale);
     
 Map<String, Object> options=new HashMap();
@@ -166,6 +187,7 @@ List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
 Map<String, String> scale=new HashMap<>();
 scale.put("height","600");
 scale.put("width","400");
+scale.put("raw", "ar-4-3,q-40");
 transformation.add(scale);
 
 Map<String, Object> options=new HashMap();
@@ -970,9 +992,9 @@ git clone https://github.com/imagekit-developer/imagekit-java.git
 
 **5. Edit `config.properties` and write values of given keys.**
 ```properties
-UrlEndpoint=<-YOUR-ENDPOINT-URL-HERE->
-PrivateKey=<-YOUR-PRIVATE-KEY-HERE->
-PublicKey=<-YOUR-PUBLIC-KEY-HERE->
+UrlEndpoint=your_url_endpoint
+PrivateKey=your_private_key
+PublicKey=your_public_key
 ```
 
 **5. You will find `App.java` in `src/main/java/io/imagekit/sampleapp/` directory. Edit program as you need, then run `App.java`. If you are using CLI Tool (Terminal/Command Prompt) Then Open Project in CLI and execute using gradle**

@@ -12,6 +12,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     compile 'commons-codec:commons-codec:1.13'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'

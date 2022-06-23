@@ -56,6 +56,7 @@ public class Transformer {
         transformer.trans.put("effectContrast" , "e-contrast");
         transformer.trans.put("effectGray" , "e-grayscale");
         transformer.trans.put("original" , "orig");
+        transformer.trans.put("raw", "raw");
 
         return transformer;
     }

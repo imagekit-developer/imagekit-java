@@ -170,11 +170,11 @@ public class ImageKitTest {
 
 		Map<String, Object> options = new HashMap<>();
 		options.put("path", "/default-image.jpg");
-		options.put("urlEndpoint", "https://ik.imagekit.io/your_override_imagekit_id");
+		options.put("urlEndpoint", "https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix");
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_override_imagekit_id/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
+		assertThat("https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
 				+ Version.VERSION_CODE, is(url));
 	}
 
@@ -188,11 +188,11 @@ public class ImageKitTest {
 
 		Map<String, Object> options = new HashMap<>();
 		options.put("path", "/default-image.jpg");
-		options.put("urlEndpoint", "https://ik.imagekit.io/your_override_imagekit_id");
+		options.put("urlEndpoint", "https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix");
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_override_imagekit_id/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
+		assertThat("https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
 				+ Version.VERSION_CODE, is(url));
 	}
 
