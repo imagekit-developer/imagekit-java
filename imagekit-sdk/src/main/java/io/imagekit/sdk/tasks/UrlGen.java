@@ -77,7 +77,7 @@ public class UrlGen {
                     String key = entry.getKey();
                     String value = entry.getValue();
                     String element = Transformer.getInstance().transform(key) + (value.equalsIgnoreCase("-") ? "" : "-" + value);
-                    tr.append(element);
+                    tr.append(element.contains("oi") || element.contains("di") ? element.replaceFirst("/", "").replaceAll("/", "@@") :element);
                     if (i < entries.size() - 1) {
                         tr.append(",");
                     }
@@ -87,8 +87,7 @@ public class UrlGen {
         }
 
         QueryMaker queryMaker=new QueryMaker();
-        queryMaker.put(String.format(Locale.US,"%s=%s","ik-sdk-version", Version.VERSION_CODE));
-        if (null!=queryParameters){
+       if (null!=queryParameters){
             for (Map.Entry<String,String> entry:queryParameters.entrySet()){
                 queryMaker.put(String.format(Locale.US,"%s=%s",entry.getKey(),entry.getValue()));
             }
@@ -146,7 +145,6 @@ public class UrlGen {
         }
 
         QueryMaker queryMaker=new QueryMaker();
-        queryMaker.put(String.format(Locale.US,"%s=%s","ik-sdk-version", Version.VERSION_CODE));
 
         // check existing query params
         if (null!=src){

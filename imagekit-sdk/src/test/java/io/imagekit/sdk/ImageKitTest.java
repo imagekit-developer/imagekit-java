@@ -34,8 +34,11 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -53,7 +56,7 @@ import com.google.gson.JsonObject;
 
 public class ImageKitTest {
 	private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern
-			.compile("(https://.*)\\?ik-sdk-version=(.*)&ik-s=(.*)&ik-t=(.*)");
+			.compile("(https://.*)\\?ik-s=(.*)&ik-t=(.*)");
 
 	private ImageKit SUT;
 
@@ -77,9 +80,11 @@ public class ImageKitTest {
 		assertEquals(config.toString(), ImageKit.getInstance().getConfig().toString());
 	}
 
-	@Test
-	public void getUrl_with_height_width_options() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_height_width_options() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -90,13 +95,14 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 		String url = SUT.getUrl(options);
 
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
-	public void getUrl_with_height_width_options_url_version_check() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_height_width_options_url_version_check() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -105,14 +111,14 @@ public class ImageKitTest {
 		options.put("path", "/default-image.jpg");
 		options.put("transformation", transformation);
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
-		assertTrue(url.contains("ik-sdk-version=" + Version.VERSION_CODE));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
-	public void getUrl_with_new_transformation_params_options() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_new_transformation_params_options() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -125,13 +131,14 @@ public class ImageKitTest {
 		options.put("path", "/default-image.jpg");
 		options.put("transformation", transformation);
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600:myparam-40/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600:myparam-40/default-image.jpg", is(url));
 	}
 
-	@Test
-	public void getUrl_with_slash_in_path() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_slash_in_path() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -141,13 +148,14 @@ public class ImageKitTest {
 		options.put("path", "/default-image.jpg");
 		options.put("transformation", transformation);
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
-	public void getUrl_without_slash_in_path() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_without_slash_in_path() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -156,13 +164,13 @@ public class ImageKitTest {
 		options.put("path", "default-image.jpg");
 		options.put("transformation", transformation);
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
 	public void getUrl_with_overriding_urlEndpoint() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		SUT = ImageKit.getInstance();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -174,12 +182,70 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_transformation_parameters() {
+		SUT = ImageKit.getInstance();
+		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		Map<String, String> scale = new HashMap<>();
+		scale.put("height", "600");
+		scale.put("width", "400");
+		scale.put("aspectRatio", "4-3");
+		scale.put("quality", "40");
+		scale.put("crop", "force");
+		scale.put("cropMode", "extract");
+		scale.put("focus", "left");
+		scale.put("format", "png");
+		scale.put("radius", "20");
+		scale.put("background", "A94D34");
+		scale.put("border", "5-A94D34");
+		scale.put("rotation", "90");
+		scale.put("blur", "10");
+		scale.put("named", "any_name");
+		scale.put("overlayImage", "/folder/file.jpg");
+		scale.put("overlayX", "20");
+		scale.put("overlayY", "10");
+		scale.put("overlayFocus", "top");
+		scale.put("overlayHeight", "20");
+		scale.put("overlayWidth", "20");
+		scale.put("overlayText", "Image Text");
+		scale.put("overlayTextFontSize", "18");
+		scale.put("overlayTextFontFamily", "Open Sans");
+		scale.put("overlayTextColor", "00FFFF");
+		scale.put("overlayAlpha", "");
+		scale.put("overlayTextTypography", "b");
+		scale.put("overlayBackground", "00AAFF55");
+		scale.put("overlayImageTrim", String.valueOf(false));
+		scale.put("progressive", String.valueOf(true));
+		scale.put("lossless", String.valueOf(true));
+		scale.put("trim", "5");
+		scale.put("metadata", String.valueOf(true));
+		scale.put("colorProfile", String.valueOf(true));
+		scale.put("defaultImage", "/folder/file.jpg");
+		scale.put("dpr", "3");
+		scale.put("effectSharpen", "-");
+		scale.put("effectUSM", "");
+		scale.put("effectContrast", "1");
+		scale.put("effectGray", "");
+		scale.put("original", String.valueOf(true));
+		scale.put("raw", "w-200,h-200");
+
+		transformation.add(scale);
+
+		Map<String, Object> options = new HashMap<>();
+		options.put("path", "/default-image.jpg");
+		options.put("urlEndpoint", "https://ik.imagekit.io/your_imagekit_id/");
+		options.put("transformation", transformation);
+
+		String url = SUT.getUrl(options);
+		assertThat("https://ik.imagekit.io/your_imagekit_id/tr:cm-extract,ofo-top,n-any_name,md-true,ow-20,e-contrast-1,fo-left,bl-10,ar-4-3,oit-false,e-usm-,oa-,obg-00AAFF55,ots-18,t-5,oh-20,cp-true,r-20,ox-20,ot-Image%20Text,oy-10,otc-00FFFF,di-folder@@file.jpg,h-600,bo-5-A94D34,orig-true,rt-90,dpr-3,f-png,raw-w-200,h-200,lo-true,e-grayscale-,q-40,ott-b,bg-A94D34,w-400,pr-true,e-sharpen,oi-folder@@file.jpg,c-force,otf-Open%20Sans/default-image.jpg", is(url));
+	}
+
+	@org.junit.jupiter.api.Test
 	public void getUrl_with_overriding_urlEndpoint_double_slash_tests() {
+		SUT = ImageKit.getInstance();
 		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
@@ -188,20 +254,21 @@ public class ImageKitTest {
 
 		Map<String, Object> options = new HashMap<>();
 		options.put("path", "/default-image.jpg");
-		options.put("urlEndpoint", "https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix");
+		options.put("urlEndpoint", "https://ik.imagekit.io/your_imagekit_id/");
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/different-url-endpoint-prefix/tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE, is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-600/default-image.jpg", is(url));
 	}
 
-	@Test
-	public void getUrl_with_options_as_query() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_options_as_query() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -214,16 +281,17 @@ public class ImageKitTest {
 		options.put("transformationPosition", "query");
 
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "default-image.jpg?ik-sdk-version=" + Version.VERSION_CODE
-				+ "&v=123&tr=w-400,h-600", is(url));
+		MatcherAssert.assertThat(SUT.getConfig().getUrlEndpoint() + "/default-image.jpg?v=123&tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_with_options_as_path() {
+	@org.junit.jupiter.api.Test()
+	public void getUrl_with_options_as_path() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -235,16 +303,17 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&v=123", is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600/default-image.jpg?v=123", is(url));
 	}
 
-	@Test
-	public void getUrl_with_chained_transformation_options_as_query() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_chained_transformation_options_as_query() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -260,16 +329,17 @@ public class ImageKitTest {
 		options.put("transformationPosition", "query");
 
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "default-image.jpg?ik-sdk-version=" + Version.VERSION_CODE
-				+ "&v=123&tr=w-400,h-600:rt-90", is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/default-image.jpg?v=123&tr=w-400,h-600:rt-90", is(url));
 	}
 
-	@Test
-	public void getUrl_with_chained_transformation_options_as_path() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_chained_transformation_options_as_path() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -284,17 +354,18 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat(SUT.getConfig().getUrlEndpoint() + "tr:w-400,h-600:rt-90/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&v=123", is(url));
+		assertThat(SUT.getConfig().getUrlEndpoint() + "/tr:w-400,h-600:rt-90/default-image.jpg?v=123", is(url));
 	}
 
-	@Test
-	public void getUrl_with_multiple_query_params_addition_check() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_multiple_query_params_addition_check() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 		queryParams.put("z", "234");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -306,17 +377,18 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&q=abc&v=123&z=234&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?q=abc&v=123&z=234&tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_with_double_and_check() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_double_and_check() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 		queryParams.put("z", "234");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -328,17 +400,18 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&q=abc&v=123&z=234&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?q=abc&v=123&z=234&tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_with_double_question_mark_check() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_double_question_mark_check() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 		queryParams.put("z", "234");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -350,13 +423,14 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&v=123&z=234&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?v=123&z=234&tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_with_src() {
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+	@org.junit.jupiter.api.Test
+	public void getUrl_with_src() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -367,17 +441,18 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_src_with_query_params() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_src_with_query_params() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParams = new HashMap<>();
 		queryParams.put("v", "123");
 		queryParams.put("z", "234");
 
-		List<Map<String, String>> transformation = new ArrayList<Map<String, String>>();
+		List<Map<String, String>> transformation = new ArrayList<>();
 		Map<String, String> scale = new HashMap<>();
 		scale.put("height", "600");
 		scale.put("width", "400");
@@ -389,12 +464,13 @@ public class ImageKitTest {
 		options.put("transformation", transformation);
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&srcParam=srcParamValue&v=123&z=234&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?srcParam=srcParamValue&v=123&z=234&tr=w-400,h-600", is(url));
 	}
 
-	@Test
-	public void getUrl_src_with_query_params_but_transformationPosition_is_path() {
+	@org.junit.jupiter.api.Test
+	public void getUrl_src_with_query_params_but_transformationPosition_is_path() throws IOException {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
 		Map<String, String> queryParam = new HashMap<>();
 		queryParam.put("v", "123");
 		queryParam.put("z", "234");
@@ -412,8 +488,7 @@ public class ImageKitTest {
 		options.put("transformationPosition", "path");
 
 		String url = SUT.getUrl(options);
-		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?ik-sdk-version="
-				+ Version.VERSION_CODE + "&v=123&z=234&tr=w-400,h-600", is(url));
+		assertThat("https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg?v=123&z=234&tr=w-400,h-600", is(url));
 	}
 
 	@Test
@@ -515,10 +590,10 @@ public class ImageKitTest {
 		fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
 		fileCreateRequest.setUseUniqueFileName(false);
 		fileCreateRequest.setPrivateFile(false);
-		fileCreateRequest.setOverwriteFile(false);
+		fileCreateRequest.setOverwriteFile(true);
 		fileCreateRequest.setOverwriteAITags(false);
 		fileCreateRequest.setOverwriteTags(false);
-		fileCreateRequest.setOverwriteCustomMetadata(false);
+		fileCreateRequest.setOverwriteCustomMetadata(true);
 		JsonObject jsonObjectCustomMetadata = new JsonObject();
 		jsonObjectCustomMetadata.addProperty("test1", 10);
 		fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);

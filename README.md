@@ -174,7 +174,7 @@ String url = ImageKit.getInstance().getUrl(options);
 ```
 The result in a URL like
 ```
-https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-600/default-image.jpg?v=123&ik-sdk-version=java-1.0.3
+https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-600/default-image.jpg?v=123
 ```
 
 **2. Using full image URL**
@@ -200,7 +200,7 @@ String url = ImageKit.getInstance().getUrl(options);
 The results in a URL like
 
 ```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-400,h-600&ik-sdk-version=java-1.0.3
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-400,h-600
 ```
 
 The ```.getUrl()``` method accepts the following parameters
@@ -240,7 +240,7 @@ String url = ImageKit.getInstance().getUrl(options);
 
 Sample Result URL -
 ```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300&w-400:rt-90&ik-sdk-version=java-1.0.3
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300&w-400:rt-90
 ```
 
 **2. Sharpening and contrast transforms and a progressive JPG image**
@@ -268,7 +268,7 @@ String url = ImageKit.getInstance().getUrl(options);
 Note that because the `src` parameter was used, the transformation string gets added as a query parameter.
 
 ```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=f-jpg&pr-true&e-sharpen&e-contrast-1&ik-sdk-version=java-1.0.3
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=f-jpg&pr-true&e-sharpen&e-contrast-1
 ```
 
 **3. Signed URL that expires in 300 seconds with the default URL endpoint and other query parameters**
@@ -289,7 +289,7 @@ String url = ImageKit.getInstance().getUrl(options);
 ```
 **Sample Result URL**
 ```
-https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=1567358667&ik-s=f2c7cdacbe7707b71a83d49cf1c6110e3d701054&ik-sdk-version=java-1.0.3
+https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=1567358667&ik-s=f2c7cdacbe7707b71a83d49cf1c6110e3d701054
 ```
 
 **List of transformations**
