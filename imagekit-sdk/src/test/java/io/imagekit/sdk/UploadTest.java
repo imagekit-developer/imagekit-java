@@ -128,14 +128,10 @@ public class UploadTest {
                 + "10,10,20,20\r\n" + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"responseFields\"\r\n" + "Content-Length: 32\r\n" + "\r\n"
                 + "thumbnail,tags,customCoordinates\r\n" + "--randomBoundary-------------------\r\n"
-                + "Content-Disposition: form-data; name=\"overwriteFile\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-                + "true\r\n" + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"overwriteAITags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-                + "false\r\n" + "--randomBoundary-------------------\r\n"
+                + "true\r\n" + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"overwriteTags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-                + "false\r\n" + "--randomBoundary-------------------\r\n"
-                + "Content-Disposition: form-data; name=\"overwriteCustomMetadata\"\r\n" + "Content-Length: 4\r\n"
-                + "\r\n" + "true\r\n" + "--randomBoundary-------------------\r\n"
+                + "true\r\n" + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"extensions\"\r\n" + "Content-Length: 114\r\n" + "\r\n"
                 + "[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true}},{\"name\":\"google-auto-tagging\",\"minConfidence\":10,\"maxTags\":5}]\r\n"
                 + "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"webhookUrl\"\r\n"
@@ -143,7 +139,7 @@ public class UploadTest {
                 + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"customMetadata\"\r\n" + "Content-Length: 12\r\n" + "\r\n"
                 + "{\"test1\":10}\r\n" + "--randomBoundary---------------------";
-        System.out.println("request.getBody().readUtf8().trim():->" + request.getBody().readUtf8().trim());
+//        System.out.println("request.getBody().readUtf8().trim():->" + request.getBody().readUtf8().trim());
         assertEquals(json, request.getBody().readUtf8().trim());
         assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"), request.getRequestUrl().toString());
