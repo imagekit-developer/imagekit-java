@@ -114,6 +114,29 @@ public class FolderOperationTest {
         assertEquals(RestClient.API_BASE_URL.concat("v1/folder/"), request.getRequestUrl().toString());
     }
 
+    @Test(expected = BadRequestException.class)
+    public void copyFolder_400_Expected()
+            throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+
+        CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
+        copyFolderRequest.setSourceFolderPath("/");
+        copyFolderRequest.setDestinationPath("/test");
+        copyFolderRequest.setIncludeVersions(false);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400)
+                .setBody("{\n" +
+                        "    \"message\": \"sourceFolderPath cannot be root\",\n" +
+                        "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                        "    \"reason\": \"SOURCE_IS_ROOT\"\n" +
+                        "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.copyFolder(copyFolderRequest);
+        server.takeRequest();
+    }
+
     @Test(expected = NotFoundException.class)
     public void copyFolder_404_Expected()
             throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,

@@ -675,7 +675,23 @@ System.out.println("Map Response:");
 System.out.println(resultRenameFile.getResponseMetaData().getMap());
 ```
 
-**15. Create Folder**
+**15. Restore file Version**
+
+It Restores file version to a different version of a file as per the
+[API documentation here](https://docs.imagekit.io/api-reference/media-api/restore-file-version).
+The argument to the `restoreFileVersion()` method accepts the fileId and versionId.
+
+```java
+Result result = ImageKit.getInstance().restoreFileVersion("fileId", "versionId");
+System.out.println("======FINAL RESULT=======");
+System.out.println(result);
+System.out.println("Raw Response:");
+System.out.println(result.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(result.getResponseMetaData().getMap());
+```
+
+**16. Create Folder**
 
 It Creates the Folder as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder).
@@ -694,7 +710,7 @@ System.out.println("Map Response:");
 System.out.println(resultEmptyBlock.getResponseMetaData().getMap());
 ```
 
-**16. Delete Folder**
+**17. Delete Folder**
 
 It Deletes the Folder as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder).
@@ -712,7 +728,7 @@ System.out.println("Map Response:");
 System.out.println(resultNoContent.getResponseMetaData().getMap());
 ```
 
-**17. Copy Folder**
+**18. Copy Folder**
 
 It Copies the Folder as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
@@ -731,7 +747,7 @@ System.out.println("Map Response:");
 System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 ```
 
-**18. Move Folder**
+**19. Move Folder**
 
 It Moves the Folder as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder).
@@ -750,7 +766,7 @@ System.out.println("Map Response:");
 System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 ```
 
-**19. Get Bulk Job Status**
+**20. Get Bulk Job Status**
 
 It Gets the Job status as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-move-folder-status).
@@ -767,7 +783,7 @@ System.out.println("Map Response:");
 System.out.println(resultBulkJobStatus.getResponseMetaData().getMap());
 ```
 
-**20. Purge Cache**
+**21. Purge Cache**
 
 Programmatically issue a cache clear request as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache).
 Accepts the full URL of the file for which the cache has to be cleared.
@@ -781,7 +797,7 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-**21. Purge Cache Status**
+**22. Purge Cache Status**
 
 Get the purge cache request status using the request ID returned when a purge cache request gets submitted as pet the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
@@ -797,7 +813,7 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-**22. Get File Metadata**
+**23. Get File Metadata**
 
 Accepts the file ID and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/metadata-api/get-image-metadata-for-uploaded-media-files)
 ```java
@@ -823,7 +839,7 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-**23. Create CustomMetaDataFields**
+**24. Create CustomMetaDataFields**
 
 It creates the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
@@ -846,7 +862,7 @@ System.out.println("Map Response:");
 System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 ```
 
-**24. Get CustomMetaDataFields**
+**25. Get CustomMetaDataFields**
 
 fetches the metadata as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
@@ -862,7 +878,7 @@ System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getList()
 System.out.println(resultCustomMetaDataFieldList.getResultCustomMetaDataFields());
 ```
 
-**25. Edit CustomMetaDataFields**
+**26. Edit CustomMetaDataFields**
 
 It edits the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
@@ -886,7 +902,7 @@ System.out.println("Map Response:");
 System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 ```
 
-**26. Delete CustomMetaDataFields**
+**27. Delete CustomMetaDataFields**
 
 It deletes the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).

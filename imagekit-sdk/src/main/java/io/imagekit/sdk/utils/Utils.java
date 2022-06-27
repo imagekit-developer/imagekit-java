@@ -177,6 +177,7 @@ public class Utils {
 
 	public static ResultException populateResult(Response response) throws IOException {
 		String resp = response.body().string();
+		System.out.println("resp:==> " + resp);
 		ResultException result = new Gson().fromJson(resp, ResultException.class);
 		populateResponseMetadata(resp, result.getResponseMetaData(), response.code(), response.headers().toMultimap());
 		return result;

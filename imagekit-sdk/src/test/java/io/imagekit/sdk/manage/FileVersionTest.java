@@ -210,4 +210,78 @@ public class FileVersionTest {
                 RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2"),
                 request.getRequestUrl().toString());
     }
+
+    @Test
+    public void restoreFileVersion_expectedSuccessWith()
+            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"type\": \"file\",\n" +
+                "    \"name\": \"new_car.jpg\",\n" +
+                "    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n" +
+                "    \"updatedAt\": \"2022-06-27T12:11:11.254Z\",\n" +
+                "    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" +
+                "    \"tags\": [\n" +
+                "        \"tagg\",\n" +
+                "        \"tagg1\"\n" +
+                "    ],\n" +
+                "    \"AITags\": null,\n" +
+                "    \"versionInfo\": {\n" +
+                "        \"id\": \"62b97749f63122840530fda9\",\n" +
+                "        \"name\": \"Version 1\"\n" +
+                "    },\n" +
+                "    \"embeddedMetadata\": {\n" +
+                "        \"XResolution\": 250,\n" +
+                "        \"YResolution\": 250,\n" +
+                "        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n" +
+                "        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" +
+                "    },\n" +
+                "    \"customCoordinates\": \"10,10,20,20\",\n" +
+                "    \"customMetadata\": {\n" +
+                "        \"test100\": 10\n" +
+                "    },\n" +
+                "    \"isPrivateFile\": false,\n" +
+                "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n" +
+                "    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n" +
+                "    \"fileType\": \"image\",\n" +
+                "    \"filePath\": \"/new_car.jpg\",\n" +
+                "    \"height\": 354,\n" +
+                "    \"width\": 236,\n" +
+                "    \"size\": 23023,\n" +
+                "    \"hasAlpha\": false,\n" +
+                "    \"mime\": \"image/jpeg\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
+        RecordedRequest request = server.takeRequest();
+
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PUT /v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore HTTP/1.1",
+                request.getRequestLine());
+        assertEquals(
+                RestClient.API_BASE_URL.concat("v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore"),
+                request.getRequestUrl().toString());
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void restoreFileVersion_expected_404()
+            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
+                "    \"message\": \"The requested file version does not exist.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
+        RecordedRequest request = server.takeRequest();
+        request.getBody().readUtf8();
+    }
 }

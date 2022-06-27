@@ -153,7 +153,7 @@ public class FileOperationTest {
         RenameFileRequest renameFileRequest = new RenameFileRequest();
         renameFileRequest.setFilePath("/new1.jpg");
         renameFileRequest.setNewFileName("new_car.jpg");
-        renameFileRequest.setPurgeCache(true);
+        renameFileRequest.setPurgeCache(false);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(409)
@@ -175,10 +175,37 @@ public class FileOperationTest {
         RenameFileRequest renameFileRequest = new RenameFileRequest();
         renameFileRequest.setFilePath("/car_false.jpeg");
         renameFileRequest.setNewFileName("new_car.jpeg");
-        renameFileRequest.setPurgeCache(true);
+        renameFileRequest.setPurgeCache(false);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{}"));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.renameFile(renameFileRequest);
+        RecordedRequest request = server.takeRequest();
+
+        String renameFileRequestJson = "{\"filePath\":\"/car_false.jpeg\",\"newFileName\":\"new_car.jpeg\",\"purgeCache\":false}";
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals(renameFileRequestJson, utf8RequestBody);
+        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+        assertEquals("PUT /v1/files/rename HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files/rename"), request.getRequestUrl().toString());
+    }
+
+    @Test
+    public void renameFile_successExpected_with_purge_cache() throws InterruptedException, IOException, ConflictException,
+            PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
+            ForbiddenException, TooManyRequestsException, UnauthorizedException {
+
+        RenameFileRequest renameFileRequest = new RenameFileRequest();
+        renameFileRequest.setFilePath("/car_false.jpeg");
+        renameFileRequest.setNewFileName("new_car.jpeg");
+        renameFileRequest.setPurgeCache(true);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("{\n" +
+                "    \"purgeRequestId\": \"62b973a00f0ad4164f307dad\"\n" +
+                "}"));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
         SUT.renameFile(renameFileRequest);

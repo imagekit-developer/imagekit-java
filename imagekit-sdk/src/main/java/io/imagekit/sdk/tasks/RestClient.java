@@ -84,7 +84,7 @@ public class RestClient {
 		return result;
 	}
 
-	public Result updateDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException,
+	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException,
 			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		Result result = null;
 		Map<String, String> headers = Utils.getHeaders(imageKit);
@@ -178,7 +178,7 @@ public class RestClient {
 		ResultMetaData result = new ResultMetaData();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
-		String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/%s/metadata", fileId);
+		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/metadata"), fileId);
 
 		request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
@@ -675,6 +675,39 @@ public class RestClient {
 			throw new UnknownException(e.getMessage(), e.getCause());
 		}
 		return resultRenameFile;
+	}
+
+	public Result restoreFileVersion(String fileId, String versionId)
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
+		Result resultFileVersionDetails = new Result();
+		Map<String, String> headers = Utils.getHeaders(imageKit);
+
+		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/versions/%s/restore"), fileId, versionId);
+		RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), "");
+		request = new Request.Builder().url(url).put(requestBody).headers(Headers.of(headers)).build();
+
+		try {
+			Response response = client.newCall(request).execute();
+			String respBody = "";
+			if (response.code() == 200) {
+				System.out.println("20000000000000");
+				respBody = response.body().string();
+				resultFileVersionDetails = new Gson().fromJson(respBody, Result.class);
+			} else if (response.code() == 404) {
+				System.out.println("400000000000004");
+				ResultException result = Utils.populateResult(response);
+				throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+						result.getHelp(), result.getResponseMetaData());
+			} else {
+				Utils.generalApiThrowException(response);
+			}
+			Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(),
+					response.headers().toMultimap());
+		} catch (IOException e) {
+			throw new UnknownException(e.getMessage(), e.getCause());
+		}
+		return resultFileVersionDetails;
 	}
 
 	public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) throws UnknownException {

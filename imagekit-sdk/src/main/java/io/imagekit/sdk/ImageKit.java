@@ -100,7 +100,7 @@ public final class ImageKit {
 	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest)
 			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
 			BadRequestException, UnknownException {
-		return restClient.updateDetail(fileUpdateRequest);
+		return restClient.updateFileDetail(fileUpdateRequest);
 	}
 
 	/**
@@ -345,6 +345,17 @@ public final class ImageKit {
 			PartialSuccessException, NotFoundException, BadRequestException, InternalServerException, UnknownException,
 			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		return restClient.renameFile(renameFileRequest);
+	}
+
+	/**
+	 *
+	 * @param fileId & versionId
+	 * @return a Result class
+	 */
+	public Result restoreFileVersion(String fileId, String versionId)
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
+		return restClient.restoreFileVersion(fileId, versionId);
 	}
 
 	/**

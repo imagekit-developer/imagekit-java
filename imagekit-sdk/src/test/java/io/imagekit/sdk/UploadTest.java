@@ -43,6 +43,19 @@ public class UploadTest {
         urlConnect.getContent();
     }
 
+    @Test(expected = RuntimeException.class)
+    public void imageKit_upload_expected_RuntimeException_for_file() throws IOException, InterruptedException, InternalServerException,
+            BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+        FileCreateRequest fileCreateRequest = new FileCreateRequest((String) null, "sample-cat-image.png");
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setBody("java.lang.RuntimeException: Error: File not provided."));
+        server.start();
+        RestClient.UPLOAD_BASE_URL = server.url("/").toString();
+        SUT.upload(fileCreateRequest);
+        RecordedRequest request = server.takeRequest();
+    }
+
     @Test
     public void imageKit_upload_returnSuccess() throws IOException, InterruptedException, InternalServerException,
             BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
@@ -139,10 +152,64 @@ public class UploadTest {
                 + "--randomBoundary-------------------\r\n"
                 + "Content-Disposition: form-data; name=\"customMetadata\"\r\n" + "Content-Length: 12\r\n" + "\r\n"
                 + "{\"test1\":10}\r\n" + "--randomBoundary---------------------";
-//        System.out.println("request.getBody().readUtf8().trim():->" + request.getBody().readUtf8().trim());
         assertEquals(json, request.getBody().readUtf8().trim());
         assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
         assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"), request.getRequestUrl().toString());
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void imageKit_upload_400_expected() throws IOException, InterruptedException, InternalServerException,
+            BadRequestException, UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+        String imageUrl = "https://homepages.cae.wisc.edu/~ece533/images/cat.png";
+        URL url = new URL(imageUrl);
+        FileCreateRequest fileCreateRequest = new FileCreateRequest(url, "sample-cat-image.png");
+        List<String> tags = new ArrayList<>();
+        tags.add("Software");
+        tags.add("Developer");
+        tags.add("Engineer");
+        fileCreateRequest.setTags(tags);
+        fileCreateRequest.setFolder("demo1");
+        String customCoordinates = "10,10,20,20";
+        fileCreateRequest.setCustomCoordinates(customCoordinates);
+
+        List<String> responseFields = new ArrayList<>();
+        responseFields.add("thumbnail");
+        responseFields.add("tags");
+        responseFields.add("customCoordinates");
+
+        fileCreateRequest.setResponseFields(responseFields);
+        JsonObject optionsInnerObject = new JsonObject();
+        optionsInnerObject.addProperty("add_shadow", true);
+        JsonObject innerObject1 = new JsonObject();
+        innerObject1.addProperty("name", "remove-bg");
+        innerObject1.add("options", optionsInnerObject);
+        JsonObject innerObject2 = new JsonObject();
+        innerObject2.addProperty("name", "google-auto-tagging");
+        innerObject2.addProperty("minConfidence", 10);
+        innerObject2.addProperty("maxTags", 5);
+        JsonArray jsonArray = new JsonArray();
+        jsonArray.add(innerObject1);
+        jsonArray.add(innerObject2);
+        fileCreateRequest.setExtensions(jsonArray);
+        fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
+        fileCreateRequest.setUseUniqueFileName(false);
+        fileCreateRequest.setPrivateFile(false);
+        fileCreateRequest.setOverwriteFile(false);
+        fileCreateRequest.setOverwriteAITags(false);
+        fileCreateRequest.setOverwriteTags(false);
+        fileCreateRequest.setOverwriteCustomMetadata(true);
+        JsonObject jsonObjectCustomMetadata = new JsonObject();
+        jsonObjectCustomMetadata.addProperty("test1", 10);
+        fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(400).setBody("{\n" +
+                "    \"message\": \"A file with the same name already exists at the exact location. We could not overwrite it because both overwriteFile and useUniqueFileName are set to false.\"\n" +
+                "}"));
+        server.start();
+        RestClient.UPLOAD_BASE_URL = server.url("/").toString();
+        SUT.upload(fileCreateRequest);
+        server.takeRequest();
     }
 
 }

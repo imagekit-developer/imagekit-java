@@ -139,6 +139,7 @@ public class FileTest {
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
         Map<String, String> options = new HashMap<>();
+        options.put("skip", "" + 0);
         options.put("limit", "" + 1);
         SUT.getFileList(options);
 
@@ -146,8 +147,8 @@ public class FileTest {
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals("", utf8RequestBody);
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /v1/files?limit=1 HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files?limit=1"), request.getRequestUrl().toString());
+        assertEquals("GET /v1/files?limit=1&limit=0 HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files?limit=1&limit=0"), request.getRequestUrl().toString());
 
     }
 
@@ -203,6 +204,83 @@ public class FileTest {
 
     @Test
     public void imageKit_getFileMetaData_successExpected()
+            throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+            UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+        MockWebServer server = new MockWebServer();
+        String responseJson = "{\n" +
+                "    \"height\": 300,\n" +
+                "    \"width\": 300,\n" +
+                "    \"size\": 51085,\n" +
+                "    \"format\": \"jpg\",\n" +
+                "    \"hasColorProfile\": false,\n" +
+                "    \"quality\": 0,\n" +
+                "    \"density\": 300,\n" +
+                "    \"hasTransparency\": false,\n" +
+                "    \"exif\": {\n" +
+                "        \"image\": {\n" +
+                "            \"Orientation\": 1,\n" +
+                "            \"XResolution\": 300,\n" +
+                "            \"YResolution\": 300,\n" +
+                "            \"ResolutionUnit\": 2,\n" +
+                "            \"Software\": \"Adobe Photoshop CS5 (12.0x20100115 [20100115.m.998 2010/01/15:02:00:00 cutoff; m branch])  Windows\",\n" +
+                "            \"ModifyDate\": \"2017:09:11 22:15:46\",\n" +
+                "            \"ExifOffset\": 236\n" +
+                "        },\n" +
+                "        \"thumbnail\": {\n" +
+                "            \"Compression\": 6,\n" +
+                "            \"XResolution\": 72,\n" +
+                "            \"YResolution\": 72,\n" +
+                "            \"ResolutionUnit\": 2,\n" +
+                "            \"ThumbnailOffset\": 374,\n" +
+                "            \"ThumbnailLength\": 4083\n" +
+                "        },\n" +
+                "        \"exif\": {\n" +
+                "            \"ColorSpace\": 65535,\n" +
+                "            \"ExifImageWidth\": 300,\n" +
+                "            \"ExifImageHeight\": 300\n" +
+                "        },\n" +
+                "        \"gps\": {},\n" +
+                "        \"interoperability\": {},\n" +
+                "        \"makernote\": {}\n" +
+                "    },\n" +
+                "    \"pHash\": \"2df5da2dd63c6926\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setBody(responseJson));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.getFileMetadata("62b43109d23153217b8b8a36");
+
+        RecordedRequest request = server.takeRequest();
+        String utf8RequestBody = request.getBody().readUtf8();
+        assertEquals("", utf8RequestBody);
+        assertEquals("application/json", request.getHeader("Content-Type"));
+        assertEquals("GET /v1/files/62b43109d23153217b8b8a36/metadata HTTP/1.1",
+                request.getRequestLine());
+        assertEquals(
+                RestClient.API_BASE_URL.concat("v1/files/62b43109d23153217b8b8a36/metadata"),
+                request.getRequestUrl().toString());
+
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void imageKit_getFileMetaData_400_Expected()
+            throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
+            UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
+        MockWebServer server = new MockWebServer();
+        String responseJson = "{\n" +
+                "    \"message\": \"Your request contains invalid fileId parameter.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\",\n" +
+                "    \"type\": \"INVALID_PARAM_ERROR\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        SUT.getFileMetadata("fileId");
+        server.takeRequest();
+    }
+
+    @Test
+    public void imageKit_getRemoteFileMetaData_successExpected()
             throws IOException, ForbiddenException, TooManyRequestsException, InternalServerException,
             UnauthorizedException, BadRequestException, UnknownException, InterruptedException {
         MockWebServer server = new MockWebServer();
