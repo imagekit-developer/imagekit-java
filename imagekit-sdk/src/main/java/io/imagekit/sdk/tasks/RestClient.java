@@ -84,8 +84,9 @@ public class RestClient {
 		return result;
 	}
 
-	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException,
-			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest)
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException {
 		Result result = null;
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/details"),
@@ -683,7 +684,8 @@ public class RestClient {
 		Result resultFileVersionDetails = new Result();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
-		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/versions/%s/restore"), fileId, versionId);
+		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/versions/%s/restore"), fileId,
+				versionId);
 		RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), "");
 		request = new Request.Builder().url(url).put(requestBody).headers(Headers.of(headers)).build();
 

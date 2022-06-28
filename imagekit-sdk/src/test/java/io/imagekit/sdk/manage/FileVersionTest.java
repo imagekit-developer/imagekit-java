@@ -24,264 +24,244 @@ import static org.junit.Assert.assertEquals;
 
 public class FileVersionTest {
 
-    private ImageKit SUT;
+	private ImageKit SUT;
 
-    @Before
-    public void setUp() throws Exception {
-        SUT = ImageKit.getInstance();
-        SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
-    }
+	@Before
+	public void setUp() throws Exception {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+	}
 
-    @Test(expected = NotFoundException.class)
-    public void getFileVersions_404_Expected()
-            throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test(expected = NotFoundException.class)
+	public void getFileVersions_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404)
-                .setBody("{\n" + "    \"message\": \"The requested asset does not exist.\",\n"
-                        + "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.getFileVersions("id");
-        server.takeRequest();
-    }
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(404)
+				.setBody("{\n" + "    \"message\": \"The requested asset does not exist.\",\n"
+						+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileVersions("id");
+		server.takeRequest();
+	}
 
-    @Test
-    public void getFileVersions_successExpected()
-            throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test
+	public void getFileVersions_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"type\": \"file\",\n"
-                + "        \"name\": \"w2_image.png\",\n" + "        \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n"
-                + "        \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n"
-                + "        \"fileId\": \"629f3de17eb0fe4053615450\",\n" + "        \"tags\": [\n"
-                + "            \"tag10\"\n" + "        ],\n" + "        \"AITags\": [\n" + "            {\n"
-                + "                \"name\": \"Colorfulness\",\n" + "                \"confidence\": 96.19,\n"
-                + "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
-                + "                \"name\": \"Purple\",\n" + "                \"confidence\": 86.05,\n"
-                + "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
-                + "                \"name\": \"Violet\",\n" + "                \"confidence\": 81.08,\n"
-                + "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
-                + "                \"name\": \"Rectangle\",\n" + "                \"confidence\": 80.99,\n"
-                + "                \"source\": \"google-auto-tagging\"\n" + "            }\n" + "        ],\n"
-                + "        \"versionInfo\": {\n" + "            \"id\": \"629f3de17eb0fe4053615450\",\n"
-                + "            \"name\": \"Version 1\"\n" + "        },\n" + "        \"embeddedMetadata\": {\n"
-                + "            \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n" + "            \"ImageWidth\": 1006,\n"
-                + "            \"ImageHeight\": 467,\n"
-                + "            \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" + "        },\n"
-                + "        \"customCoordinates\": null,\n" + "        \"customMetadata\": {},\n"
-                + "        \"isPrivateFile\": false,\n"
-                + "        \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n"
-                + "        \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n"
-                + "        \"fileType\": \"image\",\n" + "        \"filePath\": \"/w2_image.png\",\n"
-                + "        \"height\": 467,\n" + "        \"width\": 1006,\n" + "        \"size\": 47579,\n"
-                + "        \"hasAlpha\": true,\n" + "        \"mime\": \"image/png\"\n" + "    }\n" + "]"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.getFileVersions("629f3de17eb0fe4053615450");
-        RecordedRequest request = server.takeRequest();
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("[\n" + "    {\n" + "        \"type\": \"file\",\n"
+				+ "        \"name\": \"w2_image.png\",\n" + "        \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n"
+				+ "        \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n"
+				+ "        \"fileId\": \"629f3de17eb0fe4053615450\",\n" + "        \"tags\": [\n"
+				+ "            \"tag10\"\n" + "        ],\n" + "        \"AITags\": [\n" + "            {\n"
+				+ "                \"name\": \"Colorfulness\",\n" + "                \"confidence\": 96.19,\n"
+				+ "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
+				+ "                \"name\": \"Purple\",\n" + "                \"confidence\": 86.05,\n"
+				+ "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
+				+ "                \"name\": \"Violet\",\n" + "                \"confidence\": 81.08,\n"
+				+ "                \"source\": \"google-auto-tagging\"\n" + "            },\n" + "            {\n"
+				+ "                \"name\": \"Rectangle\",\n" + "                \"confidence\": 80.99,\n"
+				+ "                \"source\": \"google-auto-tagging\"\n" + "            }\n" + "        ],\n"
+				+ "        \"versionInfo\": {\n" + "            \"id\": \"629f3de17eb0fe4053615450\",\n"
+				+ "            \"name\": \"Version 1\"\n" + "        },\n" + "        \"embeddedMetadata\": {\n"
+				+ "            \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n" + "            \"ImageWidth\": 1006,\n"
+				+ "            \"ImageHeight\": 467,\n"
+				+ "            \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" + "        },\n"
+				+ "        \"customCoordinates\": null,\n" + "        \"customMetadata\": {},\n"
+				+ "        \"isPrivateFile\": false,\n"
+				+ "        \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n"
+				+ "        \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n"
+				+ "        \"fileType\": \"image\",\n" + "        \"filePath\": \"/w2_image.png\",\n"
+				+ "        \"height\": 467,\n" + "        \"width\": 1006,\n" + "        \"size\": 47579,\n"
+				+ "        \"hasAlpha\": true,\n" + "        \"mime\": \"image/png\"\n" + "    }\n" + "]"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileVersions("629f3de17eb0fe4053615450");
+		RecordedRequest request = server.takeRequest();
 
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions"),
-                request.getRequestUrl().toString());
-    }
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions"),
+				request.getRequestUrl().toString());
+	}
 
-    @Test(expected = NotFoundException.class)
-    public void getFileVersionDetails_404_Expected()
-            throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test(expected = NotFoundException.class)
+	public void getFileVersionDetails_404_Expected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404)
-                .setBody("{\n" + "    \"message\": \"The requested asset does not exist.\",\n"
-                        + "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
-        server.takeRequest();
-    }
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(404)
+				.setBody("{\n" + "    \"message\": \"The requested asset does not exist.\",\n"
+						+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
+		server.takeRequest();
+	}
 
-    @Test
-    public void getFileVersionDetails_successExpected()
-            throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test
+	public void getFileVersionDetails_successExpected()
+			throws InterruptedException, IOException, NotFoundException, BadRequestException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
-                + "    \"name\": \"w2_image.png\",\n" + "    \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n"
-                + "    \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n"
-                + "    \"fileId\": \"629f3de17eb0fe4053615450\",\n" + "    \"tags\": [\n" + "        \"tag10\"\n"
-                + "    ],\n" + "    \"AITags\": [\n" + "        {\n" + "            \"name\": \"Colorfulness\",\n"
-                + "            \"confidence\": 96.19,\n" + "            \"source\": \"google-auto-tagging\"\n"
-                + "        },\n" + "        {\n" + "            \"name\": \"Purple\",\n"
-                + "            \"confidence\": 86.05,\n" + "            \"source\": \"google-auto-tagging\"\n"
-                + "        },\n" + "        {\n" + "            \"name\": \"Violet\",\n"
-                + "            \"confidence\": 81.08,\n" + "            \"source\": \"google-auto-tagging\"\n"
-                + "        },\n" + "        {\n" + "            \"name\": \"Rectangle\",\n"
-                + "            \"confidence\": 80.99,\n" + "            \"source\": \"google-auto-tagging\"\n"
-                + "        }\n" + "    ],\n" + "    \"versionInfo\": {\n"
-                + "        \"id\": \"629f3de17eb0fe4053615450\",\n" + "        \"name\": \"Version 1\"\n" + "    },\n"
-                + "    \"embeddedMetadata\": {\n" + "        \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n"
-                + "        \"ImageWidth\": 1006,\n" + "        \"ImageHeight\": 467,\n"
-                + "        \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" + "    },\n"
-                + "    \"customCoordinates\": null,\n" + "    \"customMetadata\": {},\n"
-                + "    \"isPrivateFile\": false,\n"
-                + "    \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n"
-                + "    \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n"
-                + "    \"fileType\": \"image\",\n" + "    \"filePath\": \"/w2_image.png\",\n" + "    \"height\": 467,\n"
-                + "    \"width\": 1006,\n" + "    \"size\": 47579,\n" + "    \"hasAlpha\": true,\n"
-                + "    \"mime\": \"image/png\"\n" + "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
-        RecordedRequest request = server.takeRequest();
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
+				+ "    \"name\": \"w2_image.png\",\n" + "    \"createdAt\": \"2022-06-07T12:00:33.825Z\",\n"
+				+ "    \"updatedAt\": \"2022-06-07T12:00:33.828Z\",\n"
+				+ "    \"fileId\": \"629f3de17eb0fe4053615450\",\n" + "    \"tags\": [\n" + "        \"tag10\"\n"
+				+ "    ],\n" + "    \"AITags\": [\n" + "        {\n" + "            \"name\": \"Colorfulness\",\n"
+				+ "            \"confidence\": 96.19,\n" + "            \"source\": \"google-auto-tagging\"\n"
+				+ "        },\n" + "        {\n" + "            \"name\": \"Purple\",\n"
+				+ "            \"confidence\": 86.05,\n" + "            \"source\": \"google-auto-tagging\"\n"
+				+ "        },\n" + "        {\n" + "            \"name\": \"Violet\",\n"
+				+ "            \"confidence\": 81.08,\n" + "            \"source\": \"google-auto-tagging\"\n"
+				+ "        },\n" + "        {\n" + "            \"name\": \"Rectangle\",\n"
+				+ "            \"confidence\": 80.99,\n" + "            \"source\": \"google-auto-tagging\"\n"
+				+ "        }\n" + "    ],\n" + "    \"versionInfo\": {\n"
+				+ "        \"id\": \"629f3de17eb0fe4053615450\",\n" + "        \"name\": \"Version 1\"\n" + "    },\n"
+				+ "    \"embeddedMetadata\": {\n" + "        \"DateCreated\": \"2022-05-26T06:05:18.087Z\",\n"
+				+ "        \"ImageWidth\": 1006,\n" + "        \"ImageHeight\": 467,\n"
+				+ "        \"DateTimeCreated\": \"2022-05-26T06:05:18.088Z\"\n" + "    },\n"
+				+ "    \"customCoordinates\": null,\n" + "    \"customMetadata\": {},\n"
+				+ "    \"isPrivateFile\": false,\n"
+				+ "    \"url\": \"https://ik.imagekit.io/xyxt2lnil/w2_image.png\",\n"
+				+ "    \"thumbnail\": \"https://ik.imagekit.io/xyxt2lnil/tr:n-ik_ml_thumbnail/w2_image.png\",\n"
+				+ "    \"fileType\": \"image\",\n" + "    \"filePath\": \"/w2_image.png\",\n" + "    \"height\": 467,\n"
+				+ "    \"width\": 1006,\n" + "    \"size\": 47579,\n" + "    \"hasAlpha\": true,\n"
+				+ "    \"mime\": \"image/png\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.getFileVersionDetails("629f3de17eb0fe4053615450", "629f3de17eb0fe4053615450");
+		RecordedRequest request = server.takeRequest();
 
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1",
-                request.getRequestLine());
-        assertEquals(
-                RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),
-                request.getRequestUrl().toString());
-    }
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("GET /v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450 HTTP/1.1",
+				request.getRequestLine());
+		assertEquals(
+				RestClient.API_BASE_URL.concat("v1/files/629f3de17eb0fe4053615450/versions/629f3de17eb0fe4053615450"),
+				request.getRequestUrl().toString());
+	}
 
-    @Test(expected = BadRequestException.class)
-    public void deleteFileVersion_400_SuccessWith()
-            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test(expected = BadRequestException.class)
+	public void deleteFileVersion_400_SuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
-        deleteFileVersionRequest.setVersionId("id");
+		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+		deleteFileVersionRequest.setVersionId("id");
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(400)
-                .setBody("{\n" + "    \"message\": \"Your request contains invalid versionId parameter.\",\n"
-                        + "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.deleteFileVersion(deleteFileVersionRequest);
-        server.takeRequest();
-    }
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(400)
+				.setBody("{\n" + "    \"message\": \"Your request contains invalid versionId parameter.\",\n"
+						+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.deleteFileVersion(deleteFileVersionRequest);
+		server.takeRequest();
+	}
 
-    @Test(expected = NotFoundException.class)
-    public void deleteFileVersion_404_SuccessWith()
-            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test(expected = NotFoundException.class)
+	public void deleteFileVersion_404_SuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
-        deleteFileVersionRequest.setVersionId("62a9c403d89eedb81721102b");
+		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+		deleteFileVersionRequest.setVersionId("62a9c403d89eedb81721102b");
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404)
-                .setBody("{\n" + "    \"message\": \"The requested file version does not exist.\",\n"
-                        + "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.deleteFileVersion(deleteFileVersionRequest);
-        server.takeRequest();
-    }
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(404)
+				.setBody("{\n" + "    \"message\": \"The requested file version does not exist.\",\n"
+						+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.deleteFileVersion(deleteFileVersionRequest);
+		server.takeRequest();
+	}
 
-    @Test
-    public void deleteFileVersion_expectedSuccessWith()
-            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test
+	public void deleteFileVersion_expectedSuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-        deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
-        deleteFileVersionRequest.setVersionId("629d91878482bae8bed177f2");
+		DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+		deleteFileVersionRequest.setFileId("629d90768482ba272ed17628");
+		deleteFileVersionRequest.setVersionId("629d91878482bae8bed177f2");
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(204).setBody(""));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.deleteFileVersion(deleteFileVersionRequest);
-        RecordedRequest request = server.takeRequest();
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(204).setBody(""));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.deleteFileVersion(deleteFileVersionRequest);
+		RecordedRequest request = server.takeRequest();
 
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals("", utf8RequestBody);
-        assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("DELETE /v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2 HTTP/1.1",
-                request.getRequestLine());
-        assertEquals(
-                RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2"),
-                request.getRequestUrl().toString());
-    }
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json", request.getHeader("Content-Type"));
+		assertEquals("DELETE /v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2 HTTP/1.1",
+				request.getRequestLine());
+		assertEquals(
+				RestClient.API_BASE_URL.concat("v1/files/629d90768482ba272ed17628/versions/629d91878482bae8bed177f2"),
+				request.getRequestUrl().toString());
+	}
 
-    @Test
-    public void restoreFileVersion_expectedSuccessWith()
-            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test
+	public void restoreFileVersion_expectedSuccessWith()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("{\n" +
-                "    \"type\": \"file\",\n" +
-                "    \"name\": \"new_car.jpg\",\n" +
-                "    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n" +
-                "    \"updatedAt\": \"2022-06-27T12:11:11.254Z\",\n" +
-                "    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" +
-                "    \"tags\": [\n" +
-                "        \"tagg\",\n" +
-                "        \"tagg1\"\n" +
-                "    ],\n" +
-                "    \"AITags\": null,\n" +
-                "    \"versionInfo\": {\n" +
-                "        \"id\": \"62b97749f63122840530fda9\",\n" +
-                "        \"name\": \"Version 1\"\n" +
-                "    },\n" +
-                "    \"embeddedMetadata\": {\n" +
-                "        \"XResolution\": 250,\n" +
-                "        \"YResolution\": 250,\n" +
-                "        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n" +
-                "        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" +
-                "    },\n" +
-                "    \"customCoordinates\": \"10,10,20,20\",\n" +
-                "    \"customMetadata\": {\n" +
-                "        \"test100\": 10\n" +
-                "    },\n" +
-                "    \"isPrivateFile\": false,\n" +
-                "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n" +
-                "    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n" +
-                "    \"fileType\": \"image\",\n" +
-                "    \"filePath\": \"/new_car.jpg\",\n" +
-                "    \"height\": 354,\n" +
-                "    \"width\": 236,\n" +
-                "    \"size\": 23023,\n" +
-                "    \"hasAlpha\": false,\n" +
-                "    \"mime\": \"image/jpeg\"\n" +
-                "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
-        RecordedRequest request = server.takeRequest();
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
+				+ "    \"name\": \"new_car.jpg\",\n" + "    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n"
+				+ "    \"updatedAt\": \"2022-06-27T12:11:11.254Z\",\n"
+				+ "    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" + "    \"tags\": [\n" + "        \"tagg\",\n"
+				+ "        \"tagg1\"\n" + "    ],\n" + "    \"AITags\": null,\n" + "    \"versionInfo\": {\n"
+				+ "        \"id\": \"62b97749f63122840530fda9\",\n" + "        \"name\": \"Version 1\"\n" + "    },\n"
+				+ "    \"embeddedMetadata\": {\n" + "        \"XResolution\": 250,\n"
+				+ "        \"YResolution\": 250,\n" + "        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n"
+				+ "        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" + "    },\n"
+				+ "    \"customCoordinates\": \"10,10,20,20\",\n" + "    \"customMetadata\": {\n"
+				+ "        \"test100\": 10\n" + "    },\n" + "    \"isPrivateFile\": false,\n"
+				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n"
+				+ "    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n"
+				+ "    \"fileType\": \"image\",\n" + "    \"filePath\": \"/new_car.jpg\",\n" + "    \"height\": 354,\n"
+				+ "    \"width\": 236,\n" + "    \"size\": 23023,\n" + "    \"hasAlpha\": false,\n"
+				+ "    \"mime\": \"image/jpeg\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
+		RecordedRequest request = server.takeRequest();
 
-        String utf8RequestBody = request.getBody().readUtf8();
-        assertEquals("", utf8RequestBody);
-        assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
-        assertEquals("PUT /v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore HTTP/1.1",
-                request.getRequestLine());
-        assertEquals(
-                RestClient.API_BASE_URL.concat("v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore"),
-                request.getRequestUrl().toString());
-    }
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals("", utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("PUT /v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore HTTP/1.1",
+				request.getRequestLine());
+		assertEquals(
+				RestClient.API_BASE_URL
+						.concat("v1/files/62a9c3ccd875ec6fd658c854/versions/62b97749f63122840530fda9/restore"),
+				request.getRequestUrl().toString());
+	}
 
-    @Test(expected = NotFoundException.class)
-    public void restoreFileVersion_expected_404()
-            throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
-            UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+	@Test(expected = NotFoundException.class)
+	public void restoreFileVersion_expected_404()
+			throws IOException, InterruptedException, BadRequestException, NotFoundException, InternalServerException,
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404).setBody("{\n" +
-                "    \"message\": \"The requested file version does not exist.\",\n" +
-                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
-                "}"));
-        server.start();
-        RestClient.API_BASE_URL = server.url("/").toString();
-        SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
-        RecordedRequest request = server.takeRequest();
-        request.getBody().readUtf8();
-    }
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setResponseCode(404)
+				.setBody("{\n" + "    \"message\": \"The requested file version does not exist.\",\n"
+						+ "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" + "}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+		SUT.restoreFileVersion("62a9c3ccd875ec6fd658c854", "62b97749f63122840530fda9");
+		RecordedRequest request = server.takeRequest();
+		request.getBody().readUtf8();
+	}
 }
