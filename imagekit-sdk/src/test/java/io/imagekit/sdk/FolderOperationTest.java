@@ -122,7 +122,7 @@ public class FolderOperationTest {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/");
         copyFolderRequest.setDestinationPath("/test");
-        copyFolderRequest.setIncludeVersions(false);
+        copyFolderRequest.setIncludeFileVersions(false);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(400)
@@ -145,7 +145,7 @@ public class FolderOperationTest {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/testFolder");
         copyFolderRequest.setDestinationPath("/test");
-        copyFolderRequest.setIncludeVersions(true);
+        copyFolderRequest.setIncludeFileVersions(true);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404)
@@ -166,7 +166,7 @@ public class FolderOperationTest {
         CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
         copyFolderRequest.setSourceFolderPath("/testFolder");
         copyFolderRequest.setDestinationPath("/Gallery");
-        copyFolderRequest.setIncludeVersions(true);
+        copyFolderRequest.setIncludeFileVersions(true);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setBody("{\n" + "    \"jobId\": \"629f43017eb0feff5c61f83c\"\n" + "}"));
@@ -175,7 +175,7 @@ public class FolderOperationTest {
         SUT.copyFolder(copyFolderRequest);
         RecordedRequest request = server.takeRequest();
 
-        String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/Gallery\",\"includeVersions\":true}";
+        String copyFolderRequestJson = "{\"sourceFolderPath\":\"/testFolder\",\"destinationPath\":\"/Gallery\",\"includeFileVersions\":true}";
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(copyFolderRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));

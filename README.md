@@ -639,7 +639,7 @@ The argument to the `copyFile()` method accepts the sourceFilePath and destinati
 CopyFileRequest copyFileRequest = new CopyFileRequest();
 copyFileRequest.setSourceFilePath("/w2_image.png");
 copyFileRequest.setDestinationPath("/Gallery/");
-copyFileRequest.setIncludeVersions(true);
+copyFileRequest.setIncludeFileVersions(true);
 ResultNoContent resultNoContent = ImageKit.getInstance().copyFile(copyFileRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultNoContent);
@@ -745,7 +745,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 It Copies the Folder as per the
 [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
-The argument to the `copyFolder()` method accepts the sourceFolderPath, destinationPath and includeVersions for which the folder has to be copied.
+The argument to the `copyFolder()` method accepts the sourceFolderPath, destinationPath and includeFileVersions for which the folder has to be copied.
 
 ```java
 CopyFolderRequest copyFolderRequest = new CopyFolderRequest();

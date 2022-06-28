@@ -383,7 +383,7 @@ public final class ImageKit {
 	/**
 	 *
 	 * @param copyFolderRequest that contains sourceFolderPath, destinationPath,
-	 *                          includeVersions
+	 *                          includeFileVersions
 	 * @return Result class
 	 */
 	public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest)

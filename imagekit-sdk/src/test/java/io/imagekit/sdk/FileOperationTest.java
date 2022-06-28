@@ -41,7 +41,7 @@ public class FileOperationTest {
         CopyFileRequest copyFileRequest = new CopyFileRequest();
         copyFileRequest.setSourceFilePath("/sample_image.jpg");
         copyFileRequest.setDestinationPath("/Gallery/");
-        copyFileRequest.setIncludeVersions(true);
+        copyFileRequest.setIncludeFileVersions(true);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(404)
@@ -62,7 +62,7 @@ public class FileOperationTest {
         CopyFileRequest copyFileRequest = new CopyFileRequest();
         copyFileRequest.setSourceFilePath("/car_false.jpeg");
         copyFileRequest.setDestinationPath("/Gallery/");
-        copyFileRequest.setIncludeVersions(true);
+        copyFileRequest.setIncludeFileVersions(true);
 
         MockWebServer server = new MockWebServer();
         server.enqueue(new MockResponse().setResponseCode(204).setBody(""));
@@ -71,7 +71,7 @@ public class FileOperationTest {
         SUT.copyFile(copyFileRequest);
         RecordedRequest request = server.takeRequest();
 
-        String copyFileRequestJson = "{\"sourceFilePath\":\"/car_false.jpeg\",\"destinationPath\":\"/Gallery/\",\"includeVersions\":true}";
+        String copyFileRequestJson = "{\"sourceFilePath\":\"/car_false.jpeg\",\"destinationPath\":\"/Gallery/\",\"includeFileVersions\":true}";
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals(copyFileRequestJson, utf8RequestBody);
         assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));

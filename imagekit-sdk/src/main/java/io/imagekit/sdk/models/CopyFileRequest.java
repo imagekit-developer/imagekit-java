@@ -3,7 +3,7 @@ package io.imagekit.sdk.models;
 public class CopyFileRequest {
 	public String sourceFilePath;
 	public String destinationPath;
-	public Boolean includeVersions;
+	public Boolean includeFileVersions;
 
 	public String getSourceFilePath() {
 		return sourceFilePath;
@@ -21,17 +21,17 @@ public class CopyFileRequest {
 		this.destinationPath = destinationPath;
 	}
 
-	public Boolean getIncludeVersions() {
-		return includeVersions;
+	public Boolean getIncludeFileVersions() {
+		return includeFileVersions;
 	}
 
-	public void setIncludeVersions(Boolean includeVersions) {
-		this.includeVersions = includeVersions;
+	public void setIncludeFileVersions(Boolean includeFileVersions) {
+		this.includeFileVersions = includeFileVersions;
 	}
 
 	@Override
 	public String toString() {
 		return "CopyFileRequest{" + "sourceFilePath=" + sourceFilePath + ", destinationPath=" + destinationPath
-				+ ", includeVersions=" + includeVersions + '}';
+				+ ", includeFileVersions=" + includeFileVersions + '}';
 	}
 }
