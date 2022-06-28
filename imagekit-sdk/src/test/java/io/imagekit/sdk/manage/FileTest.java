@@ -118,38 +118,93 @@ public class FileTest {
             UnauthorizedException, BadRequestException, UnknownException, IOException {
 
         MockWebServer server = new MockWebServer();
-        String responseJson = "[\n" + "    {\n" + "        \"type\": \"file\",\n"
-                + "        \"name\": \"default-image.jpg\",\n"
-                + "        \"createdAt\": \"2022-06-11T07:26:19.294Z\",\n"
-                + "        \"updatedAt\": \"2022-06-11T07:26:19.600Z\",\n"
-                + "        \"fileId\": \"62a4439bce686814dfcce65c\",\n" + "        \"tags\": null,\n"
-                + "        \"AITags\": null,\n" + "        \"versionInfo\": {\n"
-                + "            \"id\": \"62a4439bce686814dfcce65c\",\n" + "            \"name\": \"Version 1\"\n"
-                + "        },\n" + "        \"embeddedMetadata\": {\n"
-                + "            \"DateCreated\": \"2022-06-11T07:26:19.599Z\",\n"
-                + "            \"DateTimeCreated\": \"2022-06-11T07:26:19.600Z\"\n" + "        },\n"
-                + "        \"customCoordinates\": null,\n" + "        \"customMetadata\": {},\n"
-                + "        \"isPrivateFile\": false,\n"
-                + "        \"url\": \"https://ik.imagekit.io/zv3rkhsym/default-image.jpg\",\n"
-                + "        \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/default-image.jpg\",\n"
-                + "        \"fileType\": \"image\",\n" + "        \"filePath\": \"/default-image.jpg\",\n"
-                + "        \"height\": 1000,\n" + "        \"width\": 1000,\n" + "        \"size\": 147022,\n"
-                + "        \"hasAlpha\": false,\n" + "        \"mime\": \"image/jpeg\"\n" + "    }\n" + "]";
+        String responseJson = "[\n" +
+                "    {\n" +
+                "        \"type\": \"file\",\n" +
+                "        \"name\": \"default-image.jpg\",\n" +
+                "        \"createdAt\": \"2022-06-11T07:26:19.294Z\",\n" +
+                "        \"updatedAt\": \"2022-06-11T07:26:19.600Z\",\n" +
+                "        \"fileId\": \"62a4439bce686814dfcce65c\",\n" +
+                "        \"tags\": null,\n" +
+                "        \"AITags\": null,\n" +
+                "        \"versionInfo\": {\n" +
+                "            \"id\": \"62a4439bce686814dfcce65c\",\n" +
+                "            \"name\": \"Version 1\"\n" +
+                "        },\n" +
+                "        \"embeddedMetadata\": {\n" +
+                "            \"DateCreated\": \"2022-06-11T07:26:19.599Z\",\n" +
+                "            \"DateTimeCreated\": \"2022-06-11T07:26:19.600Z\"\n" +
+                "        },\n" +
+                "        \"customCoordinates\": null,\n" +
+                "        \"customMetadata\": {},\n" +
+                "        \"isPrivateFile\": false,\n" +
+                "        \"url\": \"https://ik.imagekit.io/zv3rkhsym/default-image.jpg\",\n" +
+                "        \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/default-image.jpg\",\n" +
+                "        \"fileType\": \"image\",\n" +
+                "        \"filePath\": \"/default-image.jpg\",\n" +
+                "        \"height\": 1000,\n" +
+                "        \"width\": 1000,\n" +
+                "        \"size\": 147022,\n" +
+                "        \"hasAlpha\": false,\n" +
+                "        \"mime\": \"image/jpeg\"\n" +
+                "    }\n" +
+                "]";
         server.enqueue(new MockResponse().setBody(responseJson));
         server.start();
         RestClient.API_BASE_URL = server.url("/").toString();
         Map<String, String> options = new HashMap<>();
+        List<String> tags = new ArrayList<>();
+        tags.add("Software");
+        tags.add("Developer");
+        tags.add("Engineer");
         options.put("skip", "" + 0);
         options.put("limit", "" + 1);
+        options.put("type", "file");
+        options.put("sort", "ASC_CREATED");
+        options.put("path", "/");
+        options.put("fileType", "all");
+        options.put("searchQuery","createdAt >= '2d' OR size < '2mb' OR format='png'");
+        options.put("tags", String.valueOf(tags));
         SUT.getFileList(options);
 
         RecordedRequest request = server.takeRequest();
         String utf8RequestBody = request.getBody().readUtf8();
         assertEquals("", utf8RequestBody);
         assertEquals("application/json", request.getHeader("Content-Type"));
-        assertEquals("GET /v1/files?limit=1&limit=0 HTTP/1.1", request.getRequestLine());
-        assertEquals(RestClient.API_BASE_URL.concat("v1/files?limit=1&limit=0"), request.getRequestUrl().toString());
+        assertEquals("GET /v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer] HTTP/1.1", request.getRequestLine());
+        assertEquals(RestClient.API_BASE_URL.concat("v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer]"), request.getRequestUrl().toString());
 
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void imageKit_getFileList_400_expected()
+            throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException,
+            UnauthorizedException, BadRequestException, UnknownException, IOException {
+
+        MockWebServer server = new MockWebServer();
+        String responseJson = "{\n" +
+                "    \"message\": \"Invalid search query - createdAt field must have a valid date value. Make sure the value is enclosed within quotes. Please refer to the documentation for syntax specification.\",\n" +
+                "    \"help\": \"For support kindly contact us at support@imagekit.io .\"\n" +
+                "}";
+        server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
+        server.start();
+        RestClient.API_BASE_URL = server.url("/").toString();
+        Map<String, String> options = new HashMap<>();
+        List<String> tags = new ArrayList<>();
+        tags.add("Software");
+        tags.add("Developer");
+        tags.add("Engineer");
+        options.put("skip", "" + 0);
+        options.put("limit", "" + 1);
+        options.put("type", "file");
+        options.put("sort", "ASC_CREATED");
+        options.put("path", "/");
+        options.put("fileType", "all");
+        options.put("searchQuery","createdAt >= '2days' OR size < '2mb' OR format='png'");
+        options.put("tags", String.valueOf(tags));
+        SUT.getFileList(options);
+
+        server.takeRequest();
     }
 
     @Test(expected = BadRequestException.class)

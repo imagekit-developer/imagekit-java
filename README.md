@@ -421,7 +421,20 @@ in the [documentation here](https://docs.imagekit.io/api-reference/media-api/lis
 correct values to get the results.
 
 ```java
-ResultList resultList=ImageKit.getInstance().getFileList(10,10);
+Map<String, String> options = new HashMap<>();
+List<String> tags = new ArrayList<>();
+tags.add("Software");
+tags.add("Developer");
+tags.add("Engineer");
+options.put("skip", "" + 0);
+options.put("limit", "" + 1);
+options.put("type", "file");
+options.put("sort", "ASC_CREATED");
+options.put("path", "/");
+options.put("fileType", "all");
+options.put("searchQuery","createdAt >= '2d' OR size < '2mb' OR format='png'");
+options.put("tags", String.valueOf(tags));
+ResultList resultList = ImageKit.getInstance().getFileList(options);
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultList);
 System.out.println("Raw Response:");
