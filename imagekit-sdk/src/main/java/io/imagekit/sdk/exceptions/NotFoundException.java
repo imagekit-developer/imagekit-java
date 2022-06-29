@@ -16,6 +16,14 @@ public class NotFoundException extends Exception {
 		this.responseMetaData = responseMetaData;
 	}
 
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
+
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
+
 	@Override
 	public String toString() {
 		return "NotFoundException{" + "message='" + message + '\'' + ", help='" + help + '\'' + ", responseMetaData="

@@ -4,7 +4,7 @@
 [![Release](https://jitpack.io/v/com.github.imagekit-developer/imagekit-java.svg)](https://jitpack.io/#com.github.imagekit-developer/imagekit-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
-
+ 
 Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file
 operations.
 
@@ -22,6 +22,7 @@ Table of contents -
  * [File upload](#file-upload)
  * [File management](#file-management)
  * [Utility functions](#utility-functions)
+ * [Handling errors](#handling-errors)
  * [Support](#support)
  * [Links](#links)
  
@@ -1043,7 +1044,45 @@ cd imagekit-java
 # You will find jar in "imagekit-sdk/build/libs/" directory.
 ```
 
-## Support
+## Handling errors
+Catch and respond to invalid data, internal problems, and more.
+
+Imagekit Java SDK raise exceptions for many reasons, such as not found, invalid parameters, authentication errors, and internal server error. We recommend writing code that gracefully handles all possible API exceptions.
+
+#### Example:
+
+```java
+try {
+  // Use ImageKit's SDK to make requests...
+} catch (BadRequestException e) {
+  // Missing or Invalid parameters were supplied to Imagekit.io's API
+  System.out.println("Status is: " + e.getResponseMetaData().getHttpStatusCode());
+  System.out.println("Message is: " + e.getMessage());
+  System.out.println("Headers are: " + e.getResponseMetaData().getHeaders());
+  System.out.println("Raw body is: " + e.getResponseMetaData().getRaw());
+  System.out.println("Mapped body is: " + e.getResponseMetaData().getMap());
+} catch (UnauthorizedException e) {
+  // No valid API key was provided.
+} catch (ForbiddenException e) {
+  // Can be for the following reasons: 
+  // ImageKit could not authenticate your account with the keys provided.
+  // An expired key (public or private) was used with the request.
+  // The account is disabled.
+  // If you are using the upload API, the total storage limit (or upload limit) is exceeded.
+} catch (TooManyRequestsException e) {
+  // Too many requests made to the API too quickly
+} catch (InternalServerException e) {
+  // Something went wrong with ImageKit.io API.
+} catch (PartialSuccessException e) {
+  // Error cases on partial success.
+} catch (NotFoundException e) {
+  // If any of the field or parameter is not found in data 
+} catch (UnknownException e) {
+  // Something else happened, which can be unrelated to imagekit, reason will be indicated in the message field
+}
+```
+
+## Supporttim
 For any feedback or to report any issues or general implementation support, please reach out to [support@imagekit.io]()
 
 
