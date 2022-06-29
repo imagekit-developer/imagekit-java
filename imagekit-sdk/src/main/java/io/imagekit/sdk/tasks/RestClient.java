@@ -344,7 +344,7 @@ public class RestClient {
 		return result;
 	}
 
-	public ResultTags manageTags(TagsRequest tagsRequest, String action)
+	private ResultTags manageTags(TagsRequest tagsRequest, String action)
 			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException,
 			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		ResultTags resultTags = new ResultTags();
