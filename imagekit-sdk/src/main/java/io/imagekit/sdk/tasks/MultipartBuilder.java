@@ -54,16 +54,16 @@ public class MultipartBuilder {
 		if (null != fileCreateRequest.responseFields) {
 			builder.addFormDataPart("responseFields", Utils.listToString(fileCreateRequest.responseFields));
 		}
-		if (fileCreateRequest.overwriteFile != null && !fileCreateRequest.overwriteFile) {
+		if (fileCreateRequest.overwriteFile != null && fileCreateRequest.overwriteFile) {
 			builder.addFormDataPart("overwriteFile", "true");
 		}
-		if (fileCreateRequest.overwriteAITags != null && !fileCreateRequest.overwriteAITags) {
+		if (fileCreateRequest.overwriteAITags != null && fileCreateRequest.overwriteAITags) {
 			builder.addFormDataPart("overwriteAITags", "true");
 		}
-		if (fileCreateRequest.overwriteTags != null && !fileCreateRequest.overwriteTags) {
+		if (fileCreateRequest.overwriteTags != null && fileCreateRequest.overwriteTags) {
 			builder.addFormDataPart("overwriteTags", "true");
 		}
-		if (fileCreateRequest.overwriteCustomMetadata != null && !fileCreateRequest.overwriteCustomMetadata) {
+		if (fileCreateRequest.overwriteCustomMetadata != null && fileCreateRequest.overwriteCustomMetadata) {
 			builder.addFormDataPart("overwriteCustomMetadata", "true");
 		}
 		if (null != fileCreateRequest.extensions) {

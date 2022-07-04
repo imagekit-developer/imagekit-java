@@ -25,6 +25,7 @@ import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.DeleteFileVersionRequest;
 import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.GetFileListRequest;
 import io.imagekit.sdk.models.MoveFileRequest;
 import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.MetaData;
@@ -65,6 +66,7 @@ public class RestClient {
 
 		request = new Request.Builder().url(UPLOAD_BASE_URL.concat("api/v1/files/upload")).post(body)
 				.headers(Headers.of(headers)).build();
+
 
 		try {
 			Response response = client.newCall(request).execute();
@@ -112,16 +114,17 @@ public class RestClient {
 		return result;
 	}
 
-	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
+	public ResultList getFileList(GetFileListRequest getFileListRequest) throws ForbiddenException, TooManyRequestsException,
 			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
 		ResultList resultList = new ResultList();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
+//		ObjectMap objectMapper = new ObjectMapper();
+//		ModelMapp
 		QueryMaker queryMaker = new QueryMaker();
-
-		for (Map.Entry<String, String> entry : options.entrySet()) {
-			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
-		}
+//		for (Map.Entry<String, String> entry : ) {
+//			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
+//		}
 
 		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files?%s"), queryMaker.get());
 
@@ -300,7 +303,6 @@ public class RestClient {
 
 		try {
 			Response response = client.newCall(request).execute();
-			System.out.println("res:==> " + response.request().body());
 			String respBody = "";
 			if (response.code() == 200 || response.code() == 201) {
 				respBody = response.body().string();
@@ -344,7 +346,7 @@ public class RestClient {
 		return result;
 	}
 
-	private ResultTags manageTags(TagsRequest tagsRequest, String action)
+	public ResultTags manageTags(TagsRequest tagsRequest, String action)
 			throws NotFoundException, PartialSuccessException, BadRequestException, InternalServerException,
 			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
 		ResultTags resultTags = new ResultTags();

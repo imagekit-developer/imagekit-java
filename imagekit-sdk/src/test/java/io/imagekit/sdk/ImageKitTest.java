@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class ImageKitTest {
+	private ImageKit SUT;
 
 	@Test
 	public void imageKit_configurationTest() {

@@ -123,6 +123,48 @@ public class CustomMetaDataFieldTest {
 		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
 	}
 
+	@Test
+	public void createCustomMetaDataFields_successExpected_type_Textarea()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"name\": \"mockName\",\n" +
+				"    \"label\": \"mockLabel\",\n" +
+				"    \"schema\": {\n" +
+				"        \"isValueRequired\": true,\n" +
+				"        \"defaultValue\": \"default value of test\",\n" +
+				"        \"type\": \"Textarea\",\n" +
+				"        \"minLength\": 10,\n" +
+				"        \"maxLength\": 1000\n" +
+				"    }\n" +
+				"}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+
+		CustomMetaDataFieldSchemaObject mockCustomMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+		mockCustomMetaDataFieldSchemaObject.setValueRequired(true);
+		mockCustomMetaDataFieldSchemaObject.setDefaultValue("default value of test");
+		mockCustomMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Textarea);
+		mockCustomMetaDataFieldSchemaObject.setMinLength(10);
+		mockCustomMetaDataFieldSchemaObject.setMaxLength(100);
+
+		CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+		customMetaDataFieldCreateRequest.setName("mockName");
+		customMetaDataFieldCreateRequest.setLabel("mockLabel");
+		customMetaDataFieldCreateRequest.setSchema(mockCustomMetaDataFieldSchemaObject);
+
+		SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+		RecordedRequest request = server.takeRequest();
+
+		String customMetaDataFieldCreateRequestJson = "{\"name\":\"mockName\",\"label\":\"mockLabel\",\"schema\":{\"type\":\"Textarea\",\"defaultValue\":\"default value of test\",\"isValueRequired\":true,\"minLength\":10,\"maxLength\":100}}";
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
+	}
+
 	@Test(expected = NotFoundException.class)
 	public void deleteCustomMetaDataField_404_Expected()
 			throws IOException, InterruptedException, NotFoundException, UnknownException {

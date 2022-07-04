@@ -11,7 +11,7 @@ operations.
 ImageKit is a complete image optimization and transformation solution that comes with and
 [image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your
 existing infrastructure - storage like AWS s3, web servers, your CDN, and custom domain names, allowing you to deliver
-optimize images in minutes with minimal code changes.
+optimize images in minutes with minimal code changes
 
 Table of contents -
  * [Installation](#installation)
@@ -500,10 +500,37 @@ It updates the file properties as per the [API documentation here](https://docs.
 The argument to the `updateDetail()` method is the object of `FileUpdateRequest` class, and the constructor will take the file ID and then set the parameters to be updated.
 
 ```java
-String fileId="your-file-id";
-FileUpdateRequest fileUpdateRequest =new FileUpdateRequest(fileId);
-fileUpdateRequest.setTags(List.of("Software","Developer","Engineer"));
+List<String> tags = new ArrayList<>();
+tags.add("Software");
+tags.add("Developer");
+tags.add("Engineer");
+
+List<String> aiTags = new ArrayList<>();
+aiTags.add("Plant");
+FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("fileId");
+fileUpdateRequest.setTags(tags);
+fileUpdateRequest.setRemoveAITags(aiTags);
+fileUpdateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
+
+JsonObject optionsInnerObject = new JsonObject();
+optionsInnerObject.addProperty("add_shadow", true);
+optionsInnerObject.addProperty("bg_color", "yellow");
+JsonObject innerObject1 = new JsonObject();
+innerObject1.addProperty("name", "remove-bg");
+innerObject1.add("options", optionsInnerObject);
+JsonObject innerObject2 = new JsonObject();
+innerObject2.addProperty("name", "google-auto-tagging");
+innerObject2.addProperty("minConfidence", 15);
+innerObject2.addProperty("maxTags", 20);
+JsonArray jsonArray = new JsonArray();
+jsonArray.add(innerObject1);
+jsonArray.add(innerObject2);
+
+fileUpdateRequest.setExtensions(jsonArray);
 fileUpdateRequest.setCustomCoordinates("10,10,40,40");
+JsonObject jsonObjectCustomMetadata = new JsonObject();
+jsonObjectCustomMetadata.addProperty("test10", 11);
+fileUpdateRequest.setCustomMetadata(jsonObjectCustomMetadata);
 Result result=ImageKit.getInstance().updateFileDetail(fileUpdateRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(result);
@@ -524,7 +551,7 @@ fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
 tags.add("tag-to-add-1");
 tags.add("tag-to-add-2");
-ResultTags resultTags=ImageKit.getInstance().addTags(new TagsRequest(fileIds, tags), "addTags");
+ResultTags resultTags=ImageKit.getInstance().addTags(new TagsRequest(fileIds, tags));
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultTags);
 System.out.println("Raw Response:");
@@ -544,7 +571,7 @@ fileIds.add("FileId");
 List<String> tags = new ArrayList<>();
 tags.add("tag-to-remove-1");
 tags.add("tag-to-remove-2");
-ResultTags resultTags=ImageKit.getInstance().removeTags(new TagsRequest(fileIds, tags), "removeTags");
+ResultTags resultTags=ImageKit.getInstance().removeTags(new TagsRequest(fileIds, tags));
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultTags);
 System.out.println("Raw Response:");
@@ -861,6 +888,7 @@ The argument to the `createCustomMetaDataFields()` method is the object of `Cust
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
+schemaObject.setType("Number");
 schemaObject.setMinValue(10);
 schemaObject.setMaxValue(200);
 CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();

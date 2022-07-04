@@ -92,9 +92,9 @@ public class UploadTest {
 		jsonArray.add(innerObject2);
 		fileCreateRequest.setExtensions(jsonArray);
 		fileCreateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
+		fileCreateRequest.setOverwriteFile(true);
 		fileCreateRequest.setUseUniqueFileName(false);
 		fileCreateRequest.setPrivateFile(false);
-		fileCreateRequest.setOverwriteFile(true);
 		fileCreateRequest.setOverwriteAITags(false);
 		fileCreateRequest.setOverwriteTags(false);
 		fileCreateRequest.setOverwriteCustomMetadata(true);
@@ -103,56 +103,91 @@ public class UploadTest {
 		fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);
 
 		MockWebServer server = new MockWebServer();
-		server.enqueue(new MockResponse().setBody("{\n" + "    \"fileId\": \"62a465d245a84a0ef3852968\",\n"
-				+ "    \"name\": \"sample-cat-image_GG0_X8GOn.jpg\",\n" + "    \"size\": 23023,\n"
-				+ "    \"versionInfo\": {\n" + "        \"id\": \"62a465d245a84a0ef3852968\",\n"
-				+ "        \"name\": \"Version 1\"\n" + "    },\n"
-				+ "    \"filePath\": \"/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n"
-				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n"
-				+ "    \"fileType\": \"image\",\n" + "    \"height\": 354,\n" + "    \"width\": 236,\n"
-				+ "    \"thumbnailUrl\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/demo1/sample-cat-image_GG0_X8GOn.jpg\",\n"
-				+ "    \"AITags\": [\n" + "        {\n" + "            \"name\": \"Clothing\",\n"
-				+ "            \"confidence\": 98.77,\n" + "            \"source\": \"google-auto-tagging\"\n"
-				+ "        },\n" + "        {\n" + "            \"name\": \"Plant\",\n"
-				+ "            \"confidence\": 96.51,\n" + "            \"source\": \"google-auto-tagging\"\n"
-				+ "        },\n" + "        {\n" + "            \"name\": \"Smile\",\n"
-				+ "            \"confidence\": 95.31,\n" + "            \"source\": \"google-auto-tagging\"\n"
-				+ "        },\n" + "        {\n" + "            \"name\": \"Shoe\",\n"
-				+ "            \"confidence\": 95.2,\n" + "            \"source\": \"google-auto-tagging\"\n"
-				+ "        },\n" + "        {\n" + "            \"name\": \"Street light\",\n"
-				+ "            \"confidence\": 91.05,\n" + "            \"source\": \"google-auto-tagging\"\n"
-				+ "        }\n" + "    ],\n" + "    \"extensionStatus\": {\n" + "        \"remove-bg\": \"pending\",\n"
-				+ "        \"google-auto-tagging\": \"success\"\n" + "    }\n" + "}"));
+		server.enqueue(new MockResponse().setBody("{\r\n" + "    \"fileId\": \"62a465d245a84a0ef3852968\",\r\n"
+				+ "    \"name\": \"sample-cat-image_GG0_X8GOn.jpg\",\r\n" + "    \"size\": 23023,\r\n"
+				+ "    \"versionInfo\": {\r\n" + "        \"id\": \"62a465d245a84a0ef3852968\",\r\n"
+				+ "        \"name\": \"Version 1\"\r\n" + "    },\r\n"
+				+ "    \"filePath\": \"/demo1/sample-cat-image_GG0_X8GOn.jpg\",\r\n"
+				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/demo1/sample-cat-image_GG0_X8GOn.jpg\",\r\n"
+				+ "    \"fileType\": \"image\",\r\n" + "    \"height\": 354,\r\n" + "    \"width\": 236,\r\n"
+				+ "    \"thumbnailUrl\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/demo1/sample-cat-image_GG0_X8GOn.jpg\",\r\n"
+				+ "    \"AITags\": [\r\n" + "        {\r\n" + "            \"name\": \"Clothing\",\r\n"
+				+ "            \"confidence\": 98.77,\r\n" + "            \"source\": \"google-auto-tagging\"\r\n"
+				+ "        },\r\n" + "        {\r\n" + "            \"name\": \"Plant\",\r\n"
+				+ "            \"confidence\": 96.51,\r\n" + "            \"source\": \"google-auto-tagging\"\r\n"
+				+ "        },\r\n" + "        {\r\n" + "            \"name\": \"Smile\",\r\n"
+				+ "            \"confidence\": 95.31,\r\n" + "            \"source\": \"google-auto-tagging\"\r\n"
+				+ "        },\r\n" + "        {\r\n" + "            \"name\": \"Shoe\",\r\n"
+				+ "            \"confidence\": 95.2,\r\n" + "            \"source\": \"google-auto-tagging\"\r\n"
+				+ "        },\r\n" + "        {\r\n" + "            \"name\": \"Street light\",\r\n"
+				+ "            \"confidence\": 91.05,\r\n" + "            \"source\": \"google-auto-tagging\"\r\n"
+				+ "        }\r\n" + "    ],\r\n" + "    \"extensionStatus\": {\r\n" + "        \"remove-bg\": \"pending\",\r\n"
+				+ "        \"google-auto-tagging\": \"success\"\r\n" + "    }\r\n" + "}"));
 		server.start();
 		RestClient.UPLOAD_BASE_URL = server.url("/").toString();
 		SUT.upload(fileCreateRequest);
 		RecordedRequest request = server.takeRequest();
-		String json = "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"file\"\r\n"
-				+ "Content-Length: 53\r\n" + "\r\n" + "https://homepages.cae.wisc.edu/~ece533/images/cat.png\r\n"
-				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"fileName\"\r\n"
-				+ "Content-Length: 20\r\n" + "\r\n" + "sample-cat-image.png\r\n"
-				+ "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"useUniqueFileName\"\r\n" + "Content-Length: 5\r\n" + "\r\n"
-				+ "false\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"tags\"\r\n" + "Content-Length: 27\r\n" + "\r\n"
-				+ "Software,Developer,Engineer\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"folder\"\r\n" + "Content-Length: 5\r\n" + "\r\n" + "demo1\r\n"
-				+ "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"customCoordinates\"\r\n" + "Content-Length: 11\r\n" + "\r\n"
-				+ "10,10,20,20\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"responseFields\"\r\n" + "Content-Length: 32\r\n" + "\r\n"
-				+ "thumbnail,tags,customCoordinates\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"overwriteAITags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-				+ "true\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"overwriteTags\"\r\n" + "Content-Length: 4\r\n" + "\r\n"
-				+ "true\r\n" + "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"extensions\"\r\n" + "Content-Length: 114\r\n" + "\r\n"
-				+ "[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true}},{\"name\":\"google-auto-tagging\",\"minConfidence\":10,\"maxTags\":5}]\r\n"
-				+ "--randomBoundary-------------------\r\n" + "Content-Disposition: form-data; name=\"webhookUrl\"\r\n"
-				+ "Content-Length: 57\r\n" + "\r\n" + "https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e\r\n"
-				+ "--randomBoundary-------------------\r\n"
-				+ "Content-Disposition: form-data; name=\"customMetadata\"\r\n" + "Content-Length: 12\r\n" + "\r\n"
-				+ "{\"test1\":10}\r\n" + "--randomBoundary---------------------";
+		String json = "--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"file\"\r\n" +
+				"Content-Length: 53\r\n" +
+				"\r\n" +
+				"https://homepages.cae.wisc.edu/~ece533/images/cat.png\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"fileName\"\r\n" +
+				"Content-Length: 20\r\n" +
+				"\r\n" +
+				"sample-cat-image.png\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"useUniqueFileName\"\r\n" +
+				"Content-Length: 5\r\n" +
+				"\r\n" +
+				"false\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"tags\"\r\n" +
+				"Content-Length: 27\r\n" +
+				"\r\n" +
+				"Software,Developer,Engineer\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"folder\"\r\n" +
+				"Content-Length: 5\r\n" +
+				"\r\n" +
+				"demo1\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"customCoordinates\"\r\n" +
+				"Content-Length: 11\r\n" +
+				"\r\n" +
+				"10,10,20,20\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"responseFields\"\r\n" +
+				"Content-Length: 32\r\n" +
+				"\r\n" +
+				"thumbnail,tags,customCoordinates\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"overwriteFile\"\r\n" +
+				"Content-Length: 4\r\n" +
+				"\r\n" +
+				"true\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"overwriteCustomMetadata\"\r\n" +
+				"Content-Length: 4\r\n" +
+				"\r\n" +
+				"true\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"extensions\"\r\n" +
+				"Content-Length: 114\r\n" +
+				"\r\n" +
+				"[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true}},{\"name\":\"google-auto-tagging\",\"minConfidence\":10,\"maxTags\":5}]\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"webhookUrl\"\r\n" +
+				"Content-Length: 57\r\n" +
+				"\r\n" +
+				"https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e\r\n" +
+				"--randomBoundary-------------------\r\n" +
+				"Content-Disposition: form-data; name=\"customMetadata\"\r\n" +
+				"Content-Length: 12\r\n" +
+				"\r\n" +
+				"{\"test1\":10}\r\n" +
+				"--randomBoundary---------------------";
 		assertEquals(json, request.getBody().readUtf8().trim());
 		assertEquals("POST /api/v1/files/upload HTTP/1.1", request.getRequestLine());
 		assertEquals(RestClient.UPLOAD_BASE_URL.concat("api/v1/files/upload"), request.getRequestUrl().toString());
@@ -204,8 +239,8 @@ public class UploadTest {
 		fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata);
 
 		MockWebServer server = new MockWebServer();
-		server.enqueue(new MockResponse().setResponseCode(400).setBody("{\n"
-				+ "    \"message\": \"A file with the same name already exists at the exact location. We could not overwrite it because both overwriteFile and useUniqueFileName are set to false.\"\n"
+		server.enqueue(new MockResponse().setResponseCode(400).setBody("{\r\n"
+				+ "    \"message\": \"A file with the same name already exists at the exact location. We could not overwrite it because both overwriteFile and useUniqueFileName are set to false.\"\r\n"
 				+ "}"));
 		server.start();
 		RestClient.UPLOAD_BASE_URL = server.url("/").toString();

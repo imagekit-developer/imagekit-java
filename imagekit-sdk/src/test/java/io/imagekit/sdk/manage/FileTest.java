@@ -1,5 +1,7 @@
 package io.imagekit.sdk.manage;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.ImageKitTest;
 import io.imagekit.sdk.exceptions.BadRequestException;
@@ -75,35 +77,206 @@ public class FileTest {
 			ForbiddenException, TooManyRequestsException, UnauthorizedException {
 
 		MockWebServer server = new MockWebServer();
-		server.enqueue(new MockResponse().setBody("{\n" + "    \"type\": \"file\",\n"
-				+ "    \"name\": \"new_car.jpg\",\n" + "    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n"
-				+ "    \"updatedAt\": \"2022-06-18T12:14:07.070Z\",\n"
-				+ "    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" + "    \"tags\": [\n" + "        \"tagg\",\n"
-				+ "        \"tagg1\"\n" + "    ],\n" + "    \"AITags\": null,\n" + "    \"versionInfo\": {\n"
-				+ "        \"id\": \"62a9c3ccd875ec6fd658c854\",\n" + "        \"name\": \"Version 1\"\n" + "    },\n"
-				+ "    \"embeddedMetadata\": {\n" + "        \"XResolution\": 250,\n"
-				+ "        \"YResolution\": 250,\n" + "        \"DateCreated\": \"2022-06-15T11:34:36.702Z\",\n"
-				+ "        \"DateTimeCreated\": \"2022-06-15T11:34:36.702Z\"\n" + "    },\n"
-				+ "    \"customCoordinates\": \"10,10,20,20\",\n" + "    \"customMetadata\": {\n"
-				+ "        \"test100\": 10\n" + "    },\n" + "    \"isPrivateFile\": false,\n"
-				+ "    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n"
-				+ "    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n"
-				+ "    \"fileType\": \"image\",\n" + "    \"filePath\": \"/new_car.jpg\",\n" + "    \"height\": 354,\n"
-				+ "    \"width\": 236,\n" + "    \"size\": 23023,\n" + "    \"hasAlpha\": false,\n"
-				+ "    \"mime\": \"image/jpeg\"\n" + "}"));
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"type\": \"file\",\n" +
+				"    \"name\": \"new_car.jpg\",\n" +
+				"    \"createdAt\": \"2022-06-15T11:34:36.294Z\",\n" +
+				"    \"updatedAt\": \"2022-07-04T10:15:50.067Z\",\n" +
+				"    \"fileId\": \"62a9c3ccd875ec6fd658c854\",\n" +
+				"    \"tags\": [\n" +
+				"        \"Software\",\n" +
+				"        \"Developer\",\n" +
+				"        \"Engineer\"\n" +
+				"    ],\n" +
+				"    \"AITags\": [\n" +
+				"        {\n" +
+				"            \"name\": \"Clothing\",\n" +
+				"            \"confidence\": 98.77,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Smile\",\n" +
+				"            \"confidence\": 95.31,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Shoe\",\n" +
+				"            \"confidence\": 95.2,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Street light\",\n" +
+				"            \"confidence\": 91.05,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Person\",\n" +
+				"            \"confidence\": 96.5,\n" +
+				"            \"source\": \"aws-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Female\",\n" +
+				"            \"confidence\": 91.27,\n" +
+				"            \"source\": \"aws-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Flyer\",\n" +
+				"            \"confidence\": 90.62,\n" +
+				"            \"source\": \"aws-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Poster\",\n" +
+				"            \"confidence\": 90.62,\n" +
+				"            \"source\": \"aws-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Advertisement\",\n" +
+				"            \"confidence\": 90.62,\n" +
+				"            \"source\": \"aws-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Plant\",\n" +
+				"            \"confidence\": 96.51,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Street fashion\",\n" +
+				"            \"confidence\": 89.1,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Fashion\",\n" +
+				"            \"confidence\": 88.46,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Tree\",\n" +
+				"            \"confidence\": 87.62,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Yellow\",\n" +
+				"            \"confidence\": 85.76,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Happy\",\n" +
+				"            \"confidence\": 84.01,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Grass\",\n" +
+				"            \"confidence\": 82.89,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Leisure\",\n" +
+				"            \"confidence\": 81.19,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Morning\",\n" +
+				"            \"confidence\": 79.09,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Summer\",\n" +
+				"            \"confidence\": 78.87,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"People\",\n" +
+				"            \"confidence\": 77.9,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Electric blue\",\n" +
+				"            \"confidence\": 75.57,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Beauty\",\n" +
+				"            \"confidence\": 75.22,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Denim\",\n" +
+				"            \"confidence\": 74.91,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Recreation\",\n" +
+				"            \"confidence\": 74.33,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        },\n" +
+				"        {\n" +
+				"            \"name\": \"Publication\",\n" +
+				"            \"confidence\": 74.24,\n" +
+				"            \"source\": \"google-auto-tagging\"\n" +
+				"        }\n" +
+				"    ],\n" +
+				"    \"versionInfo\": {\n" +
+				"        \"id\": \"62b97749f63122840530fda9\",\n" +
+				"        \"name\": \"Version 4\"\n" +
+				"    },\n" +
+				"    \"embeddedMetadata\": {\n" +
+				"        \"DateCreated\": \"2022-07-04T10:15:50.066Z\",\n" +
+				"        \"DateTimeCreated\": \"2022-07-04T10:15:50.066Z\"\n" +
+				"    },\n" +
+				"    \"customCoordinates\": null,\n" +
+				"    \"customMetadata\": {\n" +
+				"        \"test100\": 10,\n" +
+				"        \"test10\": 11\n" +
+				"    },\n" +
+				"    \"isPrivateFile\": false,\n" +
+				"    \"url\": \"https://ik.imagekit.io/zv3rkhsym/new_car.jpg\",\n" +
+				"    \"thumbnail\": \"https://ik.imagekit.io/zv3rkhsym/tr:n-ik_ml_thumbnail/new_car.jpg\",\n" +
+				"    \"fileType\": \"image\",\n" +
+				"    \"filePath\": \"/new_car.jpg\",\n" +
+				"    \"height\": 354,\n" +
+				"    \"width\": 236,\n" +
+				"    \"size\": 7390,\n" +
+				"    \"hasAlpha\": false,\n" +
+				"    \"mime\": \"image/jpeg\"\n" +
+				"}"));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
-		FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("62a9c3ccd875ec6fd658c854");
 		List<String> tags = new ArrayList<>();
 		tags.add("Software");
 		tags.add("Developer");
 		tags.add("Engineer");
+
+		List<String> aiTags = new ArrayList<>();
+		aiTags.add("Plant");
+		FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("62a9c3ccd875ec6fd658c854");
+		fileUpdateRequest.setRemoveAITags(aiTags);
+		fileUpdateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
+
+		JsonObject optionsInnerObject = new JsonObject();
+		optionsInnerObject.addProperty("add_shadow", true);
+		optionsInnerObject.addProperty("bg_color", "yellow");
+		JsonObject innerObject1 = new JsonObject();
+		innerObject1.addProperty("name", "remove-bg");
+		innerObject1.add("options", optionsInnerObject);
+		JsonObject innerObject2 = new JsonObject();
+		innerObject2.addProperty("name", "google-auto-tagging");
+		innerObject2.addProperty("minConfidence", 15);
+		innerObject2.addProperty("maxTags", 20);
+		JsonArray jsonArray = new JsonArray();
+		jsonArray.add(innerObject1);
+		jsonArray.add(innerObject2);
+
+		fileUpdateRequest.setExtensions(jsonArray);
 		fileUpdateRequest.setTags(tags);
+		fileUpdateRequest.setCustomCoordinates("10,10,40,40");
+		JsonObject jsonObjectCustomMetadata = new JsonObject();
+		jsonObjectCustomMetadata.addProperty("test10", 11);
+		fileUpdateRequest.setCustomMetadata(jsonObjectCustomMetadata);
 
 		SUT.updateFileDetail(fileUpdateRequest);
 		RecordedRequest request = server.takeRequest();
 
-		String requestJson = "{\"fileId\":\"62a9c3ccd875ec6fd658c854\",\"tags\":[\"Software\",\"Developer\",\"Engineer\"]}";
+		String requestJson = "{\"fileId\":\"62a9c3ccd875ec6fd658c854\",\"removeAITags\":[\"Plant\"],\"webhookUrl\":\"https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e\",\"extensions\":[{\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_color\":\"yellow\"}},{\"name\":\"google-auto-tagging\",\"minConfidence\":15,\"maxTags\":20}],\"tags\":[\"Software\",\"Developer\",\"Engineer\"],\"customCoordinates\":\"10,10,40,40\",\"customMetadata\":{\"test10\":11}}";
 		String utf8RequestBody = request.getBody().readUtf8();
 		assertEquals(requestJson, utf8RequestBody);
 		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
@@ -114,8 +287,7 @@ public class FileTest {
 
 	@Test
 	public void imageKit_getFileList_returnList()
-			throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException,
-			UnauthorizedException, BadRequestException, UnknownException, IOException {
+			throws InterruptedException, IOException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "[\n" + "    {\n" + "        \"type\": \"file\",\n"
@@ -151,7 +323,7 @@ public class FileTest {
 		options.put("fileType", "all");
 		options.put("searchQuery", "createdAt >= '2d' OR size < '2mb' OR format='png'");
 		options.put("tags", String.valueOf(tags));
-		SUT.getFileList(options);
+//		SUT.getFileList(options);
 
 		RecordedRequest request = server.takeRequest();
 		String utf8RequestBody = request.getBody().readUtf8();
@@ -191,7 +363,7 @@ public class FileTest {
 		options.put("fileType", "all");
 		options.put("searchQuery", "createdAt >= '2days' OR size < '2mb' OR format='png'");
 		options.put("tags", String.valueOf(tags));
-		SUT.getFileList(options);
+//		SUT.getFileList(options);
 
 		server.takeRequest();
 	}
