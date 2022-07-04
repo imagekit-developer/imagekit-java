@@ -1,27 +1,17 @@
 package io.imagekit.sdk.models;
 
-import java.util.List;
-
 public class CustomMetaDataFieldSchemaObject {
 	private CustomMetaDataTypeEnum type;
-	private List<String> selectOptions;
-	private String defaultValue;
+	private Object selectOptions;
+	private Object defaultValue;
 	private Boolean isValueRequired;
-	private Integer minValue;
-	private Integer maxValue;
+	private Object minValue;
+	private Object maxValue;
 	private Integer minLength;
 	private Integer maxLength;
 
 	public CustomMetaDataFieldSchemaObject() {
 
-	}
-
-	public CustomMetaDataFieldSchemaObject(CustomMetaDataTypeEnum type, boolean isValueRequired, int minValue,
-			int maxValue) {
-		this.type = type;
-		this.isValueRequired = isValueRequired;
-		this.minValue = minValue;
-		this.maxValue = maxValue;
 	}
 
 	public CustomMetaDataTypeEnum getType() {
@@ -32,43 +22,43 @@ public class CustomMetaDataFieldSchemaObject {
 		this.type = type;
 	}
 
-	public List<String> getSelectOptions() {
+	public Object getSelectOptions() {
 		return selectOptions;
 	}
 
-	public void setSelectOptions(List<String> selectOptions) {
+	public void setSelectOptions(Object selectOptions) {
 		this.selectOptions = selectOptions;
 	}
 
-	public String getDefaultValue() {
+	public Object getDefaultValue() {
 		return defaultValue;
 	}
 
-	public void setDefaultValue(String defaultValue) {
+	public void setDefaultValue(Object defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
-	public boolean isValueRequired() {
+	public Boolean getValueRequired() {
 		return isValueRequired;
 	}
 
-	public void setValueRequired(boolean valueRequired) {
+	public void setValueRequired(Boolean valueRequired) {
 		isValueRequired = valueRequired;
 	}
 
-	public Integer getMinValue() {
+	public Object getMinValue() {
 		return minValue;
 	}
 
-	public void setMinValue(Integer minValue) {
+	public void setMinValue(Object minValue) {
 		this.minValue = minValue;
 	}
 
-	public Integer getMaxValue() {
+	public Object getMaxValue() {
 		return maxValue;
 	}
 
-	public void setMaxValue(Integer maxValue) {
+	public void setMaxValue(Object maxValue) {
 		this.maxValue = maxValue;
 	}
 
@@ -90,8 +80,15 @@ public class CustomMetaDataFieldSchemaObject {
 
 	@Override
 	public String toString() {
-		return "{" + "type=" + '"' + type + '"' + ", selectOptions=" + '"' + selectOptions + '"' + ", defaultValue="
-				+ '"' + defaultValue + '"' + ", isValueRequired=" + isValueRequired + ", minValue=" + minValue
-				+ ", maxValue=" + maxValue + ", minLength=" + minLength + ", maxLength=" + maxLength + '}';
+		return "CustomMetaDataFieldSchemaObject{" +
+				"type=" + type +
+				", selectOptions=" + selectOptions +
+				", defaultValue=" + defaultValue +
+				", isValueRequired=" + isValueRequired +
+				", minValue=" + minValue +
+				", maxValue=" + maxValue +
+				", minLength=" + minLength +
+				", maxLength=" + maxLength +
+				'}';
 	}
 }

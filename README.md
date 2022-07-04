@@ -882,9 +882,11 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **24. Create CustomMetaDataFields**
 
-It creates the CustomMetaDataFields as per the
+It creates the CustomMetaDataFields with many available types with param name `type` as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
 The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class.
+
+#### Examples:
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
@@ -903,6 +905,53 @@ System.out.println(resultCustomMetaDataField.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
 System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 ```
+
+- MultiSelect type Exmample:
+
+```java
+List<Object> objectList = new ArrayList<>();
+objectList.add("small");
+objectList.add(30);
+objectList.add(40);
+objectList.add(true);
+
+List<Object> defaultValueObject = new ArrayList<>();
+defaultValueObject.add("small");
+defaultValueObject.add(30);
+defaultValueObject.add(true);
+CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+customMetaDataFieldSchemaObject.setType("MultiSelect");
+customMetaDataFieldSchemaObject.setValueRequired(true);                 // optional
+customMetaDataFieldSchemaObject.setDefaultValue(defaultValueObject);    // required if isValueRequired set to true
+customMetaDataFieldSchemaObject.setSelectOptions(objectList);
+CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+customMetaDataFieldCreateRequest.setName("Name-MultiSelect");
+customMetaDataFieldCreateRequest.setLabel("Label-MultiSelect");
+customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
+      .createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+```
+
+- Date type Exmample:
+
+```java
+CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+customMetaDataFieldSchemaObject.setType("Date");
+customMetaDataFieldSchemaObject.setValueRequired(true);                          // optional
+customMetaDataFieldSchemaObject.setDefaultValue("2022-11-30T10:11:10+00:00");    // required if isValueRequired set to true
+customMetaDataFieldSchemaObject.setMinValue("2022-11-30T10:11:10+00:00");
+customMetaDataFieldSchemaObject.setMaxValue("2022-12-30T10:11:10+00:00");
+
+CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+customMetaDataFieldCreateRequest.setName("Name");
+customMetaDataFieldCreateRequest.setLabel("Label");
+customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
+       .createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+```
+
 
 **25. Get CustomMetaDataFields**
 

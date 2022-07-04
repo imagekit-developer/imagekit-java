@@ -19,6 +19,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -158,6 +160,199 @@ public class CustomMetaDataFieldTest {
 		RecordedRequest request = server.takeRequest();
 
 		String customMetaDataFieldCreateRequestJson = "{\"name\":\"mockName\",\"label\":\"mockLabel\",\"schema\":{\"type\":\"Textarea\",\"defaultValue\":\"default value of test\",\"isValueRequired\":true,\"minLength\":10,\"maxLength\":100}}";
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
+	}
+
+	@Test
+	public void createCustomMetaDataFields_successExpected_type_Date()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"id\": \"62c2d18da6f0abb293b3941a\",\n" +
+				"    \"name\": \"name\",\n" +
+				"    \"label\": \"label\",\n" +
+				"    \"schema\": {\n" +
+				"        \"type\": \"Date\",\n" +
+				"        \"minValue\": \"2022-11-30T10:11:10+00:00\",\n" +
+				"        \"maxValue\": \"2022-12-30T10:11:10+00:00\"\n" +
+				"    }\n" +
+				"}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+
+		CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+		customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Date);
+		customMetaDataFieldSchemaObject.setMinValue("2022-11-30T10:11:10+00:00");
+		customMetaDataFieldSchemaObject.setMaxValue("2022-12-30T10:11:10+00:00");
+
+		CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+		customMetaDataFieldCreateRequest.setName("Name");
+		customMetaDataFieldCreateRequest.setLabel("Label");
+		customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+		SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+		RecordedRequest request = server.takeRequest();
+
+		String customMetaDataFieldCreateRequestJson = "{\"name\":\"Name\",\"label\":\"Label\",\"schema\":{\"type\":\"Date\",\"minValue\":\"2022-11-30T10:11:10+00:00\",\"maxValue\":\"2022-12-30T10:11:10+00:00\"}}";
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
+	}
+
+	@Test
+	public void createCustomMetaDataFields_successExpected_type_Boolean()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"id\": \"62c2e4268eed64d4a80c585a\",\n" +
+				"    \"name\": \"Name\",\n" +
+				"    \"label\": \"Label\",\n" +
+				"    \"schema\": {\n" +
+				"        \"type\": \"Boolean\",\n" +
+				"        \"isValueRequired\": true,\n" +
+				"        \"defaultValue\": true\n" +
+				"    }\n" +
+				"}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+
+		CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+		customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.Boolean);
+		customMetaDataFieldSchemaObject.setValueRequired(true);
+		customMetaDataFieldSchemaObject.setDefaultValue(true);
+
+		CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+		customMetaDataFieldCreateRequest.setName("Name");
+		customMetaDataFieldCreateRequest.setLabel("Label");
+		customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+		SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+		RecordedRequest request = server.takeRequest();
+
+		String customMetaDataFieldCreateRequestJson = "{\"name\":\"Name\",\"label\":\"Label\",\"schema\":{\"type\":\"Boolean\",\"defaultValue\":true,\"isValueRequired\":true}}";
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
+	}
+
+	@Test
+	public void createCustomMetaDataFields_successExpected_type_SingleSelect()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"id\": \"62c2cfe2a6f0ab95fcb3640f\",\n" +
+				"    \"name\": \"Name\",\n" +
+				"    \"label\": \"Label\",\n" +
+				"    \"schema\": {\n" +
+				"        \"type\": \"SingleSelect\",\n" +
+				"        \"selectOptions\": [\n" +
+				"            \"small\",\n" +
+				"            \"medium\",\n" +
+				"            \"large\",\n" +
+				"            30,\n" +
+				"            40,\n" +
+				"            true\n" +
+				"        ]\n" +
+				"    }\n" +
+				"}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+
+		List<Object> objectList = new ArrayList<>();
+		objectList.add("small");
+		objectList.add("medium");
+		objectList.add("large");
+		objectList.add(30);
+		objectList.add(40);
+		objectList.add(true);
+		CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+		customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.SingleSelect);
+		customMetaDataFieldSchemaObject.setSelectOptions(objectList);
+
+		CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+		customMetaDataFieldCreateRequest.setName("Name");
+		customMetaDataFieldCreateRequest.setLabel("Label");
+		customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+		SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+		RecordedRequest request = server.takeRequest();
+
+		String customMetaDataFieldCreateRequestJson = "{\"name\":\"Name\",\"label\":\"Label\",\"schema\":{\"type\":\"SingleSelect\",\"selectOptions\":[\"small\",\"medium\",\"large\",30,40,true]}}";
+		String utf8RequestBody = request.getBody().readUtf8();
+		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
+		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
+		assertEquals("POST /v1/customMetadataFields HTTP/1.1", request.getRequestLine());
+		assertEquals(RestClient.API_BASE_URL.concat("v1/customMetadataFields"), request.getRequestUrl().toString());
+	}
+
+	@Test
+	public void createCustomMetaDataFields_successExpected_type_MultiSelect()
+			throws InterruptedException, IOException, BadRequestException, UnknownException {
+
+		MockWebServer server = new MockWebServer();
+		server.enqueue(new MockResponse().setBody("{\n" +
+				"    \"id\": \"62c2d3c5a6f0ab2330b3b0b2\",\n" +
+				"    \"name\": \"Name\",\n" +
+				"    \"label\": \"Label\",\n" +
+				"    \"schema\": {\n" +
+				"        \"isValueRequired\": true,\n" +
+				"        \"defaultValue\": [\n" +
+				"            \"small\",\n" +
+				"            30,\n" +
+				"            true\n" +
+				"        ],\n" +
+				"        \"type\": \"MultiSelect\",\n" +
+				"        \"selectOptions\": [\n" +
+				"            \"small\",\n" +
+				"            \"medium\",\n" +
+				"            \"large\",\n" +
+				"            30,\n" +
+				"            40,\n" +
+				"            true\n" +
+				"        ]\n" +
+				"    }\n" +
+				"}"));
+		server.start();
+		RestClient.API_BASE_URL = server.url("/").toString();
+
+		List<Object> objectList = new ArrayList<>();
+		objectList.add("small");
+		objectList.add("medium");
+		objectList.add("large");
+		objectList.add(30);
+		objectList.add(40);
+		objectList.add(true);
+
+		List<Object> defaultValueObject = new ArrayList<>();
+		defaultValueObject.add("small");
+		defaultValueObject.add(30);
+		defaultValueObject.add(true);
+		CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
+		customMetaDataFieldSchemaObject.setType(CustomMetaDataTypeEnum.MultiSelect);
+		customMetaDataFieldSchemaObject.setValueRequired(true);
+		customMetaDataFieldSchemaObject.setDefaultValue(defaultValueObject);
+		customMetaDataFieldSchemaObject.setSelectOptions(objectList);
+
+		CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
+		customMetaDataFieldCreateRequest.setName("Name");
+		customMetaDataFieldCreateRequest.setLabel("Label");
+		customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
+
+		SUT.createCustomMetaDataFields(customMetaDataFieldCreateRequest);
+		RecordedRequest request = server.takeRequest();
+
+		String customMetaDataFieldCreateRequestJson = "{\"name\":\"Name\",\"label\":\"Label\",\"schema\":{\"type\":\"MultiSelect\",\"selectOptions\":[\"small\",\"medium\",\"large\",30,40,true],\"defaultValue\":[\"small\",30,true],\"isValueRequired\":true}}";
 		String utf8RequestBody = request.getBody().readUtf8();
 		assertEquals(customMetaDataFieldCreateRequestJson, utf8RequestBody);
 		assertEquals("application/json; charset=utf-8", request.getHeader("Content-Type"));
