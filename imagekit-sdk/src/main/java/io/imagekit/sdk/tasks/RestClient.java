@@ -1,5 +1,7 @@
 package io.imagekit.sdk.tasks;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -37,6 +39,9 @@ import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -114,20 +119,47 @@ public class RestClient {
 		return result;
 	}
 
-	public ResultList getFileList(GetFileListRequest getFileListRequest) throws ForbiddenException, TooManyRequestsException,
-			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InstantiationException, IllegalAccessException {
 		ResultList resultList = new ResultList();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
-//		ObjectMap objectMapper = new ObjectMapper();
-//		ModelMapp
 		QueryMaker queryMaker = new QueryMaker();
-//		for (Map.Entry<String, String> entry : ) {
-//			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
+//		Map<String, String> options = new HashMap<>();
+//		if (getFileListRequest.getType() != null) {
+//			options.put("type", getFileListRequest.getType());
 //		}
+//		if (getFileListRequest.getSort() != null) {
+//			options.put("sort", getFileListRequest.getSort());
+//		}
+//		if (getFileListRequest.getPath() != null) {
+//			options.put("path", getFileListRequest.getPath());
+//		}
+//		if (getFileListRequest.getSearchQuery() != null) {
+//			options.put("searchQuery", getFileListRequest.getSearchQuery());
+//		}
+//		if (getFileListRequest.getFileType() != null) {
+//			options.put("fileType", getFileListRequest.getFileType());
+//		}
+//		if (getFileListRequest.getLimit() != null) {
+//			options.put("limit", getFileListRequest.getLimit());
+//		}
+//		if (getFileListRequest.getSkip() != null) {
+//			options.put("skip", getFileListRequest.getSkip());
+//		}
+//		if (getFileListRequest.getTags() != null) {
+//			options.put("tags", Arrays.toString(getFileListRequest.getTags()));
+//		}
+		System.out.println("options:==> " + options);
+		for (Map.Entry<String, String> entry : options.entrySet()) {
+			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
+		}
+
+		System.out.println("queryMake:--> " + queryMaker.get());
 
 		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files?%s"), queryMaker.get());
 
+		System.out.println("url:--> " + url);
 		request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
 		try {
@@ -135,8 +167,10 @@ public class RestClient {
 			String respBody = "";
 			if (response.code() == 200) {
 				respBody = response.body().string();
-				List<BaseFile> files = new Gson().fromJson(respBody, new TypeToken<List<BaseFile>>() {
-				}.getType());
+//				System.out.println("respBody:==> " + respBody);
+				List<BaseFile> files = new Gson().fromJson(respBody,
+						new TypeToken<List<BaseFile>>() {
+						}.getType());
 				resultList.setResults(files);
 				resultList.setRaw(respBody);
 			} else {

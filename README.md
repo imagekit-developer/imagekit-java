@@ -882,8 +882,10 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **24. Create CustomMetaDataFields**
 
-It creates the CustomMetaDataFields with many available types with param name `type` as per the
+It creates the CustomMetaDataFields as per the
 [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
+
+Check for the [Allowed Values In The Schema](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field#allowed-values-in-the-schema-object).
 The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class.
 
 #### Examples:
