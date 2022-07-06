@@ -110,9 +110,9 @@ public final class ImageKit {
 	 *                "includeFolder", "name", "limit", "skip"]
 	 * @return ResultList class that contains list of BaseFile
 	 */
-	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
+	public ResultList getFileList(GetFileListRequest getFileListRequest) throws ForbiddenException, TooManyRequestsException,
 			InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IllegalAccessException, InstantiationException {
-		return restClient.getFileList(options);
+		return restClient.getFileList(getFileListRequest);
 	}
 
 	/**

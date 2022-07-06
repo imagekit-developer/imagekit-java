@@ -1,7 +1,7 @@
 package io.imagekit.sdk.models;
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
 
 import java.util.Date;
 import java.util.List;
@@ -20,10 +20,11 @@ public class BaseFile {
 	protected String customCoordinates;
 	protected String fileType;
 	protected JsonArray aiTags;
-	protected JsonObject versionInfo;
-	protected JsonObject customMetadata;
-	protected JsonObject embeddedMetadata;
-	protected JsonObject extensionStatus;
+	protected JsonElement versionInfo;
+	protected JsonElement customMetadata;
+
+	protected JsonElement embeddedMetadata;
+	protected JsonElement extensionStatus;
 	protected String type;
 	protected String mime;
 	protected Boolean hasAlpha;
@@ -35,8 +36,8 @@ public class BaseFile {
 
 	public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size,
 			String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType,
-			JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata,
-			JsonObject extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
+			JsonArray aiTags, JsonElement versionInfo, JsonElement customMetadata, JsonElement embeddedMetadata,
+			JsonElement extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
 		this.fileId = fileId;
 		this.name = name;
 		this.url = url;
@@ -165,35 +166,35 @@ public class BaseFile {
 		this.aiTags = aiTags;
 	}
 
-	public JsonObject getVersionInfo() {
+	public JsonElement getVersionInfo() {
 		return versionInfo;
 	}
 
-	public void setVersionInfo(JsonObject versionInfo) {
+	public void setVersionInfo(JsonElement versionInfo) {
 		this.versionInfo = versionInfo;
 	}
 
-	public JsonObject getCustomMetadata() {
+	public JsonElement getCustomMetadata() {
 		return customMetadata;
 	}
 
-	public void setCustomMetadata(JsonObject customMetadata) {
+	public void setCustomMetadata(JsonElement customMetadata) {
 		this.customMetadata = customMetadata;
 	}
 
-	public JsonObject getEmbeddedMetadata() {
+	public JsonElement getEmbeddedMetadata() {
 		return embeddedMetadata;
 	}
 
-	public void setEmbeddedMetadata(JsonObject embeddedMetadata) {
+	public void setEmbeddedMetadata(JsonElement embeddedMetadata) {
 		this.embeddedMetadata = embeddedMetadata;
 	}
 
-	public JsonObject getExtensionStatus() {
+	public JsonElement getExtensionStatus() {
 		return extensionStatus;
 	}
 
-	public void setExtensionStatus(JsonObject extensionStatus) {
+	public void setExtensionStatus(JsonElement extensionStatus) {
 		this.extensionStatus = extensionStatus;
 	}
 
