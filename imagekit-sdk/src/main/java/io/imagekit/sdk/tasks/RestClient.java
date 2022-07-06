@@ -151,16 +151,18 @@ public class RestClient {
 		if (getFileListRequest.getTags() != null) {
 			options.put("tags", Arrays.toString(getFileListRequest.getTags()));
 		}
-		System.out.println("options:==> " + options);
+        if (getFileListRequest.getIncludeFolder() != null) {
+            options.put("includeFolder", String.valueOf(getFileListRequest.getIncludeFolder()));
+        }
+        if (getFileListRequest.getName() != null) {
+            options.put("name", getFileListRequest.getName());
+        }
 		for (Map.Entry<String, String> entry : options.entrySet()) {
 			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
 		}
 
-		System.out.println("queryMake:--> " + queryMaker.get());
-
 		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files?%s"), queryMaker.get());
 
-		System.out.println("url:--> " + url);
 		request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
 		try {
@@ -168,7 +170,6 @@ public class RestClient {
 			String respBody = "";
 			if (response.code() == 200) {
 				respBody = response.body().string();
-				System.out.println("respBody:==> " + respBody);
 				List<BaseFile> files = new Gson().fromJson(respBody,
 						new TypeToken<List<BaseFile>>() {
 						}.getType());

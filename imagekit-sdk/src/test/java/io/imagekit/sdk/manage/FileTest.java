@@ -13,6 +13,7 @@ import io.imagekit.sdk.exceptions.TooManyRequestsException;
 import io.imagekit.sdk.exceptions.UnauthorizedException;
 import io.imagekit.sdk.exceptions.UnknownException;
 import io.imagekit.sdk.models.FileUpdateRequest;
+import io.imagekit.sdk.models.GetFileListRequest;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.utils.Utils;
 import okhttp3.mockwebserver.MockResponse;
@@ -287,7 +288,7 @@ public class FileTest {
 
 	@Test
 	public void imageKit_getFileList_returnList()
-			throws InterruptedException, IOException {
+			throws InterruptedException, IOException, ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IllegalAccessException, InstantiationException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "[\n" + "    {\n" + "        \"type\": \"file\",\n"
@@ -310,30 +311,31 @@ public class FileTest {
 		server.enqueue(new MockResponse().setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
-		Map<String, String> options = new HashMap<>();
-		List<String> tags = new ArrayList<>();
-		tags.add("Software");
-		tags.add("Developer");
-		tags.add("Engineer");
-		options.put("skip", "" + 0);
-		options.put("limit", "" + 1);
-		options.put("type", "file");
-		options.put("sort", "ASC_CREATED");
-		options.put("path", "/");
-		options.put("fileType", "all");
-		options.put("searchQuery", "createdAt >= '2d' OR size < '2mb' OR format='png'");
-		options.put("tags", String.valueOf(tags));
-//		SUT.getFileList(options);
+		String[] tags = new String[3];
+		tags[0] = "Software";
+		tags[1] = "Developer";
+		tags[2] = "Engineer";
+		GetFileListRequest getFileListRequest = new GetFileListRequest();
+		getFileListRequest.setType("file");
+		getFileListRequest.setSort("ASC_CREATED");
+		getFileListRequest.setPath("/");
+		getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
+		getFileListRequest.setFileType("all");
+		getFileListRequest.setLimit("1");
+		getFileListRequest.setSkip("0");
+		getFileListRequest.setTags(tags);
+		getFileListRequest.setIncludeFolder(false);
+		SUT.getFileList(getFileListRequest);
 
 		RecordedRequest request = server.takeRequest();
 		String utf8RequestBody = request.getBody().readUtf8();
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
 		assertEquals(
-				"GET /v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer] HTTP/1.1",
+				"GET /v1/files?path=/&includeFolder=false&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer] HTTP/1.1",
 				request.getRequestLine());
 		assertEquals(RestClient.API_BASE_URL.concat(
-				"v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer]"),
+				"v1/files?path=/&includeFolder=false&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer]"),
 				request.getRequestUrl().toString());
 
 	}
@@ -341,7 +343,7 @@ public class FileTest {
 	@Test(expected = BadRequestException.class)
 	public void imageKit_getFileList_400_expected()
 			throws InterruptedException, ForbiddenException, TooManyRequestsException, InternalServerException,
-			UnauthorizedException, BadRequestException, UnknownException, IOException {
+			UnauthorizedException, BadRequestException, UnknownException, IOException, IllegalAccessException, InstantiationException {
 
 		MockWebServer server = new MockWebServer();
 		String responseJson = "{\n"
@@ -350,20 +352,21 @@ public class FileTest {
 		server.enqueue(new MockResponse().setResponseCode(400).setBody(responseJson));
 		server.start();
 		RestClient.API_BASE_URL = server.url("/").toString();
-		Map<String, String> options = new HashMap<>();
-		List<String> tags = new ArrayList<>();
-		tags.add("Software");
-		tags.add("Developer");
-		tags.add("Engineer");
-		options.put("skip", "" + 0);
-		options.put("limit", "" + 1);
-		options.put("type", "file");
-		options.put("sort", "ASC_CREATED");
-		options.put("path", "/");
-		options.put("fileType", "all");
-		options.put("searchQuery", "createdAt >= '2days' OR size < '2mb' OR format='png'");
-		options.put("tags", String.valueOf(tags));
-//		SUT.getFileList(options);
+		String[] tags = new String[3];
+		tags[0] = "Software";
+		tags[1] = "Developer";
+		tags[2] = "Engineer";
+		GetFileListRequest getFileListRequest = new GetFileListRequest();
+		getFileListRequest.setType("file");
+		getFileListRequest.setSort("ASC_CREATED");
+		getFileListRequest.setPath("/");
+		getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
+		getFileListRequest.setFileType("all");
+		getFileListRequest.setLimit("1");
+		getFileListRequest.setSkip("0");
+		getFileListRequest.setTags(tags);
+		getFileListRequest.setIncludeFolder(true);
+		SUT.getFileList(getFileListRequest);
 
 		server.takeRequest();
 	}

@@ -422,20 +422,22 @@ in the [documentation here](https://docs.imagekit.io/api-reference/media-api/lis
 correct values to get the results.
 
 ```java
-Map<String, String> options = new HashMap<>();
-List<String> tags = new ArrayList<>();
-tags.add("Software");
-tags.add("Developer");
-tags.add("Engineer");
-options.put("skip", "" + 0);
-options.put("limit", "" + 1);
-options.put("type", "file");
-options.put("sort", "ASC_CREATED");
-options.put("path", "/");
-options.put("fileType", "all");
-options.put("searchQuery","createdAt >= '2d' OR size < '2mb' OR format='png'");
-options.put("tags", String.valueOf(tags));
-ResultList resultList = ImageKit.getInstance().getFileList(options);
+String[] tags = new String[3];
+tags[0] = "Software";
+tags[1] = "Developer";
+tags[2] = "Engineer";
+GetFileListRequest getFileListRequest = new GetFileListRequest();
+getFileListRequest.setType("file");
+getFileListRequest.setSort("ASC_CREATED");
+getFileListRequest.setPath("/");
+getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
+getFileListRequest.setFileType("all");
+getFileListRequest.setLimit("4");
+getFileListRequest.setSkip("1");
+getFileListRequest.setTags(tags);
+getFileListRequest.setIncludeFolder(false);
+getFileListRequest.setName("new_car.jpg");      // name match is case-sensitive.
+ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultList);
 System.out.println("Raw Response:");
