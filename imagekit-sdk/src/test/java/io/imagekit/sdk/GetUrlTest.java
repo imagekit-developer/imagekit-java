@@ -444,7 +444,7 @@ public class GetUrlTest {
 
 		String url = SUT.getUrl(options);
 
-		assertSignedUrl("https://test-domain.com/test-endpoint/tr:w-100/test-signed-url.png", url);
+		assertSignedUrl("https://ik.imagekit.io/zv3rkhsym/tr:w-100/test-signed-url.png", url);
 	}
 
 	@Test

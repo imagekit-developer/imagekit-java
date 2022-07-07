@@ -1,6 +1,8 @@
 package io.imagekit.sdk;
 
 import io.imagekit.sdk.config.Configuration;
+import io.imagekit.sdk.utils.Utils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Map;
@@ -10,6 +12,12 @@ import static org.junit.Assert.assertNotNull;
 
 public class ImageKitTest {
 	private ImageKit SUT;
+
+	@Before
+	public void setUp() throws Exception {
+		SUT = ImageKit.getInstance();
+		SUT.setConfig(Utils.getSystemConfig(ImageKitTest.class));
+	}
 
 	@Test
 	public void imageKit_configurationTest() {

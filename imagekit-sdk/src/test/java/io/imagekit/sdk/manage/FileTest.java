@@ -331,10 +331,10 @@ public class FileTest {
 		assertEquals("", utf8RequestBody);
 		assertEquals("application/json", request.getHeader("Content-Type"));
 		assertEquals(
-				"GET /v1/files?path=/&includeFolder=false&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer] HTTP/1.1",
+				"GET /v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer] HTTP/1.1",
 				request.getRequestLine());
 		assertEquals(RestClient.API_BASE_URL.concat(
-				"v1/files?path=/&includeFolder=false&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer]"),
+				"v1/files?path=/&searchQuery=createdAt%20%3E=%20%272d%27%20OR%20size%20%3C%20%272mb%27%20OR%20format=%27png%27&limit=1&skip=0&sort=ASC_CREATED&type=file&fileType=all&tags=[Software,%20Developer,%20Engineer]"),
 				request.getRequestUrl().toString());
 
 	}
