@@ -11,8 +11,6 @@ public class GetFileListRequest {
 	public String limit;
 	public String skip;
 	public String[] tags;
-	public Boolean includeFolder;
-	public String name;
 
 	public String getType() {
 		return type;
@@ -78,22 +76,6 @@ public class GetFileListRequest {
 		this.tags = tags;
 	}
 
-	public Boolean getIncludeFolder() {
-		return includeFolder;
-	}
-
-	public void setIncludeFolder(Boolean includeFolder) {
-		this.includeFolder = includeFolder;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	@Override
 	public String toString() {
 		return "GetFileListRequest{" +
@@ -105,8 +87,6 @@ public class GetFileListRequest {
 				", limit='" + limit + '\'' +
 				", skip='" + skip + '\'' +
 				", tags=" + Arrays.toString(tags) +
-				", includeFolder=" + includeFolder +
-				", name='" + name + '\'' +
 				'}';
 	}
 }

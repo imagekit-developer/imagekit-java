@@ -324,7 +324,6 @@ public class FileTest {
 		getFileListRequest.setLimit("1");
 		getFileListRequest.setSkip("0");
 		getFileListRequest.setTags(tags);
-		getFileListRequest.setIncludeFolder(false);
 		SUT.getFileList(getFileListRequest);
 
 		RecordedRequest request = server.takeRequest();
@@ -365,7 +364,6 @@ public class FileTest {
 		getFileListRequest.setLimit("1");
 		getFileListRequest.setSkip("0");
 		getFileListRequest.setTags(tags);
-		getFileListRequest.setIncludeFolder(true);
 		SUT.getFileList(getFileListRequest);
 
 		server.takeRequest();

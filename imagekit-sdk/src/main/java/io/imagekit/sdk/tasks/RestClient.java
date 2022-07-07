@@ -1,7 +1,5 @@
 package io.imagekit.sdk.tasks;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -151,12 +149,6 @@ public class RestClient {
 		if (getFileListRequest.getTags() != null) {
 			options.put("tags", Arrays.toString(getFileListRequest.getTags()));
 		}
-        if (getFileListRequest.getIncludeFolder() != null) {
-            options.put("includeFolder", String.valueOf(getFileListRequest.getIncludeFolder()));
-        }
-        if (getFileListRequest.getName() != null) {
-            options.put("name", getFileListRequest.getName());
-        }
 		for (Map.Entry<String, String> entry : options.entrySet()) {
 			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
 		}

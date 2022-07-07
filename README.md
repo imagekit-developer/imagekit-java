@@ -1,3 +1,4 @@
+
 # ImageKit Java SDK
 
 [![Java CI](https://github.com/imagekit-developer/imagekit-java/workflows/Java%20CI/badge.svg)](https://github.com/imagekit-developer/imagekit-java)
@@ -435,8 +436,6 @@ getFileListRequest.setFileType("all");
 getFileListRequest.setLimit("4");
 getFileListRequest.setSkip("1");
 getFileListRequest.setTags(tags);
-getFileListRequest.setIncludeFolder(false);
-getFileListRequest.setName("new_car.jpg");      // name match is case-sensitive.
 ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
 System.out.println("======FINAL RESULT=======");
 System.out.println(resultList);
