@@ -78,7 +78,7 @@ UrlEndpoint=<-YOUR-ENDPOINT-URL-HERE->
 PrivateKey=<-YOUR-PRIVATE-KEY-HERE->
 PublicKey=<-YOUR-PUBLIC-KEY-HERE->
 ```
-Step 2. Then you need to initialize ImageKit with that configuration.
+Step 2. Then you need to initialize ImageKit with that configuration. 
 
  ```java
 import io.imagekit.sdk.ImageKit;
