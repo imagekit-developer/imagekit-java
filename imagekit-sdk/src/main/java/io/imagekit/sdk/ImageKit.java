@@ -15,6 +15,7 @@ import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.Calculation;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
+import retrofit2.http.QueryMap;
 
 import java.util.List;
 import java.util.Map;
@@ -100,18 +101,18 @@ public final class ImageKit {
 	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest)
 			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
 			BadRequestException, UnknownException {
-		return restClient.updateDetail(fileUpdateRequest);
+		return restClient.updateFileDetail(fileUpdateRequest);
 	}
 
 	/**
 	 *
-	 * @param options is an map it may contain keys [ "path", "fileType", "tags",
+	 * @param getFileListRequest is an map it may contain keys [ "path", "fileType", "tags",
 	 *                "includeFolder", "name", "limit", "skip"]
 	 * @return ResultList class that contains list of BaseFile
 	 */
-	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
-			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
-		return restClient.getFileList(options);
+	public ResultList getFileList(GetFileListRequest getFileListRequest) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException, IllegalAccessException, InstantiationException {
+		return restClient.getFileList(getFileListRequest);
 	}
 
 	/**
@@ -349,6 +350,17 @@ public final class ImageKit {
 
 	/**
 	 *
+	 * @param fileId & versionId
+	 * @return a Result class
+	 */
+	public Result restoreFileVersion(String fileId, String versionId)
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
+		return restClient.restoreFileVersion(fileId, versionId);
+	}
+
+	/**
+	 *
 	 * @param createFolderRequest which contains folderPath that is full path to the
 	 *                            folder you want to delete
 	 * @return Result class
@@ -372,7 +384,7 @@ public final class ImageKit {
 	/**
 	 *
 	 * @param copyFolderRequest that contains sourceFolderPath, destinationPath,
-	 *                          includeVersions
+	 *                          includeFileVersions
 	 * @return Result class
 	 */
 	public ResultOfFolderActions copyFolder(CopyFolderRequest copyFolderRequest)

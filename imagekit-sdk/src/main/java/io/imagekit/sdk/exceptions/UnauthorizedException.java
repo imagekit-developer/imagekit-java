@@ -16,6 +16,14 @@ public class UnauthorizedException extends Exception {
 		this.responseMetaData = responseMetaData;
 	}
 
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
+
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
+
 	@Override
 	public String toString() {
 		return "UnauthorizedException{" + "message='" + message + '\'' + ", help='" + help + '\''

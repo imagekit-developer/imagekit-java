@@ -16,6 +16,14 @@ public class TooManyRequestsException extends Exception {
 		this.responseMetaData = responseMetaData;
 	}
 
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
+
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
+
 	@Override
 	public String toString() {
 		return "TooManyRequestsException{" + "message='" + message + '\'' + ", help='" + help + '\''

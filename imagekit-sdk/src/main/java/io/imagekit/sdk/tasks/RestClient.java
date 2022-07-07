@@ -1,6 +1,9 @@
 package io.imagekit.sdk.tasks;
 
+import com.fasterxml.jackson.databind.JavaType;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
@@ -25,6 +28,7 @@ import io.imagekit.sdk.models.CustomMetaDataFieldUpdateRequest;
 import io.imagekit.sdk.models.DeleteFileVersionRequest;
 import io.imagekit.sdk.models.DeleteFolderRequest;
 import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.GetFileListRequest;
 import io.imagekit.sdk.models.MoveFileRequest;
 import io.imagekit.sdk.models.MoveFolderRequest;
 import io.imagekit.sdk.models.MetaData;
@@ -36,6 +40,9 @@ import io.imagekit.sdk.utils.Utils;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -66,6 +73,7 @@ public class RestClient {
 		request = new Request.Builder().url(UPLOAD_BASE_URL.concat("api/v1/files/upload")).post(body)
 				.headers(Headers.of(headers)).build();
 
+
 		try {
 			Response response = client.newCall(request).execute();
 			String respBody = "";
@@ -84,8 +92,9 @@ public class RestClient {
 		return result;
 	}
 
-	public Result updateDetail(FileUpdateRequest fileUpdateRequest) throws ForbiddenException, TooManyRequestsException,
-			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public Result updateFileDetail(FileUpdateRequest fileUpdateRequest)
+			throws ForbiddenException, TooManyRequestsException, InternalServerException, UnauthorizedException,
+			BadRequestException, UnknownException {
 		Result result = null;
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/details"),
@@ -111,13 +120,43 @@ public class RestClient {
 		return result;
 	}
 
-	public ResultList getFileList(Map<String, String> options) throws ForbiddenException, TooManyRequestsException,
-			InternalServerException, UnauthorizedException, BadRequestException, UnknownException {
+	public ResultList getFileList(GetFileListRequest getFileListRequest) throws ForbiddenException, TooManyRequestsException,
+			InternalServerException, UnauthorizedException, BadRequestException, UnknownException, InstantiationException, IllegalAccessException {
 		ResultList resultList = new ResultList();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
 		QueryMaker queryMaker = new QueryMaker();
-
+		Map<String, String> options = new HashMap<>();
+		if (getFileListRequest.getType() != null) {
+			options.put("type", getFileListRequest.getType());
+		}
+		if (getFileListRequest.getSort() != null) {
+			options.put("sort", getFileListRequest.getSort());
+		}
+		if (getFileListRequest.getPath() != null) {
+			options.put("path", getFileListRequest.getPath());
+		}
+		if (getFileListRequest.getSearchQuery() != null) {
+			options.put("searchQuery", getFileListRequest.getSearchQuery());
+		}
+		if (getFileListRequest.getFileType() != null) {
+			options.put("fileType", getFileListRequest.getFileType());
+		}
+		if (getFileListRequest.getLimit() != null) {
+			options.put("limit", getFileListRequest.getLimit());
+		}
+		if (getFileListRequest.getSkip() != null) {
+			options.put("skip", getFileListRequest.getSkip());
+		}
+		if (getFileListRequest.getTags() != null) {
+			options.put("tags", Arrays.toString(getFileListRequest.getTags()));
+		}
+        if (getFileListRequest.getIncludeFolder() != null) {
+            options.put("includeFolder", String.valueOf(getFileListRequest.getIncludeFolder()));
+        }
+        if (getFileListRequest.getName() != null) {
+            options.put("name", getFileListRequest.getName());
+        }
 		for (Map.Entry<String, String> entry : options.entrySet()) {
 			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
 		}
@@ -131,8 +170,9 @@ public class RestClient {
 			String respBody = "";
 			if (response.code() == 200) {
 				respBody = response.body().string();
-				List<BaseFile> files = new Gson().fromJson(respBody, new TypeToken<List<BaseFile>>() {
-				}.getType());
+				List<BaseFile> files = new Gson().fromJson(respBody,
+						new TypeToken<List<BaseFile>>() {
+						}.getType());
 				resultList.setResults(files);
 				resultList.setRaw(respBody);
 			} else {
@@ -178,7 +218,7 @@ public class RestClient {
 		ResultMetaData result = new ResultMetaData();
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
-		String url = String.format(Locale.US, "https://api.imagekit.io/v1/files/%s/metadata", fileId);
+		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/metadata"), fileId);
 
 		request = new Request.Builder().url(url).get().headers(Headers.of(headers)).build();
 
@@ -299,7 +339,6 @@ public class RestClient {
 
 		try {
 			Response response = client.newCall(request).execute();
-			System.out.println("res:==> " + response.request().body());
 			String respBody = "";
 			if (response.code() == 200 || response.code() == 201) {
 				respBody = response.body().string();
@@ -675,6 +714,40 @@ public class RestClient {
 			throw new UnknownException(e.getMessage(), e.getCause());
 		}
 		return resultRenameFile;
+	}
+
+	public Result restoreFileVersion(String fileId, String versionId)
+			throws NotFoundException, BadRequestException, InternalServerException, UnknownException,
+			ForbiddenException, TooManyRequestsException, UnauthorizedException {
+		Result resultFileVersionDetails = new Result();
+		Map<String, String> headers = Utils.getHeaders(imageKit);
+
+		String url = String.format(Locale.US, API_BASE_URL.concat("v1/files/%s/versions/%s/restore"), fileId,
+				versionId);
+		RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"), "");
+		request = new Request.Builder().url(url).put(requestBody).headers(Headers.of(headers)).build();
+
+		try {
+			Response response = client.newCall(request).execute();
+			String respBody = "";
+			if (response.code() == 200) {
+				System.out.println("20000000000000");
+				respBody = response.body().string();
+				resultFileVersionDetails = new Gson().fromJson(respBody, Result.class);
+			} else if (response.code() == 404) {
+				System.out.println("400000000000004");
+				ResultException result = Utils.populateResult(response);
+				throw new NotFoundException(result.getMessage(), null, false, false, result.getMessage(),
+						result.getHelp(), result.getResponseMetaData());
+			} else {
+				Utils.generalApiThrowException(response);
+			}
+			Utils.populateResponseMetadata(respBody, resultFileVersionDetails.getResponseMetaData(), response.code(),
+					response.headers().toMultimap());
+		} catch (IOException e) {
+			throw new UnknownException(e.getMessage(), e.getCause());
+		}
+		return resultFileVersionDetails;
 	}
 
 	public ResultEmptyBlock createFolder(CreateFolderRequest createFolderRequest) throws UnknownException {

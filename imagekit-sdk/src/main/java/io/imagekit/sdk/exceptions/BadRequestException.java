@@ -8,8 +8,16 @@ public class BadRequestException extends Exception {
 	private String help;
 	private ResponseMetaData responseMetaData;
 
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
+
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
+
 	public BadRequestException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace,
-			String message1, String help, ResponseMetaData responseMetaData) {
+							   String message1, String help, ResponseMetaData responseMetaData) {
 		super(message, cause, enableSuppression, writableStackTrace);
 		this.message = message1;
 		this.help = help;
