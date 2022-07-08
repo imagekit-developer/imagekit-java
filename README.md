@@ -538,7 +538,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **6. Add tags**
 
-Accepts the file IDs and tags and add tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk)
+Accepts an object of class `TagsRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk) can be passed via their setter functions to get the results.
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -557,7 +557,7 @@ System.out.println(resultTags.getResponseMetaData().getMap());
 
 **7. Remove tags**
 
-Accepts the file IDs and tags to remove tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
+Accepts an object of class `TagsRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk) can be passed via their setter functions to get the results.
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -576,7 +576,7 @@ System.out.println(resultTags.getResponseMetaData().getMap());
 
 **8. Remove AI tags**
 
-Accepts the file IDs and AI tags to remove AI tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk)
+Accepts an object of class `AITagsRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk) can be passed via their setter functions to get the results.
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -612,7 +612,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **10. Delete FileVersion**
 
-Accepts the file ID and version ID (particular version of the file except current version) to delete a FileVersion as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version).
+Accepts an object of class `DeleteFileVersionRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version) can be passed via their setter functions to get the results.
 
 ```java
 DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
@@ -648,7 +648,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **12. Copy file**
 
-Accepts the sourceFilePath and destinationPath to copy the File as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
+Accepts an object of class `CopyFileRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file) can be passed via their setter functions to get the results.
 
 ```java
 CopyFileRequest copyFileRequest = new CopyFileRequest();
@@ -666,7 +666,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **13. Move file**
 
-Accepts the sourceFilePath and destinationPath to move the File as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/move-file).
+Accepts an object of class `MoveFileRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/move-file) can be passed via their setter functions to get the results.
 
 ```java
 MoveFileRequest moveFileRequest = new MoveFileRequest();
@@ -683,7 +683,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **14. Rename file**
 
-Accepts the filePath and newFileName to rename file as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file).
+Accepts an object of class `RenameFileRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file) can be passed via their setter functions to get the results.
 
 ```java
 RenameFileRequest renameFileRequest = new RenameFileRequest();
@@ -715,7 +715,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **16. Create Folder**
 
-Accepts the folderName and parentFolderPath to cretae folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder).
+Accepts an object of class `CreateFolderRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder) can be passed via their setter functions to get the results.
 
 ```java
 CreateFolderRequest createFolderRequest = new CreateFolderRequest();
@@ -732,7 +732,7 @@ System.out.println(resultEmptyBlock.getResponseMetaData().getMap());
 
 **17. Delete Folder**
 
-Accepts the folderPath to delete folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder).
+Accepts an object of class `DeleteFolderRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder) can be passed via their setter functions to get the results.
 
 ```java
 DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
@@ -748,7 +748,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **18. Copy Folder**
 
-Accepts the sourceFolderPath, destinationPath and includeFileVersions to copy folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
+Accepts an object of class `CopyFolderRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder) can be passed via their setter functions to get the results.
 
 ```java
 CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
@@ -765,7 +765,7 @@ System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 
 **19. Move Folder**
 
-Accepts the sourceFolderPath and destinationPath to move folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder).
+Accepts an object of class `MoveFolderRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder) can be passed via their setter functions to get the results.
 
 ```java
 MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
