@@ -65,14 +65,17 @@ Step 2. Add the dependency in the POM file:
 
 ## Initialization
 
-**Step 1**. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use quote(`'` or `"`) in values.
+**Step 1**. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use quote(`'` or `"`) in values. 
+
+ You can get the value of [URL-endpoint](https://imagekit.io/dashboard#url-endpoints) from your ImageKit dashboard. API keys can be obtained from the [developer](https://imagekit.io/dashboard/developer/api-keys) section in your ImageKit dashboard.
 
 ```editorconfig
 # Put essential values of keys [UrlEndpoint, PrivateKey, PublicKey]
-UrlEndpoint=<-YOUR-ENDPOINT-URL-HERE->
-PrivateKey=<-YOUR-PRIVATE-KEY-HERE->
-PublicKey=<-YOUR-PUBLIC-KEY-HERE->
+UrlEndpoint=your_public_api_key
+PrivateKey=your_private_api_key
+PublicKey=https://ik.imagekit.io/imagekit_id/
 ```
+
 **Step 2**. Then you need to initialize ImageKit with that configuration. 
 
  ```java
