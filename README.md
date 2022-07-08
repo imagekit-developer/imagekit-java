@@ -124,27 +124,27 @@ This document presents a list of changes that break existing functionality of pr
 
 Changes from 1.0.3 -> 2.0.0 are listed below
 
-1. Result object raw and getMap() properties:
+1. Result `raw` object and `getMap()` properties:
 
 **What changed**
-- raw and getMap() has been deprecated.
+- `raw` and `getMap()` has been deprecated.
 
 **Who is affected?**
-- This affects any development that uses the raw or getMap() from response object of APIs that is Result object.
+- This affects any development that uses the `raw` or `getMap()` from the response object of APIs and Result object.
 
 **How should I update my code?**
-- If you still need to use raw and getMap(), write it with using it with result's internal property such as result.getResponseMetaData().getRaw(). 
+- If you still need to use `raw` and `getMap()`, do this `result.getResponseMetaData().getRaw()`.
  
-2. Result object message and isSuccessful boolean properties:
+2. Result object `message` and `isSuccessful` boolean properties:
 
 **What changed**
-- message and isSuccessful has been replaced with custom exceptions according to response code.
+- `message` and `isSuccessful` have been replaced with custom exceptions according to response code.
 
 **Who is affected?**
-- This affects any development that uses the message or isSuccessful from response object of APIs that is Result object.
+- This affects any development that uses the `message` or `isSuccessful` from response object of APIs that is Result object.
 
 **How should I update my code?**
-- If you still need to use message it will be there in custom exception and could be raised isSuccessful properties in your own code from status code which is coming in the response or custom exception.
+- If you still need to use `message` it will be there in the custom exception and could be raised `isSuccessful` properties in your own code from status code with `httpStatusCode` that is coming in the responseMetaData with `getResponseMetaData()` of response object or custom exception.
 
 
 ## URL generation
