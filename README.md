@@ -119,27 +119,27 @@ This document presents a list of changes that break the existing functionality o
 
 Changes from 1.0.3 -> 2.0.0 are listed below
 
-1. Result raw object and getMap() properties:
+1. Result `raw` object and `getMap()` properties:
 
 **What changed**
-- raw and getMap() has been deprecated.
+- `raw` and `getMap()` has been deprecated.
 
 **Who is affected?**
-- This affects any development that uses the raw or getMap() from the response object of APIs and Result object.
+- This affects any development that uses the `raw` or `getMap()` from the response object of APIs and Result object.
 
 **How should I update my code?**
-- If you still need to use raw and getMap(), do this `result.getResponseMetaData().getRaw()`.
+- If you still need to use `raw` and `getMap()`, do this `result.getResponseMetaData().getRaw()`.
  
-2. Result object message and isSuccessful boolean properties:
+2. Result object `message` and `isSuccessful` boolean properties:
 
 **What changed**
-- message and isSuccessful have been replaced with custom exceptions according to response code.
+- `message` and `isSuccessful` have been replaced with custom exceptions according to response code.
 
 **Who is affected?**
-- This affects any development that uses the message or isSuccessful from response object of APIs that is Result object.
+- This affects any development that uses the `message` or `isSuccessful` from response object of APIs that is Result object.
 
 **How should I update my code?**
-- If you still need to use message it will be there in the custom exception and could be raised isSuccessful properties in your own code from status code that is coming in the response or custom exception.
+- If you still need to use `message` it will be there in the custom exception and could be raised `isSuccessful` properties in your own code from status code with `httpStatusCode` that is coming in the responseMetaData with `getResponseMetaData()` of response object or custom exception.
 
 
 ## URL generation
@@ -356,7 +356,7 @@ If you want to generate transformations in your application and add them to the 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media library. It
 accepts an object of the `FileCreateRequest` class that contains all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload).
 
-The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. If `file` is byte array then it's require another parameter named `mediaType` to upload a file. The method returns object of `Result` class. It contains method `isSuccessful()` (return boolean), `getMessage()` for error message and other file parameter responsed by server.
+The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. The method returns object of `Result` in case of successful, or it will throw custom exception in case of failure.
 
 Sample usage
 
@@ -406,9 +406,9 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-If the upload is successful, `getMessage()` will be `None`, and the result will be an object of `Result` class that contains the same all the parameters received from ImageKit's servers, and `isSuccessful()` will return true.
+If the upload is successful, result will be there as an object of `Result` class that contains the same all the parameters received from ImageKit's servers.
 
-If the upload fails, `getMessage()` will contain the same error message received from ImageKit's servers, and `isSuccessful()` will return false.
+If the upload fails, custom exception getting thrown and by doinf`getMessage()` will contain the same error message received from ImageKit's servers.
 
 
 ## File Management

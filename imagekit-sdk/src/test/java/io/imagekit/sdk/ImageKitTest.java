@@ -48,7 +48,7 @@ public class ImageKitTest {
 		assertNotNull(auth);
 		assertEquals("your_token", auth.get("token"));
 		assertEquals("1582269249", auth.get("expire"));
-		assertEquals("98598e12a8eec9fedc883df4ae598618aaf24d87", auth.get("signature"));
+		assertEquals("e71bcd6031016b060d349d212e23e85c791decdd", auth.get("signature"));
 	}
 
 	@Test
