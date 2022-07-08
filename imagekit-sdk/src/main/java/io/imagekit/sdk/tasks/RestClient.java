@@ -147,7 +147,7 @@ public class RestClient {
 			options.put("skip", getFileListRequest.getSkip());
 		}
 		if (getFileListRequest.getTags() != null) {
-			options.put("tags", Arrays.toString(getFileListRequest.getTags()));
+			options.put("tags", String.join(",", getFileListRequest.getTags()));
 		}
 		for (Map.Entry<String, String> entry : options.entrySet()) {
 			queryMaker.put(String.format("%s=%s", entry.getKey(), entry.getValue()));
