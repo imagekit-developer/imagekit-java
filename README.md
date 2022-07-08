@@ -420,7 +420,7 @@ The SDK provides a simple interface for all the [media APIs mentioned here](http
 
 **1. List & Search Files**
 
-Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the correct values to get the results.
+Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed via their setter functions to get the results.
 
 ```java
 String[] tags = new String[3];
@@ -493,7 +493,7 @@ System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
 
 **5. Update File Details**
 
-Accepts an object of class `FileUpdateRequest` specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed as-is with the correct values to get the results.
+Accepts an object of class `FileUpdateRequest` specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed via their setter functions to get the results.
 
 ```java
 List<String> tags = new ArrayList<>();
