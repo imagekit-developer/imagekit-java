@@ -6,13 +6,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
  
-Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file
-operations.
+Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file operations.
 
-ImageKit is a complete image optimization and transformation solution that comes with and
-[image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your
-existing infrastructure - storage like AWS s3, web servers, your CDN, and custom domain names, allowing you to deliver
-optimize images in minutes with minimal code changes
+ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
 Table of contents -
  * [Installation](#installation)
@@ -303,49 +299,64 @@ transformation code from ImageKit docs as the name when using in the ```url``` f
 
 
 | Supported Transformation Name | Translates to parameter |
-| ----------------------------- | ----------------------- |
-| height                        | h                       |
-| width                         | w                       |
-| aspect_ratio                  | ar                      |
-| quality                       | q                       |
-| crop                          | c                       |
-| crop_mode                     | cm                      |
-| x                             | x                       |
-| y                             | y                       |
-| focus                         | fo                      |
-| format                        | f                       |
-| radius                        | r                       |
-| background                    | bg                      |
-| border                        | bo                      |
-| rotation                      | rt                      |
-| blur                          | bl                      |
-| named                         | n                       |
-| overlay_image                 | oi                      |
-| overlay_x                     | ox                      |
-| overlay_y                     | oy                      |
-| overlay_focus                 | ofo                     |
-| overlay_height                | oh                      |
-| overlay_width                 | ow                      |
-| overlay_text                  | ot                      |
-| overlay_text_font_size        | ots                     |
-| overlay_text_font_family      | otf                     |
-| overlay_text_color            | otc                     |
-| overlay_alpha                 | oa                      |
-| overlay_text_typography       | ott                     |
-| overlay_background            | obg                     |
-| overlay_image_trim            | oit                     |
-| progressive                   | pr                      |
-| lossless                      | lo                      |
-| trim                          | t                       |
-| metadata                      | md                      |
-| color_profile                 | cp                      |
-| default_image                 | di                      |
-| dpr                           | dpr                     |
-| effect_sharpen                | e-sharpen               |
-| effect_usm                    | e-usm                   |
-| effect_contrast               | e-contrast              |
-| effect_gray                   | e-grayscale             |
-| original                      | orig                    |
+|-------------------------------|-------------------------|
+| height | h |
+| width | w |
+| aspectRatio | ar |
+| quality | q |
+| crop | c |
+| cropMode | cm |
+| x | x |
+| y | y |
+| focus | fo |
+| format | f |
+| radius | r |
+| background | bg |
+| border | b |
+| rotation | rt |
+| blur | bl |
+| named | n |
+| overlayX | ox |
+| overlayY | oy |
+| overlayFocus | ofo |
+| overlayHeight | oh |
+| overlayWidth | ow |
+| overlayImage | oi |
+| overlayImageTrim | oit |
+| overlayImageAspectRatio | oiar |
+| overlayImageBackground | oibg |
+| overlayImageBorder | oib |
+| overlayImageDPR | oidpr |
+| overlayImageQuality | oiq |
+| overlayImageCropping | oic |
+| overlayImageFocus | oifo |
+| overlayText | ot |
+| overlayTextFontSize | ots |
+| overlayTextFontFamily | otf |
+| overlayTextColor | otc |
+| overlayTextTransparency | oa |
+| overlayAlpha | oa |
+| overlayTextTypography | ott |
+| overlayBackground | obg |
+| overlayTextEncoded | ote |
+| overlayTextWidth | otw |
+| overlayTextBackground | otbg |
+| overlayTextPadding | otp |
+| overlayTextInnerAlignment | otia |
+| overlayRadius | or |
+| progressive | pr |
+| lossless | lo |
+| trim | t |
+| metadata | md |
+| colorProfile | cp |
+| defaultImage | di |
+| dpr | dpr |
+| effectSharpen | e-sharpen |
+| effectUSM | e-usm |
+| effectContrast | e-contrast |
+| effectGray | e-grayscale |
+| original | orig |
+| raw | `replaced by the parameter value` |
 
 
 ## File Upload
