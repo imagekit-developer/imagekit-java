@@ -1,4 +1,3 @@
-
 # ImageKit Java SDK
 
 [![Java CI](https://github.com/imagekit-developer/imagekit-java/workflows/Java%20CI/badge.svg)](https://github.com/imagekit-developer/imagekit-java)
@@ -6,13 +5,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
  
-Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file
-operations.
+Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file operations.
 
-ImageKit is a complete image optimization and transformation solution that comes with and
-[image CDN](https://imagekit.io/features/imagekit-infrastructure) and media storage. It can be integrated with your
-existing infrastructure - storage like AWS s3, web servers, your CDN, and custom domain names, allowing you to deliver
-optimize images in minutes with minimal code changes
+ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
 
 Table of contents -
  * [Installation](#installation)
@@ -37,13 +32,13 @@ Table of contents -
 Step 1. Add the JitPack repository to your build file
 ```
 allprojects {
-	repositories {
-		...
-		maven { url 'https://jitpack.io' }
-	}
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
 }
 ```
-Step 2. Add the dependency on project's `build.gradle`:
+Step 2. Add the dependency on the project's `build.gradle`:
 ```
 dependencies {
         implementation 'com.github.imagekit-developer:imagekit-java:2.0.0'
@@ -59,7 +54,7 @@ Step 1. Add the JitPack repository to your build file
     </repository>
 </repositories>
 ```
-Step 2. Add the dependency in POM file:
+Step 2. Add the dependency in the POM file:
 ```
 <dependency>
     <groupId>com.github.imagekit-developer</groupId>
@@ -70,7 +65,7 @@ Step 2. Add the dependency in POM file:
 
 ## Initialization
 
-Step 1. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use quote(`'` or `"`) in values.
+**Step 1**. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use quote(`'` or `"`) in values.
 
 ```editorconfig
 # Put essential values of keys [UrlEndpoint, PrivateKey, PublicKey]
@@ -78,7 +73,7 @@ UrlEndpoint=<-YOUR-ENDPOINT-URL-HERE->
 PrivateKey=<-YOUR-PRIVATE-KEY-HERE->
 PublicKey=<-YOUR-PUBLIC-KEY-HERE->
 ```
-Step 2. Then you need to initialize ImageKit with that configuration. 
+**Step 2**. Then you need to initialize ImageKit with that configuration. 
 
  ```java
 import io.imagekit.sdk.ImageKit;
@@ -114,11 +109,11 @@ You can use this Java SDK for 3 different kinds of methods:
 * URL generation
 * file upload
 * file management
-* 
+
 The usage of the SDK has been explained below.
 
 ## Change log
-This document presents a list of changes that break existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and they will be in major versions.
+This document presents a list of changes that break the existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and will be in major versions.
 
 ### Breaking History:
 
@@ -151,10 +146,7 @@ Changes from 1.0.3 -> 2.0.0 are listed below
 
 **1. Using image path and URL-endpoint**
 
-This method allows you to create a URL using the path where the image exists and the URL-endpoint you want to use to access the image. You can refer to the documentation
-[here](https://docs.imagekit.io/integration/url-endpoints) to read more about URL endpoints
-in ImageKit and the section about [image origins](https://docs.imagekit.io/integration/configure-origin) to understand
-about paths with different kinds of origins.
+This method allows you to create an URL to access a file using the relative file path and the ImageKit URL endpoint (`urlEndpoint`). The file can be an image, video, or any other static file supported by ImageKit.
 
 ```java
 Map<String, String> queryParam=new HashMap<>();
@@ -180,9 +172,7 @@ https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-600/default-image.jpg?v=123
 ```
 
 **2. Using full image URL**
-This method allows you to add transformation parameters to an existing complete URL that is already mapped to ImageKit
-using the `src` parameter. This method should be used if you have the complete image URL mapped to ImageKit stored in your
-database.
+This method allows you to add transformation parameters to an absolute URL. For example, if you have configured a custom CNAME and have absolute asset URLs in your database or CMS, you will often need this.
 
 ```java
 List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
@@ -209,13 +199,13 @@ The ```.getUrl()``` method accepts the following parameters
 
 | Option                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| urlEndpoint            | Optional. `(Type: String)` The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified at the time of SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/                                                                                                                                                                                                                                                                                                                                             |
+| urlEndpoint            | Optional. `(Type: String)` The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified during SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/                                                                                                                                                                                                                                                                                                                                             |
 | path                    | Conditional. `(Type: String)` This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                                                                                                |
 | src                     | Conditional. `(Type: String)` This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                           |
 | transformation          | Optional. `(Type: List<Map<String,String>>)` An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
-| transformationPosition | Optional. `(Type: String)` Default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query` which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                 |
-| queryParameters        | Optional. `(Type: Map<String, String>)` These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameter to your URLs.                                                                                                                                                                                                                                                                                                                           |
-| signed                  | Optional. `(Type: Boolean)` Default is `false`. If set to `true`, the SDK generates a signed image URL adding the image signature to the image URL. This can only be used if you are creating the URL with the `url_endpoint` and `path` parameters, and not with the `src` parameter.                                                                                                                                                                                                                                                                                            |
+| transformationPosition | Optional. `(Type: String)` Default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query`, which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                 |
+| queryParameters        | Optional. `(Type: Map<String, String>)` These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameters to your URLs.                                                                                                                                                                                                                                                                                                                           |
+| signed                  | Optional. `(Type: Boolean)` Default is `false`. If set to `true`, the SDK generates a signed image URL adding the image signature to the image URL. This can only be used if you create the URL with the `url_endpoint` and `path` parameters and not with the `src` parameter.                                                                                                                                                                                                                                                                                            |
 | expireSeconds          | Optional. `(Type: Integer)` Meant to be used along with the `signed` parameter to specify the time in seconds from now when the URL should expire. If specified, the URL contains the expiry timestamp in the URL, and the image signature is modified accordingly.                                                                                                                                                                                                                                                                                                                |
 
 
@@ -245,7 +235,7 @@ Sample Result URL -
 https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300&w-400:rt-90
 ```
 
-**2. Sharpening and contrast transforms and a progressive JPG image**
+**2. Sharpening and contrast transform and a progressive JPG image**
 
 There are some transforms like [Sharpening](https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation)
 that can be added to the URL with or without any other value. To use such transforms without specifying a value, specify
@@ -296,67 +286,77 @@ https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=15
 
 **List of transformations**
 
-The complete list of transformations supported and their usage in ImageKit can be found [here](https://docs.imagekit.io/features/image-transformations/resize-crop-and-other-transformations).
-The SDK gives a name to each transformation parameter, making the code simpler, making the code more straightforward and readable.
-If a transformation is supported in ImageKit, but a name for it cannot be found in the table below, then use the
-transformation code from ImageKit docs as the name when using in the ```url``` function.
+See the complete list of [image](https://docs.imagekit.io/features/image-transformations) and [video](https://docs.imagekit.io/features/video-transformation) transformations supported in ImageKit. The SDK gives a name to each transformation parameter e.g. `height` for `h` and `width` for `w` parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
 
+If you want to generate transformations in your application and add them to the URL as it is, use the `raw` parameter.
 
 | Supported Transformation Name | Translates to parameter |
-| ----------------------------- | ----------------------- |
-| height                        | h                       |
-| width                         | w                       |
-| aspect_ratio                  | ar                      |
-| quality                       | q                       |
-| crop                          | c                       |
-| crop_mode                     | cm                      |
-| x                             | x                       |
-| y                             | y                       |
-| focus                         | fo                      |
-| format                        | f                       |
-| radius                        | r                       |
-| background                    | bg                      |
-| border                        | bo                      |
-| rotation                      | rt                      |
-| blur                          | bl                      |
-| named                         | n                       |
-| overlay_image                 | oi                      |
-| overlay_x                     | ox                      |
-| overlay_y                     | oy                      |
-| overlay_focus                 | ofo                     |
-| overlay_height                | oh                      |
-| overlay_width                 | ow                      |
-| overlay_text                  | ot                      |
-| overlay_text_font_size        | ots                     |
-| overlay_text_font_family      | otf                     |
-| overlay_text_color            | otc                     |
-| overlay_alpha                 | oa                      |
-| overlay_text_typography       | ott                     |
-| overlay_background            | obg                     |
-| overlay_image_trim            | oit                     |
-| progressive                   | pr                      |
-| lossless                      | lo                      |
-| trim                          | t                       |
-| metadata                      | md                      |
-| color_profile                 | cp                      |
-| default_image                 | di                      |
-| dpr                           | dpr                     |
-| effect_sharpen                | e-sharpen               |
-| effect_usm                    | e-usm                   |
-| effect_contrast               | e-contrast              |
-| effect_gray                   | e-grayscale             |
-| original                      | orig                    |
+|-------------------------------|-------------------------|
+| height | h |
+| width | w |
+| aspectRatio | ar |
+| quality | q |
+| crop | c |
+| cropMode | cm |
+| x | x |
+| y | y |
+| focus | fo |
+| format | f |
+| radius | r |
+| background | bg |
+| border | b |
+| rotation | rt |
+| blur | bl |
+| named | n |
+| overlayX | ox |
+| overlayY | oy |
+| overlayFocus | ofo |
+| overlayHeight | oh |
+| overlayWidth | ow |
+| overlayImage | oi |
+| overlayImageTrim | oit |
+| overlayImageAspectRatio | oiar |
+| overlayImageBackground | oibg |
+| overlayImageBorder | oib |
+| overlayImageDPR | oidpr |
+| overlayImageQuality | oiq |
+| overlayImageCropping | oic |
+| overlayImageFocus | oifo |
+| overlayText | ot |
+| overlayTextFontSize | ots |
+| overlayTextFontFamily | otf |
+| overlayTextColor | otc |
+| overlayTextTransparency | oa |
+| overlayAlpha | oa |
+| overlayTextTypography | ott |
+| overlayBackground | obg |
+| overlayTextEncoded | ote |
+| overlayTextWidth | otw |
+| overlayTextBackground | otbg |
+| overlayTextPadding | otp |
+| overlayTextInnerAlignment | otia |
+| overlayRadius | or |
+| progressive | pr |
+| lossless | lo |
+| trim | t |
+| metadata | md |
+| colorProfile | cp |
+| defaultImage | di |
+| dpr | dpr |
+| effectSharpen | e-sharpen |
+| effectUSM | e-usm |
+| effectContrast | e-contrast |
+| effectGray | e-grayscale |
+| original | orig |
+| raw | `replaced by the parameter value` |
 
 
 ## File Upload
 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media library. It
-accepts an object of `FileCreateRequest` class that contains all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload).
+accepts an object of the `FileCreateRequest` class that contains all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload).
 
-The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name` if `file` is byte array then it's require another parameter named `mediaType` to upload a file. The method returns object of `Result` class. It contains method `isSuccessful()` (return boolean), `getMessage()` for error message and other file parameter responsed by server.
-ImageKit upload API using the same parameter name as specified in the upload API documentation. For example, to
-specify tags for a file at the time of upload use the tags parameter as specified in the
-[documentation here](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload)
+The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. If `file` is byte array then it's require another parameter named `mediaType` to upload a file. The method returns object of `Result` class. It contains method `isSuccessful()` (return boolean), `getMessage()` for error message and other file parameter responsed by server.
 
 Sample usage
 
@@ -406,21 +406,18 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-If the upload is successful, `getMessage()` will be `None`, and the result will be an object of `Result` class that contains the same all the parameters received from ImageKit's servers and `isSuccessful()` will return true.
+If the upload is successful, `getMessage()` will be `None`, and the result will be an object of `Result` class that contains the same all the parameters received from ImageKit's servers, and `isSuccessful()` will return true.
 
-If the upload fails, `getMessage()` will contain the same error message received from ImageKit's servers and `isSuccessful()` will return false.
+If the upload fails, `getMessage()` will contain the same error message received from ImageKit's servers, and `isSuccessful()` will return false.
 
 
 ## File Management
 
-The SDK provides a simple interface for all the [media APIs mentioned here](https://docs.imagekit.io/api-reference/media-api)
-to manage your files. This also returns `error` and `result`, the error will be `None` if API succeeds.
+The SDK provides a simple interface for all the [media APIs mentioned here](https://docs.imagekit.io/api-reference/media-api) to manage your files. This also returns `error` and `result`, the error will be `None` if API succeeds.
 
 **1. List & Search Files**
 
-Accepts an object specifying the parameters to be used to list and search files. All parameters specified
-in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the
-correct values to get the results.
+Accepts an object specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the correct values to get the results.
 
 ```java
 String[] tags = new String[3];
