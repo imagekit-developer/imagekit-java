@@ -142,7 +142,7 @@ Changes from 1.0.3 -> 2.0.0 are listed below
 - This affects any development that uses the `message` or `isSuccessful` from response object of APIs that is Result object.
 
 **How should I update my code?**
-- If you still need to use `message` it will be there in the custom exception and could be raised `isSuccessful` properties in your own code from status code with `httpStatusCode` that is coming in the responseMetaData with `getResponseMetaData()` of response object or custom exception.
+- If you still need to use `message` it will be there in the custom exceptions that could be raised when calling the various API methods. `isSuccessful` can be understood to be `true` if the API method doesn't throw any exception.
 
 
 ## URL generation
@@ -411,7 +411,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 If the upload is successful, result will be there as an object of `Result` class that contains the same all the parameters received from ImageKit's servers.
 
-If the upload fails, custom exception getting thrown and by doinf`getMessage()` will contain the same error message received from ImageKit's servers.
+If the upload fails, custom exception is thrown and `getMessage()` can be called to get the error message received from ImageKit's servers.
 
 
 ## File Management
