@@ -420,7 +420,7 @@ The SDK provides a simple interface for all the [media APIs mentioned here](http
 
 **1. List & Search Files**
 
-Accepts an object specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the correct values to get the results.
+Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed via their setter functions to get the results.
 
 ```java
 String[] tags = new String[3];
@@ -462,9 +462,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **3. Get File Versions**
 
-It Gets the File versions as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-versions).
-The argument to the `getFileVersions()` method accepts the fileId for which file has to be get or Fetched the versions.
+Accepts the file ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-versions).
 
 ```java
 String fileId = "62a04834c10d49825c6de9e8";
@@ -479,9 +477,7 @@ System.out.println(resultFileVersions.getResponseMetaData().getMap());
 
 **4. Get File Version details**
 
-It Gets the File version details as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
-The argument to the `getFileVersionDetails()` method accepts the fileId and versionId for which file has to be get or Fetched with particular version.
+Accepts the file ID and version ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
 
 ```java
 String fileId = "62a04834c10d49825c6de9e8";
@@ -497,8 +493,7 @@ System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
 
 **5. Update File Details**
 
-It updates the file properties as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/update-file-details).
-The argument to the `updateDetail()` method is the object of `FileUpdateRequest` class, and the constructor will take the file ID and then set the parameters to be updated.
+Accepts an object of class `FileUpdateRequest` specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed via their setter functions to get the results.
 
 ```java
 List<String> tags = new ArrayList<>();
@@ -543,8 +538,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **6. Add tags**
 
-Add tags using the FileIds and tags which we want to add in request as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk)
+Accepts the file IDs and tags and add tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk)
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -563,8 +557,7 @@ System.out.println(resultTags.getResponseMetaData().getMap());
 
 **7. Remove tags**
 
-Removed tags using the FileIds and tags which we want to remove from request as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
+Accepts the file IDs and tags to remove tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk)
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -583,8 +576,7 @@ System.out.println(resultTags.getResponseMetaData().getMap());
 
 **8. Remove AI tags**
 
-Removed AITags using the FileIds and AITags which we want to remove from request as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk)
+Accepts the file IDs and AI tags to remove AI tags as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk)
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -605,8 +597,7 @@ System.out.println(resultTags.getResponseMetaData().getMap());
 
 **9. Delete File**
 
-Delete a file as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file). The method accepts the file ID of the file that has to be
-deleted.
+Accepts the file ID and delete a file as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file).
 
 ```java
 String fileId="your-file-id";
@@ -621,9 +612,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **10. Delete FileVersion**
 
-It deletes the FileVersion as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version).
-The argument to the `deleteFileVersion()` method accepts the id of file and versionID to delete particular version of the file except current version which we want to be deleted.
+Accepts the file ID and version ID (particular version of the file except current version) to delete a FileVersion as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version).
 
 ```java
 DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
@@ -640,8 +629,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **11. Delete files (bulk)**
 
-Delete multiple files as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-files-bulk). The method accepts multiple file ID of the file that has to be
-deleted.
+Accepts the file IDs to delete files as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-files-bulk).
 
 ```java
 List<String> fileIds = new ArrayList<>();
@@ -660,9 +648,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **12. Copy file**
 
-It Copies the File as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
-The argument to the `copyFile()` method accepts the sourceFilePath and destinationPath that where we want to be copied it.
+Accepts the sourceFilePath and destinationPath to copy the File as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
 
 ```java
 CopyFileRequest copyFileRequest = new CopyFileRequest();
@@ -680,9 +666,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **13. Move file**
 
-It Moves the File as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/move-file).
-The argument to the `moveFile()` method accepts the sourceFilePath and destinationPath that where we want to be moved it.
+Accepts the sourceFilePath and destinationPath to move the File as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/move-file).
 
 ```java
 MoveFileRequest moveFileRequest = new MoveFileRequest();
@@ -699,9 +683,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **14. Rename file**
 
-It Renames the File as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file).
-The argument to the `renameFile()` method accepts the filePath for which you wants to rename and newFileName that with which you want to renamed it with purgeCache boolean.
+Accepts the filePath and newFileName to rename file as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file).
 
 ```java
 RenameFileRequest renameFileRequest = new RenameFileRequest();
@@ -719,9 +701,7 @@ System.out.println(resultRenameFile.getResponseMetaData().getMap());
 
 **15. Restore file Version**
 
-It Restores file version to a different version of a file as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/restore-file-version).
-The argument to the `restoreFileVersion()` method accepts the fileId and versionId.
+Accepts the fileId and versionId to restore file version as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/restore-file-version).
 
 ```java
 Result result = ImageKit.getInstance().restoreFileVersion("fileId", "versionId");
@@ -735,9 +715,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **16. Create Folder**
 
-It Creates the Folder as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder).
-The argument to the `createFolder()` method accepts the folderName and parentFolderPath.
+Accepts the folderName and parentFolderPath to cretae folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder).
 
 ```java
 CreateFolderRequest createFolderRequest = new CreateFolderRequest();
@@ -754,9 +732,7 @@ System.out.println(resultEmptyBlock.getResponseMetaData().getMap());
 
 **17. Delete Folder**
 
-It Deletes the Folder as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder).
-The argument to the `deleteFolder()` method accepts the folderPath for which the folder has to be deleted.
+Accepts the folderPath to delete folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder).
 
 ```java
 DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
@@ -772,9 +748,7 @@ System.out.println(resultNoContent.getResponseMetaData().getMap());
 
 **18. Copy Folder**
 
-It Copies the Folder as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
-The argument to the `copyFolder()` method accepts the sourceFolderPath, destinationPath and includeFileVersions for which the folder has to be copied.
+Accepts the sourceFolderPath, destinationPath and includeFileVersions to copy folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder).
 
 ```java
 CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
@@ -791,9 +765,7 @@ System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 
 **19. Move Folder**
 
-It Moves the Folder as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder).
-The argument to the `moveFolder()` method accepts the sourceFolderPath, destinationPath for which the folder has to be moved.
+Accepts the sourceFolderPath and destinationPath to move folder as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder).
 
 ```java
 MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
@@ -810,9 +782,7 @@ System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
 
 **20. Get Bulk Job Status**
 
-It Gets the Job status as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-move-folder-status).
-The argument to the `getBulkJobStatus()` method accepts the jobId for which job has to be get or Fetched the status.
+Accepts the jobId to get bulk job status as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-move-folder-status).
 
 ```java
 String jobId = "629f44ac7eb0fe8173622d4b";
@@ -827,8 +797,8 @@ System.out.println(resultBulkJobStatus.getResponseMetaData().getMap());
 
 **21. Purge Cache**
 
-Programmatically issue a cache clear request as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache).
-Accepts the full URL of the file for which the cache has to be cleared.
+Accepts a full URL of the file for which the cache has to be cleared as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache).
+
 ```java
 ResultCache result=ImageKit.getInstance().purgeCache("https://ik.imagekit.io/imagekit-id/default-image.jpg");
 System.out.println("======FINAL RESULT=======");
@@ -841,8 +811,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **22. Purge Cache Status**
 
-Get the purge cache request status using the request ID returned when a purge cache request gets submitted as pet the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
+Accepts a request ID and fetch purge cache status as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
 
 ```java
 String requestId="cache-requestId";
@@ -858,6 +827,7 @@ System.out.println(result.getResponseMetaData().getMap());
 **23. Get File Metadata**
 
 Accepts the file ID and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/metadata-api/get-image-metadata-for-uploaded-media-files)
+
 ```java
 String fileId="your-file-id";
 ResultMetaData result=ImageKit.getInstance().getFileMetadata(fileId);
@@ -883,11 +853,9 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **24. Create CustomMetaDataFields**
 
-It creates the CustomMetaDataFields as per the
-[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field).
+Accepts an object of class `CustomMetaDataFieldCreateRequest` specifying the parameters to be used to create cusomMetaDataFields. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field) can be passed as-is with the correct values to get the results.
 
 Check for the [Allowed Values In The Schema](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field#allowed-values-in-the-schema-object).
-The argument to the `createCustomMetaDataFields()` method is the object of `CustomMetaDataFieldCreateRequest` class.
 
 #### Examples:
 
@@ -958,8 +926,7 @@ ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
 
 **25. Get CustomMetaDataFields**
 
-fetches the metadata as per the
-[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
+Accepts the includeDeleted boolean and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
 ResultCustomMetaDataFieldList resultCustomMetaDataFieldList=ImageKit.getInstance().getCustomMetaDataFields(false);
@@ -974,9 +941,7 @@ System.out.println(resultCustomMetaDataFieldList.getResultCustomMetaDataFields()
 
 **26. Edit CustomMetaDataFields**
 
-It edits the CustomMetaDataFields as per the
-[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
-The argument to the `updateCustomMetaDataFields()` method is the object of `CustomMetaDataFieldUpdateRequest` class.
+Accepts an ID of customMetaDataField and object of class `CustomMetaDataFieldUpdateRequest` specifying the parameters to be used to edit cusomMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
@@ -998,9 +963,7 @@ System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
 
 **27. Delete CustomMetaDataFields**
 
-It deletes the CustomMetaDataFields as per the
-[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).
-The argument to the `deleteCustomMetaDataField()` method accepts the id of customMetaDataField which we want to be deleted.
+Accepts the id to delete the customMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).
 
 ```java
 ResultNoContent resultNoContent=ImageKit.getInstance().deleteCustomMetaDataField("id");
