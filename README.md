@@ -142,7 +142,7 @@ Changes from 1.0.3 -> 2.0.0 are listed below
 - This affects any development that uses the `message` or `isSuccessful` from response object of APIs that is Result object.
 
 **How should I update my code?**
-- If you still need to use `message` it will be there in the custom exceptions that could be raised when calling the various API methods. `isSuccessful` can be derived to be `true` if the API method doesn't throw any exception.
+- If you still need to use `message` it will be there in the custom exceptions that could be raised when calling the various API methods. `isSuccessful` can be understood to be `true` if the API method doesn't throw any exception.
 
 
 ## URL generation
