@@ -926,7 +926,7 @@ ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
 
 **25. Get CustomMetaDataFields**
 
-Fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
+Accepts the includeDeleted boolean and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
 ResultCustomMetaDataFieldList resultCustomMetaDataFieldList=ImageKit.getInstance().getCustomMetaDataFields(false);
