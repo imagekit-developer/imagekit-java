@@ -356,7 +356,7 @@ If you want to generate transformations in your application and add them to the 
 The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media library. It
 accepts an object of the `FileCreateRequest` class that contains all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload).
 
-The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. If `file` is byte array then it's require another parameter named `mediaType` to upload a file. The method returns object of `Result` class. It contains method `isSuccessful()` (return boolean), `getMessage()` for error message and other file parameter responsed by server.
+The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. The method returns object of `Result` in case of successful, or it will throw custom exception in case of failure.
 
 Sample usage
 
@@ -406,9 +406,9 @@ System.out.println("Map Response:");
 System.out.println(result.getResponseMetaData().getMap());
 ```
 
-If the upload is successful, `getMessage()` will be `None`, and the result will be an object of `Result` class that contains the same all the parameters received from ImageKit's servers, and `isSuccessful()` will return true.
+If the upload is successful, result will be there as an object of `Result` class that contains the same all the parameters received from ImageKit's servers.
 
-If the upload fails, `getMessage()` will contain the same error message received from ImageKit's servers, and `isSuccessful()` will return false.
+If the upload fails, custom exception getting thrown and by doinf`getMessage()` will contain the same error message received from ImageKit's servers.
 
 
 ## File Management

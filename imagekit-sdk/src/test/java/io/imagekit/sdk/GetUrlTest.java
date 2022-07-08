@@ -199,7 +199,7 @@ public class GetUrlTest {
 
 		String url = SUT.getUrl(options);
 		assertThat(
-				"https://ik.imagekit.io/your_imagekit_id/tr:cm-extract,ofo-top,n-any_name,md-true,ow-20,e-contrast-1,fo-left,bl-10,ar-4-3,oit-false,e-usm-,oa-,obg-00AAFF55,ots-18,t-5,oh-20,cp-true,r-20,ox-20,ot-Image%20Text,oy-10,otc-00FFFF,di-folder@@file.jpg,h-600,b-5-A94D34,orig-true,rt-90,dpr-3,f-png,raw-w-200,h-200,lo-true,e-grayscale-,q-40,ott-b,bg-A94D34,w-400,pr-true,e-sharpen,oi-folder@@file.jpg,c-force,otf-Open%20Sans/default-image.jpg",
+				"https://ik.imagekit.io/your_imagekit_id/tr:cm-extract,ofo-top,n-any_name,md-true,ow-20,e-contrast-1,oiar-oiar,fo-left,bl-10,ar-4-3,oit-oit,e-usm-,oidpr-oidpr,oa-,obg-00AAFF55,ots-18,t-5,oh-20,oic-oic,cp-true,r-20,ox-20,ot-Image%20Text,oy-10,otc-00FFFF,di-folder@@file.jpg,h-600,b-5-A94D34,orig-true,rt-90,dpr-3,f-png,raw-w-200,h-200,lo-true,e-grayscale-,oibg-oibg,q-40,ott-b,oib-oib,oiq-oiq,bg-A94D34,w-400,pr-true,e-sharpen,oi-oi,oifo-oifo,c-force,otf-Open%20Sans/default-image.jpg",
 				is(url));
 	}
 
@@ -453,7 +453,7 @@ public class GetUrlTest {
 
 		String url = SUT.getUrl(options);
 
-		assertSignedUrl("https://ik.imagekit.io/zv3rkhsym/tr:w-100/test-signed-url.png", url);
+		assertSignedUrl("https://ik.imagekit.io/imagekit_id/tr:w-100/test-signed-url.png", url);
 	}
 
 	@Test
