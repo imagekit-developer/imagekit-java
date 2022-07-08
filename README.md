@@ -420,7 +420,7 @@ The SDK provides a simple interface for all the [media APIs mentioned here](http
 
 **1. List & Search Files**
 
-Accepts an object specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the correct values to get the results.
+Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed as-is with the correct values to get the results.
 
 ```java
 String[] tags = new String[3];
@@ -477,7 +477,7 @@ System.out.println(resultFileVersions.getResponseMetaData().getMap());
 
 **4. Get File Version details**
 
-Accepts the file ID and vesrion ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
+Accepts the file ID and version ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
 
 ```java
 String fileId = "62a04834c10d49825c6de9e8";
@@ -493,7 +493,7 @@ System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
 
 **5. Update File Details**
 
-Accepts an object specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed as-is with the correct values to get the results.
+Accepts an object of class `FileUpdateRequest` specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed as-is with the correct values to get the results.
 
 ```java
 List<String> tags = new ArrayList<>();
@@ -648,8 +648,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **12. Copy file**
 
-Accepts the sourceFilePath and destinationPath to copy the File as per the
-[API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
+Accepts the sourceFilePath and destinationPath to copy the File as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file).
 
 ```java
 CopyFileRequest copyFileRequest = new CopyFileRequest();
@@ -854,7 +853,7 @@ System.out.println(result.getResponseMetaData().getMap());
 
 **24. Create CustomMetaDataFields**
 
-Accepts an object specifying the parameters to be used to create cusomMetaDataFields. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field) can be passed as-is with the correct values to get the results.
+Accepts an object of class `CustomMetaDataFieldCreateRequest` specifying the parameters to be used to create cusomMetaDataFields. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field) can be passed as-is with the correct values to get the results.
 
 Check for the [Allowed Values In The Schema](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field#allowed-values-in-the-schema-object).
 
@@ -927,8 +926,7 @@ ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
 
 **25. Get CustomMetaDataFields**
 
-Fetches the metadata as per the
-[API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
+Fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
 
 ```java
 ResultCustomMetaDataFieldList resultCustomMetaDataFieldList=ImageKit.getInstance().getCustomMetaDataFields(false);
@@ -943,7 +941,7 @@ System.out.println(resultCustomMetaDataFieldList.getResultCustomMetaDataFields()
 
 **26. Edit CustomMetaDataFields**
 
-Accepts an ID of customMetaDataField and object specifying the parameters to be used to edit cusomMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
+Accepts an ID of customMetaDataField and object of class `CustomMetaDataFieldUpdateRequest` specifying the parameters to be used to edit cusomMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
 
 ```java
 CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
