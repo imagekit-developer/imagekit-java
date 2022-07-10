@@ -1,150 +1,253 @@
 package io.imagekit.sdk.models;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+
+import java.util.Date;
 import java.util.List;
 
 public class BaseFile {
-    protected String fileId;
-    protected String name;
-    protected String url;
-    protected String thumbnail;
-    protected int height;
-    protected int width;
-    protected long size;
-    protected String filePath;
-    protected List<String> tags;
-    protected boolean isPrivateFile;
-    protected String customCoordinates;
-    protected String fileType;
+	protected String fileId;
+	protected String name;
+	protected String url;
+	protected String thumbnail;
+	protected int height;
+	protected int width;
+	protected long size;
+	protected String filePath;
+	protected List<String> tags;
+	protected boolean isPrivateFile;
+	protected String customCoordinates;
+	protected String fileType;
+	protected JsonArray aiTags;
+	protected JsonElement versionInfo;
+	protected JsonElement customMetadata;
 
-    public BaseFile() {
-    }
+	protected JsonElement embeddedMetadata;
+	protected JsonElement extensionStatus;
+	protected String type;
+	protected String mime;
+	protected Boolean hasAlpha;
+	protected Date createdAt;
+	protected Date updatedAt;
 
-    public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType) {
-        this.fileId = fileId;
-        this.name = name;
-        this.url = url;
-        this.thumbnail = thumbnail;
-        this.height = height;
-        this.width = width;
-        this.size = size;
-        this.filePath = filePath;
-        this.tags = tags;
-        this.isPrivateFile = isPrivateFile;
-        this.customCoordinates = customCoordinates;
-        this.fileType = fileType;
-    }
+	public BaseFile() {
+	}
 
-    public String getFileId() {
-        return fileId;
-    }
+	public BaseFile(String fileId, String name, String url, String thumbnail, int height, int width, long size,
+			String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType,
+			JsonArray aiTags, JsonElement versionInfo, JsonElement customMetadata, JsonElement embeddedMetadata,
+			JsonElement extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
+		this.fileId = fileId;
+		this.name = name;
+		this.url = url;
+		this.thumbnail = thumbnail;
+		this.height = height;
+		this.width = width;
+		this.size = size;
+		this.filePath = filePath;
+		this.tags = tags;
+		this.isPrivateFile = isPrivateFile;
+		this.customCoordinates = customCoordinates;
+		this.fileType = fileType;
+		this.aiTags = aiTags;
+		this.versionInfo = versionInfo;
+		this.customMetadata = customMetadata;
+		this.embeddedMetadata = embeddedMetadata;
+		this.extensionStatus = extensionStatus;
+		this.type = type;
+		this.mime = mime;
+		this.hasAlpha = hasAlpha;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+	}
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
+	public String getFileId() {
+		return fileId;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+	public String getThumbnail() {
+		return thumbnail;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
+	public int getHeight() {
+		return height;
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public long getSize() {
-        return size;
-    }
+	public void setWidth(int width) {
+		this.width = width;
+	}
 
-    public void setSize(long size) {
-        this.size = size;
-    }
+	public long getSize() {
+		return size;
+	}
 
-    public String getFilePath() {
-        return filePath;
-    }
+	public void setSize(long size) {
+		this.size = size;
+	}
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
+	public String getFilePath() {
+		return filePath;
+	}
 
-    public List<String> getTags() {
-        return tags;
-    }
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+	public List<String> getTags() {
+		return tags;
+	}
 
-    public boolean isPrivateFile() {
-        return isPrivateFile;
-    }
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
 
-    public void setPrivateFile(boolean privateFile) {
-        isPrivateFile = privateFile;
-    }
+	public boolean isPrivateFile() {
+		return isPrivateFile;
+	}
 
-    public String getCustomCoordinates() {
-        return customCoordinates;
-    }
+	public void setPrivateFile(boolean privateFile) {
+		isPrivateFile = privateFile;
+	}
 
-    public void setCustomCoordinates(String customCoordinates) {
-        this.customCoordinates = customCoordinates;
-    }
+	public String getCustomCoordinates() {
+		return customCoordinates;
+	}
 
-    public String getFileType() {
-        return fileType;
-    }
+	public void setCustomCoordinates(String customCoordinates) {
+		this.customCoordinates = customCoordinates;
+	}
 
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
+	public String getFileType() {
+		return fileType;
+	}
 
-    @Override
-    public String toString() {
-        return "BaseFile{" +
-                "fileId='" + fileId + '\'' +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
-                ", height=" + height +
-                ", width=" + width +
-                ", size=" + size +
-                ", filePath='" + filePath + '\'' +
-                ", tags='" + tags +'\''+
-                ", isPrivateFile=" + isPrivateFile +
-                ", customCoordinates='" + customCoordinates +'\''+
-                ", fileType='" + fileType + '\'' +
-                '}';
-    }
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
+
+	public JsonArray getAiTags() {
+		return aiTags;
+	}
+
+	public void setAiTags(JsonArray aiTags) {
+		this.aiTags = aiTags;
+	}
+
+	public JsonElement getVersionInfo() {
+		return versionInfo;
+	}
+
+	public void setVersionInfo(JsonElement versionInfo) {
+		this.versionInfo = versionInfo;
+	}
+
+	public JsonElement getCustomMetadata() {
+		return customMetadata;
+	}
+
+	public void setCustomMetadata(JsonElement customMetadata) {
+		this.customMetadata = customMetadata;
+	}
+
+	public JsonElement getEmbeddedMetadata() {
+		return embeddedMetadata;
+	}
+
+	public void setEmbeddedMetadata(JsonElement embeddedMetadata) {
+		this.embeddedMetadata = embeddedMetadata;
+	}
+
+	public JsonElement getExtensionStatus() {
+		return extensionStatus;
+	}
+
+	public void setExtensionStatus(JsonElement extensionStatus) {
+		this.extensionStatus = extensionStatus;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getMime() {
+		return mime;
+	}
+
+	public void setMime(String mime) {
+		this.mime = mime;
+	}
+
+	public Boolean getHasAlpha() {
+		return hasAlpha;
+	}
+
+	public void setHasAlpha(Boolean hasAlpha) {
+		this.hasAlpha = hasAlpha;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	@Override
+	public String toString() {
+		return "BaseFile{" + "fileId='" + fileId + '\'' + ", name='" + name + '\'' + ", url='" + url + '\''
+				+ ", thumbnail='" + thumbnail + '\'' + ", height=" + height + ", width=" + width + ", size=" + size
+				+ ", filePath='" + filePath + '\'' + ", tags='" + tags + '\'' + ", isPrivateFile=" + isPrivateFile
+				+ ", customCoordinates='" + customCoordinates + '\'' + ", fileType='" + fileType + '\'' + ", aiTags="
+				+ aiTags + ", versionInfo=" + versionInfo + ", customMetadata=" + customMetadata + ", embeddedMetadata="
+				+ embeddedMetadata + ", extensionStatus=" + extensionStatus + ", type='" + type + '\'' + ", mime='"
+				+ mime + '\'' + ", hasAlpha=" + hasAlpha + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ '}';
+	}
+
 }

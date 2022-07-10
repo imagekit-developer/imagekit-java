@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'io.imagekit.sdk'
-version '1.0.3'
+version '2.0.0'
 
 sourceCompatibility = 1.8
 
@@ -12,9 +12,19 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: '../libs')
+    compile 'commons-codec:commons-codec:1.13'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile group: 'com.squareup.okio', name: 'okio', version: '1.14.0'
+    implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.2")
     testCompile "org.mockito:mockito-all:2.+"
     testImplementation 'com.squareup.okhttp3:mockwebserver:3.10.0'
 }

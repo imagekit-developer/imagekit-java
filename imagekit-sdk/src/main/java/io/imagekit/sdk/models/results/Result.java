@@ -1,192 +1,193 @@
 package io.imagekit.sdk.models.results;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-import io.imagekit.sdk.models.BaseFile;
 
+import io.imagekit.sdk.models.BaseFile;
+import io.imagekit.sdk.models.ResponseMetaData;
+
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Result extends BaseFile {
-    private boolean isSuccessful;
-    private String message;
-    private String help;
-    private String raw;
+	private String help;
+	@Deprecated
+	private String raw;
+	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
-    public Result() {
+	public Result() {
+	}
 
-    }
+	public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size,
+			String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType,
+			JsonArray aiTags, JsonObject versionInfo, JsonObject customMetadata, JsonObject embeddedMetadata,
+			JsonObject extensionStatus, String type, String mime, Boolean hasAlpha, Date createdAt, Date updatedAt) {
+		this.fileId = fileId;
+		this.name = name;
+		this.url = url;
+		this.thumbnail = thumbnail;
+		this.height = height;
+		this.width = width;
+		this.size = size;
+		this.filePath = filePath;
+		this.tags = tags;
+		this.isPrivateFile = isPrivateFile;
+		this.customCoordinates = customCoordinates;
+		this.fileType = fileType;
+		this.aiTags = aiTags;
+		this.versionInfo = versionInfo;
+		this.customMetadata = customMetadata;
+		this.embeddedMetadata = embeddedMetadata;
+		this.extensionStatus = extensionStatus;
+		this.type = type;
+		this.mime = mime;
+		this.hasAlpha = hasAlpha;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+	}
 
-    public Result(String fileId, String name, String url, String thumbnail, int height, int width, long size, String filePath, List<String> tags, boolean isPrivateFile, String customCoordinates, String fileType) {
-        this.fileId = fileId;
-        this.name = name;
-        this.url = url;
-        this.thumbnail = thumbnail;
-        this.height = height;
-        this.width = width;
-        this.size = size;
-        this.filePath = filePath;
-        this.tags = tags;
-        this.isPrivateFile = isPrivateFile;
-        this.customCoordinates = customCoordinates;
-        this.fileType = fileType;
-    }
+	public String getHelp() {
+		return help;
+	}
 
-    public boolean isSuccessful() {
-        return isSuccessful;
-    }
+	public String getRaw() {
+		return raw;
+	}
 
-    public void setSuccessful(boolean successful) {
-        isSuccessful = successful;
-    }
+	public void setRaw(String raw) {
+		this.raw = raw;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	@Deprecated
+	public Map<String, Object> getMap() {
+		if (null != raw) {
+			return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+			}.getType());
+		}
+		return new HashMap<>();
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setHelp(String help) {
+		this.help = help;
+	}
 
-    public String getHelp() {
-        return help;
-    }
+	public String getFileId() {
+		return fileId;
+	}
 
-    public void setHelp(String help) {
-        this.help = help;
-    }
+	public void setFileId(String fileId) {
+		this.fileId = fileId;
+	}
 
-    public String getRaw() {
-        return raw;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        return new HashMap<>();
-    }
+	public String getUrl() {
+		return url;
+	}
 
-    public String getFileId() {
-        return fileId;
-    }
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
+	public String getThumbnail() {
+		return thumbnail;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setThumbnail(String thumbnail) {
+		this.thumbnail = thumbnail;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public int getHeight() {
+		return height;
+	}
 
-    public String getUrl() {
-        return url;
-    }
+	public void setHeight(int height) {
+		this.height = height;
+	}
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+	public int getWidth() {
+		return width;
+	}
 
-    public String getThumbnail() {
-        return thumbnail;
-    }
+	public void setWidth(int width) {
+		this.width = width;
+	}
 
-    public void setThumbnail(String thumbnail) {
-        this.thumbnail = thumbnail;
-    }
+	public long getSize() {
+		return size;
+	}
 
-    public int getHeight() {
-        return height;
-    }
+	public void setSize(long size) {
+		this.size = size;
+	}
 
-    public void setHeight(int height) {
-        this.height = height;
-    }
+	public String getFilePath() {
+		return filePath;
+	}
 
-    public int getWidth() {
-        return width;
-    }
+	public void setFilePath(String filePath) {
+		this.filePath = filePath;
+	}
 
-    public void setWidth(int width) {
-        this.width = width;
-    }
+	public List<String> getTags() {
+		return tags;
+	}
 
-    public long getSize() {
-        return size;
-    }
+	public void setTags(List<String> tags) {
+		this.tags = tags;
+	}
 
-    public void setSize(long size) {
-        this.size = size;
-    }
+	public boolean isPrivateFile() {
+		return isPrivateFile;
+	}
 
-    public String getFilePath() {
-        return filePath;
-    }
+	public void setPrivateFile(boolean privateFile) {
+		isPrivateFile = privateFile;
+	}
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
+	public String getCustomCoordinates() {
+		return customCoordinates;
+	}
 
-    public List<String> getTags() {
-        return tags;
-    }
+	public void setCustomCoordinates(String customCoordinates) {
+		this.customCoordinates = customCoordinates;
+	}
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
+	public String getFileType() {
+		return fileType;
+	}
 
-    public boolean isPrivateFile() {
-        return isPrivateFile;
-    }
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
 
-    public void setPrivateFile(boolean privateFile) {
-        isPrivateFile = privateFile;
-    }
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
 
-    public String getCustomCoordinates() {
-        return customCoordinates;
-    }
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
 
-    public void setCustomCoordinates(String customCoordinates) {
-        this.customCoordinates = customCoordinates;
-    }
-
-    public String getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(String fileType) {
-        this.fileType = fileType;
-    }
-
-    @Override
-    public String toString() {
-        return "Result{" +
-                "isSuccessful=" + isSuccessful +
-                ", message='" + message + '\'' +
-                ", help='" + help + '\'' +
-                ", fileId='" + fileId + '\'' +
-                ", name='" + name + '\'' +
-                ", url='" + url + '\'' +
-                ", thumbnail='" + thumbnail + '\'' +
-                ", height=" + height +
-                ", width=" + width +
-                ", size=" + size +
-                ", filePath='" + filePath + '\'' +
-                ", tags='" + tags +'\''+
-                ", isPrivateFile=" + isPrivateFile +
-                ", customCoordinates='" + customCoordinates +'\''+
-                ", fileType='" + fileType + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "Result{" + "fileId='" + fileId + '\'' + ", name='" + name + '\'' + ", url='" + url + '\''
+				+ ", thumbnail='" + thumbnail + '\'' + ", height=" + height + ", width=" + width + ", size=" + size
+				+ ", filePath='" + filePath + '\'' + ", tags=" + tags + ", isPrivateFile=" + isPrivateFile
+				+ ", customCoordinates='" + customCoordinates + '\'' + ", fileType='" + fileType + '\'' + ", aiTags="
+				+ aiTags + ", versionInfo=" + versionInfo + ", customMetadata=" + customMetadata + ", embeddedMetadata="
+				+ embeddedMetadata + ", extensionStatus=" + extensionStatus + ", type='" + type + '\'' + ", mime='"
+				+ mime + '\'' + ", hasAlpha=" + hasAlpha + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", help='" + help + '\'' + ", raw='" + raw + '\'' + ", responseMetaData=" + responseMetaData + '}';
+	}
 }

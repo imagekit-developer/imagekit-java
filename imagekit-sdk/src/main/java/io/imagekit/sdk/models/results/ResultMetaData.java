@@ -2,77 +2,67 @@ package io.imagekit.sdk.models.results;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.imagekit.sdk.models.MetaData;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.imagekit.sdk.models.MetaData;
+import io.imagekit.sdk.models.ResponseMetaData;
 
 public class ResultMetaData {
-    private boolean isSuccessful;
-    private String message;
-    private String help;
-    private String raw;
-    private MetaData results;
+	private String help;
+	@Deprecated
+	private String raw;
+	private MetaData results;
+	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
-    public ResultMetaData() {
-    }
+	public ResultMetaData() {
+	}
 
-    public boolean isSuccessful() {
-        return isSuccessful;
-    }
+	public String getHelp() {
+		return help;
+	}
 
-    public void setSuccessful(boolean successful) {
-        isSuccessful = successful;
-    }
+	public void setHelp(String help) {
+		this.help = help;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getRaw() {
+		return raw;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setRaw(String raw) {
+		this.raw = raw;
+	}
 
-    public String getHelp() {
-        return help;
-    }
+	@Deprecated
+	public Map<String, Object> getMap() {
+		if (null != raw) {
+			return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+			}.getType());
+		}
+		return new HashMap<>();
+	}
 
-    public void setHelp(String help) {
-        this.help = help;
-    }
+	public MetaData getResults() {
+		return results;
+	}
 
-    public String getRaw() {
-        return raw;
-    }
+	public void setResults(MetaData results) {
+		this.results = results;
+	}
 
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
 
-    public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        return new HashMap<>();
-    }
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
 
-    public MetaData getResults() {
-        return results;
-    }
-
-    public void setResults(MetaData results) {
-        this.results = results;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultMetaData{" +
-                "isSuccessful=" + isSuccessful +
-                ", message='" + message + '\'' +
-                ", help='" + help + '\'' +
-                ", results=" + results +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ResultMetaData{" + "help='" + help + '\'' + ", raw='" + raw + '\'' + ", results=" + results
+				+ ", responseMetaData=" + responseMetaData + '}';
+	}
 }

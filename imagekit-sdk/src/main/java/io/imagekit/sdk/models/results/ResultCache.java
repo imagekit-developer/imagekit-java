@@ -6,71 +6,62 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.imagekit.sdk.models.ResponseMetaData;
+
 public class ResultCache {
-    private boolean isSuccessful;
-    private String message;
-    private String help;
-    private String requestId;
-    private String raw;
+	private String help;
+	private String requestId;
+	@Deprecated
+	private String raw;
+	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
-    public ResultCache() {
-    }
+	public ResultCache() {
+	}
 
-    public boolean isSuccessful() {
-        return isSuccessful;
-    }
+	public String getHelp() {
+		return help;
+	}
 
-    public void setSuccessful(boolean successful) {
-        isSuccessful = successful;
-    }
+	public void setHelp(String help) {
+		this.help = help;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getRaw() {
+		return raw;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public void setRaw(String raw) {
+		this.raw = raw;
+	}
 
-    public String getHelp() {
-        return help;
-    }
+	@Deprecated
+	public Map<String, Object> getMap() {
+		if (null != raw) {
+			return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+			}.getType());
+		}
+		return new HashMap<>();
+	}
 
-    public void setHelp(String help) {
-        this.help = help;
-    }
+	public String getRequestId() {
+		return requestId;
+	}
 
-    public String getRaw() {
-        return raw;
-    }
+	public void setRequestId(String requestId) {
+		this.requestId = requestId;
+	}
 
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
 
-    public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        return new HashMap<>();
-    }
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
 
-    public String getRequestId() {
-        return requestId;
-    }
-
-    public void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultCache{" +
-                "isSuccessful=" + isSuccessful +
-                ", message='" + message + '\'' +
-                ", help='" + help + '\'' +
-                ", requestId='" + requestId + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ResultCache{" + "help='" + help + '\'' + ", requestId='" + requestId + '\'' + ", raw='" + raw + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
+	}
 }

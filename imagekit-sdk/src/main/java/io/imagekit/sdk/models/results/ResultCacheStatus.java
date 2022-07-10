@@ -6,71 +6,62 @@ import com.google.gson.reflect.TypeToken;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.imagekit.sdk.models.ResponseMetaData;
+
 public class ResultCacheStatus {
-    private boolean isSuccessful;
-    private String message;
-    private String help;
-    private String status;
-    private String raw;
+	private String help;
+	private String status;
+	@Deprecated
+	private String raw;
+	private ResponseMetaData responseMetaData = new ResponseMetaData();
 
-    public ResultCacheStatus() {
-    }
+	public ResultCacheStatus() {
+	}
 
-    public boolean isSuccessful() {
-        return isSuccessful;
-    }
+	public String getHelp() {
+		return help;
+	}
 
-    public void setSuccessful(boolean successful) {
-        isSuccessful = successful;
-    }
+	public String getRaw() {
+		return raw;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public void setRaw(String raw) {
+		this.raw = raw;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	@Deprecated
+	public Map<String, Object> getMap() {
+		if (null != raw) {
+			return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
+			}.getType());
+		}
+		return new HashMap<>();
+	}
 
-    public String getHelp() {
-        return help;
-    }
+	public void setHelp(String help) {
+		this.help = help;
+	}
 
-    public void setHelp(String help) {
-        this.help = help;
-    }
+	public String getStatus() {
+		return status;
+	}
 
-    public String getRaw() {
-        return raw;
-    }
+	public void setStatus(String status) {
+		this.status = status;
+	}
 
-    public void setRaw(String raw) {
-        this.raw = raw;
-    }
+	public ResponseMetaData getResponseMetaData() {
+		return responseMetaData;
+	}
 
-    public Map<String,Object> getMap(){
-        if (null!=raw) {
-            return new Gson().fromJson(raw, new TypeToken<Map<String, Object>>() {
-            }.getType());
-        }
-        return new HashMap<>();
-    }
+	public void setResponseMetaData(ResponseMetaData responseMetaData) {
+		this.responseMetaData = responseMetaData;
+	}
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "ResultCache{" +
-                "isSuccessful=" + isSuccessful +
-                ", message='" + message + '\'' +
-                ", help='" + help + '\'' +
-                ", status='" + status + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "ResultCacheStatus{" + "help='" + help + '\'' + ", status='" + status + '\'' + ", raw='" + raw + '\''
+				+ ", responseMetaData=" + responseMetaData + '}';
+	}
 }
