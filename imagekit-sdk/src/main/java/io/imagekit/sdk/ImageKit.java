@@ -15,7 +15,6 @@ import io.imagekit.sdk.models.results.*;
 import io.imagekit.sdk.tasks.Calculation;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
-import retrofit2.http.QueryMap;
 
 import java.util.List;
 import java.util.Map;
