@@ -124,7 +124,7 @@ public class UrlGen {
 			List<Map<String, String>> transformation, String transformationPosition, boolean signed, long expireSeconds,
 			String privateKey, String urlEndpoint) {
 		StringBuilder tr = new StringBuilder("");
-		if (transformation.size() > 0) {
+		if (transformation != null && transformation.size() > 0) {
 			tr.append("tr=");
 			for (Map<String, String> map : transformation) {
 				Set<Map.Entry<String, String>> entries = map.entrySet();
@@ -193,10 +193,10 @@ public class UrlGen {
 			expiryTimestamp = ((Calendar.getInstance().getTimeInMillis() / 1000) + expireSeconds);
 		}
 		String signature = signUrl(privateKey, tmpUri.toString(), urlEndpoint, expiryTimestamp);
-		queryMaker.put("ik-s=" + signature);
 		if (expiryTimestamp > 0 && expiryTimestamp != DEFAULT_TIMESTAMP) {
 			queryMaker.put("ik-t=" + expiryTimestamp);
 		}
+		queryMaker.put("ik-s=" + signature);
 	}
 
 	public static String signUrl(String privateKey, String url, String urlEndpoint, long expiryTimestamp) {

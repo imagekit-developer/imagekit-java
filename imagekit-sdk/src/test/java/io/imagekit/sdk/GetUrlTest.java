@@ -20,7 +20,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 public class GetUrlTest {
-	private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-s=(.*)&ik-t=(.*)");
+	private static final Pattern IMAGEKIT_SIGNED_URL_PATTERN = Pattern.compile("(https://.*)\\?ik-t=(.*)&ik-s=(.*)");
 	private ImageKit SUT;
 
 	@Before
@@ -460,7 +460,6 @@ public class GetUrlTest {
 	public void getUrl_with_signature_src_noTransform() {
 		Map<String, Object> options = new HashMap<>();
 		options.put("src", "https://ik.imagekit.io/your_imagekit_id/endpoint/default-image.jpg");
-		options.put("transformation", Collections.emptyList());
 		options.put("signed", true);
 		options.put("expireSeconds", 1000);
 
