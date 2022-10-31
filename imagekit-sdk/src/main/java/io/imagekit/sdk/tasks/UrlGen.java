@@ -65,7 +65,7 @@ public class UrlGen {
 			String privateKey) {
 
 		StringBuilder tr = new StringBuilder("");
-		if (transformation.size() > 0) {
+		if (transformation != null && transformation.size() > 0) {
 			tr.append("tr");
 			for (Map<String, String> map : transformation) {
 				Set<Map.Entry<String, String>> entries = map.entrySet();
