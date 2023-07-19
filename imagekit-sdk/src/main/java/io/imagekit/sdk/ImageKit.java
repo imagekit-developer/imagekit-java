@@ -16,6 +16,7 @@ import io.imagekit.sdk.tasks.Calculation;
 import io.imagekit.sdk.tasks.RestClient;
 import io.imagekit.sdk.tasks.UrlGen;
 
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Map;
 
@@ -88,7 +89,7 @@ public final class ImageKit {
 	 * @return object of Result class
 	 */
 	public Result upload(FileCreateRequest fileCreateRequest) throws InternalServerException, BadRequestException,
-			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException, MalformedURLException {
 		return restClient.upload(fileCreateRequest);
 	}
 

@@ -39,6 +39,8 @@ import okhttp3.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +64,7 @@ public class RestClient {
 	}
 
 	public Result upload(FileCreateRequest fileCreateRequest) throws InternalServerException, BadRequestException,
-			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException {
+			UnknownException, ForbiddenException, TooManyRequestsException, UnauthorizedException, MalformedURLException {
 		Result result = null;
 		Map<String, String> headers = Utils.getHeaders(imageKit);
 
@@ -86,6 +88,9 @@ public class RestClient {
 					response.headers().toMultimap());
 		} catch (IOException e) {
 			throw new UnknownException(e.getMessage(), e.getCause());
+		}
+		if(fileCreateRequest.isReadableImage()) {
+			result.setImage(Utils.createImage(new URL(result.getUrl())));
 		}
 		return result;
 	}
