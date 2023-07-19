@@ -87,4 +87,48 @@ public class UtilsTest {
         Configuration config=Utils.getSystemConfig(UtilsTest.class);
         assertNotNull(config);
     }
+
+    @Test
+    public void validImageURL_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        assertTrue(Utils.isReadableImage(imageURL));
+    }
+
+    @Test
+    public void nonImageURL_isReadableImage_expectedFalse() {
+        URL nonImageURL = UtilsTest.class.getClassLoader().getResource("not_an_image.txt");
+        assertFalse(Utils.isReadableImage(nonImageURL));
+    }
+
+    @Test
+    public void validImageByteArray_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        File file=new File(imageURL.getPath());
+        byte[] bytes = Utils.fileToBytes(file);
+        assertTrue(Utils.isReadableImage(bytes));
+    }
+
+    @Test
+    public void nonImageByteArray_isReadableImage_expectedFalse() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("not_an_image.txt");
+        File file=new File(imageURL.getPath());
+        byte[] bytes = Utils.fileToBytes(file);
+        assertFalse(Utils.isReadableImage(bytes));
+    }
+
+    @Test
+    public void validImageBase64_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        File file=new File(imageURL.getPath());
+        String base64 = Utils.fileToBase64(file);
+        assertTrue(Utils.isReadableImage(base64));
+    }
+
+    @Test
+    public void nonImageBase64_isReadableImage_expectedFalse() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("not_an_image.txt");
+        File file=new File(imageURL.getPath());
+        String base64 = Utils.fileToBase64(file);
+        assertFalse(Utils.isReadableImage(base64));
+    }
 }

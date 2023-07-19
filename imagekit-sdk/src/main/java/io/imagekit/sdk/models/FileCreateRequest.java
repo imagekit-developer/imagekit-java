@@ -29,23 +29,27 @@ public class FileCreateRequest {
 	public Boolean overwriteTags;
 	public Boolean overwriteCustomMetadata;
 	public JsonObject customMetadata;
+	public boolean isReadableImage;
 
 	public FileCreateRequest(URL url, String fileName) {
 		this.url = url;
 		this.fileName = fileName;
 		this.useUniqueFileName = true;
+		this.isReadableImage = Utils.isReadableImage(url);
 	}
 
 	public FileCreateRequest(String base64, String fileName) {
 		this.base64 = base64;
 		this.fileName = fileName;
 		this.useUniqueFileName = true;
+		this.isReadableImage = Utils.isReadableImage(base64);
 	}
 
 	public FileCreateRequest(byte[] bytes, String fileName) {
 		this.bytes = bytes;
 		this.fileName = fileName;
 		this.useUniqueFileName = true;
+		this.isReadableImage = Utils.isReadableImage(bytes);
 	}
 
 	public String getFileName() {
@@ -158,6 +162,14 @@ public class FileCreateRequest {
 
 	public void setCustomMetadata(JsonObject customMetadata) {
 		this.customMetadata = customMetadata;
+	}
+
+	public boolean isReadableImage() {
+		return isReadableImage;
+	}
+
+	public void setReadableImage(boolean readableImage) {
+		isReadableImage = readableImage;
 	}
 
 	@Override
