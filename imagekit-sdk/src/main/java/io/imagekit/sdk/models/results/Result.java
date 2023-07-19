@@ -4,16 +4,26 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
-
 import io.imagekit.sdk.models.BaseFile;
 import io.imagekit.sdk.models.ResponseMetaData;
+import io.imagekit.sdk.utils.Utils;
 
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Result extends BaseFile {
+	private BufferedImage image;
 	private String help;
 	@Deprecated
 	private String raw;
@@ -48,6 +58,14 @@ public class Result extends BaseFile {
 		this.hasAlpha = hasAlpha;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+
+	public BufferedImage getImage() {
+		return this.image;
+	}
+
+	public void setImage(BufferedImage image) {
+		this.image = image;
 	}
 
 	public String getHelp() {
