@@ -87,4 +87,26 @@ public class UtilsTest {
         Configuration config=Utils.getSystemConfig(UtilsTest.class);
         assertNotNull(config);
     }
+
+    @Test
+    public void validImageURL_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        assertTrue(Utils.isReadableImage(imageURL));
+    }
+
+    @Test
+    public void validImageByteArray_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        File file=new File(imageURL.getPath());
+        byte[] bytes = Utils.fileToBytes(file);
+        assertTrue(Utils.isReadableImage(bytes));
+    }
+
+    @Test
+    public void validImageBase64_isReadableImage_expectedTrue() {
+        URL imageURL = UtilsTest.class.getClassLoader().getResource("sample1.jpg");
+        File file=new File(imageURL.getPath());
+        String base64 = Utils.fileToBase64(file);
+        assertTrue(Utils.isReadableImage(base64));
+    }
 }
