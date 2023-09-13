@@ -807,7 +807,7 @@ public class RestClient {
 		RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json"),
 				new Gson().toJson(copyFolderRequest));
 
-		request = new Request.Builder().url(API_BASE_URL.concat("v1/bulkJobs/moveFolder")).post(requestBody)
+		request = new Request.Builder().url(API_BASE_URL.concat("v1/bulkJobs/copyFolder")).post(requestBody)
 				.headers(Headers.of(headers)).build();
 
 		try {
