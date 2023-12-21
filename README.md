@@ -310,6 +310,85 @@ String url = ImageKit.getInstance().getUrl(options);
 https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-400,h-600,l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end
 ```
 
+### 4. Adding overlays
+
+ImageKit.io enables you to apply overlays to [images](https://docs.imagekit.io/features/image-transformations/overlay-using-layers) and [videos](https://docs.imagekit.io/features/video-transformation/overlay) using the raw parameter with the concept of [layers](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#layers). The raw parameter facilitates incorporating transformations directly in the URL. A layer is a distinct type of transformation that allows you to define an asset to serve as an overlay, along with its positioning and additional transformations.
+
+#### Text as overlays
+
+You can add any text string over a base video or image using a text layer (l-text).
+
+For example:
+
+```java
+List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+Map<String, String> scale=new HashMap<>();
+scale.put("height","300");
+scale.put("width","400");
+scale.put("raw", "l-text,i-Imagekit,fs-50,l-end");
+transformation.add(scale);
+
+Map<String, Object> options=new HashMap();
+options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
+options.put("transformation", transformation);
+
+String url = ImageKit.getInstance().getUrl(options);
+```
+#### Sample Result URL
+```
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-text,i-Imagekit,fs-50,l-end
+```
+
+#### Image as overlays
+
+You can add an image over a base video or image using an image layer (l-image).
+
+For example:
+
+```java
+List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+Map<String, String> scale=new HashMap<>();
+scale.put("height","300");
+scale.put("width","400");
+scale.put("raw", "l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end");
+transformation.add(scale);
+
+Map<String, Object> options=new HashMap();
+options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
+options.put("transformation", transformation);
+
+String url = ImageKit.getInstance().getUrl(options);
+```
+#### Sample Result URL
+```
+https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end
+```
+
+#### Solid color blocks as overlays
+
+You can add solid color blocks over a base video or image using an image layer (l-image).
+
+For example:
+
+```java
+List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
+Map<String, String> scale=new HashMap<>();
+scale.put("height","300");
+scale.put("width","400");
+scale.put("raw", "l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end");
+transformation.add(scale);
+
+Map<String, Object> options=new HashMap();
+options.put("src","https://ik.imagekit.io/your_imagekit_id/img/sample-video.mp4");
+options.put("transformation", transformation);
+
+String url = ImageKit.getInstance().getUrl(options);
+```
+#### Sample Result URL
+```
+https://ik.imagekit.io/your_imagekit_id/img/sample-video.mp4?tr=h-300,w-400,l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end
+```
+
 **List of transformations**
 
 See the complete list of [image](https://docs.imagekit.io/features/image-transformations) and [video](https://docs.imagekit.io/features/video-transformation) transformations supported in ImageKit. The SDK gives a name to each transformation parameter e.g. `height` for `h` and `width` for `w` parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
