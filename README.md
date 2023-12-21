@@ -287,11 +287,11 @@ String url = ImageKit.getInstance().getUrl(options);
 https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=1567358667&ik-s=f2c7cdacbe7707b71a83d49cf1c6110e3d701054
 ```
 
-### 4. Adding overlays
+**4. Adding overlays**
 
 ImageKit.io enables you to apply overlays to [images](https://docs.imagekit.io/features/image-transformations/overlay-using-layers) and [videos](https://docs.imagekit.io/features/video-transformation/overlay) using the raw parameter with the concept of [layers](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#layers). The raw parameter facilitates incorporating transformations directly in the URL. A layer is a distinct type of transformation that allows you to define an asset to serve as an overlay, along with its positioning and additional transformations.
 
-#### Text as overlays
+**Text as overlays**
 
 You can add any text string over a base video or image using a text layer (l-text).
 
@@ -311,12 +311,12 @@ options.put("transformation", transformation);
 
 String url = ImageKit.getInstance().getUrl(options);
 ```
-#### Sample Result URL
+**Sample Result URL**
 ```
 https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-text,i-Imagekit,fs-50,l-end
 ```
 
-#### Image as overlays
+**Image as overlays**
 
 You can add an image over a base video or image using an image layer (l-image).
 
@@ -336,12 +336,12 @@ options.put("transformation", transformation);
 
 String url = ImageKit.getInstance().getUrl(options);
 ```
-#### Sample Result URL
+**Sample Result URL**
 ```
 https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end
 ```
 
-#### Solid color blocks as overlays
+**Solid color blocks as overlays**
 
 You can add solid color blocks over a base video or image using an image layer (l-image).
 
@@ -361,7 +361,7 @@ options.put("transformation", transformation);
 
 String url = ImageKit.getInstance().getUrl(options);
 ```
-#### Sample Result URL
+**Sample Result URL**
 ```
 https://ik.imagekit.io/your_imagekit_id/img/sample-video.mp4?tr=h-300,w-400,l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end
 ```
