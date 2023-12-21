@@ -287,29 +287,6 @@ String url = ImageKit.getInstance().getUrl(options);
 https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=1567358667&ik-s=f2c7cdacbe7707b71a83d49cf1c6110e3d701054
 ```
 
-**4.Adding overlays to images**
-ImageKit.io  allows overlaying [text](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#add-text-over-image) or [image](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#add-images-over-image) over other images and videos for watermarking or creating dynamic assets using custom text.
-
-```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","600");
-scale.put("width","400");
-scale.put("raw", "l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end");
-transformation.add(scale);
-
-Map<String, Object> options=new HashMap();
-options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
-options.put("transformation", transformation);
-
-String url = ImageKit.getInstance().getUrl(options);
-```
-
-**Sample Result URL**
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-400,h-600,l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end
-```
-
 ### 4. Adding overlays
 
 ImageKit.io enables you to apply overlays to [images](https://docs.imagekit.io/features/image-transformations/overlay-using-layers) and [videos](https://docs.imagekit.io/features/video-transformation/overlay) using the raw parameter with the concept of [layers](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#layers). The raw parameter facilitates incorporating transformations directly in the URL. A layer is a distinct type of transformation that allows you to define an asset to serve as an overlay, along with its positioning and additional transformations.
