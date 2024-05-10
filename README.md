@@ -499,7 +499,7 @@ System.out.println(resultList.getResponseMetaData().getMap());
 ```
 
 #### Advance Search
-In addition, you can fine-tune your query by specifying various filters by generating a query string in a Lucene-like syntax and setting this generated string to the `GetFileListRequest` object using `setSearchQuery`.
+In addition, you can fine-tune your query by specifying various filters by generating a query string in a Lucene-like syntax and setting this generated string to the `GetFileListRequest` object using `setSearchQuery` function.
 
 ```java
 String[] tags = new String[3];
