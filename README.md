@@ -473,6 +473,9 @@ The SDK provides a simple interface for all the [media APIs mentioned here](http
 
 Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed via their setter functions to get the results.
 
+#### Applying Filters
+Filter out the files by specifying the parameters.
+
 ```java
 String[] tags = new String[3];
 tags[0] = "Software";
@@ -482,7 +485,6 @@ GetFileListRequest getFileListRequest = new GetFileListRequest();
 getFileListRequest.setType("file");
 getFileListRequest.setSort("ASC_CREATED");
 getFileListRequest.setPath("/");
-getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
 getFileListRequest.setFileType("all");
 getFileListRequest.setLimit("4");
 getFileListRequest.setSkip("1");
@@ -495,6 +497,27 @@ System.out.println(resultList.getResponseMetaData().getRaw());
 System.out.println("Map Response:");
 System.out.println(resultList.getResponseMetaData().getMap());
 ```
+
+#### Advance Search
+In addition, you can fine-tune your query by specifying various filters by generating a query string in a Lucene-like syntax and setting this generated string to the `GetFileListRequest` object using `setSearchQuery`.
+
+```java
+String[] tags = new String[3];
+tags[0] = "Software";
+tags[1] = "Developer";
+tags[2] = "Engineer";
+GetFileListRequest getFileListRequest = new GetFileListRequest();
+getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
+ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
+System.out.println("======FINAL RESULT=======");
+System.out.println(resultList);
+System.out.println("Raw Response:");
+System.out.println(resultList.getResponseMetaData().getRaw());
+System.out.println("Map Response:");
+System.out.println(resultList.getResponseMetaData().getMap());
+```
+
+Detailed documentation can be found here for [advance search queries](https://docs.imagekit.io/api-reference/media-api/list-and-search-files#advanced-search-queries).
 
 **2. Get File Details**
 
