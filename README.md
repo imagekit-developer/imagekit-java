@@ -502,10 +502,6 @@ System.out.println(resultList.getResponseMetaData().getMap());
 In addition, you can fine-tune your query by specifying various filters by generating a query string in a Lucene-like syntax and setting this generated string to the `GetFileListRequest` object using `setSearchQuery` function.
 
 ```java
-String[] tags = new String[3];
-tags[0] = "Software";
-tags[1] = "Developer";
-tags[2] = "Engineer";
 GetFileListRequest getFileListRequest = new GetFileListRequest();
 getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
 ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
