@@ -21,7 +21,10 @@ import io.imagekit.sdk.models.results.ResultException;
 import okhttp3.Credentials;
 import okhttp3.Response;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -182,4 +185,29 @@ public class Utils {
 		return result;
 	}
 
+	public static BufferedImage createImage(URL url) {
+		try {
+			return ImageIO.read(url);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static boolean isReadableImage(String base64) {
+		byte[] bytes = Base64.getDecoder().decode(base64);
+		return isReadableImage(bytes);
+	}
+
+	public static boolean isReadableImage(byte[] bytes) {
+		InputStream inputStream = new ByteArrayInputStream(bytes);
+		try {
+			return ImageIO.read(inputStream) != null;
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static boolean isReadableImage(URL url) {
+		return createImage(url) != null;
+	}
 }
