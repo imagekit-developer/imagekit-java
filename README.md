@@ -144,6 +144,48 @@ Changes from 1.0.3 -> 2.0.0 are listed below
 **How should I update my code?**
 - If you still need to use `message` it will be there in the custom exceptions that could be raised when calling the various API methods. `isSuccessful` can be understood to be `true` if the API method doesn't throw any exception.
 
+## Versioning
+The SDK provides a simple interface for asset versioning. Asset versioning allows you to preserve, retrieve, and restore every version of any asset stored in your media library.
+
+**1. Get file versions**
+
+Check all the parameters and result structure [here](https://docs.imagekit.io/api-reference/media-api/get-file-versions)
+
+```java
+String fileId = "file_id";
+ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
+```
+
+**2. Get file version details**
+
+Check all the parameters and result structure [here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details)
+
+```java
+String fileId = "file_id";
+String versionId = "version_id";
+ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
+```
+
+**3. Delete file version**
+
+Check all the parameters and result structure [here](https://docs.imagekit.io/api-reference/media-api/delete-file-version)
+
+```java
+DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
+deleteFileVersionRequest.setFileId("file_id");
+deleteFileVersionRequest.setVersionId("version_id");
+ResultNoContent resultNoContent = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
+```
+
+**4. Restore file version** 
+
+Check all the parameters and result structure [here](https://docs.imagekit.io/api-reference/media-api/restore-file-version)
+
+```java
+Result result = ImageKit.getInstance().restoreFileVersion("file_id", "version_id");
+```
+
+
 
 ## URL generation
 
@@ -1195,7 +1237,7 @@ try {
 }
 ```
 
-## Supporttim
+## Support
 For any feedback or to report any issues or general implementation support, please reach out to [support@imagekit.io]()
 
 
