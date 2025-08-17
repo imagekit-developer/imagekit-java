@@ -4,8 +4,10 @@ package com.imagekit.api.proguard
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
+import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.files.ExifDetails
+import com.imagekit.api.models.assets.AssetListResponse
+import com.imagekit.api.models.files.FileUpdateResponse
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -53,50 +55,115 @@ internal class ProGuardCompatibilityTest {
         assertThat(client).isNotNull()
         assertThat(client.customMetadataFields()).isNotNull()
         assertThat(client.files()).isNotNull()
-        assertThat(client.folder()).isNotNull()
-        assertThat(client.bulkJobs()).isNotNull()
+        assertThat(client.assets()).isNotNull()
+        assertThat(client.cache()).isNotNull()
+        assertThat(client.folders()).isNotNull()
         assertThat(client.accounts()).isNotNull()
+        assertThat(client.beta()).isNotNull()
     }
 
     @Test
-    fun exifDetailsRoundtrip() {
+    fun fileUpdateResponseRoundtrip() {
         val jsonMapper = jsonMapper()
-        val exifDetails =
-            ExifDetails.builder()
-                .apertureValue(0.0)
-                .colorSpace(0L)
-                .createDate("CreateDate")
-                .customRendered(0L)
-                .dateTimeOriginal("DateTimeOriginal")
-                .exifImageHeight(0L)
-                .exifImageWidth(0L)
-                .exifVersion("ExifVersion")
-                .exposureCompensation(0.0)
-                .exposureMode(0L)
-                .exposureProgram(0L)
-                .exposureTime(0.0)
-                .flash(0L)
-                .flashpixVersion("FlashpixVersion")
-                .fNumber(0.0)
-                .focalLength(0L)
-                .focalPlaneResolutionUnit(0L)
-                .focalPlaneXResolution(0.0)
-                .focalPlaneYResolution(0.0)
-                .interopOffset(0L)
-                .iso(0L)
-                .meteringMode(0L)
-                .sceneCaptureType(0L)
-                .shutterSpeedValue(0.0)
-                .subSecTime("SubSecTime")
-                .whiteBalance(0L)
+        val fileUpdateResponse =
+            FileUpdateResponse.builder()
+                .addAiTag(
+                    FileUpdateResponse.AiTag.builder()
+                        .confidence(0.0)
+                        .name("name")
+                        .source("source")
+                        .build()
+                )
+                .createdAt("createdAt")
+                .customCoordinates("customCoordinates")
+                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .extensionStatus(
+                    FileUpdateResponse.ExtensionStatus.builder()
+                        .aiAutoDescription(
+                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
+                        )
+                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
+                        .googleAutoTagging(
+                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
+                        )
+                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
+                        .build()
+                )
+                .fileId("fileId")
+                .filePath("filePath")
+                .fileType("fileType")
+                .hasAlpha(true)
+                .height(0.0)
+                .isPrivateFile(true)
+                .isPublished(true)
+                .mime("mime")
+                .name("name")
+                .size(0.0)
+                .addTag("string")
+                .thumbnail("thumbnail")
+                .type("type")
+                .updatedAt("updatedAt")
+                .url("url")
+                .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
+                .width(0.0)
                 .build()
 
-        val roundtrippedExifDetails =
+        val roundtrippedFileUpdateResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(exifDetails),
-                jacksonTypeRef<ExifDetails>(),
+                jsonMapper.writeValueAsString(fileUpdateResponse),
+                jacksonTypeRef<FileUpdateResponse>(),
             )
 
-        assertThat(roundtrippedExifDetails).isEqualTo(exifDetails)
+        assertThat(roundtrippedFileUpdateResponse).isEqualTo(fileUpdateResponse)
+    }
+
+    @Test
+    fun assetListResponseRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val assetListResponse =
+            AssetListResponse.ofFileDetails(
+                AssetListResponse.FileDetails.builder()
+                    .addAiTag(
+                        AssetListResponse.FileDetails.AiTag.builder()
+                            .confidence(0.0)
+                            .name("name")
+                            .source("source")
+                            .build()
+                    )
+                    .createdAt("createdAt")
+                    .customCoordinates("customCoordinates")
+                    .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                    .fileId("fileId")
+                    .filePath("filePath")
+                    .fileType("fileType")
+                    .hasAlpha(true)
+                    .height(0.0)
+                    .isPrivateFile(true)
+                    .isPublished(true)
+                    .mime("mime")
+                    .name("name")
+                    .size(0.0)
+                    .addTag("string")
+                    .thumbnail("thumbnail")
+                    .type("type")
+                    .updatedAt("updatedAt")
+                    .url("url")
+                    .versionInfo(
+                        AssetListResponse.FileDetails.VersionInfo.builder()
+                            .id("id")
+                            .name("name")
+                            .build()
+                    )
+                    .width(0.0)
+                    .build()
+            )
+
+        val roundtrippedAssetListResponse =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(assetListResponse),
+                jacksonTypeRef<AssetListResponse>(),
+            )
+
+        assertThat(roundtrippedAssetListResponse).isEqualTo(assetListResponse)
     }
 }

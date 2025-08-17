@@ -4,15 +4,12 @@ package com.imagekit.api.services.blocking
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
-import com.imagekit.api.models.files.FileAddTagsParams
+import com.imagekit.api.core.JsonValue
 import com.imagekit.api.models.files.FileCopyParams
-import com.imagekit.api.models.files.FileListParams
 import com.imagekit.api.models.files.FileMoveParams
-import com.imagekit.api.models.files.FileRemoveAiTagsParams
-import com.imagekit.api.models.files.FileRemoveTagsParams
 import com.imagekit.api.models.files.FileRenameParams
-import com.imagekit.api.models.files.FileUploadV1Params
-import com.imagekit.api.models.files.FileUploadV2Params
+import com.imagekit.api.models.files.FileUpdateParams
+import com.imagekit.api.models.files.FileUploadParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,7 +19,7 @@ internal class FileServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun list() {
+    fun update() {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
@@ -31,20 +28,96 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.files()
 
-        val files =
-            fileService.list(
-                FileListParams.builder()
-                    .fileType("fileType")
-                    .limit("limit")
-                    .path("path")
-                    .searchQuery("searchQuery")
-                    .skip("skip")
-                    .sort("sort")
-                    .type(FileListParams.Type.FILE)
+        val file =
+            fileService.update(
+                FileUpdateParams.builder()
+                    .fileId("fileId")
+                    .body(
+                        FileUpdateParams.Body.UpdateFileDetails.builder()
+                            .customCoordinates("10,10,100,100")
+                            .customMetadata(
+                                JsonValue.from(mapOf("brand" to "Nike", "color" to "red"))
+                            )
+                            .description("description")
+                            .extensions(
+                                listOf(
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .RemovedotBgExtension
+                                            .builder()
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .RemovedotBgExtension
+                                                    .Name
+                                                    .REMOVE_BG
+                                            )
+                                            .options(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .RemovedotBgExtension
+                                                    .Options
+                                                    .builder()
+                                                    .addShadow(true)
+                                                    .bgColor("bg_color")
+                                                    .bgImageUrl("bg_image_url")
+                                                    .semitransparency(true)
+                                                    .build()
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .AutoTaggingExtension
+                                            .builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .AutoTaggingExtension
+                                                    .Name
+                                                    .GOOGLE_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .AutoTaggingExtension
+                                            .builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .AutoTaggingExtension
+                                                    .Name
+                                                    .AWS_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension
+                                        .ofAutoDescription(
+                                            FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                .AutoDescriptionExtension
+                                                .builder()
+                                                .name(
+                                                    FileUpdateParams.Body.UpdateFileDetails
+                                                        .Extension
+                                                        .AutoDescriptionExtension
+                                                        .Name
+                                                        .AI_AUTO_DESCRIPTION
+                                                )
+                                                .build()
+                                        ),
+                                )
+                            )
+                            .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
+                            .addTag("tag1")
+                            .addTag("tag2")
+                            .webhookUrl("https://webhook.site/0d6b6c7a-8e5a-4b3a-8b7c-0d6b6c7a8e5a")
+                            .build()
+                    )
                     .build()
             )
 
-        files.forEach { it.validate() }
+        file.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -59,29 +132,6 @@ internal class FileServiceTest {
         val fileService = client.files()
 
         fileService.delete("fileId")
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun addTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
-                .password("My Password")
-                .build()
-        val fileService = client.files()
-
-        val response =
-            fileService.addTags(
-                FileAddTagsParams.builder()
-                    .addFileId("598821f949c0a938d57563bd")
-                    .addFileId("598821f949c0a938d57563be")
-                    .tags(listOf("t-shirt", "round-neck", "sale2019"))
-                    .build()
-            )
-
-        response.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -109,6 +159,22 @@ internal class FileServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
+    fun get() {
+        val client =
+            ImageKitOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .privateApiKey("My Private API Key")
+                .password("My Password")
+                .build()
+        val fileService = client.files()
+
+        val file = fileService.get("fileId")
+
+        file.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
     fun move() {
         val client =
             ImageKitOkHttpClient.builder()
@@ -123,52 +189,6 @@ internal class FileServiceTest {
                 FileMoveParams.builder()
                     .destinationPath("/folder/to/move/into/")
                     .sourceFilePath("/path/to/file.jpg")
-                    .build()
-            )
-
-        response.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun removeAiTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
-                .password("My Password")
-                .build()
-        val fileService = client.files()
-
-        val response =
-            fileService.removeAiTags(
-                FileRemoveAiTagsParams.builder()
-                    .aiTags(listOf("t-shirt", "round-neck", "sale2019"))
-                    .addFileId("598821f949c0a938d57563bd")
-                    .addFileId("598821f949c0a938d57563be")
-                    .build()
-            )
-
-        response.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun removeTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
-                .password("My Password")
-                .build()
-        val fileService = client.files()
-
-        val response =
-            fileService.removeTags(
-                FileRemoveTagsParams.builder()
-                    .addFileId("598821f949c0a938d57563bd")
-                    .addFileId("598821f949c0a938d57563be")
-                    .tags(listOf("t-shirt", "round-neck", "sale2019"))
                     .build()
             )
 
@@ -200,7 +220,7 @@ internal class FileServiceTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun uploadV1() {
+    fun upload() {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
@@ -210,81 +230,95 @@ internal class FileServiceTest {
         val fileService = client.files()
 
         val response =
-            fileService.uploadV1(
-                FileUploadV1Params.builder()
-                    .file("https://www.example.com/rest-of-the-image-path.jpg")
+            fileService.upload(
+                FileUploadParams.builder()
+                    .file("some content".byteInputStream())
                     .fileName("fileName")
                     .token("token")
                     .checks("\"request.folder\" : \"marketing/\"\n")
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                        FileUploadParams.CustomMetadata.builder()
+                            .putAdditionalProperty("brand", JsonValue.from("bar"))
+                            .putAdditionalProperty("color", JsonValue.from("bar"))
+                            .build()
                     )
-                    .expire("expire")
-                    .extensions(
-                        "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                    .description("Running shoes")
+                    .expire(0L)
+                    .addExtension(
+                        FileUploadParams.Extension.RemovedotBgExtension.builder()
+                            .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
+                            .options(
+                                FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
+                                    .addShadow(true)
+                                    .bgColor("bg_color")
+                                    .bgImageUrl("bg_image_url")
+                                    .semitransparency(true)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .addExtension(
+                        FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            .maxTags(5L)
+                            .minConfidence(95L)
+                            .name(
+                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                    .GOOGLE_AUTO_TAGGING
+                            )
+                            .build()
                     )
                     .folder("folder")
-                    .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                    .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                    .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                    .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                    .overwriteFile("overwriteFile")
-                    .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                    .isPrivateFile(true)
+                    .isPublished(true)
+                    .overwriteAiTags(true)
+                    .overwriteCustomMetadata(true)
+                    .overwriteFile(true)
+                    .overwriteTags(true)
                     .publicKey("publicKey")
-                    .responseFields("responseFields")
+                    .responseFields(
+                        listOf(
+                            FileUploadParams.ResponseField.TAGS,
+                            FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                            FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                        )
+                    )
                     .signature("signature")
-                    .tags("t-shirt,round-neck,men")
+                    .tags(listOf("t-shirt", "round-neck", "men"))
                     .transformation(
-                        "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        FileUploadParams.Transformation.builder()
+                            .addPost(
+                                FileUploadParams.Transformation.Post.GenerateAThumbnail.builder()
+                                    .type(
+                                        FileUploadParams.Transformation.Post.GenerateAThumbnail.Type
+                                            .THUMBNAIL
+                                    )
+                                    .value("w-150,h-150")
+                                    .build()
+                            )
+                            .addPost(
+                                FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                    .builder()
+                                    .protocol(
+                                        FileUploadParams.Transformation.Post
+                                            .AdaptiveBitrateStreaming
+                                            .Protocol
+                                            .DASH
+                                    )
+                                    .type(
+                                        FileUploadParams.Transformation.Post
+                                            .AdaptiveBitrateStreaming
+                                            .Type
+                                            .ABS
+                                    )
+                                    .value("sr-240_360_480_720_1080")
+                                    .build()
+                            )
+                            .pre("w-300,h-300,q-80")
+                            .build()
                     )
-                    .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                    .webhookUrl("webhookUrl")
-                    .build()
-            )
-
-        response.validate()
-    }
-
-    @Disabled("Prism tests are disabled")
-    @Test
-    fun uploadV2() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
-                .password("My Password")
-                .build()
-        val fileService = client.files()
-
-        val response =
-            fileService.uploadV2(
-                FileUploadV2Params.builder()
-                    .file("https://www.example.com/rest-of-the-image-path.jpg")
-                    .fileName("fileName")
-                    .token("token")
-                    .checks("\"request.folder\" : \"marketing/\"\n")
-                    .customCoordinates("customCoordinates")
-                    .customMetadata(
-                        "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
-                    )
-                    .extensions(
-                        "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
-                    )
-                    .folder("folder")
-                    .isPrivateFile(FileUploadV2Params.IsPrivateFile.TRUE)
-                    .isPublished(FileUploadV2Params.IsPublished.TRUE)
-                    .overwriteAiTags(FileUploadV2Params.OverwriteAiTags.TRUE)
-                    .overwriteCustomMetadata(FileUploadV2Params.OverwriteCustomMetadata.TRUE)
-                    .overwriteFile("overwriteFile")
-                    .overwriteTags(FileUploadV2Params.OverwriteTags.TRUE)
-                    .responseFields("responseFields")
-                    .tags("t-shirt,round-neck,men")
-                    .transformation(
-                        "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
-                    )
-                    .useUniqueFileName(FileUploadV2Params.UseUniqueFileName.TRUE)
-                    .webhookUrl("webhookUrl")
+                    .useUniqueFileName(true)
+                    .webhookUrl("https://example.com")
                     .build()
             )
 

@@ -6,8 +6,12 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.getPackageVersion
 import com.imagekit.api.services.async.AccountServiceAsync
 import com.imagekit.api.services.async.AccountServiceAsyncImpl
-import com.imagekit.api.services.async.BulkJobServiceAsync
-import com.imagekit.api.services.async.BulkJobServiceAsyncImpl
+import com.imagekit.api.services.async.AssetServiceAsync
+import com.imagekit.api.services.async.AssetServiceAsyncImpl
+import com.imagekit.api.services.async.BetaServiceAsync
+import com.imagekit.api.services.async.BetaServiceAsyncImpl
+import com.imagekit.api.services.async.CacheServiceAsync
+import com.imagekit.api.services.async.CacheServiceAsyncImpl
 import com.imagekit.api.services.async.CustomMetadataFieldServiceAsync
 import com.imagekit.api.services.async.CustomMetadataFieldServiceAsyncImpl
 import com.imagekit.api.services.async.FileServiceAsync
@@ -39,17 +43,23 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptionsWithUserAgent) }
 
-    private val folder: FolderServiceAsync by lazy {
-        FolderServiceAsyncImpl(clientOptionsWithUserAgent)
+    private val assets: AssetServiceAsync by lazy {
+        AssetServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
-    private val bulkJobs: BulkJobServiceAsync by lazy {
-        BulkJobServiceAsyncImpl(clientOptionsWithUserAgent)
+    private val cache: CacheServiceAsync by lazy {
+        CacheServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
+    private val folders: FolderServiceAsync by lazy {
+        FolderServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val accounts: AccountServiceAsync by lazy {
         AccountServiceAsyncImpl(clientOptionsWithUserAgent)
     }
+
+    private val beta: BetaServiceAsync by lazy { BetaServiceAsyncImpl(clientOptionsWithUserAgent) }
 
     override fun sync(): ImageKitClient = sync
 
@@ -62,11 +72,15 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun files(): FileServiceAsync = files
 
-    override fun folder(): FolderServiceAsync = folder
+    override fun assets(): AssetServiceAsync = assets
 
-    override fun bulkJobs(): BulkJobServiceAsync = bulkJobs
+    override fun cache(): CacheServiceAsync = cache
+
+    override fun folders(): FolderServiceAsync = folders
 
     override fun accounts(): AccountServiceAsync = accounts
+
+    override fun beta(): BetaServiceAsync = beta
 
     override fun close() = clientOptions.httpClient.close()
 
@@ -81,16 +95,24 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
             FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val folder: FolderServiceAsync.WithRawResponse by lazy {
-            FolderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        private val assets: AssetServiceAsync.WithRawResponse by lazy {
+            AssetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val bulkJobs: BulkJobServiceAsync.WithRawResponse by lazy {
-            BulkJobServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        private val cache: CacheServiceAsync.WithRawResponse by lazy {
+            CacheServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val folders: FolderServiceAsync.WithRawResponse by lazy {
+            FolderServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val accounts: AccountServiceAsync.WithRawResponse by lazy {
             AccountServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val beta: BetaServiceAsync.WithRawResponse by lazy {
+            BetaServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -105,10 +127,14 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
         override fun files(): FileServiceAsync.WithRawResponse = files
 
-        override fun folder(): FolderServiceAsync.WithRawResponse = folder
+        override fun assets(): AssetServiceAsync.WithRawResponse = assets
 
-        override fun bulkJobs(): BulkJobServiceAsync.WithRawResponse = bulkJobs
+        override fun cache(): CacheServiceAsync.WithRawResponse = cache
+
+        override fun folders(): FolderServiceAsync.WithRawResponse = folders
 
         override fun accounts(): AccountServiceAsync.WithRawResponse = accounts
+
+        override fun beta(): BetaServiceAsync.WithRawResponse = beta
     }
 }

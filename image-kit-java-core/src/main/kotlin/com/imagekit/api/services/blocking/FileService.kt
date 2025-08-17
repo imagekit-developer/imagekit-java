@@ -7,29 +7,21 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.models.files.FileAddTagsParams
-import com.imagekit.api.models.files.FileAddTagsResponse
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
-import com.imagekit.api.models.files.FileListParams
-import com.imagekit.api.models.files.FileListResponse
+import com.imagekit.api.models.files.FileGetParams
+import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
-import com.imagekit.api.models.files.FileRemoveAiTagsParams
-import com.imagekit.api.models.files.FileRemoveAiTagsResponse
-import com.imagekit.api.models.files.FileRemoveTagsParams
-import com.imagekit.api.models.files.FileRemoveTagsResponse
 import com.imagekit.api.models.files.FileRenameParams
 import com.imagekit.api.models.files.FileRenameResponse
-import com.imagekit.api.models.files.FileUploadV1Params
-import com.imagekit.api.models.files.FileUploadV1Response
-import com.imagekit.api.models.files.FileUploadV2Params
-import com.imagekit.api.models.files.FileUploadV2Response
-import com.imagekit.api.services.blocking.files.BatchService
-import com.imagekit.api.services.blocking.files.DetailService
+import com.imagekit.api.models.files.FileUpdateParams
+import com.imagekit.api.models.files.FileUpdateResponse
+import com.imagekit.api.models.files.FileUploadParams
+import com.imagekit.api.models.files.FileUploadResponse
+import com.imagekit.api.services.blocking.files.BulkService
 import com.imagekit.api.services.blocking.files.MetadataService
-import com.imagekit.api.services.blocking.files.PurgeService
 import com.imagekit.api.services.blocking.files.VersionService
 import java.util.function.Consumer
 
@@ -47,37 +39,44 @@ interface FileService {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService
 
-    fun details(): DetailService
-
-    fun batch(): BatchService
+    fun bulk(): BulkService
 
     fun versions(): VersionService
-
-    fun purge(): PurgeService
 
     fun metadata(): MetadataService
 
     /**
-     * This API can list all the uploaded files and folders in your ImageKit.io media library. In
-     * addition, you can fine-tune your query by specifying various filters by generating a query
-     * string in a Lucene-like syntax and provide this generated string as the value of the
-     * `searchQuery`.
+     * This API updates the details or attributes of the current version of the file. You can update
+     * `tags`, `customCoordinates`, `customMetadata`, publication status, remove existing `AITags`
+     * and apply extensions using this API.
      */
-    fun list(): List<FileListResponse> = list(FileListParams.none())
+    fun update(fileId: String): FileUpdateResponse = update(fileId, FileUpdateParams.none())
 
-    /** @see list */
-    fun list(
-        params: FileListParams = FileListParams.none(),
+    /** @see update */
+    fun update(
+        fileId: String,
+        params: FileUpdateParams = FileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<FileListResponse>
+    ): FileUpdateResponse = update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-    /** @see list */
-    fun list(params: FileListParams = FileListParams.none()): List<FileListResponse> =
-        list(params, RequestOptions.none())
+    /** @see update */
+    fun update(
+        fileId: String,
+        params: FileUpdateParams = FileUpdateParams.none(),
+    ): FileUpdateResponse = update(fileId, params, RequestOptions.none())
 
-    /** @see list */
-    fun list(requestOptions: RequestOptions): List<FileListResponse> =
-        list(FileListParams.none(), requestOptions)
+    /** @see update */
+    fun update(
+        params: FileUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): FileUpdateResponse
+
+    /** @see update */
+    fun update(params: FileUpdateParams): FileUpdateResponse = update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(fileId: String, requestOptions: RequestOptions): FileUpdateResponse =
+        update(fileId, FileUpdateParams.none(), requestOptions)
 
     /**
      * This API deletes the file and all its file versions permanently.
@@ -110,19 +109,6 @@ interface FileService {
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
     /**
-     * This API adds tags to multiple files in bulk. A maximum of 50 files can be specified at a
-     * time.
-     */
-    fun addTags(params: FileAddTagsParams): FileAddTagsResponse =
-        addTags(params, RequestOptions.none())
-
-    /** @see addTags */
-    fun addTags(
-        params: FileAddTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileAddTagsResponse
-
-    /**
      * This will copy a file from one folder to another.
      *
      * Note: If any file at the destination has the same name as the source file, then the source
@@ -138,6 +124,35 @@ interface FileService {
     ): FileCopyResponse
 
     /**
+     * This API returns an object with details or attributes about the current version of the file.
+     */
+    fun get(fileId: String): FileGetResponse = get(fileId, FileGetParams.none())
+
+    /** @see get */
+    fun get(
+        fileId: String,
+        params: FileGetParams = FileGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): FileGetResponse = get(params.toBuilder().fileId(fileId).build(), requestOptions)
+
+    /** @see get */
+    fun get(fileId: String, params: FileGetParams = FileGetParams.none()): FileGetResponse =
+        get(fileId, params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        params: FileGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): FileGetResponse
+
+    /** @see get */
+    fun get(params: FileGetParams): FileGetResponse = get(params, RequestOptions.none())
+
+    /** @see get */
+    fun get(fileId: String, requestOptions: RequestOptions): FileGetResponse =
+        get(fileId, FileGetParams.none(), requestOptions)
+
+    /**
      * This will move a file and all its versions from one folder to another.
      *
      * Note: If any file at the destination has the same name as the source file, then the source
@@ -150,32 +165,6 @@ interface FileService {
         params: FileMoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): FileMoveResponse
-
-    /**
-     * This API removes AITags from multiple files in bulk. A maximum of 50 files can be specified
-     * at a time.
-     */
-    fun removeAiTags(params: FileRemoveAiTagsParams): FileRemoveAiTagsResponse =
-        removeAiTags(params, RequestOptions.none())
-
-    /** @see removeAiTags */
-    fun removeAiTags(
-        params: FileRemoveAiTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileRemoveAiTagsResponse
-
-    /**
-     * This API removes tags from multiple files in bulk. A maximum of 50 files can be specified at
-     * a time.
-     */
-    fun removeTags(params: FileRemoveTagsParams): FileRemoveTagsResponse =
-        removeTags(params, RequestOptions.none())
-
-    /** @see removeTags */
-    fun removeTags(
-        params: FileRemoveTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileRemoveTagsResponse
 
     /**
      * You can rename an already existing file in the media library using rename file API. This
@@ -216,45 +205,13 @@ interface FileService {
      *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
      * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
      */
-    fun uploadV1(params: FileUploadV1Params): FileUploadV1Response =
-        uploadV1(params, RequestOptions.none())
+    fun upload(params: FileUploadParams): FileUploadResponse = upload(params, RequestOptions.none())
 
-    /** @see uploadV1 */
-    fun uploadV1(
-        params: FileUploadV1Params,
+    /** @see upload */
+    fun upload(
+        params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileUploadV1Response
-
-    /**
-     * The V2 API enhances security by verifying the entire payload using JWT. This API is in beta.
-     *
-     * ImageKit.io allows you to upload files directly from both the server and client sides. For
-     * server-side uploads, private API key authentication is used. For client-side uploads,
-     * generate a one-time `token` from your secure backend using private API.
-     * [Learn more](/docs/api-reference/upload-file/upload-file-v2#how-to-implement-secure-client-side-file-upload)
-     * about how to implement secure client-side file upload.
-     *
-     * **File size limit** \ On the free plan, the maximum upload file sizes are 20MB for images,
-     * audio, and raw files, and 100MB for videos. On the paid plan, these limits increase to 40MB
-     * for images, audio, and raw files, and 2GB for videos. These limits can be further increased
-     * with higher-tier plans.
-     *
-     * **Version limit** \ A file can have a maximum of 100 versions.
-     *
-     * **Demo applications**
-     * - A full-fledged
-     *   [upload widget using Uppy](https://github.com/imagekit-samples/uppy-uploader), supporting
-     *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
-     * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
-     */
-    fun uploadV2(params: FileUploadV2Params): FileUploadV2Response =
-        uploadV2(params, RequestOptions.none())
-
-    /** @see uploadV2 */
-    fun uploadV2(
-        params: FileUploadV2Params,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileUploadV2Response
+    ): FileUploadResponse
 
     /** A view of [FileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -266,40 +223,55 @@ interface FileService {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileService.WithRawResponse
 
-        fun details(): DetailService.WithRawResponse
-
-        fun batch(): BatchService.WithRawResponse
+        fun bulk(): BulkService.WithRawResponse
 
         fun versions(): VersionService.WithRawResponse
-
-        fun purge(): PurgeService.WithRawResponse
 
         fun metadata(): MetadataService.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/files`, but is otherwise the same as
-         * [FileService.list].
+         * Returns a raw HTTP response for `patch /v1/files/{fileId}/details`, but is otherwise the
+         * same as [FileService.update].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<List<FileListResponse>> = list(FileListParams.none())
+        fun update(fileId: String): HttpResponseFor<FileUpdateResponse> =
+            update(fileId, FileUpdateParams.none())
 
-        /** @see list */
+        /** @see update */
         @MustBeClosed
-        fun list(
-            params: FileListParams = FileListParams.none(),
+        fun update(
+            fileId: String,
+            params: FileUpdateParams = FileUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<FileListResponse>>
+        ): HttpResponseFor<FileUpdateResponse> =
+            update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-        /** @see list */
+        /** @see update */
         @MustBeClosed
-        fun list(
-            params: FileListParams = FileListParams.none()
-        ): HttpResponseFor<List<FileListResponse>> = list(params, RequestOptions.none())
+        fun update(
+            fileId: String,
+            params: FileUpdateParams = FileUpdateParams.none(),
+        ): HttpResponseFor<FileUpdateResponse> = update(fileId, params, RequestOptions.none())
 
-        /** @see list */
+        /** @see update */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<List<FileListResponse>> =
-            list(FileListParams.none(), requestOptions)
+        fun update(
+            params: FileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<FileUpdateResponse>
+
+        /** @see update */
+        @MustBeClosed
+        fun update(params: FileUpdateParams): HttpResponseFor<FileUpdateResponse> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        @MustBeClosed
+        fun update(
+            fileId: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<FileUpdateResponse> =
+            update(fileId, FileUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /v1/files/{fileId}`, but is otherwise the same as
@@ -340,21 +312,6 @@ interface FileService {
             delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/files/addTags`, but is otherwise the same as
-         * [FileService.addTags].
-         */
-        @MustBeClosed
-        fun addTags(params: FileAddTagsParams): HttpResponseFor<FileAddTagsResponse> =
-            addTags(params, RequestOptions.none())
-
-        /** @see addTags */
-        @MustBeClosed
-        fun addTags(
-            params: FileAddTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileAddTagsResponse>
-
-        /**
          * Returns a raw HTTP response for `post /v1/files/copy`, but is otherwise the same as
          * [FileService.copy].
          */
@@ -370,6 +327,47 @@ interface FileService {
         ): HttpResponseFor<FileCopyResponse>
 
         /**
+         * Returns a raw HTTP response for `get /v1/files/{fileId}/details`, but is otherwise the
+         * same as [FileService.get].
+         */
+        @MustBeClosed
+        fun get(fileId: String): HttpResponseFor<FileGetResponse> =
+            get(fileId, FileGetParams.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            fileId: String,
+            params: FileGetParams = FileGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<FileGetResponse> =
+            get(params.toBuilder().fileId(fileId).build(), requestOptions)
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            fileId: String,
+            params: FileGetParams = FileGetParams.none(),
+        ): HttpResponseFor<FileGetResponse> = get(fileId, params, RequestOptions.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            params: FileGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<FileGetResponse>
+
+        /** @see get */
+        @MustBeClosed
+        fun get(params: FileGetParams): HttpResponseFor<FileGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(fileId: String, requestOptions: RequestOptions): HttpResponseFor<FileGetResponse> =
+            get(fileId, FileGetParams.none(), requestOptions)
+
+        /**
          * Returns a raw HTTP response for `post /v1/files/move`, but is otherwise the same as
          * [FileService.move].
          */
@@ -383,37 +381,6 @@ interface FileService {
             params: FileMoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<FileMoveResponse>
-
-        /**
-         * Returns a raw HTTP response for `post /v1/files/removeAITags`, but is otherwise the same
-         * as [FileService.removeAiTags].
-         */
-        @MustBeClosed
-        fun removeAiTags(
-            params: FileRemoveAiTagsParams
-        ): HttpResponseFor<FileRemoveAiTagsResponse> = removeAiTags(params, RequestOptions.none())
-
-        /** @see removeAiTags */
-        @MustBeClosed
-        fun removeAiTags(
-            params: FileRemoveAiTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileRemoveAiTagsResponse>
-
-        /**
-         * Returns a raw HTTP response for `post /v1/files/removeTags`, but is otherwise the same as
-         * [FileService.removeTags].
-         */
-        @MustBeClosed
-        fun removeTags(params: FileRemoveTagsParams): HttpResponseFor<FileRemoveTagsResponse> =
-            removeTags(params, RequestOptions.none())
-
-        /** @see removeTags */
-        @MustBeClosed
-        fun removeTags(
-            params: FileRemoveTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileRemoveTagsResponse>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/rename`, but is otherwise the same as
@@ -432,32 +399,17 @@ interface FileService {
 
         /**
          * Returns a raw HTTP response for `post /api/v1/files/upload`, but is otherwise the same as
-         * [FileService.uploadV1].
+         * [FileService.upload].
          */
         @MustBeClosed
-        fun uploadV1(params: FileUploadV1Params): HttpResponseFor<FileUploadV1Response> =
-            uploadV1(params, RequestOptions.none())
+        fun upload(params: FileUploadParams): HttpResponseFor<FileUploadResponse> =
+            upload(params, RequestOptions.none())
 
-        /** @see uploadV1 */
+        /** @see upload */
         @MustBeClosed
-        fun uploadV1(
-            params: FileUploadV1Params,
+        fun upload(
+            params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileUploadV1Response>
-
-        /**
-         * Returns a raw HTTP response for `post /api/v2/files/upload`, but is otherwise the same as
-         * [FileService.uploadV2].
-         */
-        @MustBeClosed
-        fun uploadV2(params: FileUploadV2Params): HttpResponseFor<FileUploadV2Response> =
-            uploadV2(params, RequestOptions.none())
-
-        /** @see uploadV2 */
-        @MustBeClosed
-        fun uploadV2(
-            params: FileUploadV2Params,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileUploadV2Response>
+        ): HttpResponseFor<FileUploadResponse>
     }
 }

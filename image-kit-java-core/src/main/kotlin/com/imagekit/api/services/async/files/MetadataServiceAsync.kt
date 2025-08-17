@@ -5,10 +5,10 @@ package com.imagekit.api.services.async.files
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.models.files.metadata.MetadataFromUrlParams
-import com.imagekit.api.models.files.metadata.MetadataFromUrlResponse
-import com.imagekit.api.models.files.metadata.MetadataRetrieveParams
-import com.imagekit.api.models.files.metadata.MetadataRetrieveResponse
+import com.imagekit.api.models.files.metadata.MetadataGetFromUrlParams
+import com.imagekit.api.models.files.metadata.MetadataGetFromUrlResponse
+import com.imagekit.api.models.files.metadata.MetadataGetParams
+import com.imagekit.api.models.files.metadata.MetadataGetResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -33,51 +33,52 @@ interface MetadataServiceAsync {
      * You can also get the metadata in upload API response by passing `metadata` in
      * `responseFields` parameter.
      */
-    fun retrieve(fileId: String): CompletableFuture<MetadataRetrieveResponse> =
-        retrieve(fileId, MetadataRetrieveParams.none())
+    fun get(fileId: String): CompletableFuture<MetadataGetResponse> =
+        get(fileId, MetadataGetParams.none())
 
-    /** @see retrieve */
-    fun retrieve(
+    /** @see get */
+    fun get(
         fileId: String,
-        params: MetadataRetrieveParams = MetadataRetrieveParams.none(),
+        params: MetadataGetParams = MetadataGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<MetadataRetrieveResponse> =
-        retrieve(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): CompletableFuture<MetadataGetResponse> =
+        get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-    /** @see retrieve */
-    fun retrieve(
+    /** @see get */
+    fun get(
         fileId: String,
-        params: MetadataRetrieveParams = MetadataRetrieveParams.none(),
-    ): CompletableFuture<MetadataRetrieveResponse> = retrieve(fileId, params, RequestOptions.none())
+        params: MetadataGetParams = MetadataGetParams.none(),
+    ): CompletableFuture<MetadataGetResponse> = get(fileId, params, RequestOptions.none())
 
-    /** @see retrieve */
-    fun retrieve(
-        params: MetadataRetrieveParams,
+    /** @see get */
+    fun get(
+        params: MetadataGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<MetadataRetrieveResponse>
+    ): CompletableFuture<MetadataGetResponse>
 
-    /** @see retrieve */
-    fun retrieve(params: MetadataRetrieveParams): CompletableFuture<MetadataRetrieveResponse> =
-        retrieve(params, RequestOptions.none())
+    /** @see get */
+    fun get(params: MetadataGetParams): CompletableFuture<MetadataGetResponse> =
+        get(params, RequestOptions.none())
 
-    /** @see retrieve */
-    fun retrieve(
+    /** @see get */
+    fun get(
         fileId: String,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MetadataRetrieveResponse> =
-        retrieve(fileId, MetadataRetrieveParams.none(), requestOptions)
+    ): CompletableFuture<MetadataGetResponse> =
+        get(fileId, MetadataGetParams.none(), requestOptions)
 
     /**
      * Get image EXIF, pHash, and other metadata from ImageKit.io powered remote URL using this API.
      */
-    fun fromUrl(params: MetadataFromUrlParams): CompletableFuture<MetadataFromUrlResponse> =
-        fromUrl(params, RequestOptions.none())
+    fun getFromUrl(
+        params: MetadataGetFromUrlParams
+    ): CompletableFuture<MetadataGetFromUrlResponse> = getFromUrl(params, RequestOptions.none())
 
-    /** @see fromUrl */
-    fun fromUrl(
-        params: MetadataFromUrlParams,
+    /** @see getFromUrl */
+    fun getFromUrl(
+        params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<MetadataFromUrlResponse>
+    ): CompletableFuture<MetadataGetFromUrlResponse>
 
     /**
      * A view of [MetadataServiceAsync] that provides access to raw HTTP responses for each method.
@@ -95,58 +96,58 @@ interface MetadataServiceAsync {
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/metadata`, but is otherwise the
-         * same as [MetadataServiceAsync.retrieve].
+         * same as [MetadataServiceAsync.get].
          */
-        fun retrieve(fileId: String): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>> =
-            retrieve(fileId, MetadataRetrieveParams.none())
+        fun get(fileId: String): CompletableFuture<HttpResponseFor<MetadataGetResponse>> =
+            get(fileId, MetadataGetParams.none())
 
-        /** @see retrieve */
-        fun retrieve(
+        /** @see get */
+        fun get(
             fileId: String,
-            params: MetadataRetrieveParams = MetadataRetrieveParams.none(),
+            params: MetadataGetParams = MetadataGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>> =
-            retrieve(params.toBuilder().fileId(fileId).build(), requestOptions)
+        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>> =
+            get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-        /** @see retrieve */
-        fun retrieve(
+        /** @see get */
+        fun get(
             fileId: String,
-            params: MetadataRetrieveParams = MetadataRetrieveParams.none(),
-        ): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>> =
-            retrieve(fileId, params, RequestOptions.none())
+            params: MetadataGetParams = MetadataGetParams.none(),
+        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>> =
+            get(fileId, params, RequestOptions.none())
 
-        /** @see retrieve */
-        fun retrieve(
-            params: MetadataRetrieveParams,
+        /** @see get */
+        fun get(
+            params: MetadataGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>>
+        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>>
 
-        /** @see retrieve */
-        fun retrieve(
-            params: MetadataRetrieveParams
-        ): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
+        /** @see get */
+        fun get(
+            params: MetadataGetParams
+        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>> =
+            get(params, RequestOptions.none())
 
-        /** @see retrieve */
-        fun retrieve(
+        /** @see get */
+        fun get(
             fileId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MetadataRetrieveResponse>> =
-            retrieve(fileId, MetadataRetrieveParams.none(), requestOptions)
+        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>> =
+            get(fileId, MetadataGetParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/files/metadata`, but is otherwise the same as
-         * [MetadataServiceAsync.fromUrl].
+         * [MetadataServiceAsync.getFromUrl].
          */
-        fun fromUrl(
-            params: MetadataFromUrlParams
-        ): CompletableFuture<HttpResponseFor<MetadataFromUrlResponse>> =
-            fromUrl(params, RequestOptions.none())
+        fun getFromUrl(
+            params: MetadataGetFromUrlParams
+        ): CompletableFuture<HttpResponseFor<MetadataGetFromUrlResponse>> =
+            getFromUrl(params, RequestOptions.none())
 
-        /** @see fromUrl */
-        fun fromUrl(
-            params: MetadataFromUrlParams,
+        /** @see getFromUrl */
+        fun getFromUrl(
+            params: MetadataGetFromUrlParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<MetadataFromUrlResponse>>
+        ): CompletableFuture<HttpResponseFor<MetadataGetFromUrlResponse>>
     }
 }

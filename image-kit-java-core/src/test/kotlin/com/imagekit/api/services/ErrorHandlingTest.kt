@@ -22,7 +22,7 @@ import com.imagekit.api.errors.RateLimitException
 import com.imagekit.api.errors.UnauthorizedException
 import com.imagekit.api.errors.UnexpectedStatusCodeException
 import com.imagekit.api.errors.UnprocessableEntityException
-import com.imagekit.api.models.files.FileUploadV1Params
+import com.imagekit.api.models.files.FileUploadParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +60,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_400() {
+    fun filesUpload400() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -71,36 +71,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<BadRequestException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -111,7 +175,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_400WithRawResponse() {
+    fun filesUpload400WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -122,36 +186,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<BadRequestException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -162,7 +290,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_401() {
+    fun filesUpload401() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -173,36 +301,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnauthorizedException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -213,7 +405,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_401WithRawResponse() {
+    fun filesUpload401WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -224,36 +416,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnauthorizedException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -264,7 +520,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_403() {
+    fun filesUpload403() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -275,36 +531,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<PermissionDeniedException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -315,7 +635,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_403WithRawResponse() {
+    fun filesUpload403WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -326,36 +646,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<PermissionDeniedException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -366,7 +750,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_404() {
+    fun filesUpload404() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -377,36 +761,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<NotFoundException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -417,7 +865,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_404WithRawResponse() {
+    fun filesUpload404WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -428,36 +876,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<NotFoundException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -468,7 +980,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_422() {
+    fun filesUpload422() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -479,36 +991,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnprocessableEntityException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -519,7 +1095,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_422WithRawResponse() {
+    fun filesUpload422WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -530,36 +1106,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnprocessableEntityException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -570,7 +1210,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_429() {
+    fun filesUpload429() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -581,36 +1221,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<RateLimitException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -621,7 +1325,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_429WithRawResponse() {
+    fun filesUpload429WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -632,36 +1336,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<RateLimitException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -672,7 +1440,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_500() {
+    fun filesUpload500() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -683,36 +1451,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<InternalServerException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -723,7 +1555,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_500WithRawResponse() {
+    fun filesUpload500WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -734,36 +1566,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<InternalServerException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -774,7 +1670,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_999() {
+    fun filesUpload999() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -785,36 +1681,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnexpectedStatusCodeException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -825,7 +1785,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1_999WithRawResponse() {
+    fun filesUpload999WithRawResponse() {
         val fileService = client.files().withRawResponse()
         stubFor(
             post(anyUrl())
@@ -836,36 +1796,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<UnexpectedStatusCodeException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }
@@ -876,7 +1900,7 @@ internal class ErrorHandlingTest {
     }
 
     @Test
-    fun filesUploadV1InvalidJsonBody() {
+    fun filesUploadInvalidJsonBody() {
         val fileService = client.files()
         stubFor(
             post(anyUrl())
@@ -885,36 +1909,100 @@ internal class ErrorHandlingTest {
 
         val e =
             assertThrows<ImageKitException> {
-                fileService.uploadV1(
-                    FileUploadV1Params.builder()
-                        .file("https://www.example.com/rest-of-the-image-path.jpg")
+                fileService.upload(
+                    FileUploadParams.builder()
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            "\"\n  {\n    \"brand\": \"Nike\",\n    \"color\":\"red\"\n  }\n\"\n"
+                            FileUploadParams.CustomMetadata.builder()
+                                .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                .putAdditionalProperty("color", JsonValue.from("bar"))
+                                .build()
                         )
-                        .expire("expire")
-                        .extensions(
-                            "\"\n[\n  {\"name\":\"remove-bg\",\"options\":{\"add_shadow\":true,\"bg_colour\":\"green\"}},\n  {\"name\":\"google-auto-tagging\",\"maxTags\":5,\"minConfidence\":95}\n]\n\"\n"
+                        .description("Running shoes")
+                        .expire(0L)
+                        .addExtension(
+                            FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                .name(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
+                                )
+                                .options(
+                                    FileUploadParams.Extension.RemovedotBgExtension.Options
+                                        .builder()
+                                        .addShadow(true)
+                                        .bgColor("bg_color")
+                                        .bgImageUrl("bg_image_url")
+                                        .semitransparency(true)
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .addExtension(
+                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                .maxTags(5L)
+                                .minConfidence(95L)
+                                .name(
+                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        .GOOGLE_AUTO_TAGGING
+                                )
+                                .build()
                         )
                         .folder("folder")
-                        .isPrivateFile(FileUploadV1Params.IsPrivateFile.TRUE)
-                        .isPublished(FileUploadV1Params.IsPublished.TRUE)
-                        .overwriteAiTags(FileUploadV1Params.OverwriteAiTags.TRUE)
-                        .overwriteCustomMetadata(FileUploadV1Params.OverwriteCustomMetadata.TRUE)
-                        .overwriteFile("overwriteFile")
-                        .overwriteTags(FileUploadV1Params.OverwriteTags.TRUE)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .overwriteAiTags(true)
+                        .overwriteCustomMetadata(true)
+                        .overwriteFile(true)
+                        .overwriteTags(true)
                         .publicKey("publicKey")
-                        .responseFields("responseFields")
-                        .signature("signature")
-                        .tags("t-shirt,round-neck,men")
-                        .transformation(
-                            "'{\"pre\":\"width:300,height:300,quality:80\",\"post\":[{\"type\":\"thumbnail\",\"value\":\"width:100,height:100\"}]}'\n"
+                        .responseFields(
+                            listOf(
+                                FileUploadParams.ResponseField.TAGS,
+                                FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                                FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                            )
                         )
-                        .useUniqueFileName(FileUploadV1Params.UseUniqueFileName.TRUE)
-                        .webhookUrl("webhookUrl")
+                        .signature("signature")
+                        .tags(listOf("t-shirt", "round-neck", "men"))
+                        .transformation(
+                            FileUploadParams.Transformation.builder()
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                        .builder()
+                                        .type(
+                                            FileUploadParams.Transformation.Post.GenerateAThumbnail
+                                                .Type
+                                                .THUMBNAIL
+                                        )
+                                        .value("w-150,h-150")
+                                        .build()
+                                )
+                                .addPost(
+                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                        .builder()
+                                        .protocol(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Protocol
+                                                .DASH
+                                        )
+                                        .type(
+                                            FileUploadParams.Transformation.Post
+                                                .AdaptiveBitrateStreaming
+                                                .Type
+                                                .ABS
+                                        )
+                                        .value("sr-240_360_480_720_1080")
+                                        .build()
+                                )
+                                .pre("w-300,h-300,q-80")
+                                .build()
+                        )
+                        .useUniqueFileName(true)
+                        .webhookUrl("https://example.com")
                         .build()
                 )
             }

@@ -4,7 +4,7 @@ package com.imagekit.api.services.async.files
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
-import com.imagekit.api.models.files.metadata.MetadataFromUrlParams
+import com.imagekit.api.models.files.metadata.MetadataGetFromUrlParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -14,7 +14,7 @@ internal class MetadataServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun retrieve() {
+    fun get() {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
@@ -23,7 +23,7 @@ internal class MetadataServiceAsyncTest {
                 .build()
         val metadataServiceAsync = client.files().metadata()
 
-        val metadataFuture = metadataServiceAsync.retrieve("fileId")
+        val metadataFuture = metadataServiceAsync.get("fileId")
 
         val metadata = metadataFuture.get()
         metadata.validate()
@@ -31,7 +31,7 @@ internal class MetadataServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
     @Test
-    fun fromUrl() {
+    fun getFromUrl() {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
@@ -41,7 +41,9 @@ internal class MetadataServiceAsyncTest {
         val metadataServiceAsync = client.files().metadata()
 
         val responseFuture =
-            metadataServiceAsync.fromUrl(MetadataFromUrlParams.builder().url("url").build())
+            metadataServiceAsync.getFromUrl(
+                MetadataGetFromUrlParams.builder().url("https://example.com").build()
+            )
 
         val response = responseFuture.get()
         response.validate()

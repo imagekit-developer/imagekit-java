@@ -8,12 +8,12 @@ import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
+import com.imagekit.api.models.files.versions.VersionGetParams
+import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
 import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
 import com.imagekit.api.models.files.versions.VersionRestoreResponse
-import com.imagekit.api.models.files.versions.VersionRetrieveParams
-import com.imagekit.api.models.files.versions.VersionRetrieveResponse
 import java.util.function.Consumer
 
 interface VersionService {
@@ -29,28 +29,6 @@ interface VersionService {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
-
-    /** This API returns an object with details or attributes of a file version. */
-    fun retrieve(versionId: String, params: VersionRetrieveParams): VersionRetrieveResponse =
-        retrieve(versionId, params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        versionId: String,
-        params: VersionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRetrieveResponse =
-        retrieve(params.toBuilder().versionId(versionId).build(), requestOptions)
-
-    /** @see retrieve */
-    fun retrieve(params: VersionRetrieveParams): VersionRetrieveResponse =
-        retrieve(params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        params: VersionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRetrieveResponse
 
     /** This API returns details of all versions of a file. */
     fun list(fileId: String): List<VersionListResponse> = list(fileId, VersionListParams.none())
@@ -108,6 +86,26 @@ interface VersionService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): VersionDeleteResponse
 
+    /** This API returns an object with details or attributes of a file version. */
+    fun get(versionId: String, params: VersionGetParams): VersionGetResponse =
+        get(versionId, params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        versionId: String,
+        params: VersionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): VersionGetResponse = get(params.toBuilder().versionId(versionId).build(), requestOptions)
+
+    /** @see get */
+    fun get(params: VersionGetParams): VersionGetResponse = get(params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        params: VersionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): VersionGetResponse
+
     /** This API restores a file version as the current file version. */
     fun restore(versionId: String, params: VersionRestoreParams): VersionRestoreResponse =
         restore(versionId, params, RequestOptions.none())
@@ -139,38 +137,6 @@ interface VersionService {
          * The original service is not modified.
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is
-         * otherwise the same as [VersionService.retrieve].
-         */
-        @MustBeClosed
-        fun retrieve(
-            versionId: String,
-            params: VersionRetrieveParams,
-        ): HttpResponseFor<VersionRetrieveResponse> =
-            retrieve(versionId, params, RequestOptions.none())
-
-        /** @see retrieve */
-        @MustBeClosed
-        fun retrieve(
-            versionId: String,
-            params: VersionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRetrieveResponse> =
-            retrieve(params.toBuilder().versionId(versionId).build(), requestOptions)
-
-        /** @see retrieve */
-        @MustBeClosed
-        fun retrieve(params: VersionRetrieveParams): HttpResponseFor<VersionRetrieveResponse> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see retrieve */
-        @MustBeClosed
-        fun retrieve(
-            params: VersionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRetrieveResponse>
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/versions`, but is otherwise the
@@ -246,6 +212,35 @@ interface VersionService {
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<VersionDeleteResponse>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is
+         * otherwise the same as [VersionService.get].
+         */
+        @MustBeClosed
+        fun get(versionId: String, params: VersionGetParams): HttpResponseFor<VersionGetResponse> =
+            get(versionId, params, RequestOptions.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            versionId: String,
+            params: VersionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<VersionGetResponse> =
+            get(params.toBuilder().versionId(versionId).build(), requestOptions)
+
+        /** @see get */
+        @MustBeClosed
+        fun get(params: VersionGetParams): HttpResponseFor<VersionGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            params: VersionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<VersionGetResponse>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/{fileId}/versions/{versionId}/restore`,

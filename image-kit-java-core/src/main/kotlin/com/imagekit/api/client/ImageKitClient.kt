@@ -4,7 +4,9 @@ package com.imagekit.api.client
 
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.services.blocking.AccountService
-import com.imagekit.api.services.blocking.BulkJobService
+import com.imagekit.api.services.blocking.AssetService
+import com.imagekit.api.services.blocking.BetaService
+import com.imagekit.api.services.blocking.CacheService
 import com.imagekit.api.services.blocking.CustomMetadataFieldService
 import com.imagekit.api.services.blocking.FileService
 import com.imagekit.api.services.blocking.FolderService
@@ -50,11 +52,15 @@ interface ImageKitClient {
 
     fun files(): FileService
 
-    fun folder(): FolderService
+    fun assets(): AssetService
 
-    fun bulkJobs(): BulkJobService
+    fun cache(): CacheService
+
+    fun folders(): FolderService
 
     fun accounts(): AccountService
+
+    fun beta(): BetaService
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -83,10 +89,14 @@ interface ImageKitClient {
 
         fun files(): FileService.WithRawResponse
 
-        fun folder(): FolderService.WithRawResponse
+        fun assets(): AssetService.WithRawResponse
 
-        fun bulkJobs(): BulkJobService.WithRawResponse
+        fun cache(): CacheService.WithRawResponse
+
+        fun folders(): FolderService.WithRawResponse
 
         fun accounts(): AccountService.WithRawResponse
+
+        fun beta(): BetaService.WithRawResponse
     }
 }

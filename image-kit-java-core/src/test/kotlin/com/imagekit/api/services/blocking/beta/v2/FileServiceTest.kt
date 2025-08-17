@@ -1,0 +1,119 @@
+// File generated from our OpenAPI spec by Stainless.
+
+package com.imagekit.api.services.blocking.beta.v2
+
+import com.imagekit.api.TestServerExtension
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
+import com.imagekit.api.core.JsonValue
+import com.imagekit.api.models.beta.v2.files.FileUploadParams
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+
+@ExtendWith(TestServerExtension::class)
+internal class FileServiceTest {
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun upload() {
+        val client =
+            ImageKitOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .privateApiKey("My Private API Key")
+                .password("My Password")
+                .build()
+        val fileService = client.beta().v2().files()
+
+        val response =
+            fileService.upload(
+                FileUploadParams.builder()
+                    .file("some content".byteInputStream())
+                    .fileName("fileName")
+                    .token("token")
+                    .checks("\"request.folder\" : \"marketing/\"\n")
+                    .customCoordinates("customCoordinates")
+                    .customMetadata(
+                        FileUploadParams.CustomMetadata.builder()
+                            .putAdditionalProperty("brand", JsonValue.from("bar"))
+                            .putAdditionalProperty("color", JsonValue.from("bar"))
+                            .build()
+                    )
+                    .description("Running shoes")
+                    .addExtension(
+                        FileUploadParams.Extension.RemovedotBgExtension.builder()
+                            .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
+                            .options(
+                                FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
+                                    .addShadow(true)
+                                    .bgColor("bg_color")
+                                    .bgImageUrl("bg_image_url")
+                                    .semitransparency(true)
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .addExtension(
+                        FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            .maxTags(5L)
+                            .minConfidence(95L)
+                            .name(
+                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                    .GOOGLE_AUTO_TAGGING
+                            )
+                            .build()
+                    )
+                    .folder("folder")
+                    .isPrivateFile(true)
+                    .isPublished(true)
+                    .overwriteAiTags(true)
+                    .overwriteCustomMetadata(true)
+                    .overwriteFile(true)
+                    .overwriteTags(true)
+                    .responseFields(
+                        listOf(
+                            FileUploadParams.ResponseField.TAGS,
+                            FileUploadParams.ResponseField.CUSTOM_COORDINATES,
+                            FileUploadParams.ResponseField.IS_PRIVATE_FILE,
+                        )
+                    )
+                    .tags(listOf("t-shirt", "round-neck", "men"))
+                    .transformation(
+                        FileUploadParams.Transformation.builder()
+                            .addPost(
+                                FileUploadParams.Transformation.Post.GenerateAThumbnail.builder()
+                                    .type(
+                                        FileUploadParams.Transformation.Post.GenerateAThumbnail.Type
+                                            .THUMBNAIL
+                                    )
+                                    .value("w-150,h-150")
+                                    .build()
+                            )
+                            .addPost(
+                                FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
+                                    .builder()
+                                    .protocol(
+                                        FileUploadParams.Transformation.Post
+                                            .AdaptiveBitrateStreaming
+                                            .Protocol
+                                            .DASH
+                                    )
+                                    .type(
+                                        FileUploadParams.Transformation.Post
+                                            .AdaptiveBitrateStreaming
+                                            .Type
+                                            .ABS
+                                    )
+                                    .value("sr-240_360_480_720_1080")
+                                    .build()
+                            )
+                            .pre("w-300,h-300,q-80")
+                            .build()
+                    )
+                    .useUniqueFileName(true)
+                    .webhookUrl("https://example.com")
+                    .build()
+            )
+
+        response.validate()
+    }
+}

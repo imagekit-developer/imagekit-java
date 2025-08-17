@@ -6,8 +6,12 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.getPackageVersion
 import com.imagekit.api.services.blocking.AccountService
 import com.imagekit.api.services.blocking.AccountServiceImpl
-import com.imagekit.api.services.blocking.BulkJobService
-import com.imagekit.api.services.blocking.BulkJobServiceImpl
+import com.imagekit.api.services.blocking.AssetService
+import com.imagekit.api.services.blocking.AssetServiceImpl
+import com.imagekit.api.services.blocking.BetaService
+import com.imagekit.api.services.blocking.BetaServiceImpl
+import com.imagekit.api.services.blocking.CacheService
+import com.imagekit.api.services.blocking.CacheServiceImpl
 import com.imagekit.api.services.blocking.CustomMetadataFieldService
 import com.imagekit.api.services.blocking.CustomMetadataFieldServiceImpl
 import com.imagekit.api.services.blocking.FileService
@@ -39,11 +43,15 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val files: FileService by lazy { FileServiceImpl(clientOptionsWithUserAgent) }
 
-    private val folder: FolderService by lazy { FolderServiceImpl(clientOptionsWithUserAgent) }
+    private val assets: AssetService by lazy { AssetServiceImpl(clientOptionsWithUserAgent) }
 
-    private val bulkJobs: BulkJobService by lazy { BulkJobServiceImpl(clientOptionsWithUserAgent) }
+    private val cache: CacheService by lazy { CacheServiceImpl(clientOptionsWithUserAgent) }
+
+    private val folders: FolderService by lazy { FolderServiceImpl(clientOptionsWithUserAgent) }
 
     private val accounts: AccountService by lazy { AccountServiceImpl(clientOptionsWithUserAgent) }
+
+    private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
     override fun async(): ImageKitClientAsync = async
 
@@ -56,11 +64,15 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     override fun files(): FileService = files
 
-    override fun folder(): FolderService = folder
+    override fun assets(): AssetService = assets
 
-    override fun bulkJobs(): BulkJobService = bulkJobs
+    override fun cache(): CacheService = cache
+
+    override fun folders(): FolderService = folders
 
     override fun accounts(): AccountService = accounts
+
+    override fun beta(): BetaService = beta
 
     override fun close() = clientOptions.httpClient.close()
 
@@ -75,16 +87,24 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
             FileServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val folder: FolderService.WithRawResponse by lazy {
-            FolderServiceImpl.WithRawResponseImpl(clientOptions)
+        private val assets: AssetService.WithRawResponse by lazy {
+            AssetServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
-        private val bulkJobs: BulkJobService.WithRawResponse by lazy {
-            BulkJobServiceImpl.WithRawResponseImpl(clientOptions)
+        private val cache: CacheService.WithRawResponse by lazy {
+            CacheServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val folders: FolderService.WithRawResponse by lazy {
+            FolderServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val accounts: AccountService.WithRawResponse by lazy {
             AccountServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val beta: BetaService.WithRawResponse by lazy {
+            BetaServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         override fun withOptions(
@@ -99,10 +119,14 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
         override fun files(): FileService.WithRawResponse = files
 
-        override fun folder(): FolderService.WithRawResponse = folder
+        override fun assets(): AssetService.WithRawResponse = assets
 
-        override fun bulkJobs(): BulkJobService.WithRawResponse = bulkJobs
+        override fun cache(): CacheService.WithRawResponse = cache
+
+        override fun folders(): FolderService.WithRawResponse = folders
 
         override fun accounts(): AccountService.WithRawResponse = accounts
+
+        override fun beta(): BetaService.WithRawResponse = beta
     }
 }

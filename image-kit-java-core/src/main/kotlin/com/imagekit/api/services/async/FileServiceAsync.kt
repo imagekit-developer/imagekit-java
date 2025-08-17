@@ -6,29 +6,21 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.models.files.FileAddTagsParams
-import com.imagekit.api.models.files.FileAddTagsResponse
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
-import com.imagekit.api.models.files.FileListParams
-import com.imagekit.api.models.files.FileListResponse
+import com.imagekit.api.models.files.FileGetParams
+import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
-import com.imagekit.api.models.files.FileRemoveAiTagsParams
-import com.imagekit.api.models.files.FileRemoveAiTagsResponse
-import com.imagekit.api.models.files.FileRemoveTagsParams
-import com.imagekit.api.models.files.FileRemoveTagsResponse
 import com.imagekit.api.models.files.FileRenameParams
 import com.imagekit.api.models.files.FileRenameResponse
-import com.imagekit.api.models.files.FileUploadV1Params
-import com.imagekit.api.models.files.FileUploadV1Response
-import com.imagekit.api.models.files.FileUploadV2Params
-import com.imagekit.api.models.files.FileUploadV2Response
-import com.imagekit.api.services.async.files.BatchServiceAsync
-import com.imagekit.api.services.async.files.DetailServiceAsync
+import com.imagekit.api.models.files.FileUpdateParams
+import com.imagekit.api.models.files.FileUpdateResponse
+import com.imagekit.api.models.files.FileUploadParams
+import com.imagekit.api.models.files.FileUploadResponse
+import com.imagekit.api.services.async.files.BulkServiceAsync
 import com.imagekit.api.services.async.files.MetadataServiceAsync
-import com.imagekit.api.services.async.files.PurgeServiceAsync
 import com.imagekit.api.services.async.files.VersionServiceAsync
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -47,38 +39,50 @@ interface FileServiceAsync {
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync
 
-    fun details(): DetailServiceAsync
-
-    fun batch(): BatchServiceAsync
+    fun bulk(): BulkServiceAsync
 
     fun versions(): VersionServiceAsync
-
-    fun purge(): PurgeServiceAsync
 
     fun metadata(): MetadataServiceAsync
 
     /**
-     * This API can list all the uploaded files and folders in your ImageKit.io media library. In
-     * addition, you can fine-tune your query by specifying various filters by generating a query
-     * string in a Lucene-like syntax and provide this generated string as the value of the
-     * `searchQuery`.
+     * This API updates the details or attributes of the current version of the file. You can update
+     * `tags`, `customCoordinates`, `customMetadata`, publication status, remove existing `AITags`
+     * and apply extensions using this API.
      */
-    fun list(): CompletableFuture<List<FileListResponse>> = list(FileListParams.none())
+    fun update(fileId: String): CompletableFuture<FileUpdateResponse> =
+        update(fileId, FileUpdateParams.none())
 
-    /** @see list */
-    fun list(
-        params: FileListParams = FileListParams.none(),
+    /** @see update */
+    fun update(
+        fileId: String,
+        params: FileUpdateParams = FileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<FileListResponse>>
+    ): CompletableFuture<FileUpdateResponse> =
+        update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-    /** @see list */
-    fun list(
-        params: FileListParams = FileListParams.none()
-    ): CompletableFuture<List<FileListResponse>> = list(params, RequestOptions.none())
+    /** @see update */
+    fun update(
+        fileId: String,
+        params: FileUpdateParams = FileUpdateParams.none(),
+    ): CompletableFuture<FileUpdateResponse> = update(fileId, params, RequestOptions.none())
 
-    /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<List<FileListResponse>> =
-        list(FileListParams.none(), requestOptions)
+    /** @see update */
+    fun update(
+        params: FileUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<FileUpdateResponse>
+
+    /** @see update */
+    fun update(params: FileUpdateParams): CompletableFuture<FileUpdateResponse> =
+        update(params, RequestOptions.none())
+
+    /** @see update */
+    fun update(
+        fileId: String,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<FileUpdateResponse> =
+        update(fileId, FileUpdateParams.none(), requestOptions)
 
     /**
      * This API deletes the file and all its file versions permanently.
@@ -117,19 +121,6 @@ interface FileServiceAsync {
         delete(fileId, FileDeleteParams.none(), requestOptions)
 
     /**
-     * This API adds tags to multiple files in bulk. A maximum of 50 files can be specified at a
-     * time.
-     */
-    fun addTags(params: FileAddTagsParams): CompletableFuture<FileAddTagsResponse> =
-        addTags(params, RequestOptions.none())
-
-    /** @see addTags */
-    fun addTags(
-        params: FileAddTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileAddTagsResponse>
-
-    /**
      * This will copy a file from one folder to another.
      *
      * Note: If any file at the destination has the same name as the source file, then the source
@@ -146,6 +137,39 @@ interface FileServiceAsync {
     ): CompletableFuture<FileCopyResponse>
 
     /**
+     * This API returns an object with details or attributes about the current version of the file.
+     */
+    fun get(fileId: String): CompletableFuture<FileGetResponse> = get(fileId, FileGetParams.none())
+
+    /** @see get */
+    fun get(
+        fileId: String,
+        params: FileGetParams = FileGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<FileGetResponse> =
+        get(params.toBuilder().fileId(fileId).build(), requestOptions)
+
+    /** @see get */
+    fun get(
+        fileId: String,
+        params: FileGetParams = FileGetParams.none(),
+    ): CompletableFuture<FileGetResponse> = get(fileId, params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        params: FileGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<FileGetResponse>
+
+    /** @see get */
+    fun get(params: FileGetParams): CompletableFuture<FileGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see get */
+    fun get(fileId: String, requestOptions: RequestOptions): CompletableFuture<FileGetResponse> =
+        get(fileId, FileGetParams.none(), requestOptions)
+
+    /**
      * This will move a file and all its versions from one folder to another.
      *
      * Note: If any file at the destination has the same name as the source file, then the source
@@ -159,32 +183,6 @@ interface FileServiceAsync {
         params: FileMoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<FileMoveResponse>
-
-    /**
-     * This API removes AITags from multiple files in bulk. A maximum of 50 files can be specified
-     * at a time.
-     */
-    fun removeAiTags(params: FileRemoveAiTagsParams): CompletableFuture<FileRemoveAiTagsResponse> =
-        removeAiTags(params, RequestOptions.none())
-
-    /** @see removeAiTags */
-    fun removeAiTags(
-        params: FileRemoveAiTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileRemoveAiTagsResponse>
-
-    /**
-     * This API removes tags from multiple files in bulk. A maximum of 50 files can be specified at
-     * a time.
-     */
-    fun removeTags(params: FileRemoveTagsParams): CompletableFuture<FileRemoveTagsResponse> =
-        removeTags(params, RequestOptions.none())
-
-    /** @see removeTags */
-    fun removeTags(
-        params: FileRemoveTagsParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileRemoveTagsResponse>
 
     /**
      * You can rename an already existing file in the media library using rename file API. This
@@ -226,45 +224,14 @@ interface FileServiceAsync {
      *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
      * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
      */
-    fun uploadV1(params: FileUploadV1Params): CompletableFuture<FileUploadV1Response> =
-        uploadV1(params, RequestOptions.none())
+    fun upload(params: FileUploadParams): CompletableFuture<FileUploadResponse> =
+        upload(params, RequestOptions.none())
 
-    /** @see uploadV1 */
-    fun uploadV1(
-        params: FileUploadV1Params,
+    /** @see upload */
+    fun upload(
+        params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileUploadV1Response>
-
-    /**
-     * The V2 API enhances security by verifying the entire payload using JWT. This API is in beta.
-     *
-     * ImageKit.io allows you to upload files directly from both the server and client sides. For
-     * server-side uploads, private API key authentication is used. For client-side uploads,
-     * generate a one-time `token` from your secure backend using private API.
-     * [Learn more](/docs/api-reference/upload-file/upload-file-v2#how-to-implement-secure-client-side-file-upload)
-     * about how to implement secure client-side file upload.
-     *
-     * **File size limit** \ On the free plan, the maximum upload file sizes are 20MB for images,
-     * audio, and raw files, and 100MB for videos. On the paid plan, these limits increase to 40MB
-     * for images, audio, and raw files, and 2GB for videos. These limits can be further increased
-     * with higher-tier plans.
-     *
-     * **Version limit** \ A file can have a maximum of 100 versions.
-     *
-     * **Demo applications**
-     * - A full-fledged
-     *   [upload widget using Uppy](https://github.com/imagekit-samples/uppy-uploader), supporting
-     *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
-     * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
-     */
-    fun uploadV2(params: FileUploadV2Params): CompletableFuture<FileUploadV2Response> =
-        uploadV2(params, RequestOptions.none())
-
-    /** @see uploadV2 */
-    fun uploadV2(
-        params: FileUploadV2Params,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileUploadV2Response>
+    ): CompletableFuture<FileUploadResponse>
 
     /** A view of [FileServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -276,40 +243,52 @@ interface FileServiceAsync {
          */
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync.WithRawResponse
 
-        fun details(): DetailServiceAsync.WithRawResponse
-
-        fun batch(): BatchServiceAsync.WithRawResponse
+        fun bulk(): BulkServiceAsync.WithRawResponse
 
         fun versions(): VersionServiceAsync.WithRawResponse
-
-        fun purge(): PurgeServiceAsync.WithRawResponse
 
         fun metadata(): MetadataServiceAsync.WithRawResponse
 
         /**
-         * Returns a raw HTTP response for `get /v1/files`, but is otherwise the same as
-         * [FileServiceAsync.list].
+         * Returns a raw HTTP response for `patch /v1/files/{fileId}/details`, but is otherwise the
+         * same as [FileServiceAsync.update].
          */
-        fun list(): CompletableFuture<HttpResponseFor<List<FileListResponse>>> =
-            list(FileListParams.none())
+        fun update(fileId: String): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(fileId, FileUpdateParams.none())
 
-        /** @see list */
-        fun list(
-            params: FileListParams = FileListParams.none(),
+        /** @see update */
+        fun update(
+            fileId: String,
+            params: FileUpdateParams = FileUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<FileListResponse>>>
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
-        /** @see list */
-        fun list(
-            params: FileListParams = FileListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<FileListResponse>>> =
-            list(params, RequestOptions.none())
+        /** @see update */
+        fun update(
+            fileId: String,
+            params: FileUpdateParams = FileUpdateParams.none(),
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(fileId, params, RequestOptions.none())
 
-        /** @see list */
-        fun list(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<FileListResponse>>> =
-            list(FileListParams.none(), requestOptions)
+        /** @see update */
+        fun update(
+            params: FileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>>
+
+        /** @see update */
+        fun update(
+            params: FileUpdateParams
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(params, RequestOptions.none())
+
+        /** @see update */
+        fun update(
+            fileId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(fileId, FileUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /v1/files/{fileId}`, but is otherwise the same as
@@ -349,21 +328,6 @@ interface FileServiceAsync {
         ): CompletableFuture<HttpResponse> = delete(fileId, FileDeleteParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `post /v1/files/addTags`, but is otherwise the same as
-         * [FileServiceAsync.addTags].
-         */
-        fun addTags(
-            params: FileAddTagsParams
-        ): CompletableFuture<HttpResponseFor<FileAddTagsResponse>> =
-            addTags(params, RequestOptions.none())
-
-        /** @see addTags */
-        fun addTags(
-            params: FileAddTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileAddTagsResponse>>
-
-        /**
          * Returns a raw HTTP response for `post /v1/files/copy`, but is otherwise the same as
          * [FileServiceAsync.copy].
          */
@@ -377,6 +341,45 @@ interface FileServiceAsync {
         ): CompletableFuture<HttpResponseFor<FileCopyResponse>>
 
         /**
+         * Returns a raw HTTP response for `get /v1/files/{fileId}/details`, but is otherwise the
+         * same as [FileServiceAsync.get].
+         */
+        fun get(fileId: String): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+            get(fileId, FileGetParams.none())
+
+        /** @see get */
+        fun get(
+            fileId: String,
+            params: FileGetParams = FileGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+            get(params.toBuilder().fileId(fileId).build(), requestOptions)
+
+        /** @see get */
+        fun get(
+            fileId: String,
+            params: FileGetParams = FileGetParams.none(),
+        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+            get(fileId, params, RequestOptions.none())
+
+        /** @see get */
+        fun get(
+            params: FileGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<FileGetResponse>>
+
+        /** @see get */
+        fun get(params: FileGetParams): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see get */
+        fun get(
+            fileId: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+            get(fileId, FileGetParams.none(), requestOptions)
+
+        /**
          * Returns a raw HTTP response for `post /v1/files/move`, but is otherwise the same as
          * [FileServiceAsync.move].
          */
@@ -388,36 +391,6 @@ interface FileServiceAsync {
             params: FileMoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<FileMoveResponse>>
-
-        /**
-         * Returns a raw HTTP response for `post /v1/files/removeAITags`, but is otherwise the same
-         * as [FileServiceAsync.removeAiTags].
-         */
-        fun removeAiTags(
-            params: FileRemoveAiTagsParams
-        ): CompletableFuture<HttpResponseFor<FileRemoveAiTagsResponse>> =
-            removeAiTags(params, RequestOptions.none())
-
-        /** @see removeAiTags */
-        fun removeAiTags(
-            params: FileRemoveAiTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileRemoveAiTagsResponse>>
-
-        /**
-         * Returns a raw HTTP response for `post /v1/files/removeTags`, but is otherwise the same as
-         * [FileServiceAsync.removeTags].
-         */
-        fun removeTags(
-            params: FileRemoveTagsParams
-        ): CompletableFuture<HttpResponseFor<FileRemoveTagsResponse>> =
-            removeTags(params, RequestOptions.none())
-
-        /** @see removeTags */
-        fun removeTags(
-            params: FileRemoveTagsParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileRemoveTagsResponse>>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/rename`, but is otherwise the same as
@@ -436,32 +409,17 @@ interface FileServiceAsync {
 
         /**
          * Returns a raw HTTP response for `post /api/v1/files/upload`, but is otherwise the same as
-         * [FileServiceAsync.uploadV1].
+         * [FileServiceAsync.upload].
          */
-        fun uploadV1(
-            params: FileUploadV1Params
-        ): CompletableFuture<HttpResponseFor<FileUploadV1Response>> =
-            uploadV1(params, RequestOptions.none())
+        fun upload(
+            params: FileUploadParams
+        ): CompletableFuture<HttpResponseFor<FileUploadResponse>> =
+            upload(params, RequestOptions.none())
 
-        /** @see uploadV1 */
-        fun uploadV1(
-            params: FileUploadV1Params,
+        /** @see upload */
+        fun upload(
+            params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileUploadV1Response>>
-
-        /**
-         * Returns a raw HTTP response for `post /api/v2/files/upload`, but is otherwise the same as
-         * [FileServiceAsync.uploadV2].
-         */
-        fun uploadV2(
-            params: FileUploadV2Params
-        ): CompletableFuture<HttpResponseFor<FileUploadV2Response>> =
-            uploadV2(params, RequestOptions.none())
-
-        /** @see uploadV2 */
-        fun uploadV2(
-            params: FileUploadV2Params,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileUploadV2Response>>
+        ): CompletableFuture<HttpResponseFor<FileUploadResponse>>
     }
 }

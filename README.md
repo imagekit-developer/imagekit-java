@@ -36,18 +36,19 @@ This library requires Java 8 or later.
 ```java
 import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
-import com.imagekit.api.models.files.FileUploadV1Params;
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.orgMyPasswordToken` and `imagekit.baseUrl` system properties
 // Or configures using the `IMAGEKIT_PRIVATE_API_KEY`, `ORG_MY_PASSWORD_TOKEN` and `IMAGE_KIT_BASE_URL` environment variables
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
-FileUploadV1Params params = FileUploadV1Params.builder()
-    .file("https://www.example.com/rest-of-the-image-path.jpg")
+FileUploadParams params = FileUploadParams.builder()
+    .file(ByteArrayInputStream("some content".getBytes()))
     .fileName("fileName")
     .build();
-FileUploadV1Response response = client.files().uploadV1(params);
+FileUploadResponse response = client.files().upload(params);
 ```
 
 ## Client configuration
@@ -122,7 +123,7 @@ The `withOptions()` method does not affect the original client or service.
 
 To send a request to the Image Kit API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
 
-For example, `client.files().uploadV1(...)` should be called with an instance of `FileUploadV1Params`, and it will return an instance of `FileUploadV1Response`.
+For example, `client.files().upload(...)` should be called with an instance of `FileUploadParams`, and it will return an instance of `FileUploadResponse`.
 
 ## Immutability
 
@@ -139,19 +140,20 @@ The default client is synchronous. To switch to asynchronous execution, call the
 ```java
 import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
-import com.imagekit.api.models.files.FileUploadV1Params;
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.orgMyPasswordToken` and `imagekit.baseUrl` system properties
 // Or configures using the `IMAGEKIT_PRIVATE_API_KEY`, `ORG_MY_PASSWORD_TOKEN` and `IMAGE_KIT_BASE_URL` environment variables
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
-FileUploadV1Params params = FileUploadV1Params.builder()
-    .file("https://www.example.com/rest-of-the-image-path.jpg")
+FileUploadParams params = FileUploadParams.builder()
+    .file(ByteArrayInputStream("some content".getBytes()))
     .fileName("fileName")
     .build();
-CompletableFuture<FileUploadV1Response> response = client.async().files().uploadV1(params);
+CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
 ```
 
 Or create an asynchronous client from the beginning:
@@ -159,22 +161,87 @@ Or create an asynchronous client from the beginning:
 ```java
 import com.imagekit.api.client.ImageKitClientAsync;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync;
-import com.imagekit.api.models.files.FileUploadV1Params;
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.orgMyPasswordToken` and `imagekit.baseUrl` system properties
 // Or configures using the `IMAGEKIT_PRIVATE_API_KEY`, `ORG_MY_PASSWORD_TOKEN` and `IMAGE_KIT_BASE_URL` environment variables
 ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
 
-FileUploadV1Params params = FileUploadV1Params.builder()
-    .file("https://www.example.com/rest-of-the-image-path.jpg")
+FileUploadParams params = FileUploadParams.builder()
+    .file(ByteArrayInputStream("some content".getBytes()))
     .fileName("fileName")
     .build();
-CompletableFuture<FileUploadV1Response> response = client.files().uploadV1(params);
+CompletableFuture<FileUploadResponse> response = client.files().upload(params);
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
+
+## File uploads
+
+The SDK defines methods that accept files.
+
+To upload a file, pass a [`Path`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html):
+
+```java
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.nio.file.Paths;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("fileName")
+    .file(Paths.get("/path/to/file"))
+    .build();
+FileUploadResponse response = client.files().upload(params);
+```
+
+Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html):
+
+```java
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.net.URL;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("fileName")
+    .file(new URL("https://example.com//path/to/file").openStream())
+    .build();
+FileUploadResponse response = client.files().upload(params);
+```
+
+Or a `byte[]` array:
+
+```java
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("fileName")
+    .file("content".getBytes())
+    .build();
+FileUploadResponse response = client.files().upload(params);
+```
+
+Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt):
+
+```java
+import com.imagekit.api.core.MultipartField;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.InputStream;
+import java.net.URL;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("fileName")
+    .file(MultipartField.<InputStream>builder()
+        .value(new URL("https://example.com//path/to/file").openStream())
+        .filename("/path/to/file")
+        .build())
+    .build();
+FileUploadResponse response = client.files().upload(params);
+```
 
 ## Raw responses
 
@@ -185,14 +252,15 @@ To access this data, prefix any HTTP method call on a client or service with `wi
 ```java
 import com.imagekit.api.core.http.Headers;
 import com.imagekit.api.core.http.HttpResponseFor;
-import com.imagekit.api.models.files.FileUploadV1Params;
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 
-FileUploadV1Params params = FileUploadV1Params.builder()
-    .file("https://www.example.com/rest-of-the-image-path.jpg")
+FileUploadParams params = FileUploadParams.builder()
+    .file(ByteArrayInputStream("some content".getBytes()))
     .fileName("fileName")
     .build();
-HttpResponseFor<FileUploadV1Response> response = client.files().withRawResponse().uploadV1(params);
+HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
 
 int statusCode = response.statusCode();
 Headers headers = response.headers();
@@ -201,9 +269,9 @@ Headers headers = response.headers();
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadResponse;
 
-FileUploadV1Response parsedResponse = response.parse();
+FileUploadResponse parsedResponse = response.parse();
 ```
 
 ## Error handling
@@ -299,9 +367,9 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadResponse;
 
-FileUploadV1Response response = client.files().uploadV1(
+FileUploadResponse response = client.files().upload(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
 );
 ```
@@ -406,9 +474,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import com.imagekit.api.core.JsonValue;
-import com.imagekit.api.models.files.FileUploadV1Params;
+import com.imagekit.api.models.files.FileUploadParams;
 
-FileUploadV1Params params = FileUploadV1Params.builder()
+FileUploadParams params = FileUploadParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -421,10 +489,10 @@ To set undocumented parameters on _nested_ headers, query params, or body classe
 
 ```java
 import com.imagekit.api.core.JsonValue;
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateParams;
+import com.imagekit.api.models.files.FileUploadParams;
 
-CustomMetadataFieldCreateParams params = CustomMetadataFieldCreateParams.builder()
-    .schema(CustomMetadataFieldCreateParams.Schema.builder()
+FileUploadParams params = FileUploadParams.builder()
+    .transformation(FileUploadParams.Transformation.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
     .build();
@@ -436,11 +504,12 @@ To set a documented parameter or property to an undocumented or not yet supporte
 
 ```java
 import com.imagekit.api.core.JsonValue;
-import com.imagekit.api.models.files.FileUploadV1Params;
+import com.imagekit.api.models.files.FileUploadParams;
+import java.io.ByteArrayInputStream;
 
-FileUploadV1Params params = FileUploadV1Params.builder()
-    .file(JsonValue.from(42))
-    .fileName("fileName")
+FileUploadParams params = FileUploadParams.builder()
+    .file(ByteArrayInputStream("some content".getBytes()))
+    .fileName(JsonValue.from(42))
     .build();
 ```
 
@@ -489,9 +558,9 @@ To forcibly omit a required parameter or property, pass [`JsonMissing`](image-ki
 
 ```java
 import com.imagekit.api.core.JsonMissing;
-import com.imagekit.api.models.files.FileUploadV1Params;
+import com.imagekit.api.models.files.FileUploadParams;
 
-FileUploadV1Params params = FileUploadV1Params.builder()
+FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
     .file(JsonMissing.of())
     .build();
@@ -505,7 +574,7 @@ To access undocumented response properties, call the `_additionalProperties()` m
 import com.imagekit.api.core.JsonValue;
 import java.util.Map;
 
-Map<String, JsonValue> additionalProperties = client.files().uploadV1(params)._additionalProperties();
+Map<String, JsonValue> additionalProperties = client.files().upload(params)._additionalProperties();
 JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
 
 String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
@@ -533,9 +602,10 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 
 ```java
 import com.imagekit.api.core.JsonField;
+import java.io.InputStream;
 import java.util.Optional;
 
-JsonField<String> file = client.files().uploadV1(params)._file();
+JsonField<InputStream> file = client.files().upload(params)._file();
 
 if (file.isMissing()) {
   // The property is absent from the JSON response
@@ -560,17 +630,17 @@ By default, the SDK will not throw an exception in this case. It will throw [`Im
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadResponse;
 
-FileUploadV1Response response = client.files().uploadV1(params).validate();
+FileUploadResponse response = client.files().upload(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import com.imagekit.api.models.files.FileUploadV1Response;
+import com.imagekit.api.models.files.FileUploadResponse;
 
-FileUploadV1Response response = client.files().uploadV1(
+FileUploadResponse response = client.files().upload(
   params, RequestOptions.builder().responseValidation(true).build()
 );
 ```

@@ -4,8 +4,11 @@ package com.imagekit.api.services.blocking
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
-import com.imagekit.api.models.folder.FolderCreateParams
-import com.imagekit.api.models.folder.FolderDeleteParams
+import com.imagekit.api.models.folders.FolderCopyParams
+import com.imagekit.api.models.folders.FolderCreateParams
+import com.imagekit.api.models.folders.FolderDeleteParams
+import com.imagekit.api.models.folders.FolderMoveParams
+import com.imagekit.api.models.folders.FolderRenameParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -22,7 +25,7 @@ internal class FolderServiceTest {
                 .privateApiKey("My Private API Key")
                 .password("My Password")
                 .build()
-        val folderService = client.folder()
+        val folderService = client.folders()
 
         val folder =
             folderService.create(
@@ -44,7 +47,7 @@ internal class FolderServiceTest {
                 .privateApiKey("My Private API Key")
                 .password("My Password")
                 .build()
-        val folderService = client.folder()
+        val folderService = client.folders()
 
         val folder =
             folderService.delete(
@@ -52,5 +55,73 @@ internal class FolderServiceTest {
             )
 
         folder.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun copy() {
+        val client =
+            ImageKitOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .privateApiKey("My Private API Key")
+                .password("My Password")
+                .build()
+        val folderService = client.folders()
+
+        val response =
+            folderService.copy(
+                FolderCopyParams.builder()
+                    .destinationPath("/path/of/destination/folder")
+                    .sourceFolderPath("/path/of/source/folder")
+                    .includeVersions(true)
+                    .build()
+            )
+
+        response.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun move() {
+        val client =
+            ImageKitOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .privateApiKey("My Private API Key")
+                .password("My Password")
+                .build()
+        val folderService = client.folders()
+
+        val response =
+            folderService.move(
+                FolderMoveParams.builder()
+                    .destinationPath("/path/of/destination/folder")
+                    .sourceFolderPath("/path/of/source/folder")
+                    .build()
+            )
+
+        response.validate()
+    }
+
+    @Disabled("Prism tests are disabled")
+    @Test
+    fun rename() {
+        val client =
+            ImageKitOkHttpClient.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .privateApiKey("My Private API Key")
+                .password("My Password")
+                .build()
+        val folderService = client.folders()
+
+        val response =
+            folderService.rename(
+                FolderRenameParams.builder()
+                    .folderPath("/path/of/folder")
+                    .newFolderName("new-folder-name")
+                    .purgeCache(true)
+                    .build()
+            )
+
+        response.validate()
     }
 }

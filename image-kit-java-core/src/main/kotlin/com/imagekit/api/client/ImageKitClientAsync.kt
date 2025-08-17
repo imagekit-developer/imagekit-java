@@ -4,7 +4,9 @@ package com.imagekit.api.client
 
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.services.async.AccountServiceAsync
-import com.imagekit.api.services.async.BulkJobServiceAsync
+import com.imagekit.api.services.async.AssetServiceAsync
+import com.imagekit.api.services.async.BetaServiceAsync
+import com.imagekit.api.services.async.CacheServiceAsync
 import com.imagekit.api.services.async.CustomMetadataFieldServiceAsync
 import com.imagekit.api.services.async.FileServiceAsync
 import com.imagekit.api.services.async.FolderServiceAsync
@@ -50,11 +52,15 @@ interface ImageKitClientAsync {
 
     fun files(): FileServiceAsync
 
-    fun folder(): FolderServiceAsync
+    fun assets(): AssetServiceAsync
 
-    fun bulkJobs(): BulkJobServiceAsync
+    fun cache(): CacheServiceAsync
+
+    fun folders(): FolderServiceAsync
 
     fun accounts(): AccountServiceAsync
+
+    fun beta(): BetaServiceAsync
 
     /**
      * Closes this client, relinquishing any underlying resources.
@@ -87,10 +93,14 @@ interface ImageKitClientAsync {
 
         fun files(): FileServiceAsync.WithRawResponse
 
-        fun folder(): FolderServiceAsync.WithRawResponse
+        fun assets(): AssetServiceAsync.WithRawResponse
 
-        fun bulkJobs(): BulkJobServiceAsync.WithRawResponse
+        fun cache(): CacheServiceAsync.WithRawResponse
+
+        fun folders(): FolderServiceAsync.WithRawResponse
 
         fun accounts(): AccountServiceAsync.WithRawResponse
+
+        fun beta(): BetaServiceAsync.WithRawResponse
     }
 }

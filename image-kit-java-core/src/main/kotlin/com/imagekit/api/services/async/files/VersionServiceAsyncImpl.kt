@@ -18,12 +18,12 @@ import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
+import com.imagekit.api.models.files.versions.VersionGetParams
+import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
 import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
 import com.imagekit.api.models.files.versions.VersionRestoreResponse
-import com.imagekit.api.models.files.versions.VersionRetrieveParams
-import com.imagekit.api.models.files.versions.VersionRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -40,13 +40,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync =
         VersionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieve(
-        params: VersionRetrieveParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<VersionRetrieveResponse> =
-        // get /v1/files/{fileId}/versions/{versionId}
-        withRawResponse().retrieve(params, requestOptions).thenApply { it.parse() }
-
     override fun list(
         params: VersionListParams,
         requestOptions: RequestOptions,
@@ -60,6 +53,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<VersionDeleteResponse> =
         // delete /v1/files/{fileId}/versions/{versionId}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+
+    override fun get(
+        params: VersionGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<VersionGetResponse> =
+        // get /v1/files/{fileId}/versions/{versionId}
+        withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     override fun restore(
         params: VersionRestoreParams,
@@ -80,45 +80,6 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
             VersionServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
-
-        private val retrieveHandler: Handler<VersionRetrieveResponse> =
-            jsonHandler<VersionRetrieveResponse>(clientOptions.jsonMapper)
-
-        override fun retrieve(
-            params: VersionRetrieveParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> {
-            // We check here instead of in the params builder because this can be specified
-            // positionally or in the params class.
-            checkRequired("versionId", params.versionId().getOrNull())
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments(
-                        "v1",
-                        "files",
-                        params._pathParam(0),
-                        "versions",
-                        params._pathParam(1),
-                    )
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { retrieveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
 
         private val listHandler: Handler<List<VersionListResponse>> =
             jsonHandler<List<VersionListResponse>>(clientOptions.jsonMapper)
@@ -184,6 +145,45 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getHandler: Handler<VersionGetResponse> =
+            jsonHandler<VersionGetResponse>(clientOptions.jsonMapper)
+
+        override fun get(
+            params: VersionGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<VersionGetResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("versionId", params.versionId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments(
+                        "v1",
+                        "files",
+                        params._pathParam(0),
+                        "versions",
+                        params._pathParam(1),
+                    )
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

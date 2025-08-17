@@ -15,10 +15,10 @@ import com.imagekit.api.core.http.HttpResponse.Handler
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
-import com.imagekit.api.models.files.metadata.MetadataFromUrlParams
-import com.imagekit.api.models.files.metadata.MetadataFromUrlResponse
-import com.imagekit.api.models.files.metadata.MetadataRetrieveParams
-import com.imagekit.api.models.files.metadata.MetadataRetrieveResponse
+import com.imagekit.api.models.files.metadata.MetadataGetFromUrlParams
+import com.imagekit.api.models.files.metadata.MetadataGetFromUrlResponse
+import com.imagekit.api.models.files.metadata.MetadataGetParams
+import com.imagekit.api.models.files.metadata.MetadataGetResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -34,19 +34,19 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): MetadataService =
         MetadataServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun retrieve(
-        params: MetadataRetrieveParams,
+    override fun get(
+        params: MetadataGetParams,
         requestOptions: RequestOptions,
-    ): MetadataRetrieveResponse =
+    ): MetadataGetResponse =
         // get /v1/files/{fileId}/metadata
-        withRawResponse().retrieve(params, requestOptions).parse()
+        withRawResponse().get(params, requestOptions).parse()
 
-    override fun fromUrl(
-        params: MetadataFromUrlParams,
+    override fun getFromUrl(
+        params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions,
-    ): MetadataFromUrlResponse =
+    ): MetadataGetFromUrlResponse =
         // get /v1/files/metadata
-        withRawResponse().fromUrl(params, requestOptions).parse()
+        withRawResponse().getFromUrl(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         MetadataService.WithRawResponse {
@@ -61,13 +61,13 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val retrieveHandler: Handler<MetadataRetrieveResponse> =
-            jsonHandler<MetadataRetrieveResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<MetadataGetResponse> =
+            jsonHandler<MetadataGetResponse>(clientOptions.jsonMapper)
 
-        override fun retrieve(
-            params: MetadataRetrieveParams,
+        override fun get(
+            params: MetadataGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<MetadataRetrieveResponse> {
+        ): HttpResponseFor<MetadataGetResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -82,7 +82,7 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response
-                    .use { retrieveHandler.handle(it) }
+                    .use { getHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()
@@ -91,13 +91,13 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
             }
         }
 
-        private val fromUrlHandler: Handler<MetadataFromUrlResponse> =
-            jsonHandler<MetadataFromUrlResponse>(clientOptions.jsonMapper)
+        private val getFromUrlHandler: Handler<MetadataGetFromUrlResponse> =
+            jsonHandler<MetadataGetFromUrlResponse>(clientOptions.jsonMapper)
 
-        override fun fromUrl(
-            params: MetadataFromUrlParams,
+        override fun getFromUrl(
+            params: MetadataGetFromUrlParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<MetadataFromUrlResponse> {
+        ): HttpResponseFor<MetadataGetFromUrlResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -109,7 +109,7 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response
-                    .use { fromUrlHandler.handle(it) }
+                    .use { getFromUrlHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation!!) {
                             it.validate()

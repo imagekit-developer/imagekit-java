@@ -1101,7 +1101,7 @@ private constructor(
 
                 @JvmField val TEXT = of("Text")
 
-                @JvmField val TEXT_AREA = of("TextArea")
+                @JvmField val TEXTAREA = of("Textarea")
 
                 @JvmField val NUMBER = of("Number")
 
@@ -1119,7 +1119,7 @@ private constructor(
             /** An enum containing [Type]'s known values. */
             enum class Known {
                 TEXT,
-                TEXT_AREA,
+                TEXTAREA,
                 NUMBER,
                 DATE,
                 BOOLEAN,
@@ -1138,7 +1138,7 @@ private constructor(
              */
             enum class Value {
                 TEXT,
-                TEXT_AREA,
+                TEXTAREA,
                 NUMBER,
                 DATE,
                 BOOLEAN,
@@ -1158,7 +1158,7 @@ private constructor(
             fun value(): Value =
                 when (this) {
                     TEXT -> Value.TEXT
-                    TEXT_AREA -> Value.TEXT_AREA
+                    TEXTAREA -> Value.TEXTAREA
                     NUMBER -> Value.NUMBER
                     DATE -> Value.DATE
                     BOOLEAN -> Value.BOOLEAN
@@ -1179,7 +1179,7 @@ private constructor(
             fun known(): Known =
                 when (this) {
                     TEXT -> Known.TEXT
-                    TEXT_AREA -> Known.TEXT_AREA
+                    TEXTAREA -> Known.TEXTAREA
                     NUMBER -> Known.NUMBER
                     DATE -> Known.DATE
                     BOOLEAN -> Known.BOOLEAN

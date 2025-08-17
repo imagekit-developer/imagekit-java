@@ -7,12 +7,12 @@ import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
+import com.imagekit.api.models.files.versions.VersionGetParams
+import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
 import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
 import com.imagekit.api.models.files.versions.VersionRestoreResponse
-import com.imagekit.api.models.files.versions.VersionRetrieveParams
-import com.imagekit.api.models.files.versions.VersionRetrieveResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,31 +29,6 @@ interface VersionServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionServiceAsync
-
-    /** This API returns an object with details or attributes of a file version. */
-    fun retrieve(
-        versionId: String,
-        params: VersionRetrieveParams,
-    ): CompletableFuture<VersionRetrieveResponse> =
-        retrieve(versionId, params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        versionId: String,
-        params: VersionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse> =
-        retrieve(params.toBuilder().versionId(versionId).build(), requestOptions)
-
-    /** @see retrieve */
-    fun retrieve(params: VersionRetrieveParams): CompletableFuture<VersionRetrieveResponse> =
-        retrieve(params, RequestOptions.none())
-
-    /** @see retrieve */
-    fun retrieve(
-        params: VersionRetrieveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionRetrieveResponse>
 
     /** This API returns details of all versions of a file. */
     fun list(fileId: String): CompletableFuture<List<VersionListResponse>> =
@@ -118,6 +93,28 @@ interface VersionServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<VersionDeleteResponse>
 
+    /** This API returns an object with details or attributes of a file version. */
+    fun get(versionId: String, params: VersionGetParams): CompletableFuture<VersionGetResponse> =
+        get(versionId, params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        versionId: String,
+        params: VersionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<VersionGetResponse> =
+        get(params.toBuilder().versionId(versionId).build(), requestOptions)
+
+    /** @see get */
+    fun get(params: VersionGetParams): CompletableFuture<VersionGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see get */
+    fun get(
+        params: VersionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<VersionGetResponse>
+
     /** This API restores a file version as the current file version. */
     fun restore(
         versionId: String,
@@ -155,36 +152,6 @@ interface VersionServiceAsync {
         fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): VersionServiceAsync.WithRawResponse
-
-        /**
-         * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is
-         * otherwise the same as [VersionServiceAsync.retrieve].
-         */
-        fun retrieve(
-            versionId: String,
-            params: VersionRetrieveParams,
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
-            retrieve(versionId, params, RequestOptions.none())
-
-        /** @see retrieve */
-        fun retrieve(
-            versionId: String,
-            params: VersionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
-            retrieve(params.toBuilder().versionId(versionId).build(), requestOptions)
-
-        /** @see retrieve */
-        fun retrieve(
-            params: VersionRetrieveParams
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>> =
-            retrieve(params, RequestOptions.none())
-
-        /** @see retrieve */
-        fun retrieve(
-            params: VersionRetrieveParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionRetrieveResponse>>
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/versions`, but is otherwise the
@@ -256,6 +223,34 @@ interface VersionServiceAsync {
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is
+         * otherwise the same as [VersionServiceAsync.get].
+         */
+        fun get(
+            versionId: String,
+            params: VersionGetParams,
+        ): CompletableFuture<HttpResponseFor<VersionGetResponse>> =
+            get(versionId, params, RequestOptions.none())
+
+        /** @see get */
+        fun get(
+            versionId: String,
+            params: VersionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<VersionGetResponse>> =
+            get(params.toBuilder().versionId(versionId).build(), requestOptions)
+
+        /** @see get */
+        fun get(params: VersionGetParams): CompletableFuture<HttpResponseFor<VersionGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see get */
+        fun get(
+            params: VersionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<VersionGetResponse>>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/{fileId}/versions/{versionId}/restore`,

@@ -18,33 +18,23 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.multipartFormData
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
-import com.imagekit.api.models.files.FileAddTagsParams
-import com.imagekit.api.models.files.FileAddTagsResponse
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
-import com.imagekit.api.models.files.FileListParams
-import com.imagekit.api.models.files.FileListResponse
+import com.imagekit.api.models.files.FileGetParams
+import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
-import com.imagekit.api.models.files.FileRemoveAiTagsParams
-import com.imagekit.api.models.files.FileRemoveAiTagsResponse
-import com.imagekit.api.models.files.FileRemoveTagsParams
-import com.imagekit.api.models.files.FileRemoveTagsResponse
 import com.imagekit.api.models.files.FileRenameParams
 import com.imagekit.api.models.files.FileRenameResponse
-import com.imagekit.api.models.files.FileUploadV1Params
-import com.imagekit.api.models.files.FileUploadV1Response
-import com.imagekit.api.models.files.FileUploadV2Params
-import com.imagekit.api.models.files.FileUploadV2Response
-import com.imagekit.api.services.async.files.BatchServiceAsync
-import com.imagekit.api.services.async.files.BatchServiceAsyncImpl
-import com.imagekit.api.services.async.files.DetailServiceAsync
-import com.imagekit.api.services.async.files.DetailServiceAsyncImpl
+import com.imagekit.api.models.files.FileUpdateParams
+import com.imagekit.api.models.files.FileUpdateResponse
+import com.imagekit.api.models.files.FileUploadParams
+import com.imagekit.api.models.files.FileUploadResponse
+import com.imagekit.api.services.async.files.BulkServiceAsync
+import com.imagekit.api.services.async.files.BulkServiceAsyncImpl
 import com.imagekit.api.services.async.files.MetadataServiceAsync
 import com.imagekit.api.services.async.files.MetadataServiceAsyncImpl
-import com.imagekit.api.services.async.files.PurgeServiceAsync
-import com.imagekit.api.services.async.files.PurgeServiceAsyncImpl
 import com.imagekit.api.services.async.files.VersionServiceAsync
 import com.imagekit.api.services.async.files.VersionServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
@@ -58,13 +48,9 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         WithRawResponseImpl(clientOptions)
     }
 
-    private val details: DetailServiceAsync by lazy { DetailServiceAsyncImpl(clientOptions) }
-
-    private val batch: BatchServiceAsync by lazy { BatchServiceAsyncImpl(clientOptions) }
+    private val bulk: BulkServiceAsync by lazy { BulkServiceAsyncImpl(clientOptions) }
 
     private val versions: VersionServiceAsync by lazy { VersionServiceAsyncImpl(clientOptions) }
-
-    private val purge: PurgeServiceAsync by lazy { PurgeServiceAsyncImpl(clientOptions) }
 
     private val metadata: MetadataServiceAsync by lazy { MetadataServiceAsyncImpl(clientOptions) }
 
@@ -73,22 +59,18 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FileServiceAsync =
         FileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun details(): DetailServiceAsync = details
-
-    override fun batch(): BatchServiceAsync = batch
+    override fun bulk(): BulkServiceAsync = bulk
 
     override fun versions(): VersionServiceAsync = versions
 
-    override fun purge(): PurgeServiceAsync = purge
-
     override fun metadata(): MetadataServiceAsync = metadata
 
-    override fun list(
-        params: FileListParams,
+    override fun update(
+        params: FileUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<FileListResponse>> =
-        // get /v1/files
-        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+    ): CompletableFuture<FileUpdateResponse> =
+        // patch /v1/files/{fileId}/details
+        withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun delete(
         params: FileDeleteParams,
@@ -97,19 +79,19 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         // delete /v1/files/{fileId}
         withRawResponse().delete(params, requestOptions).thenAccept {}
 
-    override fun addTags(
-        params: FileAddTagsParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<FileAddTagsResponse> =
-        // post /v1/files/addTags
-        withRawResponse().addTags(params, requestOptions).thenApply { it.parse() }
-
     override fun copy(
         params: FileCopyParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<FileCopyResponse> =
         // post /v1/files/copy
         withRawResponse().copy(params, requestOptions).thenApply { it.parse() }
+
+    override fun get(
+        params: FileGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<FileGetResponse> =
+        // get /v1/files/{fileId}/details
+        withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     override fun move(
         params: FileMoveParams,
@@ -118,20 +100,6 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         // post /v1/files/move
         withRawResponse().move(params, requestOptions).thenApply { it.parse() }
 
-    override fun removeAiTags(
-        params: FileRemoveAiTagsParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<FileRemoveAiTagsResponse> =
-        // post /v1/files/removeAITags
-        withRawResponse().removeAiTags(params, requestOptions).thenApply { it.parse() }
-
-    override fun removeTags(
-        params: FileRemoveTagsParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<FileRemoveTagsResponse> =
-        // post /v1/files/removeTags
-        withRawResponse().removeTags(params, requestOptions).thenApply { it.parse() }
-
     override fun rename(
         params: FileRenameParams,
         requestOptions: RequestOptions,
@@ -139,19 +107,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         // put /v1/files/rename
         withRawResponse().rename(params, requestOptions).thenApply { it.parse() }
 
-    override fun uploadV1(
-        params: FileUploadV1Params,
+    override fun upload(
+        params: FileUploadParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileUploadV1Response> =
+    ): CompletableFuture<FileUploadResponse> =
         // post /api/v1/files/upload
-        withRawResponse().uploadV1(params, requestOptions).thenApply { it.parse() }
-
-    override fun uploadV2(
-        params: FileUploadV2Params,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<FileUploadV2Response> =
-        // post /api/v2/files/upload
-        withRawResponse().uploadV2(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().upload(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FileServiceAsync.WithRawResponse {
@@ -159,20 +120,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
-        private val details: DetailServiceAsync.WithRawResponse by lazy {
-            DetailServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val batch: BatchServiceAsync.WithRawResponse by lazy {
-            BatchServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        private val bulk: BulkServiceAsync.WithRawResponse by lazy {
+            BulkServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val versions: VersionServiceAsync.WithRawResponse by lazy {
             VersionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val purge: PurgeServiceAsync.WithRawResponse by lazy {
-            PurgeServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val metadata: MetadataServiceAsync.WithRawResponse by lazy {
@@ -186,28 +139,28 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        override fun details(): DetailServiceAsync.WithRawResponse = details
-
-        override fun batch(): BatchServiceAsync.WithRawResponse = batch
+        override fun bulk(): BulkServiceAsync.WithRawResponse = bulk
 
         override fun versions(): VersionServiceAsync.WithRawResponse = versions
 
-        override fun purge(): PurgeServiceAsync.WithRawResponse = purge
-
         override fun metadata(): MetadataServiceAsync.WithRawResponse = metadata
 
-        private val listHandler: Handler<List<FileListResponse>> =
-            jsonHandler<List<FileListResponse>>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<FileUpdateResponse> =
+            jsonHandler<FileUpdateResponse>(clientOptions.jsonMapper)
 
-        override fun list(
-            params: FileListParams,
+        override fun update(
+            params: FileUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<FileListResponse>>> {
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("fileId", params.fileId().getOrNull())
             val request =
                 HttpRequest.builder()
-                    .method(HttpMethod.GET)
+                    .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files")
+                    .addPathSegments("v1", "files", params._pathParam(0), "details")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -216,10 +169,10 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
                         response
-                            .use { listHandler.handle(it) }
+                            .use { updateHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
-                                    it.forEach { it.validate() }
+                                    it.validate()
                                 }
                             }
                     }
@@ -253,37 +206,6 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val addTagsHandler: Handler<FileAddTagsResponse> =
-            jsonHandler<FileAddTagsResponse>(clientOptions.jsonMapper)
-
-        override fun addTags(
-            params: FileAddTagsParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileAddTagsResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files", "addTags")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { addTagsHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
         private val copyHandler: Handler<FileCopyResponse> =
             jsonHandler<FileCopyResponse>(clientOptions.jsonMapper)
 
@@ -306,6 +228,39 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     errorHandler.handle(response).parseable {
                         response
                             .use { copyHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getHandler: Handler<FileGetResponse> =
+            jsonHandler<FileGetResponse>(clientOptions.jsonMapper)
+
+        override fun get(
+            params: FileGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FileGetResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("fileId", params.fileId().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "files", params._pathParam(0), "details")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { getHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
@@ -346,68 +301,6 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val removeAiTagsHandler: Handler<FileRemoveAiTagsResponse> =
-            jsonHandler<FileRemoveAiTagsResponse>(clientOptions.jsonMapper)
-
-        override fun removeAiTags(
-            params: FileRemoveAiTagsParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileRemoveAiTagsResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files", "removeAITags")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { removeAiTagsHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val removeTagsHandler: Handler<FileRemoveTagsResponse> =
-            jsonHandler<FileRemoveTagsResponse>(clientOptions.jsonMapper)
-
-        override fun removeTags(
-            params: FileRemoveTagsParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileRemoveTagsResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files", "removeTags")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { removeTagsHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
         private val renameHandler: Handler<FileRenameResponse> =
             jsonHandler<FileRenameResponse>(clientOptions.jsonMapper)
 
@@ -439,13 +332,13 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val uploadV1Handler: Handler<FileUploadV1Response> =
-            jsonHandler<FileUploadV1Response>(clientOptions.jsonMapper)
+        private val uploadHandler: Handler<FileUploadResponse> =
+            jsonHandler<FileUploadResponse>(clientOptions.jsonMapper)
 
-        override fun uploadV1(
-            params: FileUploadV1Params,
+        override fun upload(
+            params: FileUploadParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileUploadV1Response>> {
+        ): CompletableFuture<HttpResponseFor<FileUploadResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -463,41 +356,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
                         response
-                            .use { uploadV1Handler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
-        }
-
-        private val uploadV2Handler: Handler<FileUploadV2Response> =
-            jsonHandler<FileUploadV2Response>(clientOptions.jsonMapper)
-
-        override fun uploadV2(
-            params: FileUploadV2Params,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileUploadV2Response>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .baseUrl(
-                        if (clientOptions.baseUrlOverridden()) clientOptions.baseUrl()
-                        else "https://upload.imagekit.io"
-                    )
-                    .addPathSegments("api", "v2", "files", "upload")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    errorHandler.handle(response).parseable {
-                        response
-                            .use { uploadV2Handler.handle(it) }
+                            .use { uploadHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

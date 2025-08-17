@@ -20,10 +20,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /**
-     * Set it to `true` to include deleted field objects in the API response. Default value is
-     * `false`.
-     */
+    /** Set it to `true` to include deleted field objects in the API response. */
     fun includeDeleted(): Optional<Boolean> = Optional.ofNullable(includeDeleted)
 
     /** Additional headers to send with the request. */
@@ -59,10 +56,7 @@ private constructor(
             additionalQueryParams = customMetadataFieldListParams.additionalQueryParams.toBuilder()
         }
 
-        /**
-         * Set it to `true` to include deleted field objects in the API response. Default value is
-         * `false`.
-         */
+        /** Set it to `true` to include deleted field objects in the API response. */
         fun includeDeleted(includeDeleted: Boolean?) = apply {
             this.includeDeleted = includeDeleted
         }

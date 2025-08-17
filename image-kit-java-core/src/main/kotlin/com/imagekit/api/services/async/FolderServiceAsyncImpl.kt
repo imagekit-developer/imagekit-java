@@ -15,10 +15,18 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
-import com.imagekit.api.models.folder.FolderCreateParams
-import com.imagekit.api.models.folder.FolderCreateResponse
-import com.imagekit.api.models.folder.FolderDeleteParams
-import com.imagekit.api.models.folder.FolderDeleteResponse
+import com.imagekit.api.models.folders.FolderCopyParams
+import com.imagekit.api.models.folders.FolderCopyResponse
+import com.imagekit.api.models.folders.FolderCreateParams
+import com.imagekit.api.models.folders.FolderCreateResponse
+import com.imagekit.api.models.folders.FolderDeleteParams
+import com.imagekit.api.models.folders.FolderDeleteResponse
+import com.imagekit.api.models.folders.FolderMoveParams
+import com.imagekit.api.models.folders.FolderMoveResponse
+import com.imagekit.api.models.folders.FolderRenameParams
+import com.imagekit.api.models.folders.FolderRenameResponse
+import com.imagekit.api.services.async.folders.JobServiceAsync
+import com.imagekit.api.services.async.folders.JobServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -29,10 +37,14 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
         WithRawResponseImpl(clientOptions)
     }
 
+    private val job: JobServiceAsync by lazy { JobServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): FolderServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): FolderServiceAsync =
         FolderServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    override fun job(): JobServiceAsync = job
 
     override fun create(
         params: FolderCreateParams,
@@ -48,11 +60,36 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
         // delete /v1/folder
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
+    override fun copy(
+        params: FolderCopyParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<FolderCopyResponse> =
+        // post /v1/bulkJobs/copyFolder
+        withRawResponse().copy(params, requestOptions).thenApply { it.parse() }
+
+    override fun move(
+        params: FolderMoveParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<FolderMoveResponse> =
+        // post /v1/bulkJobs/moveFolder
+        withRawResponse().move(params, requestOptions).thenApply { it.parse() }
+
+    override fun rename(
+        params: FolderRenameParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<FolderRenameResponse> =
+        // post /v1/bulkJobs/renameFolder
+        withRawResponse().rename(params, requestOptions).thenApply { it.parse() }
+
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         FolderServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+
+        private val job: JobServiceAsync.WithRawResponse by lazy {
+            JobServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -60,6 +97,8 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
             FolderServiceAsyncImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
+
+        override fun job(): JobServiceAsync.WithRawResponse = job
 
         private val createHandler: Handler<FolderCreateResponse> =
             jsonHandler<FolderCreateResponse>(clientOptions.jsonMapper)
@@ -114,6 +153,99 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                     errorHandler.handle(response).parseable {
                         response
                             .use { deleteHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val copyHandler: Handler<FolderCopyResponse> =
+            jsonHandler<FolderCopyResponse>(clientOptions.jsonMapper)
+
+        override fun copy(
+            params: FolderCopyParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FolderCopyResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "bulkJobs", "copyFolder")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { copyHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val moveHandler: Handler<FolderMoveResponse> =
+            jsonHandler<FolderMoveResponse>(clientOptions.jsonMapper)
+
+        override fun move(
+            params: FolderMoveParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FolderMoveResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "bulkJobs", "moveFolder")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { moveHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val renameHandler: Handler<FolderRenameResponse> =
+            jsonHandler<FolderRenameResponse>(clientOptions.jsonMapper)
+
+        override fun rename(
+            params: FolderRenameParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<FolderRenameResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "bulkJobs", "renameFolder")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    errorHandler.handle(response).parseable {
+                        response
+                            .use { renameHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

@@ -3,19 +3,12 @@
 package com.imagekit.api.services.blocking
 
 import com.imagekit.api.core.ClientOptions
-import com.imagekit.api.core.RequestOptions
-import com.imagekit.api.core.handlers.errorBodyHandler
-import com.imagekit.api.core.handlers.errorHandler
-import com.imagekit.api.core.handlers.jsonHandler
-import com.imagekit.api.core.http.HttpMethod
-import com.imagekit.api.core.http.HttpRequest
-import com.imagekit.api.core.http.HttpResponse
-import com.imagekit.api.core.http.HttpResponse.Handler
-import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.core.http.parseable
-import com.imagekit.api.core.prepare
-import com.imagekit.api.models.accounts.AccountGetUsageParams
-import com.imagekit.api.models.accounts.AccountGetUsageResponse
+import com.imagekit.api.services.blocking.accounts.OriginService
+import com.imagekit.api.services.blocking.accounts.OriginServiceImpl
+import com.imagekit.api.services.blocking.accounts.UrlEndpointService
+import com.imagekit.api.services.blocking.accounts.UrlEndpointServiceImpl
+import com.imagekit.api.services.blocking.accounts.UsageService
+import com.imagekit.api.services.blocking.accounts.UsageServiceImpl
 import java.util.function.Consumer
 
 class AccountServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -25,23 +18,37 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
         WithRawResponseImpl(clientOptions)
     }
 
+    private val usage: UsageService by lazy { UsageServiceImpl(clientOptions) }
+
+    private val origins: OriginService by lazy { OriginServiceImpl(clientOptions) }
+
+    private val urlEndpoints: UrlEndpointService by lazy { UrlEndpointServiceImpl(clientOptions) }
+
     override fun withRawResponse(): AccountService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AccountService =
         AccountServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun getUsage(
-        params: AccountGetUsageParams,
-        requestOptions: RequestOptions,
-    ): AccountGetUsageResponse =
-        // get /v1/accounts/usage
-        withRawResponse().getUsage(params, requestOptions).parse()
+    override fun usage(): UsageService = usage
+
+    override fun origins(): OriginService = origins
+
+    override fun urlEndpoints(): UrlEndpointService = urlEndpoints
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AccountService.WithRawResponse {
 
-        private val errorHandler: Handler<HttpResponse> =
-            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
+        private val usage: UsageService.WithRawResponse by lazy {
+            UsageServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val origins: OriginService.WithRawResponse by lazy {
+            OriginServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val urlEndpoints: UrlEndpointService.WithRawResponse by lazy {
+            UrlEndpointServiceImpl.WithRawResponseImpl(clientOptions)
+        }
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -50,31 +57,10 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val getUsageHandler: Handler<AccountGetUsageResponse> =
-            jsonHandler<AccountGetUsageResponse>(clientOptions.jsonMapper)
+        override fun usage(): UsageService.WithRawResponse = usage
 
-        override fun getUsage(
-            params: AccountGetUsageParams,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<AccountGetUsageResponse> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "accounts", "usage")
-                    .build()
-                    .prepare(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            val response = clientOptions.httpClient.execute(request, requestOptions)
-            return errorHandler.handle(response).parseable {
-                response
-                    .use { getUsageHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-        }
+        override fun origins(): OriginService.WithRawResponse = origins
+
+        override fun urlEndpoints(): UrlEndpointService.WithRawResponse = urlEndpoints
     }
 }
