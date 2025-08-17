@@ -5,6 +5,11 @@ package com.imagekit.api.models.files.metadata
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.ExifDetails
+import com.imagekit.api.models.ExifImage
+import com.imagekit.api.models.Gps
+import com.imagekit.api.models.Interoperability
+import com.imagekit.api.models.Thumbnail
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -21,7 +26,7 @@ internal class MetadataGetResponseTest {
                 .exif(
                     MetadataGetResponse.Exif.builder()
                         .exif(
-                            MetadataGetResponse.Exif.InnerExif.builder()
+                            ExifDetails.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -50,9 +55,9 @@ internal class MetadataGetResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                        .gps(Gps.builder().addGpsVersionId(0L).build())
                         .image(
-                            MetadataGetResponse.Exif.Image.builder()
+                            ExifImage.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -67,7 +72,7 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            MetadataGetResponse.Exif.Interoperability.builder()
+                            Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
@@ -78,7 +83,7 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .thumbnail(
-                            MetadataGetResponse.Exif.Thumbnail.builder()
+                            Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)
@@ -108,7 +113,7 @@ internal class MetadataGetResponseTest {
             .contains(
                 MetadataGetResponse.Exif.builder()
                     .exif(
-                        MetadataGetResponse.Exif.InnerExif.builder()
+                        ExifDetails.builder()
                             .apertureValue(0.0)
                             .colorSpace(0L)
                             .createDate("CreateDate")
@@ -137,9 +142,9 @@ internal class MetadataGetResponseTest {
                             .whiteBalance(0L)
                             .build()
                     )
-                    .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                    .gps(Gps.builder().addGpsVersionId(0L).build())
                     .image(
-                        MetadataGetResponse.Exif.Image.builder()
+                        ExifImage.builder()
                             .exifOffset(0L)
                             .gpsInfo(0L)
                             .make("Make")
@@ -154,7 +159,7 @@ internal class MetadataGetResponseTest {
                             .build()
                     )
                     .interoperability(
-                        MetadataGetResponse.Exif.Interoperability.builder()
+                        Interoperability.builder()
                             .interopIndex("InteropIndex")
                             .interopVersion("InteropVersion")
                             .build()
@@ -165,7 +170,7 @@ internal class MetadataGetResponseTest {
                             .build()
                     )
                     .thumbnail(
-                        MetadataGetResponse.Exif.Thumbnail.builder()
+                        Thumbnail.builder()
                             .compression(0L)
                             .resolutionUnit(0L)
                             .thumbnailLength(0L)
@@ -199,7 +204,7 @@ internal class MetadataGetResponseTest {
                 .exif(
                     MetadataGetResponse.Exif.builder()
                         .exif(
-                            MetadataGetResponse.Exif.InnerExif.builder()
+                            ExifDetails.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -228,9 +233,9 @@ internal class MetadataGetResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                        .gps(Gps.builder().addGpsVersionId(0L).build())
                         .image(
-                            MetadataGetResponse.Exif.Image.builder()
+                            ExifImage.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -245,7 +250,7 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            MetadataGetResponse.Exif.Interoperability.builder()
+                            Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
@@ -256,7 +261,7 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .thumbnail(
-                            MetadataGetResponse.Exif.Thumbnail.builder()
+                            Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)
