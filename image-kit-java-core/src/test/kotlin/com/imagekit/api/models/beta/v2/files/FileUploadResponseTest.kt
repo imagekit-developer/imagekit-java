@@ -30,7 +30,11 @@ internal class FileUploadResponseTest {
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .customCoordinates("customCoordinates")
-                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .customMetadata(
+                    FileUploadResponse.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .duration(0L)
                 .embeddedMetadata(
                     FileUploadResponse.EmbeddedMetadata.builder()
@@ -161,8 +165,12 @@ internal class FileUploadResponseTest {
         assertThat(fileUploadResponse.audioCodec()).contains("audioCodec")
         assertThat(fileUploadResponse.bitRate()).contains(0L)
         assertThat(fileUploadResponse.customCoordinates()).contains("customCoordinates")
-        assertThat(fileUploadResponse._customMetadata())
-            .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(fileUploadResponse.customMetadata())
+            .contains(
+                FileUploadResponse.CustomMetadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(fileUploadResponse.duration()).contains(0L)
         assertThat(fileUploadResponse.embeddedMetadata())
             .contains(
@@ -299,7 +307,11 @@ internal class FileUploadResponseTest {
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .customCoordinates("customCoordinates")
-                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .customMetadata(
+                    FileUploadResponse.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .duration(0L)
                 .embeddedMetadata(
                     FileUploadResponse.EmbeddedMetadata.builder()

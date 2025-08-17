@@ -22,6 +22,8 @@ import com.imagekit.api.errors.RateLimitException
 import com.imagekit.api.errors.UnauthorizedException
 import com.imagekit.api.errors.UnexpectedStatusCodeException
 import com.imagekit.api.errors.UnprocessableEntityException
+import com.imagekit.api.models.AutoTaggingExtension
+import com.imagekit.api.models.RemovedotBgExtension
 import com.imagekit.api.models.files.FileUploadParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
@@ -87,13 +89,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -103,13 +102,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -202,13 +198,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -218,13 +211,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -317,13 +307,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -333,13 +320,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -432,13 +416,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -448,13 +429,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -547,13 +525,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -563,13 +538,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -662,13 +634,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -678,13 +647,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -777,13 +743,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -793,13 +756,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -892,13 +852,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -908,13 +865,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1007,13 +961,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1023,13 +974,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1122,13 +1070,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1138,13 +1083,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1237,13 +1179,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1253,13 +1192,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1352,13 +1288,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1368,13 +1301,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1467,13 +1397,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1483,13 +1410,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1582,13 +1506,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1598,13 +1519,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1697,13 +1615,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1713,13 +1628,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1812,13 +1724,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1828,13 +1737,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")
@@ -1925,13 +1831,10 @@ internal class ErrorHandlingTest {
                         .description("Running shoes")
                         .expire(0L)
                         .addExtension(
-                            FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                .name(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG
-                                )
+                            RemovedotBgExtension.builder()
+                                .name(RemovedotBgExtension.Name.REMOVE_BG)
                                 .options(
-                                    FileUploadParams.Extension.RemovedotBgExtension.Options
-                                        .builder()
+                                    RemovedotBgExtension.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -1941,13 +1844,10 @@ internal class ErrorHandlingTest {
                                 .build()
                         )
                         .addExtension(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         )
                         .folder("folder")

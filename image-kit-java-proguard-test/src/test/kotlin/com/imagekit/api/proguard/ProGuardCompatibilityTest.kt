@@ -76,7 +76,11 @@ internal class ProGuardCompatibilityTest {
                 )
                 .createdAt("createdAt")
                 .customCoordinates("customCoordinates")
-                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .customMetadata(
+                    FileUpdateResponse.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .extensionStatus(
                     FileUpdateResponse.ExtensionStatus.builder()
                         .aiAutoDescription(
@@ -132,7 +136,11 @@ internal class ProGuardCompatibilityTest {
                     )
                     .createdAt("createdAt")
                     .customCoordinates("customCoordinates")
-                    .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                    .customMetadata(
+                        AssetListResponse.FileDetails.CustomMetadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .fileId("fileId")
                     .filePath("filePath")
                     .fileType("fileType")

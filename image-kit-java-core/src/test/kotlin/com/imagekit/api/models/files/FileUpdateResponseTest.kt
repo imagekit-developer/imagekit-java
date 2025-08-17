@@ -24,7 +24,11 @@ internal class FileUpdateResponseTest {
                 )
                 .createdAt("createdAt")
                 .customCoordinates("customCoordinates")
-                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .customMetadata(
+                    FileUpdateResponse.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .extensionStatus(
                     FileUpdateResponse.ExtensionStatus.builder()
                         .aiAutoDescription(
@@ -66,8 +70,12 @@ internal class FileUpdateResponseTest {
             )
         assertThat(fileUpdateResponse.createdAt()).contains("createdAt")
         assertThat(fileUpdateResponse.customCoordinates()).contains("customCoordinates")
-        assertThat(fileUpdateResponse._customMetadata())
-            .isEqualTo(JsonValue.from(mapOf<String, Any>()))
+        assertThat(fileUpdateResponse.customMetadata())
+            .contains(
+                FileUpdateResponse.CustomMetadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(fileUpdateResponse.extensionStatus())
             .contains(
                 FileUpdateResponse.ExtensionStatus.builder()
@@ -111,7 +119,11 @@ internal class FileUpdateResponseTest {
                 )
                 .createdAt("createdAt")
                 .customCoordinates("customCoordinates")
-                .customMetadata(JsonValue.from(mapOf<String, Any>()))
+                .customMetadata(
+                    FileUpdateResponse.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .extensionStatus(
                     FileUpdateResponse.ExtensionStatus.builder()
                         .aiAutoDescription(

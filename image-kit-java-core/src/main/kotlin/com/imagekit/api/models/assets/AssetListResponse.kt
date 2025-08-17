@@ -218,7 +218,7 @@ private constructor(
         private val aiTags: JsonField<List<AiTag>>,
         private val createdAt: JsonField<String>,
         private val customCoordinates: JsonField<String>,
-        private val customMetadata: JsonValue,
+        private val customMetadata: JsonField<CustomMetadata>,
         private val fileId: JsonField<String>,
         private val filePath: JsonField<String>,
         private val fileType: JsonField<String>,
@@ -252,7 +252,7 @@ private constructor(
             customCoordinates: JsonField<String> = JsonMissing.of(),
             @JsonProperty("customMetadata")
             @ExcludeMissing
-            customMetadata: JsonValue = JsonMissing.of(),
+            customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
             @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
             @JsonProperty("filePath")
             @ExcludeMissing
@@ -336,10 +336,14 @@ private constructor(
         fun customCoordinates(): Optional<String> =
             customCoordinates.getOptional("customCoordinates")
 
-        /** An object with custom metadata for the file. */
-        @JsonProperty("customMetadata")
-        @ExcludeMissing
-        fun _customMetadata(): JsonValue = customMetadata
+        /**
+         * An object with custom metadata for the file.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun customMetadata(): Optional<CustomMetadata> =
+            customMetadata.getOptional("customMetadata")
 
         /**
          * Unique identifier of the asset.
@@ -506,6 +510,16 @@ private constructor(
         fun _customCoordinates(): JsonField<String> = customCoordinates
 
         /**
+         * Returns the raw JSON value of [customMetadata].
+         *
+         * Unlike [customMetadata], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("customMetadata")
+        @ExcludeMissing
+        fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
+
+        /**
          * Returns the raw JSON value of [fileId].
          *
          * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
@@ -655,7 +669,7 @@ private constructor(
             private var aiTags: JsonField<MutableList<AiTag>>? = null
             private var createdAt: JsonField<String> = JsonMissing.of()
             private var customCoordinates: JsonField<String> = JsonMissing.of()
-            private var customMetadata: JsonValue = JsonMissing.of()
+            private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
             private var fileId: JsonField<String> = JsonMissing.of()
             private var filePath: JsonField<String> = JsonMissing.of()
             private var fileType: JsonField<String> = JsonMissing.of()
@@ -764,7 +778,17 @@ private constructor(
             }
 
             /** An object with custom metadata for the file. */
-            fun customMetadata(customMetadata: JsonValue) = apply {
+            fun customMetadata(customMetadata: CustomMetadata) =
+                customMetadata(JsonField.of(customMetadata))
+
+            /**
+             * Sets [Builder.customMetadata] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.customMetadata] with a well-typed [CustomMetadata]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
                 this.customMetadata = customMetadata
             }
 
@@ -1067,6 +1091,7 @@ private constructor(
             aiTags().ifPresent { it.forEach { it.validate() } }
             createdAt()
             customCoordinates()
+            customMetadata().ifPresent { it.validate() }
             fileId()
             filePath()
             fileType()
@@ -1106,6 +1131,7 @@ private constructor(
             (aiTags.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
                 (if (createdAt.asKnown().isPresent) 1 else 0) +
                 (if (customCoordinates.asKnown().isPresent) 1 else 0) +
+                (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (fileId.asKnown().isPresent) 1 else 0) +
                 (if (filePath.asKnown().isPresent) 1 else 0) +
                 (if (fileType.asKnown().isPresent) 1 else 0) +
@@ -1348,6 +1374,109 @@ private constructor(
 
             override fun toString() =
                 "AiTag{confidence=$confidence, name=$name, source=$source, additionalProperties=$additionalProperties}"
+        }
+
+        /** An object with custom metadata for the file. */
+        class CustomMetadata
+        @JsonCreator
+        private constructor(
+            @com.fasterxml.jackson.annotation.JsonValue
+            private val additionalProperties: Map<String, JsonValue>
+        ) {
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /** Returns a mutable builder for constructing an instance of [CustomMetadata]. */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [CustomMetadata]. */
+            class Builder internal constructor() {
+
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(customMetadata: CustomMetadata) = apply {
+                    additionalProperties = customMetadata.additionalProperties.toMutableMap()
+                }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [CustomMetadata].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 */
+                fun build(): CustomMetadata = CustomMetadata(additionalProperties.toImmutable())
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): CustomMetadata = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: ImageKitInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is CustomMetadata && additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
         }
 
         /** An object with details of the file version. */

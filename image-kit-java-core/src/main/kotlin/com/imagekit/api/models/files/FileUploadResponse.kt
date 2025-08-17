@@ -31,7 +31,7 @@ private constructor(
     private val audioCodec: JsonField<String>,
     private val bitRate: JsonField<Long>,
     private val customCoordinates: JsonField<String>,
-    private val customMetadata: JsonValue,
+    private val customMetadata: JsonField<CustomMetadata>,
     private val duration: JsonField<Long>,
     private val embeddedMetadata: JsonField<EmbeddedMetadata>,
     private val extensionStatus: JsonField<ExtensionStatus>,
@@ -65,7 +65,7 @@ private constructor(
         customCoordinates: JsonField<String> = JsonMissing.of(),
         @JsonProperty("customMetadata")
         @ExcludeMissing
-        customMetadata: JsonValue = JsonMissing.of(),
+        customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("embeddedMetadata")
         @ExcludeMissing
@@ -164,10 +164,11 @@ private constructor(
      * `customMetadata` in the upload API response. Before setting any custom metadata on an asset,
      * you have to create the field using custom metadata fields API. Send `customMetadata` in
      * `responseFields` in API request to get the value of this field.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
      */
-    @JsonProperty("customMetadata")
-    @ExcludeMissing
-    fun _customMetadata(): JsonValue = customMetadata
+    fun customMetadata(): Optional<CustomMetadata> = customMetadata.getOptional("customMetadata")
 
     /**
      * The duration of the video in seconds (only for video).
@@ -361,6 +362,15 @@ private constructor(
     fun _customCoordinates(): JsonField<String> = customCoordinates
 
     /**
+     * Returns the raw JSON value of [customMetadata].
+     *
+     * Unlike [customMetadata], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("customMetadata")
+    @ExcludeMissing
+    fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
+
+    /**
      * Returns the raw JSON value of [duration].
      *
      * Unlike [duration], this method doesn't throw if the JSON field has an unexpected type.
@@ -524,7 +534,7 @@ private constructor(
         private var audioCodec: JsonField<String> = JsonMissing.of()
         private var bitRate: JsonField<Long> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
-        private var customMetadata: JsonValue = JsonMissing.of()
+        private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
         private var duration: JsonField<Long> = JsonMissing.of()
         private var embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of()
         private var extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of()
@@ -654,7 +664,17 @@ private constructor(
          * asset, you have to create the field using custom metadata fields API. Send
          * `customMetadata` in `responseFields` in API request to get the value of this field.
          */
-        fun customMetadata(customMetadata: JsonValue) = apply {
+        fun customMetadata(customMetadata: CustomMetadata) =
+            customMetadata(JsonField.of(customMetadata))
+
+        /**
+         * Sets [Builder.customMetadata] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customMetadata] with a well-typed [CustomMetadata] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
             this.customMetadata = customMetadata
         }
 
@@ -987,6 +1007,7 @@ private constructor(
         audioCodec()
         bitRate()
         customCoordinates()
+        customMetadata().ifPresent { it.validate() }
         duration()
         embeddedMetadata().ifPresent { it.validate() }
         extensionStatus().ifPresent { it.validate() }
@@ -1027,6 +1048,7 @@ private constructor(
             (if (audioCodec.asKnown().isPresent) 1 else 0) +
             (if (bitRate.asKnown().isPresent) 1 else 0) +
             (if (customCoordinates.asKnown().isPresent) 1 else 0) +
+            (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (duration.asKnown().isPresent) 1 else 0) +
             (embeddedMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (extensionStatus.asKnown().getOrNull()?.validity() ?: 0) +
@@ -1266,6 +1288,111 @@ private constructor(
 
         override fun toString() =
             "AiTag{confidence=$confidence, name=$name, source=$source, additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * A key-value data associated with the asset. Use `responseField` in API request to get
+     * `customMetadata` in the upload API response. Before setting any custom metadata on an asset,
+     * you have to create the field using custom metadata fields API. Send `customMetadata` in
+     * `responseFields` in API request to get the value of this field.
+     */
+    class CustomMetadata
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [CustomMetadata]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [CustomMetadata]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(customMetadata: CustomMetadata) = apply {
+                additionalProperties = customMetadata.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [CustomMetadata].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): CustomMetadata = CustomMetadata(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): CustomMetadata = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CustomMetadata && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
     }
 
     /**
