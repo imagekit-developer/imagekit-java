@@ -82,7 +82,7 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun beta(): BetaServiceAsync = beta
 
-    override fun close() = clientOptions.httpClient.close()
+    override fun close() = clientOptions.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ImageKitClientAsync.WithRawResponse {

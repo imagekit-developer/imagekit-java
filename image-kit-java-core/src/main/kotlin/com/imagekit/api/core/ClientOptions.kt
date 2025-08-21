@@ -22,6 +22,8 @@ private constructor(
      * The HTTP client to use in the SDK.
      *
      * Use the one published in `image-kit-java-client-okhttp` or implement your own.
+     *
+     * This class takes ownership of the client and closes it when closed.
      */
     @get:JvmName("httpClient") val httpClient: HttpClient,
     /**
@@ -170,6 +172,8 @@ private constructor(
          * The HTTP client to use in the SDK.
          *
          * Use the one published in `image-kit-java-client-okhttp` or implement your own.
+         *
+         * This class takes ownership of the client and closes it when closed.
          */
         fun httpClient(httpClient: HttpClient) = apply {
             this.httpClient = PhantomReachableClosingHttpClient(httpClient)
@@ -436,5 +440,19 @@ private constructor(
                 password,
             )
         }
+    }
+
+    /**
+     * Closes these client options, relinquishing any underlying resources.
+     *
+     * This is purposefully not inherited from [AutoCloseable] because the client options are
+     * long-lived and usually should not be synchronously closed via try-with-resources.
+     *
+     * It's also usually not necessary to call this method at all. the default client automatically
+     * releases threads and connections if they remain idle, but if you are writing an application
+     * that needs to aggressively release unused resources, then you may call this method.
+     */
+    fun close() {
+        httpClient.close()
     }
 }
