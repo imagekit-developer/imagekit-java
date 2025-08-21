@@ -529,7 +529,7 @@ private constructor(
          * When supplying a URL, the server must receive the response headers within 8 seconds;
          * otherwise the request fails with 400 Bad Request.
          */
-        fun file(file: Path) = apply { body.file(file) }
+        fun file(path: Path) = apply { body.file(path) }
 
         /** The name with which the file has to be uploaded. */
         fun fileName(fileName: String) = apply { body.fileName(fileName) }
@@ -1629,11 +1629,11 @@ private constructor(
              * When supplying a URL, the server must receive the response headers within 8 seconds;
              * otherwise the request fails with 400 Bad Request.
              */
-            fun file(file: Path) =
+            fun file(path: Path) =
                 file(
                     MultipartField.builder<InputStream>()
-                        .value(file.inputStream())
-                        .filename(file.name)
+                        .value(path.inputStream())
+                        .filename(path.name)
                         .build()
                 )
 
