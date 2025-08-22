@@ -45,8 +45,8 @@ import java.io.ByteArrayInputStream;
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("fileName")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .fileName("file-name.jpg")
     .build();
 FileUploadResponse response = client.files().upload(params);
 ```
@@ -150,8 +150,8 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("fileName")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
 ```
@@ -171,8 +171,8 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("fileName")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.files().upload(params);
 ```
@@ -257,8 +257,8 @@ import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("fileName")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .fileName("file-name.jpg")
     .build();
 HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
 
@@ -505,11 +505,10 @@ To set a documented parameter or property to an undocumented or not yet supporte
 ```java
 import com.imagekit.api.core.JsonValue;
 import com.imagekit.api.models.files.FileUploadParams;
-import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName(JsonValue.from(42))
+    .file(JsonValue.from(42))
+    .fileName("file-name.jpg")
     .build();
 ```
 
