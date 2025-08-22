@@ -60,8 +60,8 @@ internal class OriginServiceAsyncTest {
             originServiceAsync.update(
                 OriginUpdateParams.builder()
                     .id("id")
-                    .body(
-                        OriginUpdateParams.Body.S3.builder()
+                    .origin(
+                        OriginUpdateParams.Origin.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")

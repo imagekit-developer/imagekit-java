@@ -38,7 +38,7 @@ import kotlin.jvm.optionals.getOrNull
 class OriginUpdateParams
 private constructor(
     private val id: String?,
-    private val body: Body,
+    private val origin: Origin,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -49,7 +49,7 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Schema for origin resources. */
-    fun body(): Body = body
+    fun origin(): Origin = origin
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -66,7 +66,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
+         * .origin()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -76,14 +76,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
-        private var body: Body? = null
+        private var origin: Origin? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(originUpdateParams: OriginUpdateParams) = apply {
             id = originUpdateParams.id
-            body = originUpdateParams.body
+            origin = originUpdateParams.origin
             additionalHeaders = originUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = originUpdateParams.additionalQueryParams.toBuilder()
         }
@@ -98,34 +98,36 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** Schema for origin resources. */
-        fun body(body: Body) = apply { this.body = body }
+        fun origin(origin: Origin) = apply { this.origin = origin }
 
-        /** Alias for calling [body] with `Body.ofS3(s3)`. */
-        fun body(s3: Body.S3) = body(Body.ofS3(s3))
+        /** Alias for calling [origin] with `Origin.ofS3(s3)`. */
+        fun origin(s3: Origin.S3) = origin(Origin.ofS3(s3))
 
-        /** Alias for calling [body] with `Body.ofS3Compatible(s3Compatible)`. */
-        fun body(s3Compatible: Body.S3Compatible) = body(Body.ofS3Compatible(s3Compatible))
+        /** Alias for calling [origin] with `Origin.ofS3Compatible(s3Compatible)`. */
+        fun origin(s3Compatible: Origin.S3Compatible) = origin(Origin.ofS3Compatible(s3Compatible))
 
-        /** Alias for calling [body] with `Body.ofCloudinaryBackup(cloudinaryBackup)`. */
-        fun body(cloudinaryBackup: Body.CloudinaryBackup) =
-            body(Body.ofCloudinaryBackup(cloudinaryBackup))
+        /** Alias for calling [origin] with `Origin.ofCloudinaryBackup(cloudinaryBackup)`. */
+        fun origin(cloudinaryBackup: Origin.CloudinaryBackup) =
+            origin(Origin.ofCloudinaryBackup(cloudinaryBackup))
 
-        /** Alias for calling [body] with `Body.ofWebFolder(webFolder)`. */
-        fun body(webFolder: Body.WebFolder) = body(Body.ofWebFolder(webFolder))
+        /** Alias for calling [origin] with `Origin.ofWebFolder(webFolder)`. */
+        fun origin(webFolder: Origin.WebFolder) = origin(Origin.ofWebFolder(webFolder))
 
-        /** Alias for calling [body] with `Body.ofWebProxy(webProxy)`. */
-        fun body(webProxy: Body.WebProxy) = body(Body.ofWebProxy(webProxy))
+        /** Alias for calling [origin] with `Origin.ofWebProxy(webProxy)`. */
+        fun origin(webProxy: Origin.WebProxy) = origin(Origin.ofWebProxy(webProxy))
 
-        /** Alias for calling [body] with `Body.ofGoogleCloudStorageGcs(googleCloudStorageGcs)`. */
-        fun body(googleCloudStorageGcs: Body.GoogleCloudStorageGcs) =
-            body(Body.ofGoogleCloudStorageGcs(googleCloudStorageGcs))
+        /**
+         * Alias for calling [origin] with `Origin.ofGoogleCloudStorageGcs(googleCloudStorageGcs)`.
+         */
+        fun origin(googleCloudStorageGcs: Origin.GoogleCloudStorageGcs) =
+            origin(Origin.ofGoogleCloudStorageGcs(googleCloudStorageGcs))
 
-        /** Alias for calling [body] with `Body.ofAzureBlobStorage(azureBlobStorage)`. */
-        fun body(azureBlobStorage: Body.AzureBlobStorage) =
-            body(Body.ofAzureBlobStorage(azureBlobStorage))
+        /** Alias for calling [origin] with `Origin.ofAzureBlobStorage(azureBlobStorage)`. */
+        fun origin(azureBlobStorage: Origin.AzureBlobStorage) =
+            origin(Origin.ofAzureBlobStorage(azureBlobStorage))
 
-        /** Alias for calling [body] with `Body.ofAkeneoPim(akeneoPim)`. */
-        fun body(akeneoPim: Body.AkeneoPim) = body(Body.ofAkeneoPim(akeneoPim))
+        /** Alias for calling [origin] with `Origin.ofAkeneoPim(akeneoPim)`. */
+        fun origin(akeneoPim: Origin.AkeneoPim) = origin(Origin.ofAkeneoPim(akeneoPim))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -232,7 +234,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .body()
+         * .origin()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -240,13 +242,13 @@ private constructor(
         fun build(): OriginUpdateParams =
             OriginUpdateParams(
                 id,
-                checkRequired("body", body),
+                checkRequired("origin", origin),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): Body = body
+    fun _body(): Origin = origin
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -259,9 +261,9 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     /** Schema for origin resources. */
-    @JsonDeserialize(using = Body.Deserializer::class)
-    @JsonSerialize(using = Body.Serializer::class)
-    class Body
+    @JsonDeserialize(using = Origin.Deserializer::class)
+    @JsonSerialize(using = Origin.Serializer::class)
+    class Origin
     private constructor(
         private val s3: S3? = null,
         private val s3Compatible: S3Compatible? = null,
@@ -342,7 +344,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): Body = apply {
+        fun validate(): Origin = apply {
             if (validated) {
                 return@apply
             }
@@ -435,7 +437,7 @@ private constructor(
                 return true
             }
 
-            return other is Body &&
+            return other is Origin &&
                 s3 == other.s3 &&
                 s3Compatible == other.s3Compatible &&
                 cloudinaryBackup == other.cloudinaryBackup &&
@@ -460,46 +462,46 @@ private constructor(
 
         override fun toString(): String =
             when {
-                s3 != null -> "Body{s3=$s3}"
-                s3Compatible != null -> "Body{s3Compatible=$s3Compatible}"
-                cloudinaryBackup != null -> "Body{cloudinaryBackup=$cloudinaryBackup}"
-                webFolder != null -> "Body{webFolder=$webFolder}"
-                webProxy != null -> "Body{webProxy=$webProxy}"
+                s3 != null -> "Origin{s3=$s3}"
+                s3Compatible != null -> "Origin{s3Compatible=$s3Compatible}"
+                cloudinaryBackup != null -> "Origin{cloudinaryBackup=$cloudinaryBackup}"
+                webFolder != null -> "Origin{webFolder=$webFolder}"
+                webProxy != null -> "Origin{webProxy=$webProxy}"
                 googleCloudStorageGcs != null ->
-                    "Body{googleCloudStorageGcs=$googleCloudStorageGcs}"
-                azureBlobStorage != null -> "Body{azureBlobStorage=$azureBlobStorage}"
-                akeneoPim != null -> "Body{akeneoPim=$akeneoPim}"
-                _json != null -> "Body{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Body")
+                    "Origin{googleCloudStorageGcs=$googleCloudStorageGcs}"
+                azureBlobStorage != null -> "Origin{azureBlobStorage=$azureBlobStorage}"
+                akeneoPim != null -> "Origin{akeneoPim=$akeneoPim}"
+                _json != null -> "Origin{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Origin")
             }
 
         companion object {
 
-            @JvmStatic fun ofS3(s3: S3) = Body(s3 = s3)
+            @JvmStatic fun ofS3(s3: S3) = Origin(s3 = s3)
 
             @JvmStatic
-            fun ofS3Compatible(s3Compatible: S3Compatible) = Body(s3Compatible = s3Compatible)
+            fun ofS3Compatible(s3Compatible: S3Compatible) = Origin(s3Compatible = s3Compatible)
 
             @JvmStatic
             fun ofCloudinaryBackup(cloudinaryBackup: CloudinaryBackup) =
-                Body(cloudinaryBackup = cloudinaryBackup)
+                Origin(cloudinaryBackup = cloudinaryBackup)
 
-            @JvmStatic fun ofWebFolder(webFolder: WebFolder) = Body(webFolder = webFolder)
+            @JvmStatic fun ofWebFolder(webFolder: WebFolder) = Origin(webFolder = webFolder)
 
-            @JvmStatic fun ofWebProxy(webProxy: WebProxy) = Body(webProxy = webProxy)
+            @JvmStatic fun ofWebProxy(webProxy: WebProxy) = Origin(webProxy = webProxy)
 
             @JvmStatic
             fun ofGoogleCloudStorageGcs(googleCloudStorageGcs: GoogleCloudStorageGcs) =
-                Body(googleCloudStorageGcs = googleCloudStorageGcs)
+                Origin(googleCloudStorageGcs = googleCloudStorageGcs)
 
             @JvmStatic
             fun ofAzureBlobStorage(azureBlobStorage: AzureBlobStorage) =
-                Body(azureBlobStorage = azureBlobStorage)
+                Origin(azureBlobStorage = azureBlobStorage)
 
-            @JvmStatic fun ofAkeneoPim(akeneoPim: AkeneoPim) = Body(akeneoPim = akeneoPim)
+            @JvmStatic fun ofAkeneoPim(akeneoPim: AkeneoPim) = Origin(akeneoPim = akeneoPim)
         }
 
-        /** An interface that defines how to map each variant of [Body] to a value of type [T]. */
+        /** An interface that defines how to map each variant of [Origin] to a value of type [T]. */
         interface Visitor<out T> {
 
             fun visitS3(s3: S3): T
@@ -519,49 +521,50 @@ private constructor(
             fun visitAkeneoPim(akeneoPim: AkeneoPim): T
 
             /**
-             * Maps an unknown variant of [Body] to a value of type [T].
+             * Maps an unknown variant of [Origin] to a value of type [T].
              *
-             * An instance of [Body] can contain an unknown variant if it was deserialized from data
-             * that doesn't match any known variant. For example, if the SDK is on an older version
-             * than the API, then the API may respond with new variants that the SDK is unaware of.
+             * An instance of [Origin] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
              *
              * @throws ImageKitInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown Body: $json")
+                throw ImageKitInvalidDataException("Unknown Origin: $json")
             }
         }
 
-        internal class Deserializer : BaseDeserializer<Body>(Body::class) {
+        internal class Deserializer : BaseDeserializer<Origin>(Origin::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): Body {
+            override fun ObjectCodec.deserialize(node: JsonNode): Origin {
                 val json = JsonValue.fromJsonNode(node)
 
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<S3>())?.let {
-                                Body(s3 = it, _json = json)
+                                Origin(s3 = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
-                                Body(s3Compatible = it, _json = json)
+                                Origin(s3Compatible = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
-                                Body(cloudinaryBackup = it, _json = json)
+                                Origin(cloudinaryBackup = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
-                                Body(webFolder = it, _json = json)
+                                Origin(webFolder = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
-                                Body(webProxy = it, _json = json)
+                                Origin(webProxy = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<GoogleCloudStorageGcs>())?.let {
-                                Body(googleCloudStorageGcs = it, _json = json)
+                                Origin(googleCloudStorageGcs = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<AzureBlobStorage>())?.let {
-                                Body(azureBlobStorage = it, _json = json)
+                                Origin(azureBlobStorage = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
-                                Body(akeneoPim = it, _json = json)
+                                Origin(akeneoPim = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -570,7 +573,7 @@ private constructor(
                 return when (bestMatches.size) {
                     // This can happen if what we're deserializing is completely incompatible with
                     // all the possible variants (e.g. deserializing from boolean).
-                    0 -> Body(_json = json)
+                    0 -> Origin(_json = json)
                     1 -> bestMatches.single()
                     // If there's more than one match with the highest validity, then use the first
                     // completely valid match, or simply the first match if none are completely
@@ -580,10 +583,10 @@ private constructor(
             }
         }
 
-        internal class Serializer : BaseSerializer<Body>(Body::class) {
+        internal class Serializer : BaseSerializer<Origin>(Origin::class) {
 
             override fun serialize(
-                value: Body,
+                value: Origin,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
@@ -598,7 +601,7 @@ private constructor(
                     value.azureBlobStorage != null -> generator.writeObject(value.azureBlobStorage)
                     value.akeneoPim != null -> generator.writeObject(value.akeneoPim)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Body")
+                    else -> throw IllegalStateException("Invalid Origin")
                 }
             }
         }
@@ -4264,13 +4267,14 @@ private constructor(
 
         return other is OriginUpdateParams &&
             id == other.id &&
-            body == other.body &&
+            origin == other.origin &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
-    override fun hashCode(): Int = Objects.hash(id, body, additionalHeaders, additionalQueryParams)
+    override fun hashCode(): Int =
+        Objects.hash(id, origin, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "OriginUpdateParams{id=$id, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "OriginUpdateParams{id=$id, origin=$origin, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

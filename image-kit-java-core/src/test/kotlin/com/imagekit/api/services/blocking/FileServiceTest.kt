@@ -32,11 +32,11 @@ internal class FileServiceTest {
             fileService.update(
                 FileUpdateParams.builder()
                     .fileId("fileId")
-                    .body(
-                        FileUpdateParams.Body.UpdateFileDetails.builder()
+                    .update(
+                        FileUpdateParams.Update.UpdateFileDetails.builder()
                             .customCoordinates("10,10,100,100")
                             .customMetadata(
-                                FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
+                                FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
                                     .putAdditionalProperty("brand", JsonValue.from("bar"))
                                     .putAdditionalProperty("color", JsonValue.from("bar"))
                                     .build()
@@ -44,11 +44,11 @@ internal class FileServiceTest {
                             .description("description")
                             .extensions(
                                 listOf(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemoveBg(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg
+                                    FileUpdateParams.Update.UpdateFileDetails.Extension.ofRemoveBg(
+                                        FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
                                             .builder()
                                             .options(
-                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                FileUpdateParams.Update.UpdateFileDetails.Extension
                                                     .RemoveBg
                                                     .Options
                                                     .builder()
@@ -60,35 +60,39 @@ internal class FileServiceTest {
                                             )
                                             .build()
                                     ),
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .AutoTaggingExtension
-                                            .builder()
-                                            .maxTags(10L)
-                                            .minConfidence(80L)
-                                            .name(
-                                                FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                    .AutoTaggingExtension
-                                                    .Name
-                                                    .GOOGLE_AUTO_TAGGING
-                                            )
-                                            .build()
-                                    ),
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .AutoTaggingExtension
-                                            .builder()
-                                            .maxTags(10L)
-                                            .minConfidence(80L)
-                                            .name(
-                                                FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                    .AutoTaggingExtension
-                                                    .Name
-                                                    .AWS_AUTO_TAGGING
-                                            )
-                                            .build()
-                                    ),
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension
+                                    FileUpdateParams.Update.UpdateFileDetails.Extension
+                                        .ofAutoTagging(
+                                            FileUpdateParams.Update.UpdateFileDetails.Extension
+                                                .AutoTaggingExtension
+                                                .builder()
+                                                .maxTags(10L)
+                                                .minConfidence(80L)
+                                                .name(
+                                                    FileUpdateParams.Update.UpdateFileDetails
+                                                        .Extension
+                                                        .AutoTaggingExtension
+                                                        .Name
+                                                        .GOOGLE_AUTO_TAGGING
+                                                )
+                                                .build()
+                                        ),
+                                    FileUpdateParams.Update.UpdateFileDetails.Extension
+                                        .ofAutoTagging(
+                                            FileUpdateParams.Update.UpdateFileDetails.Extension
+                                                .AutoTaggingExtension
+                                                .builder()
+                                                .maxTags(10L)
+                                                .minConfidence(80L)
+                                                .name(
+                                                    FileUpdateParams.Update.UpdateFileDetails
+                                                        .Extension
+                                                        .AutoTaggingExtension
+                                                        .Name
+                                                        .AWS_AUTO_TAGGING
+                                                )
+                                                .build()
+                                        ),
+                                    FileUpdateParams.Update.UpdateFileDetails.Extension
                                         .ofAiAutoDescription(),
                                 )
                             )

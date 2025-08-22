@@ -11,8 +11,8 @@ internal class OriginUpdateParamsTest {
     fun create() {
         OriginUpdateParams.builder()
             .id("id")
-            .body(
-                OriginUpdateParams.Body.S3.builder()
+            .origin(
+                OriginUpdateParams.Origin.S3.builder()
                     .accessKey("AKIATEST123")
                     .bucket("test-bucket")
                     .name("My S3 Origin")
@@ -30,8 +30,8 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .body(
-                    OriginUpdateParams.Body.S3.builder()
+                .origin(
+                    OriginUpdateParams.Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -50,8 +50,8 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .body(
-                    OriginUpdateParams.Body.S3.builder()
+                .origin(
+                    OriginUpdateParams.Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -67,8 +67,8 @@ internal class OriginUpdateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                OriginUpdateParams.Body.ofS3(
-                    OriginUpdateParams.Body.S3.builder()
+                OriginUpdateParams.Origin.ofS3(
+                    OriginUpdateParams.Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -86,8 +86,8 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .body(
-                    OriginUpdateParams.Body.S3.builder()
+                .origin(
+                    OriginUpdateParams.Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -100,8 +100,8 @@ internal class OriginUpdateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                OriginUpdateParams.Body.ofS3(
-                    OriginUpdateParams.Body.S3.builder()
+                OriginUpdateParams.Origin.ofS3(
+                    OriginUpdateParams.Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
