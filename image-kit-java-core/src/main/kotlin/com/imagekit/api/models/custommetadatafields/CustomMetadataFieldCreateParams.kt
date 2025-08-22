@@ -844,25 +844,19 @@ private constructor(
                 this.defaultValue = defaultValue
             }
 
-            /** Alias for calling [defaultValue] with `DefaultValue.ofString(string)`. */
-            fun defaultValue(string: String) = defaultValue(DefaultValue.ofString(string))
-
-            /** Alias for calling [defaultValue] with `DefaultValue.ofNumber(number)`. */
-            fun defaultValue(number: Double) = defaultValue(DefaultValue.ofNumber(number))
-
-            /** Alias for calling [defaultValue] with `DefaultValue.ofBool(bool)`. */
-            fun defaultValue(bool: Boolean) = defaultValue(DefaultValue.ofBool(bool))
+            /**
+             * Alias for calling [defaultValue] with `DefaultValue.ofUnionMember0(unionMember0)`.
+             */
+            fun defaultValue(unionMember0: DefaultValue.UnionMember0) =
+                defaultValue(DefaultValue.ofUnionMember0(unionMember0))
 
             /**
              * Alias for calling [defaultValue] with
-             * `DefaultValue.ofUnnamedSchemaWithArrayParent3s(unnamedSchemaWithArrayParent3s)`.
+             * `DefaultValue.ofJsonScalarArray(jsonScalarArray)`.
              */
-            fun defaultValueOfUnnamedSchemaWithArrayParent3s(
-                unnamedSchemaWithArrayParent3s: List<DefaultValue.UnnamedSchemaWithArrayParent3>
-            ) =
-                defaultValue(
-                    DefaultValue.ofUnnamedSchemaWithArrayParent3s(unnamedSchemaWithArrayParent3s)
-                )
+            fun defaultValueOfJsonScalarArray(
+                jsonScalarArray: List<DefaultValue.UnnamedSchemaWithArrayParent3>
+            ) = defaultValue(DefaultValue.ofJsonScalarArray(jsonScalarArray))
 
             /**
              * Sets this custom metadata field as required. Setting custom metadata fields on an
@@ -1251,56 +1245,33 @@ private constructor(
         @JsonSerialize(using = DefaultValue.Serializer::class)
         class DefaultValue
         private constructor(
-            private val string: String? = null,
-            private val number: Double? = null,
-            private val bool: Boolean? = null,
-            private val unnamedSchemaWithArrayParent3s: List<UnnamedSchemaWithArrayParent3>? = null,
+            private val unionMember0: UnionMember0? = null,
+            private val jsonScalarArray: List<UnnamedSchemaWithArrayParent3>? = null,
             private val _json: JsonValue? = null,
         ) {
 
-            fun string(): Optional<String> = Optional.ofNullable(string)
+            /** Primitive JSON scalar. */
+            fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
 
-            fun number(): Optional<Double> = Optional.ofNullable(number)
+            fun jsonScalarArray(): Optional<List<UnnamedSchemaWithArrayParent3>> =
+                Optional.ofNullable(jsonScalarArray)
 
-            fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+            fun isUnionMember0(): Boolean = unionMember0 != null
 
-            /**
-             * Default value should be of type array when custom metadata field type is set to
-             * `MultiSelect`.
-             */
-            fun unnamedSchemaWithArrayParent3s(): Optional<List<UnnamedSchemaWithArrayParent3>> =
-                Optional.ofNullable(unnamedSchemaWithArrayParent3s)
+            fun isJsonScalarArray(): Boolean = jsonScalarArray != null
 
-            fun isString(): Boolean = string != null
+            /** Primitive JSON scalar. */
+            fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
 
-            fun isNumber(): Boolean = number != null
-
-            fun isBool(): Boolean = bool != null
-
-            fun isUnnamedSchemaWithArrayParent3s(): Boolean = unnamedSchemaWithArrayParent3s != null
-
-            fun asString(): String = string.getOrThrow("string")
-
-            fun asNumber(): Double = number.getOrThrow("number")
-
-            fun asBool(): Boolean = bool.getOrThrow("bool")
-
-            /**
-             * Default value should be of type array when custom metadata field type is set to
-             * `MultiSelect`.
-             */
-            fun asUnnamedSchemaWithArrayParent3s(): List<UnnamedSchemaWithArrayParent3> =
-                unnamedSchemaWithArrayParent3s.getOrThrow("unnamedSchemaWithArrayParent3s")
+            fun asJsonScalarArray(): List<UnnamedSchemaWithArrayParent3> =
+                jsonScalarArray.getOrThrow("jsonScalarArray")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             fun <T> accept(visitor: Visitor<T>): T =
                 when {
-                    string != null -> visitor.visitString(string)
-                    number != null -> visitor.visitNumber(number)
-                    bool != null -> visitor.visitBool(bool)
-                    unnamedSchemaWithArrayParent3s != null ->
-                        visitor.visitUnnamedSchemaWithArrayParent3s(unnamedSchemaWithArrayParent3s)
+                    unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                    jsonScalarArray != null -> visitor.visitJsonScalarArray(jsonScalarArray)
                     else -> visitor.unknown(_json)
                 }
 
@@ -1313,16 +1284,14 @@ private constructor(
 
                 accept(
                     object : Visitor<Unit> {
-                        override fun visitString(string: String) {}
+                        override fun visitUnionMember0(unionMember0: UnionMember0) {
+                            unionMember0.validate()
+                        }
 
-                        override fun visitNumber(number: Double) {}
-
-                        override fun visitBool(bool: Boolean) {}
-
-                        override fun visitUnnamedSchemaWithArrayParent3s(
-                            unnamedSchemaWithArrayParent3s: List<UnnamedSchemaWithArrayParent3>
+                        override fun visitJsonScalarArray(
+                            jsonScalarArray: List<UnnamedSchemaWithArrayParent3>
                         ) {
-                            unnamedSchemaWithArrayParent3s.forEach { it.validate() }
+                            jsonScalarArray.forEach { it.validate() }
                         }
                     }
                 )
@@ -1347,15 +1316,12 @@ private constructor(
             internal fun validity(): Int =
                 accept(
                     object : Visitor<Int> {
-                        override fun visitString(string: String) = 1
+                        override fun visitUnionMember0(unionMember0: UnionMember0) =
+                            unionMember0.validity()
 
-                        override fun visitNumber(number: Double) = 1
-
-                        override fun visitBool(bool: Boolean) = 1
-
-                        override fun visitUnnamedSchemaWithArrayParent3s(
-                            unnamedSchemaWithArrayParent3s: List<UnnamedSchemaWithArrayParent3>
-                        ) = unnamedSchemaWithArrayParent3s.sumOf { it.validity().toInt() }
+                        override fun visitJsonScalarArray(
+                            jsonScalarArray: List<UnnamedSchemaWithArrayParent3>
+                        ) = jsonScalarArray.sumOf { it.validity().toInt() }
 
                         override fun unknown(json: JsonValue?) = 0
                     }
@@ -1367,46 +1333,30 @@ private constructor(
                 }
 
                 return other is DefaultValue &&
-                    string == other.string &&
-                    number == other.number &&
-                    bool == other.bool &&
-                    unnamedSchemaWithArrayParent3s == other.unnamedSchemaWithArrayParent3s
+                    unionMember0 == other.unionMember0 &&
+                    jsonScalarArray == other.jsonScalarArray
             }
 
-            override fun hashCode(): Int =
-                Objects.hash(string, number, bool, unnamedSchemaWithArrayParent3s)
+            override fun hashCode(): Int = Objects.hash(unionMember0, jsonScalarArray)
 
             override fun toString(): String =
                 when {
-                    string != null -> "DefaultValue{string=$string}"
-                    number != null -> "DefaultValue{number=$number}"
-                    bool != null -> "DefaultValue{bool=$bool}"
-                    unnamedSchemaWithArrayParent3s != null ->
-                        "DefaultValue{unnamedSchemaWithArrayParent3s=$unnamedSchemaWithArrayParent3s}"
+                    unionMember0 != null -> "DefaultValue{unionMember0=$unionMember0}"
+                    jsonScalarArray != null -> "DefaultValue{jsonScalarArray=$jsonScalarArray}"
                     _json != null -> "DefaultValue{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid DefaultValue")
                 }
 
             companion object {
 
-                @JvmStatic fun ofString(string: String) = DefaultValue(string = string)
-
-                @JvmStatic fun ofNumber(number: Double) = DefaultValue(number = number)
-
-                @JvmStatic fun ofBool(bool: Boolean) = DefaultValue(bool = bool)
-
-                /**
-                 * Default value should be of type array when custom metadata field type is set to
-                 * `MultiSelect`.
-                 */
+                /** Primitive JSON scalar. */
                 @JvmStatic
-                fun ofUnnamedSchemaWithArrayParent3s(
-                    unnamedSchemaWithArrayParent3s: List<UnnamedSchemaWithArrayParent3>
-                ) =
-                    DefaultValue(
-                        unnamedSchemaWithArrayParent3s =
-                            unnamedSchemaWithArrayParent3s.toImmutable()
-                    )
+                fun ofUnionMember0(unionMember0: UnionMember0) =
+                    DefaultValue(unionMember0 = unionMember0)
+
+                @JvmStatic
+                fun ofJsonScalarArray(jsonScalarArray: List<UnnamedSchemaWithArrayParent3>) =
+                    DefaultValue(jsonScalarArray = jsonScalarArray.toImmutable())
             }
 
             /**
@@ -1415,19 +1365,10 @@ private constructor(
              */
             interface Visitor<out T> {
 
-                fun visitString(string: String): T
+                /** Primitive JSON scalar. */
+                fun visitUnionMember0(unionMember0: UnionMember0): T
 
-                fun visitNumber(number: Double): T
-
-                fun visitBool(bool: Boolean): T
-
-                /**
-                 * Default value should be of type array when custom metadata field type is set to
-                 * `MultiSelect`.
-                 */
-                fun visitUnnamedSchemaWithArrayParent3s(
-                    unnamedSchemaWithArrayParent3s: List<UnnamedSchemaWithArrayParent3>
-                ): T
+                fun visitJsonScalarArray(jsonScalarArray: List<UnnamedSchemaWithArrayParent3>): T
 
                 /**
                  * Maps an unknown variant of [DefaultValue] to a value of type [T].
@@ -1451,25 +1392,14 @@ private constructor(
 
                     val bestMatches =
                         sequenceOf(
-                                tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                    DefaultValue(string = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                    DefaultValue(number = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
-                                    DefaultValue(bool = it, _json = json)
+                                tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
+                                    DefaultValue(unionMember0 = it, _json = json)
                                 },
                                 tryDeserialize(
                                         node,
                                         jacksonTypeRef<List<UnnamedSchemaWithArrayParent3>>(),
                                     )
-                                    ?.let {
-                                        DefaultValue(
-                                            unnamedSchemaWithArrayParent3s = it,
-                                            _json = json,
-                                        )
-                                    },
+                                    ?.let { DefaultValue(jsonScalarArray = it, _json = json) },
                             )
                             .filterNotNull()
                             .allMaxBy { it.validity() }
@@ -1495,69 +1425,74 @@ private constructor(
                     provider: SerializerProvider,
                 ) {
                     when {
-                        value.string != null -> generator.writeObject(value.string)
-                        value.number != null -> generator.writeObject(value.number)
-                        value.bool != null -> generator.writeObject(value.bool)
-                        value.unnamedSchemaWithArrayParent3s != null ->
-                            generator.writeObject(value.unnamedSchemaWithArrayParent3s)
+                        value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                        value.jsonScalarArray != null ->
+                            generator.writeObject(value.jsonScalarArray)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid DefaultValue")
                     }
                 }
             }
 
-            @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
-            @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
-            class UnnamedSchemaWithArrayParent3
+            /** Primitive JSON scalar. */
+            @JsonDeserialize(using = UnionMember0.Deserializer::class)
+            @JsonSerialize(using = UnionMember0.Serializer::class)
+            class UnionMember0
             private constructor(
-                private val string: String? = null,
-                private val number: Double? = null,
-                private val bool: Boolean? = null,
+                private val jsonScalar: String? = null,
+                private val jsonScalar: Double? = null,
+                private val jsonScalar: Boolean? = null,
                 private val _json: JsonValue? = null,
             ) {
 
-                fun string(): Optional<String> = Optional.ofNullable(string)
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<String> = Optional.ofNullable(jsonScalar)
 
-                fun number(): Optional<Double> = Optional.ofNullable(number)
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<Double> = Optional.ofNullable(jsonScalar)
 
-                fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<Boolean> = Optional.ofNullable(jsonScalar)
 
-                fun isString(): Boolean = string != null
+                fun isJsonScalar(): Boolean = jsonScalar != null
 
-                fun isNumber(): Boolean = number != null
+                fun isJsonScalar(): Boolean = jsonScalar != null
 
-                fun isBool(): Boolean = bool != null
+                fun isJsonScalar(): Boolean = jsonScalar != null
 
-                fun asString(): String = string.getOrThrow("string")
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): String = jsonScalar.getOrThrow("jsonScalar")
 
-                fun asNumber(): Double = number.getOrThrow("number")
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): Double = jsonScalar.getOrThrow("jsonScalar")
 
-                fun asBool(): Boolean = bool.getOrThrow("bool")
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): Boolean = jsonScalar.getOrThrow("jsonScalar")
 
                 fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
                 fun <T> accept(visitor: Visitor<T>): T =
                     when {
-                        string != null -> visitor.visitString(string)
-                        number != null -> visitor.visitNumber(number)
-                        bool != null -> visitor.visitBool(bool)
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
                         else -> visitor.unknown(_json)
                     }
 
                 private var validated: Boolean = false
 
-                fun validate(): UnnamedSchemaWithArrayParent3 = apply {
+                fun validate(): UnionMember0 = apply {
                     if (validated) {
                         return@apply
                     }
 
                     accept(
                         object : Visitor<Unit> {
-                            override fun visitString(string: String) {}
+                            override fun visitJsonScalar(jsonScalar: String) {}
 
-                            override fun visitNumber(number: Double) {}
+                            override fun visitJsonScalar(jsonScalar: Double) {}
 
-                            override fun visitBool(bool: Boolean) {}
+                            override fun visitJsonScalar(jsonScalar: Boolean) {}
                         }
                     )
                     validated = true
@@ -1581,11 +1516,222 @@ private constructor(
                 internal fun validity(): Int =
                     accept(
                         object : Visitor<Int> {
-                            override fun visitString(string: String) = 1
+                            override fun visitJsonScalar(jsonScalar: String) = 1
 
-                            override fun visitNumber(number: Double) = 1
+                            override fun visitJsonScalar(jsonScalar: Double) = 1
 
-                            override fun visitBool(bool: Boolean) = 1
+                            override fun visitJsonScalar(jsonScalar: Boolean) = 1
+
+                            override fun unknown(json: JsonValue?) = 0
+                        }
+                    )
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is UnionMember0 &&
+                        jsonScalar == other.jsonScalar &&
+                        jsonScalar == other.jsonScalar &&
+                        jsonScalar == other.jsonScalar
+                }
+
+                override fun hashCode(): Int = Objects.hash(jsonScalar, jsonScalar, jsonScalar)
+
+                override fun toString(): String =
+                    when {
+                        jsonScalar != null -> "UnionMember0{jsonScalar=$jsonScalar}"
+                        jsonScalar != null -> "UnionMember0{jsonScalar=$jsonScalar}"
+                        jsonScalar != null -> "UnionMember0{jsonScalar=$jsonScalar}"
+                        _json != null -> "UnionMember0{_unknown=$_json}"
+                        else -> throw IllegalStateException("Invalid UnionMember0")
+                    }
+
+                companion object {
+
+                    /** Primitive JSON scalar. */
+                    @JvmStatic
+                    fun ofJsonScalar(jsonScalar: String) = UnionMember0(jsonScalar = jsonScalar)
+
+                    /** Primitive JSON scalar. */
+                    @JvmStatic
+                    fun ofJsonScalar(jsonScalar: Double) = UnionMember0(jsonScalar = jsonScalar)
+
+                    /** Primitive JSON scalar. */
+                    @JvmStatic
+                    fun ofJsonScalar(jsonScalar: Boolean) = UnionMember0(jsonScalar = jsonScalar)
+                }
+
+                /**
+                 * An interface that defines how to map each variant of [UnionMember0] to a value of
+                 * type [T].
+                 */
+                interface Visitor<out T> {
+
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: String): T
+
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: Double): T
+
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: Boolean): T
+
+                    /**
+                     * Maps an unknown variant of [UnionMember0] to a value of type [T].
+                     *
+                     * An instance of [UnionMember0] can contain an unknown variant if it was
+                     * deserialized from data that doesn't match any known variant. For example, if
+                     * the SDK is on an older version than the API, then the API may respond with
+                     * new variants that the SDK is unaware of.
+                     *
+                     * @throws ImageKitInvalidDataException in the default implementation.
+                     */
+                    fun unknown(json: JsonValue?): T {
+                        throw ImageKitInvalidDataException("Unknown UnionMember0: $json")
+                    }
+                }
+
+                internal class Deserializer : BaseDeserializer<UnionMember0>(UnionMember0::class) {
+
+                    override fun ObjectCodec.deserialize(node: JsonNode): UnionMember0 {
+                        val json = JsonValue.fromJsonNode(node)
+
+                        val bestMatches =
+                            sequenceOf(
+                                    tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                        UnionMember0(jsonScalar = it, _json = json)
+                                    },
+                                    tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                        UnionMember0(jsonScalar = it, _json = json)
+                                    },
+                                    tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
+                                        UnionMember0(jsonScalar = it, _json = json)
+                                    },
+                                )
+                                .filterNotNull()
+                                .allMaxBy { it.validity() }
+                                .toList()
+                        return when (bestMatches.size) {
+                            // This can happen if what we're deserializing is completely
+                            // incompatible with all the possible variants (e.g. deserializing from
+                            // object).
+                            0 -> UnionMember0(_json = json)
+                            1 -> bestMatches.single()
+                            // If there's more than one match with the highest validity, then use
+                            // the first completely valid match, or simply the first match if none
+                            // are completely valid.
+                            else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                        }
+                    }
+                }
+
+                internal class Serializer : BaseSerializer<UnionMember0>(UnionMember0::class) {
+
+                    override fun serialize(
+                        value: UnionMember0,
+                        generator: JsonGenerator,
+                        provider: SerializerProvider,
+                    ) {
+                        when {
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
+                            value._json != null -> generator.writeObject(value._json)
+                            else -> throw IllegalStateException("Invalid UnionMember0")
+                        }
+                    }
+                }
+            }
+
+            /** Primitive JSON scalar. */
+            @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
+            @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
+            class UnnamedSchemaWithArrayParent3
+            private constructor(
+                private val jsonScalar: String? = null,
+                private val jsonScalar: Double? = null,
+                private val jsonScalar: Boolean? = null,
+                private val _json: JsonValue? = null,
+            ) {
+
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<String> = Optional.ofNullable(jsonScalar)
+
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<Double> = Optional.ofNullable(jsonScalar)
+
+                /** Primitive JSON scalar. */
+                fun jsonScalar(): Optional<Boolean> = Optional.ofNullable(jsonScalar)
+
+                fun isJsonScalar(): Boolean = jsonScalar != null
+
+                fun isJsonScalar(): Boolean = jsonScalar != null
+
+                fun isJsonScalar(): Boolean = jsonScalar != null
+
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): String = jsonScalar.getOrThrow("jsonScalar")
+
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): Double = jsonScalar.getOrThrow("jsonScalar")
+
+                /** Primitive JSON scalar. */
+                fun asJsonScalar(): Boolean = jsonScalar.getOrThrow("jsonScalar")
+
+                fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                fun <T> accept(visitor: Visitor<T>): T =
+                    when {
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
+                        jsonScalar != null -> visitor.visitJsonScalar(jsonScalar)
+                        else -> visitor.unknown(_json)
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): UnnamedSchemaWithArrayParent3 = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    accept(
+                        object : Visitor<Unit> {
+                            override fun visitJsonScalar(jsonScalar: String) {}
+
+                            override fun visitJsonScalar(jsonScalar: Double) {}
+
+                            override fun visitJsonScalar(jsonScalar: Boolean) {}
+                        }
+                    )
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: ImageKitInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    accept(
+                        object : Visitor<Int> {
+                            override fun visitJsonScalar(jsonScalar: String) = 1
+
+                            override fun visitJsonScalar(jsonScalar: Double) = 1
+
+                            override fun visitJsonScalar(jsonScalar: Boolean) = 1
 
                             override fun unknown(json: JsonValue?) = 0
                         }
@@ -1597,32 +1743,41 @@ private constructor(
                     }
 
                     return other is UnnamedSchemaWithArrayParent3 &&
-                        string == other.string &&
-                        number == other.number &&
-                        bool == other.bool
+                        jsonScalar == other.jsonScalar &&
+                        jsonScalar == other.jsonScalar &&
+                        jsonScalar == other.jsonScalar
                 }
 
-                override fun hashCode(): Int = Objects.hash(string, number, bool)
+                override fun hashCode(): Int = Objects.hash(jsonScalar, jsonScalar, jsonScalar)
 
                 override fun toString(): String =
                     when {
-                        string != null -> "UnnamedSchemaWithArrayParent3{string=$string}"
-                        number != null -> "UnnamedSchemaWithArrayParent3{number=$number}"
-                        bool != null -> "UnnamedSchemaWithArrayParent3{bool=$bool}"
+                        jsonScalar != null ->
+                            "UnnamedSchemaWithArrayParent3{jsonScalar=$jsonScalar}"
+                        jsonScalar != null ->
+                            "UnnamedSchemaWithArrayParent3{jsonScalar=$jsonScalar}"
+                        jsonScalar != null ->
+                            "UnnamedSchemaWithArrayParent3{jsonScalar=$jsonScalar}"
                         _json != null -> "UnnamedSchemaWithArrayParent3{_unknown=$_json}"
                         else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                     }
 
                 companion object {
 
+                    /** Primitive JSON scalar. */
                     @JvmStatic
-                    fun ofString(string: String) = UnnamedSchemaWithArrayParent3(string = string)
+                    fun ofJsonScalar(jsonScalar: String) =
+                        UnnamedSchemaWithArrayParent3(jsonScalar = jsonScalar)
 
+                    /** Primitive JSON scalar. */
                     @JvmStatic
-                    fun ofNumber(number: Double) = UnnamedSchemaWithArrayParent3(number = number)
+                    fun ofJsonScalar(jsonScalar: Double) =
+                        UnnamedSchemaWithArrayParent3(jsonScalar = jsonScalar)
 
+                    /** Primitive JSON scalar. */
                     @JvmStatic
-                    fun ofBool(bool: Boolean) = UnnamedSchemaWithArrayParent3(bool = bool)
+                    fun ofJsonScalar(jsonScalar: Boolean) =
+                        UnnamedSchemaWithArrayParent3(jsonScalar = jsonScalar)
                 }
 
                 /**
@@ -1631,11 +1786,14 @@ private constructor(
                  */
                 interface Visitor<out T> {
 
-                    fun visitString(string: String): T
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: String): T
 
-                    fun visitNumber(number: Double): T
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: Double): T
 
-                    fun visitBool(bool: Boolean): T
+                    /** Primitive JSON scalar. */
+                    fun visitJsonScalar(jsonScalar: Boolean): T
 
                     /**
                      * Maps an unknown variant of [UnnamedSchemaWithArrayParent3] to a value of type
@@ -1668,13 +1826,13 @@ private constructor(
                         val bestMatches =
                             sequenceOf(
                                     tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                        UnnamedSchemaWithArrayParent3(string = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(jsonScalar = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                        UnnamedSchemaWithArrayParent3(number = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(jsonScalar = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
-                                        UnnamedSchemaWithArrayParent3(bool = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(jsonScalar = it, _json = json)
                                     },
                                 )
                                 .filterNotNull()
@@ -1705,9 +1863,9 @@ private constructor(
                         provider: SerializerProvider,
                     ) {
                         when {
-                            value.string != null -> generator.writeObject(value.string)
-                            value.number != null -> generator.writeObject(value.number)
-                            value.bool != null -> generator.writeObject(value.bool)
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
+                            value.jsonScalar != null -> generator.writeObject(value.jsonScalar)
                             value._json != null -> generator.writeObject(value._json)
                             else ->
                                 throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")

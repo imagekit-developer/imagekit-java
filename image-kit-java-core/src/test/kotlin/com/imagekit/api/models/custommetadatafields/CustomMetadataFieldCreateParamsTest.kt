@@ -15,7 +15,10 @@ internal class CustomMetadataFieldCreateParamsTest {
             .schema(
                 CustomMetadataFieldCreateParams.Schema.builder()
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                    .defaultValue("string")
+                    .defaultValue(
+                        CustomMetadataFieldCreateParams.Schema.DefaultValue.UnionMember0
+                            .ofJsonScalar("Hello")
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
@@ -45,7 +48,10 @@ internal class CustomMetadataFieldCreateParamsTest {
                 .schema(
                     CustomMetadataFieldCreateParams.Schema.builder()
                         .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                        .defaultValue("string")
+                        .defaultValue(
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.UnionMember0
+                                .ofJsonScalar("Hello")
+                        )
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue(3000.0)
@@ -79,7 +85,10 @@ internal class CustomMetadataFieldCreateParamsTest {
             .isEqualTo(
                 CustomMetadataFieldCreateParams.Schema.builder()
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                    .defaultValue("string")
+                    .defaultValue(
+                        CustomMetadataFieldCreateParams.Schema.DefaultValue.UnionMember0
+                            .ofJsonScalar("Hello")
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
