@@ -33,8 +33,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -83,8 +83,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -133,8 +133,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).contains(cloudinaryBackup)
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -181,8 +181,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).contains(webFolder)
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -227,8 +227,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).contains(webProxy)
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -255,9 +255,9 @@ internal class OriginCreateResponseTest {
     }
 
     @Test
-    fun ofGoogleCloudStorageGcs() {
-        val googleCloudStorageGcs =
-            OriginCreateResponse.GoogleCloudStorageGcs.builder()
+    fun ofGcs() {
+        val gcs =
+            OriginCreateResponse.Gcs.builder()
                 .id("id")
                 .bucket("gcs-media")
                 .clientEmail("service-account@project.iam.gserviceaccount.com")
@@ -267,25 +267,24 @@ internal class OriginCreateResponseTest {
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
-        val originCreateResponse =
-            OriginCreateResponse.ofGoogleCloudStorageGcs(googleCloudStorageGcs)
+        val originCreateResponse = OriginCreateResponse.ofGcs(gcs)
 
         assertThat(originCreateResponse.s3()).isEmpty
         assertThat(originCreateResponse.s3Compatible()).isEmpty
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).contains(googleCloudStorageGcs)
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).contains(gcs)
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
     @Test
-    fun ofGoogleCloudStorageGcsRoundtrip() {
+    fun ofGcsRoundtrip() {
         val jsonMapper = jsonMapper()
         val originCreateResponse =
-            OriginCreateResponse.ofGoogleCloudStorageGcs(
-                OriginCreateResponse.GoogleCloudStorageGcs.builder()
+            OriginCreateResponse.ofGcs(
+                OriginCreateResponse.Gcs.builder()
                     .id("id")
                     .bucket("gcs-media")
                     .clientEmail("service-account@project.iam.gserviceaccount.com")
@@ -306,9 +305,9 @@ internal class OriginCreateResponseTest {
     }
 
     @Test
-    fun ofAzureBlobStorage() {
-        val azureBlobStorage =
-            OriginCreateResponse.AzureBlobStorage.builder()
+    fun ofAzureBlob() {
+        val azureBlob =
+            OriginCreateResponse.AzureBlob.builder()
                 .id("id")
                 .accountName("account123")
                 .container("images")
@@ -318,24 +317,24 @@ internal class OriginCreateResponseTest {
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
-        val originCreateResponse = OriginCreateResponse.ofAzureBlobStorage(azureBlobStorage)
+        val originCreateResponse = OriginCreateResponse.ofAzureBlob(azureBlob)
 
         assertThat(originCreateResponse.s3()).isEmpty
         assertThat(originCreateResponse.s3Compatible()).isEmpty
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).contains(azureBlobStorage)
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).contains(azureBlob)
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
     @Test
-    fun ofAzureBlobStorageRoundtrip() {
+    fun ofAzureBlobRoundtrip() {
         val jsonMapper = jsonMapper()
         val originCreateResponse =
-            OriginCreateResponse.ofAzureBlobStorage(
-                OriginCreateResponse.AzureBlobStorage.builder()
+            OriginCreateResponse.ofAzureBlob(
+                OriginCreateResponse.AzureBlob.builder()
                     .id("id")
                     .accountName("account123")
                     .container("images")
@@ -373,8 +372,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
-        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
+        assertThat(originCreateResponse.gcs()).isEmpty
+        assertThat(originCreateResponse.azureBlob()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).contains(akeneoPim)
     }
 

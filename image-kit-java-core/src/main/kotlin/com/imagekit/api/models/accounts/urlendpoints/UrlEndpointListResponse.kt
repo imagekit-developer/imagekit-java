@@ -19,7 +19,6 @@ import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.core.allMaxBy
 import com.imagekit.api.core.checkKnown
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.getOrThrow
@@ -271,8 +270,23 @@ private constructor(
         }
 
         /** Alias for calling [urlRewriter] with `UrlRewriter.ofCloudinary(cloudinary)`. */
-        fun urlRewriter(cloudinary: UrlRewriter.CloudinaryUrlRewriter) =
+        fun urlRewriter(cloudinary: UrlRewriter.Cloudinary) =
             urlRewriter(UrlRewriter.ofCloudinary(cloudinary))
+
+        /**
+         * Alias for calling [urlRewriter] with the following:
+         * ```java
+         * UrlRewriter.Cloudinary.builder()
+         *     .preserveAssetDeliveryTypes(preserveAssetDeliveryTypes)
+         *     .build()
+         * ```
+         */
+        fun cloudinaryUrlRewriter(preserveAssetDeliveryTypes: Boolean) =
+            urlRewriter(
+                UrlRewriter.Cloudinary.builder()
+                    .preserveAssetDeliveryTypes(preserveAssetDeliveryTypes)
+                    .build()
+            )
 
         /** Alias for calling [urlRewriter] with `UrlRewriter.ofImgix()`. */
         fun urlRewriterImgix() = urlRewriter(UrlRewriter.ofImgix())
@@ -366,13 +380,13 @@ private constructor(
     @JsonSerialize(using = UrlRewriter.Serializer::class)
     class UrlRewriter
     private constructor(
-        private val cloudinary: CloudinaryUrlRewriter? = null,
+        private val cloudinary: Cloudinary? = null,
         private val imgix: JsonValue? = null,
         private val akamai: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun cloudinary(): Optional<CloudinaryUrlRewriter> = Optional.ofNullable(cloudinary)
+        fun cloudinary(): Optional<Cloudinary> = Optional.ofNullable(cloudinary)
 
         fun imgix(): Optional<JsonValue> = Optional.ofNullable(imgix)
 
@@ -384,7 +398,7 @@ private constructor(
 
         fun isAkamai(): Boolean = akamai != null
 
-        fun asCloudinary(): CloudinaryUrlRewriter = cloudinary.getOrThrow("cloudinary")
+        fun asCloudinary(): Cloudinary = cloudinary.getOrThrow("cloudinary")
 
         fun asImgix(): JsonValue = imgix.getOrThrow("imgix")
 
@@ -409,7 +423,7 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitCloudinary(cloudinary: CloudinaryUrlRewriter) {
+                    override fun visitCloudinary(cloudinary: Cloudinary) {
                         cloudinary.validate()
                     }
 
@@ -455,8 +469,7 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitCloudinary(cloudinary: CloudinaryUrlRewriter) =
-                        cloudinary.validity()
+                    override fun visitCloudinary(cloudinary: Cloudinary) = cloudinary.validity()
 
                     override fun visitImgix(imgix: JsonValue) =
                         imgix.let { if (it == JsonValue.from(mapOf("type" to "IMGIX"))) 1 else 0 }
@@ -493,8 +506,7 @@ private constructor(
         companion object {
 
             @JvmStatic
-            fun ofCloudinary(cloudinary: CloudinaryUrlRewriter) =
-                UrlRewriter(cloudinary = cloudinary)
+            fun ofCloudinary(cloudinary: Cloudinary) = UrlRewriter(cloudinary = cloudinary)
 
             @JvmStatic fun ofImgix() = UrlRewriter(imgix = JsonValue.from(mapOf("type" to "IMGIX")))
 
@@ -508,7 +520,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitCloudinary(cloudinary: CloudinaryUrlRewriter): T
+            fun visitCloudinary(cloudinary: Cloudinary): T
 
             fun visitImgix(imgix: JsonValue): T
 
@@ -533,32 +545,27 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): UrlRewriter {
                 val json = JsonValue.fromJsonNode(node)
+                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                val bestMatches =
-                    sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { UrlRewriter(imgix = it, _json = json) }
-                                ?.takeIf { it.isValid() },
-                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { UrlRewriter(akamai = it, _json = json) }
-                                ?.takeIf { it.isValid() },
-                            tryDeserialize(node, jacksonTypeRef<CloudinaryUrlRewriter>())?.let {
-                                UrlRewriter(cloudinary = it, _json = json)
-                            },
-                        )
-                        .filterNotNull()
-                        .allMaxBy { it.validity() }
-                        .toList()
-                return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from boolean).
-                    0 -> UrlRewriter(_json = json)
-                    1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
-                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                when (type) {
+                    "CLOUDINARY" -> {
+                        return tryDeserialize(node, jacksonTypeRef<Cloudinary>())?.let {
+                            UrlRewriter(cloudinary = it, _json = json)
+                        } ?: UrlRewriter(_json = json)
+                    }
+                    "IMGIX" -> {
+                        return tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                            ?.let { UrlRewriter(imgix = it, _json = json) }
+                            ?.takeIf { it.isValid() } ?: UrlRewriter(_json = json)
+                    }
+                    "AKAMAI" -> {
+                        return tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                            ?.let { UrlRewriter(akamai = it, _json = json) }
+                            ?.takeIf { it.isValid() } ?: UrlRewriter(_json = json)
+                    }
                 }
+
+                return UrlRewriter(_json = json)
             }
         }
 
@@ -579,7 +586,7 @@ private constructor(
             }
         }
 
-        class CloudinaryUrlRewriter
+        class Cloudinary
         private constructor(
             private val preserveAssetDeliveryTypes: JsonField<Boolean>,
             private val type: JsonValue,
@@ -640,8 +647,7 @@ private constructor(
             companion object {
 
                 /**
-                 * Returns a mutable builder for constructing an instance of
-                 * [CloudinaryUrlRewriter].
+                 * Returns a mutable builder for constructing an instance of [Cloudinary].
                  *
                  * The following fields are required:
                  * ```java
@@ -651,7 +657,7 @@ private constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [CloudinaryUrlRewriter]. */
+            /** A builder for [Cloudinary]. */
             class Builder internal constructor() {
 
                 private var preserveAssetDeliveryTypes: JsonField<Boolean>? = null
@@ -659,10 +665,10 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(cloudinaryUrlRewriter: CloudinaryUrlRewriter) = apply {
-                    preserveAssetDeliveryTypes = cloudinaryUrlRewriter.preserveAssetDeliveryTypes
-                    type = cloudinaryUrlRewriter.type
-                    additionalProperties = cloudinaryUrlRewriter.additionalProperties.toMutableMap()
+                internal fun from(cloudinary: Cloudinary) = apply {
+                    preserveAssetDeliveryTypes = cloudinary.preserveAssetDeliveryTypes
+                    type = cloudinary.type
+                    additionalProperties = cloudinary.additionalProperties.toMutableMap()
                 }
 
                 /** Whether to preserve `<asset_type>/<delivery_type>` in the rewritten URL. */
@@ -718,7 +724,7 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [CloudinaryUrlRewriter].
+                 * Returns an immutable instance of [Cloudinary].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
@@ -729,8 +735,8 @@ private constructor(
                  *
                  * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): CloudinaryUrlRewriter =
-                    CloudinaryUrlRewriter(
+                fun build(): Cloudinary =
+                    Cloudinary(
                         checkRequired("preserveAssetDeliveryTypes", preserveAssetDeliveryTypes),
                         type,
                         additionalProperties.toMutableMap(),
@@ -739,7 +745,7 @@ private constructor(
 
             private var validated: Boolean = false
 
-            fun validate(): CloudinaryUrlRewriter = apply {
+            fun validate(): Cloudinary = apply {
                 if (validated) {
                     return@apply
                 }
@@ -777,7 +783,7 @@ private constructor(
                     return true
                 }
 
-                return other is CloudinaryUrlRewriter &&
+                return other is Cloudinary &&
                     preserveAssetDeliveryTypes == other.preserveAssetDeliveryTypes &&
                     type == other.type &&
                     additionalProperties == other.additionalProperties
@@ -790,7 +796,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "CloudinaryUrlRewriter{preserveAssetDeliveryTypes=$preserveAssetDeliveryTypes, type=$type, additionalProperties=$additionalProperties}"
+                "Cloudinary{preserveAssetDeliveryTypes=$preserveAssetDeliveryTypes, type=$type, additionalProperties=$additionalProperties}"
         }
     }
 

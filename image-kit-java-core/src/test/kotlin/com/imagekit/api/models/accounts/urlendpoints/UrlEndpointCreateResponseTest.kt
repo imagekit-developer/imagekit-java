@@ -18,11 +18,7 @@ internal class UrlEndpointCreateResponseTest {
                 .addOrigin("origin-id-1")
                 .addOrigin("origin-id-2")
                 .urlPrefix("product-images")
-                .urlRewriter(
-                    UrlEndpointCreateResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
-                        .preserveAssetDeliveryTypes(true)
-                        .build()
-                )
+                .cloudinaryUrlRewriter(true)
                 .build()
 
         assertThat(urlEndpointCreateResponse.id()).isEqualTo("id")
@@ -33,7 +29,7 @@ internal class UrlEndpointCreateResponseTest {
         assertThat(urlEndpointCreateResponse.urlRewriter())
             .contains(
                 UrlEndpointCreateResponse.UrlRewriter.ofCloudinary(
-                    UrlEndpointCreateResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
+                    UrlEndpointCreateResponse.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )
@@ -50,11 +46,7 @@ internal class UrlEndpointCreateResponseTest {
                 .addOrigin("origin-id-1")
                 .addOrigin("origin-id-2")
                 .urlPrefix("product-images")
-                .urlRewriter(
-                    UrlEndpointCreateResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
-                        .preserveAssetDeliveryTypes(true)
-                        .build()
-                )
+                .cloudinaryUrlRewriter(true)
                 .build()
 
         val roundtrippedUrlEndpointCreateResponse =
