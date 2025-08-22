@@ -20,6 +20,7 @@ import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.Params
+import com.imagekit.api.core.allMaxBy
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.core.http.Headers
@@ -115,21 +116,13 @@ private constructor(
         /** Alias for calling [body] with `Body.ofWebProxy(webProxy)`. */
         fun body(webProxy: Body.WebProxy) = body(Body.ofWebProxy(webProxy))
 
-        /**
-         * Alias for calling [body] with the following:
-         * ```java
-         * Body.WebProxy.builder()
-         *     .name(name)
-         *     .build()
-         * ```
-         */
-        fun webProxyBody(name: String) = body(Body.WebProxy.builder().name(name).build())
+        /** Alias for calling [body] with `Body.ofGoogleCloudStorageGcs(googleCloudStorageGcs)`. */
+        fun body(googleCloudStorageGcs: Body.GoogleCloudStorageGcs) =
+            body(Body.ofGoogleCloudStorageGcs(googleCloudStorageGcs))
 
-        /** Alias for calling [body] with `Body.ofGcs(gcs)`. */
-        fun body(gcs: Body.Gcs) = body(Body.ofGcs(gcs))
-
-        /** Alias for calling [body] with `Body.ofAzureBlob(azureBlob)`. */
-        fun body(azureBlob: Body.AzureBlob) = body(Body.ofAzureBlob(azureBlob))
+        /** Alias for calling [body] with `Body.ofAzureBlobStorage(azureBlobStorage)`. */
+        fun body(azureBlobStorage: Body.AzureBlobStorage) =
+            body(Body.ofAzureBlobStorage(azureBlobStorage))
 
         /** Alias for calling [body] with `Body.ofAkeneoPim(akeneoPim)`. */
         fun body(akeneoPim: Body.AkeneoPim) = body(Body.ofAkeneoPim(akeneoPim))
@@ -275,8 +268,8 @@ private constructor(
         private val cloudinaryBackup: CloudinaryBackup? = null,
         private val webFolder: WebFolder? = null,
         private val webProxy: WebProxy? = null,
-        private val gcs: Gcs? = null,
-        private val azureBlob: AzureBlob? = null,
+        private val googleCloudStorageGcs: GoogleCloudStorageGcs? = null,
+        private val azureBlobStorage: AzureBlobStorage? = null,
         private val akeneoPim: AkeneoPim? = null,
         private val _json: JsonValue? = null,
     ) {
@@ -291,9 +284,10 @@ private constructor(
 
         fun webProxy(): Optional<WebProxy> = Optional.ofNullable(webProxy)
 
-        fun gcs(): Optional<Gcs> = Optional.ofNullable(gcs)
+        fun googleCloudStorageGcs(): Optional<GoogleCloudStorageGcs> =
+            Optional.ofNullable(googleCloudStorageGcs)
 
-        fun azureBlob(): Optional<AzureBlob> = Optional.ofNullable(azureBlob)
+        fun azureBlobStorage(): Optional<AzureBlobStorage> = Optional.ofNullable(azureBlobStorage)
 
         fun akeneoPim(): Optional<AkeneoPim> = Optional.ofNullable(akeneoPim)
 
@@ -307,9 +301,9 @@ private constructor(
 
         fun isWebProxy(): Boolean = webProxy != null
 
-        fun isGcs(): Boolean = gcs != null
+        fun isGoogleCloudStorageGcs(): Boolean = googleCloudStorageGcs != null
 
-        fun isAzureBlob(): Boolean = azureBlob != null
+        fun isAzureBlobStorage(): Boolean = azureBlobStorage != null
 
         fun isAkeneoPim(): Boolean = akeneoPim != null
 
@@ -323,9 +317,10 @@ private constructor(
 
         fun asWebProxy(): WebProxy = webProxy.getOrThrow("webProxy")
 
-        fun asGcs(): Gcs = gcs.getOrThrow("gcs")
+        fun asGoogleCloudStorageGcs(): GoogleCloudStorageGcs =
+            googleCloudStorageGcs.getOrThrow("googleCloudStorageGcs")
 
-        fun asAzureBlob(): AzureBlob = azureBlob.getOrThrow("azureBlob")
+        fun asAzureBlobStorage(): AzureBlobStorage = azureBlobStorage.getOrThrow("azureBlobStorage")
 
         fun asAkeneoPim(): AkeneoPim = akeneoPim.getOrThrow("akeneoPim")
 
@@ -338,8 +333,9 @@ private constructor(
                 cloudinaryBackup != null -> visitor.visitCloudinaryBackup(cloudinaryBackup)
                 webFolder != null -> visitor.visitWebFolder(webFolder)
                 webProxy != null -> visitor.visitWebProxy(webProxy)
-                gcs != null -> visitor.visitGcs(gcs)
-                azureBlob != null -> visitor.visitAzureBlob(azureBlob)
+                googleCloudStorageGcs != null ->
+                    visitor.visitGoogleCloudStorageGcs(googleCloudStorageGcs)
+                azureBlobStorage != null -> visitor.visitAzureBlobStorage(azureBlobStorage)
                 akeneoPim != null -> visitor.visitAkeneoPim(akeneoPim)
                 else -> visitor.unknown(_json)
             }
@@ -373,12 +369,14 @@ private constructor(
                         webProxy.validate()
                     }
 
-                    override fun visitGcs(gcs: Gcs) {
-                        gcs.validate()
+                    override fun visitGoogleCloudStorageGcs(
+                        googleCloudStorageGcs: GoogleCloudStorageGcs
+                    ) {
+                        googleCloudStorageGcs.validate()
                     }
 
-                    override fun visitAzureBlob(azureBlob: AzureBlob) {
-                        azureBlob.validate()
+                    override fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage) {
+                        azureBlobStorage.validate()
                     }
 
                     override fun visitAkeneoPim(akeneoPim: AkeneoPim) {
@@ -419,9 +417,12 @@ private constructor(
 
                     override fun visitWebProxy(webProxy: WebProxy) = webProxy.validity()
 
-                    override fun visitGcs(gcs: Gcs) = gcs.validity()
+                    override fun visitGoogleCloudStorageGcs(
+                        googleCloudStorageGcs: GoogleCloudStorageGcs
+                    ) = googleCloudStorageGcs.validity()
 
-                    override fun visitAzureBlob(azureBlob: AzureBlob) = azureBlob.validity()
+                    override fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage) =
+                        azureBlobStorage.validity()
 
                     override fun visitAkeneoPim(akeneoPim: AkeneoPim) = akeneoPim.validity()
 
@@ -440,8 +441,8 @@ private constructor(
                 cloudinaryBackup == other.cloudinaryBackup &&
                 webFolder == other.webFolder &&
                 webProxy == other.webProxy &&
-                gcs == other.gcs &&
-                azureBlob == other.azureBlob &&
+                googleCloudStorageGcs == other.googleCloudStorageGcs &&
+                azureBlobStorage == other.azureBlobStorage &&
                 akeneoPim == other.akeneoPim
         }
 
@@ -452,8 +453,8 @@ private constructor(
                 cloudinaryBackup,
                 webFolder,
                 webProxy,
-                gcs,
-                azureBlob,
+                googleCloudStorageGcs,
+                azureBlobStorage,
                 akeneoPim,
             )
 
@@ -464,8 +465,9 @@ private constructor(
                 cloudinaryBackup != null -> "Body{cloudinaryBackup=$cloudinaryBackup}"
                 webFolder != null -> "Body{webFolder=$webFolder}"
                 webProxy != null -> "Body{webProxy=$webProxy}"
-                gcs != null -> "Body{gcs=$gcs}"
-                azureBlob != null -> "Body{azureBlob=$azureBlob}"
+                googleCloudStorageGcs != null ->
+                    "Body{googleCloudStorageGcs=$googleCloudStorageGcs}"
+                azureBlobStorage != null -> "Body{azureBlobStorage=$azureBlobStorage}"
                 akeneoPim != null -> "Body{akeneoPim=$akeneoPim}"
                 _json != null -> "Body{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Body")
@@ -486,9 +488,13 @@ private constructor(
 
             @JvmStatic fun ofWebProxy(webProxy: WebProxy) = Body(webProxy = webProxy)
 
-            @JvmStatic fun ofGcs(gcs: Gcs) = Body(gcs = gcs)
+            @JvmStatic
+            fun ofGoogleCloudStorageGcs(googleCloudStorageGcs: GoogleCloudStorageGcs) =
+                Body(googleCloudStorageGcs = googleCloudStorageGcs)
 
-            @JvmStatic fun ofAzureBlob(azureBlob: AzureBlob) = Body(azureBlob = azureBlob)
+            @JvmStatic
+            fun ofAzureBlobStorage(azureBlobStorage: AzureBlobStorage) =
+                Body(azureBlobStorage = azureBlobStorage)
 
             @JvmStatic fun ofAkeneoPim(akeneoPim: AkeneoPim) = Body(akeneoPim = akeneoPim)
         }
@@ -506,9 +512,9 @@ private constructor(
 
             fun visitWebProxy(webProxy: WebProxy): T
 
-            fun visitGcs(gcs: Gcs): T
+            fun visitGoogleCloudStorageGcs(googleCloudStorageGcs: GoogleCloudStorageGcs): T
 
-            fun visitAzureBlob(azureBlob: AzureBlob): T
+            fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage): T
 
             fun visitAkeneoPim(akeneoPim: AkeneoPim): T
 
@@ -530,52 +536,47 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Body {
                 val json = JsonValue.fromJsonNode(node)
-                val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                when (type) {
-                    "S3" -> {
-                        return tryDeserialize(node, jacksonTypeRef<S3>())?.let {
-                            Body(s3 = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "S3_COMPATIBLE" -> {
-                        return tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
-                            Body(s3Compatible = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "CLOUDINARY_BACKUP" -> {
-                        return tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
-                            Body(cloudinaryBackup = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "WEB_FOLDER" -> {
-                        return tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
-                            Body(webFolder = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "WEB_PROXY" -> {
-                        return tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
-                            Body(webProxy = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "GCS" -> {
-                        return tryDeserialize(node, jacksonTypeRef<Gcs>())?.let {
-                            Body(gcs = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "AZURE_BLOB" -> {
-                        return tryDeserialize(node, jacksonTypeRef<AzureBlob>())?.let {
-                            Body(azureBlob = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
-                    "AKENEO_PIM" -> {
-                        return tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
-                            Body(akeneoPim = it, _json = json)
-                        } ?: Body(_json = json)
-                    }
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<S3>())?.let {
+                                Body(s3 = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
+                                Body(s3Compatible = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
+                                Body(cloudinaryBackup = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
+                                Body(webFolder = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
+                                Body(webProxy = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<GoogleCloudStorageGcs>())?.let {
+                                Body(googleCloudStorageGcs = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<AzureBlobStorage>())?.let {
+                                Body(azureBlobStorage = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
+                                Body(akeneoPim = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> Body(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
                 }
-
-                return Body(_json = json)
             }
         }
 
@@ -592,8 +593,9 @@ private constructor(
                     value.cloudinaryBackup != null -> generator.writeObject(value.cloudinaryBackup)
                     value.webFolder != null -> generator.writeObject(value.webFolder)
                     value.webProxy != null -> generator.writeObject(value.webProxy)
-                    value.gcs != null -> generator.writeObject(value.gcs)
-                    value.azureBlob != null -> generator.writeObject(value.azureBlob)
+                    value.googleCloudStorageGcs != null ->
+                        generator.writeObject(value.googleCloudStorageGcs)
+                    value.azureBlobStorage != null -> generator.writeObject(value.azureBlobStorage)
                     value.akeneoPim != null -> generator.writeObject(value.akeneoPim)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Body")
@@ -2802,7 +2804,7 @@ private constructor(
                 "WebProxy{name=$name, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, additionalProperties=$additionalProperties}"
         }
 
-        class Gcs
+        class GoogleCloudStorageGcs
         private constructor(
             private val bucket: JsonField<String>,
             private val clientEmail: JsonField<String>,
@@ -2988,7 +2990,8 @@ private constructor(
             companion object {
 
                 /**
-                 * Returns a mutable builder for constructing an instance of [Gcs].
+                 * Returns a mutable builder for constructing an instance of
+                 * [GoogleCloudStorageGcs].
                  *
                  * The following fields are required:
                  * ```java
@@ -3001,7 +3004,7 @@ private constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [Gcs]. */
+            /** A builder for [GoogleCloudStorageGcs]. */
             class Builder internal constructor() {
 
                 private var bucket: JsonField<String>? = null
@@ -3015,16 +3018,16 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(gcs: Gcs) = apply {
-                    bucket = gcs.bucket
-                    clientEmail = gcs.clientEmail
-                    name = gcs.name
-                    privateKey = gcs.privateKey
-                    type = gcs.type
-                    baseUrlForCanonicalHeader = gcs.baseUrlForCanonicalHeader
-                    includeCanonicalHeader = gcs.includeCanonicalHeader
-                    prefix = gcs.prefix
-                    additionalProperties = gcs.additionalProperties.toMutableMap()
+                internal fun from(googleCloudStorageGcs: GoogleCloudStorageGcs) = apply {
+                    bucket = googleCloudStorageGcs.bucket
+                    clientEmail = googleCloudStorageGcs.clientEmail
+                    name = googleCloudStorageGcs.name
+                    privateKey = googleCloudStorageGcs.privateKey
+                    type = googleCloudStorageGcs.type
+                    baseUrlForCanonicalHeader = googleCloudStorageGcs.baseUrlForCanonicalHeader
+                    includeCanonicalHeader = googleCloudStorageGcs.includeCanonicalHeader
+                    prefix = googleCloudStorageGcs.prefix
+                    additionalProperties = googleCloudStorageGcs.additionalProperties.toMutableMap()
                 }
 
                 fun bucket(bucket: String) = bucket(JsonField.of(bucket))
@@ -3155,7 +3158,7 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [Gcs].
+                 * Returns an immutable instance of [GoogleCloudStorageGcs].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
@@ -3169,8 +3172,8 @@ private constructor(
                  *
                  * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): Gcs =
-                    Gcs(
+                fun build(): GoogleCloudStorageGcs =
+                    GoogleCloudStorageGcs(
                         checkRequired("bucket", bucket),
                         checkRequired("clientEmail", clientEmail),
                         checkRequired("name", name),
@@ -3185,7 +3188,7 @@ private constructor(
 
             private var validated: Boolean = false
 
-            fun validate(): Gcs = apply {
+            fun validate(): GoogleCloudStorageGcs = apply {
                 if (validated) {
                     return@apply
                 }
@@ -3235,7 +3238,7 @@ private constructor(
                     return true
                 }
 
-                return other is Gcs &&
+                return other is GoogleCloudStorageGcs &&
                     bucket == other.bucket &&
                     clientEmail == other.clientEmail &&
                     name == other.name &&
@@ -3264,10 +3267,10 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Gcs{bucket=$bucket, clientEmail=$clientEmail, name=$name, privateKey=$privateKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
+                "GoogleCloudStorageGcs{bucket=$bucket, clientEmail=$clientEmail, name=$name, privateKey=$privateKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
         }
 
-        class AzureBlob
+        class AzureBlobStorage
         private constructor(
             private val accountName: JsonField<String>,
             private val container: JsonField<String>,
@@ -3454,7 +3457,7 @@ private constructor(
             companion object {
 
                 /**
-                 * Returns a mutable builder for constructing an instance of [AzureBlob].
+                 * Returns a mutable builder for constructing an instance of [AzureBlobStorage].
                  *
                  * The following fields are required:
                  * ```java
@@ -3467,7 +3470,7 @@ private constructor(
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [AzureBlob]. */
+            /** A builder for [AzureBlobStorage]. */
             class Builder internal constructor() {
 
                 private var accountName: JsonField<String>? = null
@@ -3481,16 +3484,16 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(azureBlob: AzureBlob) = apply {
-                    accountName = azureBlob.accountName
-                    container = azureBlob.container
-                    name = azureBlob.name
-                    sasToken = azureBlob.sasToken
-                    type = azureBlob.type
-                    baseUrlForCanonicalHeader = azureBlob.baseUrlForCanonicalHeader
-                    includeCanonicalHeader = azureBlob.includeCanonicalHeader
-                    prefix = azureBlob.prefix
-                    additionalProperties = azureBlob.additionalProperties.toMutableMap()
+                internal fun from(azureBlobStorage: AzureBlobStorage) = apply {
+                    accountName = azureBlobStorage.accountName
+                    container = azureBlobStorage.container
+                    name = azureBlobStorage.name
+                    sasToken = azureBlobStorage.sasToken
+                    type = azureBlobStorage.type
+                    baseUrlForCanonicalHeader = azureBlobStorage.baseUrlForCanonicalHeader
+                    includeCanonicalHeader = azureBlobStorage.includeCanonicalHeader
+                    prefix = azureBlobStorage.prefix
+                    additionalProperties = azureBlobStorage.additionalProperties.toMutableMap()
                 }
 
                 fun accountName(accountName: String) = accountName(JsonField.of(accountName))
@@ -3619,7 +3622,7 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [AzureBlob].
+                 * Returns an immutable instance of [AzureBlobStorage].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  *
@@ -3633,8 +3636,8 @@ private constructor(
                  *
                  * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): AzureBlob =
-                    AzureBlob(
+                fun build(): AzureBlobStorage =
+                    AzureBlobStorage(
                         checkRequired("accountName", accountName),
                         checkRequired("container", container),
                         checkRequired("name", name),
@@ -3649,7 +3652,7 @@ private constructor(
 
             private var validated: Boolean = false
 
-            fun validate(): AzureBlob = apply {
+            fun validate(): AzureBlobStorage = apply {
                 if (validated) {
                     return@apply
                 }
@@ -3699,7 +3702,7 @@ private constructor(
                     return true
                 }
 
-                return other is AzureBlob &&
+                return other is AzureBlobStorage &&
                     accountName == other.accountName &&
                     container == other.container &&
                     name == other.name &&
@@ -3728,7 +3731,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "AzureBlob{accountName=$accountName, container=$container, name=$name, sasToken=$sasToken, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
+                "AzureBlobStorage{accountName=$accountName, container=$container, name=$name, sasToken=$sasToken, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
         }
 
         class AkeneoPim
