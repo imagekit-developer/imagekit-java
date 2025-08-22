@@ -10,6 +10,7 @@ import com.imagekit.api.services.blocking.CacheService
 import com.imagekit.api.services.blocking.CustomMetadataFieldService
 import com.imagekit.api.services.blocking.FileService
 import com.imagekit.api.services.blocking.FolderService
+import com.imagekit.api.services.blocking.WebhookService
 import java.util.function.Consumer
 
 /**
@@ -62,6 +63,8 @@ interface ImageKitClient {
 
     fun beta(): BetaService
 
+    fun webhooks(): WebhookService
+
     /**
      * Closes this client, relinquishing any underlying resources.
      *
@@ -98,5 +101,7 @@ interface ImageKitClient {
         fun accounts(): AccountService.WithRawResponse
 
         fun beta(): BetaService.WithRawResponse
+
+        fun webhooks(): WebhookService.WithRawResponse
     }
 }

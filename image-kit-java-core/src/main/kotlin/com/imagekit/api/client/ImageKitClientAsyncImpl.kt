@@ -18,6 +18,8 @@ import com.imagekit.api.services.async.FileServiceAsync
 import com.imagekit.api.services.async.FileServiceAsyncImpl
 import com.imagekit.api.services.async.FolderServiceAsync
 import com.imagekit.api.services.async.FolderServiceAsyncImpl
+import com.imagekit.api.services.async.WebhookServiceAsync
+import com.imagekit.api.services.async.WebhookServiceAsyncImpl
 import java.util.function.Consumer
 
 class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageKitClientAsync {
@@ -61,6 +63,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     private val beta: BetaServiceAsync by lazy { BetaServiceAsyncImpl(clientOptionsWithUserAgent) }
 
+    private val webhooks: WebhookServiceAsync by lazy {
+        WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     override fun sync(): ImageKitClient = sync
 
     override fun withRawResponse(): ImageKitClientAsync.WithRawResponse = withRawResponse
@@ -81,6 +87,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
     override fun accounts(): AccountServiceAsync = accounts
 
     override fun beta(): BetaServiceAsync = beta
+
+    override fun webhooks(): WebhookServiceAsync = webhooks
 
     override fun close() = clientOptions.close()
 
@@ -115,6 +123,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
             BetaServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
+            WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ImageKitClientAsync.WithRawResponse =
@@ -136,5 +148,7 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
         override fun accounts(): AccountServiceAsync.WithRawResponse = accounts
 
         override fun beta(): BetaServiceAsync.WithRawResponse = beta
+
+        override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
     }
 }

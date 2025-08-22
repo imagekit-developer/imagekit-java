@@ -60,6 +60,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.folders()).isNotNull()
         assertThat(client.accounts()).isNotNull()
         assertThat(client.beta()).isNotNull()
+        assertThat(client.webhooks()).isNotNull()
     }
 
     @Test

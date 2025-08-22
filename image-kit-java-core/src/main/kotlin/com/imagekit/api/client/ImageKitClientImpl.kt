@@ -18,6 +18,8 @@ import com.imagekit.api.services.blocking.FileService
 import com.imagekit.api.services.blocking.FileServiceImpl
 import com.imagekit.api.services.blocking.FolderService
 import com.imagekit.api.services.blocking.FolderServiceImpl
+import com.imagekit.api.services.blocking.WebhookService
+import com.imagekit.api.services.blocking.WebhookServiceImpl
 import java.util.function.Consumer
 
 class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitClient {
@@ -53,6 +55,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val beta: BetaService by lazy { BetaServiceImpl(clientOptionsWithUserAgent) }
 
+    private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
+
     override fun async(): ImageKitClientAsync = async
 
     override fun withRawResponse(): ImageKitClient.WithRawResponse = withRawResponse
@@ -73,6 +77,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun accounts(): AccountService = accounts
 
     override fun beta(): BetaService = beta
+
+    override fun webhooks(): WebhookService = webhooks
 
     override fun close() = clientOptions.close()
 
@@ -107,6 +113,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
             BetaServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookService.WithRawResponse by lazy {
+            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): ImageKitClient.WithRawResponse =
@@ -128,5 +138,7 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
         override fun accounts(): AccountService.WithRawResponse = accounts
 
         override fun beta(): BetaService.WithRawResponse = beta
+
+        override fun webhooks(): WebhookService.WithRawResponse = webhooks
     }
 }
