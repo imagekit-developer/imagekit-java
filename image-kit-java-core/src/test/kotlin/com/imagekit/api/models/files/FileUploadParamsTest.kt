@@ -4,8 +4,6 @@ package com.imagekit.api.models.files
 
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.MultipartField
-import com.imagekit.api.models.AutoTaggingExtension
-import com.imagekit.api.models.RemovedotBgExtension
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,10 +27,10 @@ internal class FileUploadParamsTest {
             .description("Running shoes")
             .expire(0L)
             .addExtension(
-                RemovedotBgExtension.builder()
-                    .name(RemovedotBgExtension.Name.REMOVE_BG)
+                FileUploadParams.Extension.RemovedotBgExtension.builder()
+                    .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
                     .options(
-                        RemovedotBgExtension.Options.builder()
+                        FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
                             .addShadow(true)
                             .bgColor("bg_color")
                             .bgImageUrl("bg_image_url")
@@ -42,10 +40,10 @@ internal class FileUploadParamsTest {
                     .build()
             )
             .addExtension(
-                AutoTaggingExtension.builder()
+                FileUploadParams.Extension.AutoTaggingExtension.builder()
                     .maxTags(5L)
                     .minConfidence(95L)
-                    .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
+                    .name(FileUploadParams.Extension.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                     .build()
             )
             .folder("folder")
@@ -116,10 +114,10 @@ internal class FileUploadParamsTest {
                 .description("Running shoes")
                 .expire(0L)
                 .addExtension(
-                    RemovedotBgExtension.builder()
-                        .name(RemovedotBgExtension.Name.REMOVE_BG)
+                    FileUploadParams.Extension.RemovedotBgExtension.builder()
+                        .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
                         .options(
-                            RemovedotBgExtension.Options.builder()
+                            FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
                                 .addShadow(true)
                                 .bgColor("bg_color")
                                 .bgImageUrl("bg_image_url")
@@ -129,10 +127,12 @@ internal class FileUploadParamsTest {
                         .build()
                 )
                 .addExtension(
-                    AutoTaggingExtension.builder()
+                    FileUploadParams.Extension.AutoTaggingExtension.builder()
                         .maxTags(5L)
                         .minConfidence(95L)
-                        .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
+                        .name(
+                            FileUploadParams.Extension.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING
+                        )
                         .build()
                 )
                 .folder("folder")
@@ -215,10 +215,15 @@ internal class FileUploadParamsTest {
                             MultipartField.of(
                                 listOf(
                                     FileUploadParams.Extension.ofRemovedotBg(
-                                        RemovedotBgExtension.builder()
-                                            .name(RemovedotBgExtension.Name.REMOVE_BG)
+                                        FileUploadParams.Extension.RemovedotBgExtension.builder()
+                                            .name(
+                                                FileUploadParams.Extension.RemovedotBgExtension.Name
+                                                    .REMOVE_BG
+                                            )
                                             .options(
-                                                RemovedotBgExtension.Options.builder()
+                                                FileUploadParams.Extension.RemovedotBgExtension
+                                                    .Options
+                                                    .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
                                                     .bgImageUrl("bg_image_url")
@@ -228,10 +233,13 @@ internal class FileUploadParamsTest {
                                             .build()
                                     ),
                                     FileUploadParams.Extension.ofAutoTagging(
-                                        AutoTaggingExtension.builder()
+                                        FileUploadParams.Extension.AutoTaggingExtension.builder()
                                             .maxTags(5L)
                                             .minConfidence(95L)
-                                            .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
+                                            .name(
+                                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                                    .GOOGLE_AUTO_TAGGING
+                                            )
                                             .build()
                                     ),
                                 )

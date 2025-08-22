@@ -15,8 +15,6 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.imagekit.api.client.ImageKitClient
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.AutoTaggingExtension
-import com.imagekit.api.models.RemovedotBgExtension
 import com.imagekit.api.models.files.FileUploadParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -61,10 +59,10 @@ internal class ServiceParamsTest {
                 .description("Running shoes")
                 .expire(0L)
                 .addExtension(
-                    RemovedotBgExtension.builder()
-                        .name(RemovedotBgExtension.Name.REMOVE_BG)
+                    FileUploadParams.Extension.RemovedotBgExtension.builder()
+                        .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
                         .options(
-                            RemovedotBgExtension.Options.builder()
+                            FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
                                 .addShadow(true)
                                 .bgColor("bg_color")
                                 .bgImageUrl("bg_image_url")
@@ -74,10 +72,12 @@ internal class ServiceParamsTest {
                         .build()
                 )
                 .addExtension(
-                    AutoTaggingExtension.builder()
+                    FileUploadParams.Extension.AutoTaggingExtension.builder()
                         .maxTags(5L)
                         .minConfidence(95L)
-                        .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
+                        .name(
+                            FileUploadParams.Extension.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING
+                        )
                         .build()
                 )
                 .folder("folder")

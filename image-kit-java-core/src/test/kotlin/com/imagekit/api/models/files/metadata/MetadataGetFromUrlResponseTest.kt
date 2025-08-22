@@ -5,11 +5,6 @@ package com.imagekit.api.models.files.metadata
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.ExifDetails
-import com.imagekit.api.models.ExifImage
-import com.imagekit.api.models.Gps
-import com.imagekit.api.models.Interoperability
-import com.imagekit.api.models.Thumbnail
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -26,7 +21,7 @@ internal class MetadataGetFromUrlResponseTest {
                 .exif(
                     MetadataGetFromUrlResponse.Exif.builder()
                         .exif(
-                            ExifDetails.builder()
+                            MetadataGetFromUrlResponse.Exif.InnerExif.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -55,9 +50,13 @@ internal class MetadataGetFromUrlResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(Gps.builder().addGpsVersionId(0L).build())
+                        .gps(
+                            MetadataGetFromUrlResponse.Exif.Gps.builder()
+                                .addGpsVersionId(0L)
+                                .build()
+                        )
                         .image(
-                            ExifImage.builder()
+                            MetadataGetFromUrlResponse.Exif.Image.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -72,7 +71,7 @@ internal class MetadataGetFromUrlResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            Interoperability.builder()
+                            MetadataGetFromUrlResponse.Exif.Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
@@ -83,7 +82,7 @@ internal class MetadataGetFromUrlResponseTest {
                                 .build()
                         )
                         .thumbnail(
-                            Thumbnail.builder()
+                            MetadataGetFromUrlResponse.Exif.Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)
@@ -113,7 +112,7 @@ internal class MetadataGetFromUrlResponseTest {
             .contains(
                 MetadataGetFromUrlResponse.Exif.builder()
                     .exif(
-                        ExifDetails.builder()
+                        MetadataGetFromUrlResponse.Exif.InnerExif.builder()
                             .apertureValue(0.0)
                             .colorSpace(0L)
                             .createDate("CreateDate")
@@ -142,9 +141,9 @@ internal class MetadataGetFromUrlResponseTest {
                             .whiteBalance(0L)
                             .build()
                     )
-                    .gps(Gps.builder().addGpsVersionId(0L).build())
+                    .gps(MetadataGetFromUrlResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
                     .image(
-                        ExifImage.builder()
+                        MetadataGetFromUrlResponse.Exif.Image.builder()
                             .exifOffset(0L)
                             .gpsInfo(0L)
                             .make("Make")
@@ -159,7 +158,7 @@ internal class MetadataGetFromUrlResponseTest {
                             .build()
                     )
                     .interoperability(
-                        Interoperability.builder()
+                        MetadataGetFromUrlResponse.Exif.Interoperability.builder()
                             .interopIndex("InteropIndex")
                             .interopVersion("InteropVersion")
                             .build()
@@ -170,7 +169,7 @@ internal class MetadataGetFromUrlResponseTest {
                             .build()
                     )
                     .thumbnail(
-                        Thumbnail.builder()
+                        MetadataGetFromUrlResponse.Exif.Thumbnail.builder()
                             .compression(0L)
                             .resolutionUnit(0L)
                             .thumbnailLength(0L)
@@ -204,7 +203,7 @@ internal class MetadataGetFromUrlResponseTest {
                 .exif(
                     MetadataGetFromUrlResponse.Exif.builder()
                         .exif(
-                            ExifDetails.builder()
+                            MetadataGetFromUrlResponse.Exif.InnerExif.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -233,9 +232,13 @@ internal class MetadataGetFromUrlResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(Gps.builder().addGpsVersionId(0L).build())
+                        .gps(
+                            MetadataGetFromUrlResponse.Exif.Gps.builder()
+                                .addGpsVersionId(0L)
+                                .build()
+                        )
                         .image(
-                            ExifImage.builder()
+                            MetadataGetFromUrlResponse.Exif.Image.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -250,7 +253,7 @@ internal class MetadataGetFromUrlResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            Interoperability.builder()
+                            MetadataGetFromUrlResponse.Exif.Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
@@ -261,7 +264,7 @@ internal class MetadataGetFromUrlResponseTest {
                                 .build()
                         )
                         .thumbnail(
-                            Thumbnail.builder()
+                            MetadataGetFromUrlResponse.Exif.Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)

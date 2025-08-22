@@ -5,11 +5,6 @@ package com.imagekit.api.models.beta.v2.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.ExifDetails
-import com.imagekit.api.models.ExifImage
-import com.imagekit.api.models.Gps
-import com.imagekit.api.models.Interoperability
-import com.imagekit.api.models.Thumbnail
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -65,7 +60,7 @@ internal class FileUploadResponseTest {
                         .exif(
                             FileUploadResponse.Metadata.Exif.builder()
                                 .exif(
-                                    ExifDetails.builder()
+                                    FileUploadResponse.Metadata.Exif.InnerExif.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -94,9 +89,13 @@ internal class FileUploadResponseTest {
                                         .whiteBalance(0L)
                                         .build()
                                 )
-                                .gps(Gps.builder().addGpsVersionId(0L).build())
+                                .gps(
+                                    FileUploadResponse.Metadata.Exif.Gps.builder()
+                                        .addGpsVersionId(0L)
+                                        .build()
+                                )
                                 .image(
-                                    ExifImage.builder()
+                                    FileUploadResponse.Metadata.Exif.Image.builder()
                                         .exifOffset(0L)
                                         .gpsInfo(0L)
                                         .make("Make")
@@ -111,7 +110,7 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .interoperability(
-                                    Interoperability.builder()
+                                    FileUploadResponse.Metadata.Exif.Interoperability.builder()
                                         .interopIndex("InteropIndex")
                                         .interopVersion("InteropVersion")
                                         .build()
@@ -122,7 +121,7 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .thumbnail(
-                                    Thumbnail.builder()
+                                    FileUploadResponse.Metadata.Exif.Thumbnail.builder()
                                         .compression(0L)
                                         .resolutionUnit(0L)
                                         .thumbnailLength(0L)
@@ -202,7 +201,7 @@ internal class FileUploadResponseTest {
                     .exif(
                         FileUploadResponse.Metadata.Exif.builder()
                             .exif(
-                                ExifDetails.builder()
+                                FileUploadResponse.Metadata.Exif.InnerExif.builder()
                                     .apertureValue(0.0)
                                     .colorSpace(0L)
                                     .createDate("CreateDate")
@@ -231,9 +230,13 @@ internal class FileUploadResponseTest {
                                     .whiteBalance(0L)
                                     .build()
                             )
-                            .gps(Gps.builder().addGpsVersionId(0L).build())
+                            .gps(
+                                FileUploadResponse.Metadata.Exif.Gps.builder()
+                                    .addGpsVersionId(0L)
+                                    .build()
+                            )
                             .image(
-                                ExifImage.builder()
+                                FileUploadResponse.Metadata.Exif.Image.builder()
                                     .exifOffset(0L)
                                     .gpsInfo(0L)
                                     .make("Make")
@@ -248,7 +251,7 @@ internal class FileUploadResponseTest {
                                     .build()
                             )
                             .interoperability(
-                                Interoperability.builder()
+                                FileUploadResponse.Metadata.Exif.Interoperability.builder()
                                     .interopIndex("InteropIndex")
                                     .interopVersion("InteropVersion")
                                     .build()
@@ -259,7 +262,7 @@ internal class FileUploadResponseTest {
                                     .build()
                             )
                             .thumbnail(
-                                Thumbnail.builder()
+                                FileUploadResponse.Metadata.Exif.Thumbnail.builder()
                                     .compression(0L)
                                     .resolutionUnit(0L)
                                     .thumbnailLength(0L)
@@ -342,7 +345,7 @@ internal class FileUploadResponseTest {
                         .exif(
                             FileUploadResponse.Metadata.Exif.builder()
                                 .exif(
-                                    ExifDetails.builder()
+                                    FileUploadResponse.Metadata.Exif.InnerExif.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -371,9 +374,13 @@ internal class FileUploadResponseTest {
                                         .whiteBalance(0L)
                                         .build()
                                 )
-                                .gps(Gps.builder().addGpsVersionId(0L).build())
+                                .gps(
+                                    FileUploadResponse.Metadata.Exif.Gps.builder()
+                                        .addGpsVersionId(0L)
+                                        .build()
+                                )
                                 .image(
-                                    ExifImage.builder()
+                                    FileUploadResponse.Metadata.Exif.Image.builder()
                                         .exifOffset(0L)
                                         .gpsInfo(0L)
                                         .make("Make")
@@ -388,7 +395,7 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .interoperability(
-                                    Interoperability.builder()
+                                    FileUploadResponse.Metadata.Exif.Interoperability.builder()
                                         .interopIndex("InteropIndex")
                                         .interopVersion("InteropVersion")
                                         .build()
@@ -399,7 +406,7 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .thumbnail(
-                                    Thumbnail.builder()
+                                    FileUploadResponse.Metadata.Exif.Thumbnail.builder()
                                         .compression(0L)
                                         .resolutionUnit(0L)
                                         .thumbnailLength(0L)

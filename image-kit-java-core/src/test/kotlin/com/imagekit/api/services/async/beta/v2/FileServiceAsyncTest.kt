@@ -5,8 +5,6 @@ package com.imagekit.api.services.async.beta.v2
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.AutoTaggingExtension
-import com.imagekit.api.models.RemovedotBgExtension
 import com.imagekit.api.models.beta.v2.files.FileUploadParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -42,10 +40,10 @@ internal class FileServiceAsyncTest {
                     )
                     .description("Running shoes")
                     .addExtension(
-                        RemovedotBgExtension.builder()
-                            .name(RemovedotBgExtension.Name.REMOVE_BG)
+                        FileUploadParams.Extension.RemovedotBgExtension.builder()
+                            .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
                             .options(
-                                RemovedotBgExtension.Options.builder()
+                                FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
                                     .addShadow(true)
                                     .bgColor("bg_color")
                                     .bgImageUrl("bg_image_url")
@@ -55,10 +53,13 @@ internal class FileServiceAsyncTest {
                             .build()
                     )
                     .addExtension(
-                        AutoTaggingExtension.builder()
+                        FileUploadParams.Extension.AutoTaggingExtension.builder()
                             .maxTags(5L)
                             .minConfidence(95L)
-                            .name(AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
+                            .name(
+                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                    .GOOGLE_AUTO_TAGGING
+                            )
                             .build()
                     )
                     .folder("folder")
