@@ -21,7 +21,6 @@ import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.MultipartField
 import com.imagekit.api.core.Params
-import com.imagekit.api.core.allMaxBy
 import com.imagekit.api.core.checkKnown
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.getOrThrow
@@ -36,6 +35,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * The V2 API enhances security by verifying the entire payload using JWT. This API is in beta.
@@ -657,20 +657,16 @@ private constructor(
          */
         fun addExtension(extension: Extension) = apply { body.addExtension(extension) }
 
-        /** Alias for calling [addExtension] with `Extension.ofRemovedotBg(removedotBg)`. */
-        fun addExtension(removedotBg: Extension.RemovedotBgExtension) = apply {
-            body.addExtension(removedotBg)
-        }
+        /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
+        fun addExtension(removeBg: Extension.RemoveBg) = apply { body.addExtension(removeBg) }
 
         /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
         fun addExtension(autoTagging: Extension.AutoTaggingExtension) = apply {
             body.addExtension(autoTagging)
         }
 
-        /** Alias for calling [addExtension] with `Extension.ofAutoDescription(autoDescription)`. */
-        fun addExtension(autoDescription: Extension.AutoDescriptionExtension) = apply {
-            body.addExtension(autoDescription)
-        }
+        /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
+        fun addExtensionAiAutoDescription() = apply { body.addExtensionAiAutoDescription() }
 
         /**
          * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -1771,19 +1767,16 @@ private constructor(
                     }
             }
 
-            /** Alias for calling [addExtension] with `Extension.ofRemovedotBg(removedotBg)`. */
-            fun addExtension(removedotBg: Extension.RemovedotBgExtension) =
-                addExtension(Extension.ofRemovedotBg(removedotBg))
+            /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
+            fun addExtension(removeBg: Extension.RemoveBg) =
+                addExtension(Extension.ofRemoveBg(removeBg))
 
             /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
             fun addExtension(autoTagging: Extension.AutoTaggingExtension) =
                 addExtension(Extension.ofAutoTagging(autoTagging))
 
-            /**
-             * Alias for calling [addExtension] with `Extension.ofAutoDescription(autoDescription)`.
-             */
-            fun addExtension(autoDescription: Extension.AutoDescriptionExtension) =
-                addExtension(Extension.ofAutoDescription(autoDescription))
+            /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
+            fun addExtensionAiAutoDescription() = addExtension(Extension.ofAiAutoDescription())
 
             /**
              * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -2293,39 +2286,37 @@ private constructor(
     @JsonSerialize(using = Extension.Serializer::class)
     class Extension
     private constructor(
-        private val removedotBg: RemovedotBgExtension? = null,
+        private val removeBg: RemoveBg? = null,
         private val autoTagging: AutoTaggingExtension? = null,
-        private val autoDescription: AutoDescriptionExtension? = null,
+        private val aiAutoDescription: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun removedotBg(): Optional<RemovedotBgExtension> = Optional.ofNullable(removedotBg)
+        fun removeBg(): Optional<RemoveBg> = Optional.ofNullable(removeBg)
 
         fun autoTagging(): Optional<AutoTaggingExtension> = Optional.ofNullable(autoTagging)
 
-        fun autoDescription(): Optional<AutoDescriptionExtension> =
-            Optional.ofNullable(autoDescription)
+        fun aiAutoDescription(): Optional<JsonValue> = Optional.ofNullable(aiAutoDescription)
 
-        fun isRemovedotBg(): Boolean = removedotBg != null
+        fun isRemoveBg(): Boolean = removeBg != null
 
         fun isAutoTagging(): Boolean = autoTagging != null
 
-        fun isAutoDescription(): Boolean = autoDescription != null
+        fun isAiAutoDescription(): Boolean = aiAutoDescription != null
 
-        fun asRemovedotBg(): RemovedotBgExtension = removedotBg.getOrThrow("removedotBg")
+        fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
         fun asAutoTagging(): AutoTaggingExtension = autoTagging.getOrThrow("autoTagging")
 
-        fun asAutoDescription(): AutoDescriptionExtension =
-            autoDescription.getOrThrow("autoDescription")
+        fun asAiAutoDescription(): JsonValue = aiAutoDescription.getOrThrow("aiAutoDescription")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                removedotBg != null -> visitor.visitRemovedotBg(removedotBg)
+                removeBg != null -> visitor.visitRemoveBg(removeBg)
                 autoTagging != null -> visitor.visitAutoTagging(autoTagging)
-                autoDescription != null -> visitor.visitAutoDescription(autoDescription)
+                aiAutoDescription != null -> visitor.visitAiAutoDescription(aiAutoDescription)
                 else -> visitor.unknown(_json)
             }
 
@@ -2338,16 +2329,22 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitRemovedotBg(removedotBg: RemovedotBgExtension) {
-                        removedotBg.validate()
+                    override fun visitRemoveBg(removeBg: RemoveBg) {
+                        removeBg.validate()
                     }
 
                     override fun visitAutoTagging(autoTagging: AutoTaggingExtension) {
                         autoTagging.validate()
                     }
 
-                    override fun visitAutoDescription(autoDescription: AutoDescriptionExtension) {
-                        autoDescription.validate()
+                    override fun visitAiAutoDescription(aiAutoDescription: JsonValue) {
+                        aiAutoDescription.let {
+                            if (it != JsonValue.from(mapOf("name" to "ai-auto-description"))) {
+                                throw ImageKitInvalidDataException(
+                                    "'aiAutoDescription' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
                 }
             )
@@ -2372,14 +2369,16 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitRemovedotBg(removedotBg: RemovedotBgExtension) =
-                        removedotBg.validity()
+                    override fun visitRemoveBg(removeBg: RemoveBg) = removeBg.validity()
 
                     override fun visitAutoTagging(autoTagging: AutoTaggingExtension) =
                         autoTagging.validity()
 
-                    override fun visitAutoDescription(autoDescription: AutoDescriptionExtension) =
-                        autoDescription.validity()
+                    override fun visitAiAutoDescription(aiAutoDescription: JsonValue) =
+                        aiAutoDescription.let {
+                            if (it == JsonValue.from(mapOf("name" to "ai-auto-description"))) 1
+                            else 0
+                        }
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -2391,35 +2390,35 @@ private constructor(
             }
 
             return other is Extension &&
-                removedotBg == other.removedotBg &&
+                removeBg == other.removeBg &&
                 autoTagging == other.autoTagging &&
-                autoDescription == other.autoDescription
+                aiAutoDescription == other.aiAutoDescription
         }
 
-        override fun hashCode(): Int = Objects.hash(removedotBg, autoTagging, autoDescription)
+        override fun hashCode(): Int = Objects.hash(removeBg, autoTagging, aiAutoDescription)
 
         override fun toString(): String =
             when {
-                removedotBg != null -> "Extension{removedotBg=$removedotBg}"
+                removeBg != null -> "Extension{removeBg=$removeBg}"
                 autoTagging != null -> "Extension{autoTagging=$autoTagging}"
-                autoDescription != null -> "Extension{autoDescription=$autoDescription}"
+                aiAutoDescription != null -> "Extension{aiAutoDescription=$aiAutoDescription}"
                 _json != null -> "Extension{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Extension")
             }
 
         companion object {
 
-            @JvmStatic
-            fun ofRemovedotBg(removedotBg: RemovedotBgExtension) =
-                Extension(removedotBg = removedotBg)
+            @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = Extension(removeBg = removeBg)
 
             @JvmStatic
             fun ofAutoTagging(autoTagging: AutoTaggingExtension) =
                 Extension(autoTagging = autoTagging)
 
             @JvmStatic
-            fun ofAutoDescription(autoDescription: AutoDescriptionExtension) =
-                Extension(autoDescription = autoDescription)
+            fun ofAiAutoDescription() =
+                Extension(
+                    aiAutoDescription = JsonValue.from(mapOf("name" to "ai-auto-description"))
+                )
         }
 
         /**
@@ -2427,11 +2426,11 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitRemovedotBg(removedotBg: RemovedotBgExtension): T
+            fun visitRemoveBg(removeBg: RemoveBg): T
 
             fun visitAutoTagging(autoTagging: AutoTaggingExtension): T
 
-            fun visitAutoDescription(autoDescription: AutoDescriptionExtension): T
+            fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
             /**
              * Maps an unknown variant of [Extension] to a value of type [T].
@@ -2452,32 +2451,24 @@ private constructor(
 
             override fun ObjectCodec.deserialize(node: JsonNode): Extension {
                 val json = JsonValue.fromJsonNode(node)
+                val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
-                val bestMatches =
-                    sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<RemovedotBgExtension>())?.let {
-                                Extension(removedotBg = it, _json = json)
-                            },
-                            tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                                Extension(autoTagging = it, _json = json)
-                            },
-                            tryDeserialize(node, jacksonTypeRef<AutoDescriptionExtension>())?.let {
-                                Extension(autoDescription = it, _json = json)
-                            },
-                        )
-                        .filterNotNull()
-                        .allMaxBy { it.validity() }
-                        .toList()
-                return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from boolean).
-                    0 -> Extension(_json = json)
-                    1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
-                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                when (name) {
+                    "remove-bg" -> {
+                        return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
+                            Extension(removeBg = it, _json = json)
+                        } ?: Extension(_json = json)
+                    }
+                    "ai-auto-description" -> {
+                        return tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                            ?.let { Extension(aiAutoDescription = it, _json = json) }
+                            ?.takeIf { it.isValid() } ?: Extension(_json = json)
+                    }
                 }
+
+                return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
+                    Extension(autoTagging = it, _json = json)
+                } ?: Extension(_json = json)
             }
         }
 
@@ -2489,18 +2480,19 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.removedotBg != null -> generator.writeObject(value.removedotBg)
+                    value.removeBg != null -> generator.writeObject(value.removeBg)
                     value.autoTagging != null -> generator.writeObject(value.autoTagging)
-                    value.autoDescription != null -> generator.writeObject(value.autoDescription)
+                    value.aiAutoDescription != null ->
+                        generator.writeObject(value.aiAutoDescription)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Extension")
                 }
             }
         }
 
-        class RemovedotBgExtension
+        class RemoveBg
         private constructor(
-            private val name: MultipartField<Name>,
+            private val name: JsonValue,
             private val options: MultipartField<Options>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -2508,25 +2500,21 @@ private constructor(
             /**
              * Specifies the background removal extension.
              *
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("remove-bg")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun name(): Name = name.value.getRequired("name")
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
             fun options(): Optional<Options> = options.value.getOptional("options")
-
-            /**
-             * Returns the raw multipart value of [name].
-             *
-             * Unlike [name], this method doesn't throw if the multipart field has an unexpected
-             * type.
-             */
-            @JsonProperty("name") @ExcludeMissing fun _name(): MultipartField<Name> = name
 
             /**
              * Returns the raw multipart value of [options].
@@ -2552,42 +2540,37 @@ private constructor(
 
             companion object {
 
-                /**
-                 * Returns a mutable builder for constructing an instance of [RemovedotBgExtension].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .name()
-                 * ```
-                 */
+                /** Returns a mutable builder for constructing an instance of [RemoveBg]. */
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [RemovedotBgExtension]. */
+            /** A builder for [RemoveBg]. */
             class Builder internal constructor() {
 
-                private var name: MultipartField<Name>? = null
+                private var name: JsonValue = JsonValue.from("remove-bg")
                 private var options: MultipartField<Options> = MultipartField.of(null)
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(removedotBgExtension: RemovedotBgExtension) = apply {
-                    name = removedotBgExtension.name
-                    options = removedotBgExtension.options
-                    additionalProperties = removedotBgExtension.additionalProperties.toMutableMap()
+                internal fun from(removeBg: RemoveBg) = apply {
+                    name = removeBg.name
+                    options = removeBg.options
+                    additionalProperties = removeBg.additionalProperties.toMutableMap()
                 }
 
-                /** Specifies the background removal extension. */
-                fun name(name: Name) = name(MultipartField.of(name))
-
                 /**
-                 * Sets [Builder.name] to an arbitrary multipart value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.name] with a well-typed [Name] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("remove-bg")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun name(name: MultipartField<Name>) = apply { this.name = name }
+                fun name(name: JsonValue) = apply { this.name = name }
 
                 fun options(options: Options) = options(MultipartField.of(options))
 
@@ -2623,33 +2606,25 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [RemovedotBgExtension].
+                 * Returns an immutable instance of [RemoveBg].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .name()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
                  */
-                fun build(): RemovedotBgExtension =
-                    RemovedotBgExtension(
-                        checkRequired("name", name),
-                        options,
-                        additionalProperties.toMutableMap(),
-                    )
+                fun build(): RemoveBg = RemoveBg(name, options, additionalProperties.toMutableMap())
             }
 
             private var validated: Boolean = false
 
-            fun validate(): RemovedotBgExtension = apply {
+            fun validate(): RemoveBg = apply {
                 if (validated) {
                     return@apply
                 }
 
-                name().validate()
+                _name().let {
+                    if (it != JsonValue.from("remove-bg")) {
+                        throw ImageKitInvalidDataException("'name' is invalid, received $it")
+                    }
+                }
                 options().ifPresent { it.validate() }
                 validated = true
             }
@@ -2661,131 +2636,6 @@ private constructor(
                 } catch (e: ImageKitInvalidDataException) {
                     false
                 }
-
-            /** Specifies the background removal extension. */
-            class Name @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val REMOVE_BG = of("remove-bg")
-
-                    @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-                }
-
-                /** An enum containing [Name]'s known values. */
-                enum class Known {
-                    REMOVE_BG
-                }
-
-                /**
-                 * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Name] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    REMOVE_BG,
-                    /**
-                     * An enum member indicating that [Name] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        REMOVE_BG -> Value.REMOVE_BG
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        REMOVE_BG -> Known.REMOVE_BG
-                        else -> throw ImageKitInvalidDataException("Unknown Name: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Name = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Name && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             class Options
             private constructor(
@@ -3071,7 +2921,7 @@ private constructor(
                     return true
                 }
 
-                return other is RemovedotBgExtension &&
+                return other is RemoveBg &&
                     name == other.name &&
                     options == other.options &&
                     additionalProperties == other.additionalProperties
@@ -3082,7 +2932,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "RemovedotBgExtension{name=$name, options=$options, additionalProperties=$additionalProperties}"
+                "RemoveBg{name=$name, options=$options, additionalProperties=$additionalProperties}"
         }
 
         class AutoTaggingExtension
@@ -3446,283 +3296,6 @@ private constructor(
             override fun toString() =
                 "AutoTaggingExtension{maxTags=$maxTags, minConfidence=$minConfidence, name=$name, additionalProperties=$additionalProperties}"
         }
-
-        class AutoDescriptionExtension
-        private constructor(
-            private val name: MultipartField<Name>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            /**
-             * Specifies the auto description extension.
-             *
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun name(): Name = name.value.getRequired("name")
-
-            /**
-             * Returns the raw multipart value of [name].
-             *
-             * Unlike [name], this method doesn't throw if the multipart field has an unexpected
-             * type.
-             */
-            @JsonProperty("name") @ExcludeMissing fun _name(): MultipartField<Name> = name
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of
-                 * [AutoDescriptionExtension].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .name()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [AutoDescriptionExtension]. */
-            class Builder internal constructor() {
-
-                private var name: MultipartField<Name>? = null
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(autoDescriptionExtension: AutoDescriptionExtension) = apply {
-                    name = autoDescriptionExtension.name
-                    additionalProperties =
-                        autoDescriptionExtension.additionalProperties.toMutableMap()
-                }
-
-                /** Specifies the auto description extension. */
-                fun name(name: Name) = name(MultipartField.of(name))
-
-                /**
-                 * Sets [Builder.name] to an arbitrary multipart value.
-                 *
-                 * You should usually call [Builder.name] with a well-typed [Name] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun name(name: MultipartField<Name>) = apply { this.name = name }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [AutoDescriptionExtension].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .name()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): AutoDescriptionExtension =
-                    AutoDescriptionExtension(
-                        checkRequired("name", name),
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): AutoDescriptionExtension = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                name().validate()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /** Specifies the auto description extension. */
-            class Name @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val AI_AUTO_DESCRIPTION = of("ai-auto-description")
-
-                    @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-                }
-
-                /** An enum containing [Name]'s known values. */
-                enum class Known {
-                    AI_AUTO_DESCRIPTION
-                }
-
-                /**
-                 * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Name] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    AI_AUTO_DESCRIPTION,
-                    /**
-                     * An enum member indicating that [Name] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        AI_AUTO_DESCRIPTION -> Value.AI_AUTO_DESCRIPTION
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        AI_AUTO_DESCRIPTION -> Known.AI_AUTO_DESCRIPTION
-                        else -> throw ImageKitInvalidDataException("Unknown Name: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Name = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Name && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is AutoDescriptionExtension &&
-                    name == other.name &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy { Objects.hash(name, additionalProperties) }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "AutoDescriptionExtension{name=$name, additionalProperties=$additionalProperties}"
-        }
     }
 
     class ResponseField @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -3995,27 +3568,29 @@ private constructor(
                     }
             }
 
-            /**
-             * Alias for calling [addPost] with
-             * `Post.ofSimplePostTransformation(simplePostTransformation)`.
-             */
-            fun addPost(simplePostTransformation: Post.SimplePostTransformation) =
-                addPost(Post.ofSimplePostTransformation(simplePostTransformation))
-
-            /** Alias for calling [addPost] with `Post.ofConvertGifToVideo(convertGifToVideo)`. */
-            fun addPost(convertGifToVideo: Post.ConvertGifToVideo) =
-                addPost(Post.ofConvertGifToVideo(convertGifToVideo))
-
-            /** Alias for calling [addPost] with `Post.ofGenerateAThumbnail(generateAThumbnail)`. */
-            fun addPost(generateAThumbnail: Post.GenerateAThumbnail) =
-                addPost(Post.ofGenerateAThumbnail(generateAThumbnail))
+            /** Alias for calling [addPost] with `Post.ofTransformation(transformation)`. */
+            fun addPost(transformation: Post.InnerTransformation) =
+                addPost(Post.ofTransformation(transformation))
 
             /**
-             * Alias for calling [addPost] with
-             * `Post.ofAdaptiveBitrateStreaming(adaptiveBitrateStreaming)`.
+             * Alias for calling [addPost] with the following:
+             * ```java
+             * Post.InnerTransformation.builder()
+             *     .value(value)
+             *     .build()
+             * ```
              */
-            fun addPost(adaptiveBitrateStreaming: Post.AdaptiveBitrateStreaming) =
-                addPost(Post.ofAdaptiveBitrateStreaming(adaptiveBitrateStreaming))
+            fun addTransformationPost(value: String) =
+                addPost(Post.InnerTransformation.builder().value(value).build())
+
+            /** Alias for calling [addPost] with `Post.ofGifToVideo(gifToVideo)`. */
+            fun addPost(gifToVideo: Post.GifToVideo) = addPost(Post.ofGifToVideo(gifToVideo))
+
+            /** Alias for calling [addPost] with `Post.ofThumbnail(thumbnail)`. */
+            fun addPost(thumbnail: Post.Thumbnail) = addPost(Post.ofThumbnail(thumbnail))
+
+            /** Alias for calling [addPost] with `Post.ofAbs(abs)`. */
+            fun addPost(abs: Post.Abs) = addPost(Post.ofAbs(abs))
 
             /**
              * Transformation string to apply before uploading the file to the Media Library. Useful
@@ -4088,56 +3663,47 @@ private constructor(
         @JsonSerialize(using = Post.Serializer::class)
         class Post
         private constructor(
-            private val simplePostTransformation: SimplePostTransformation? = null,
-            private val convertGifToVideo: ConvertGifToVideo? = null,
-            private val generateAThumbnail: GenerateAThumbnail? = null,
-            private val adaptiveBitrateStreaming: AdaptiveBitrateStreaming? = null,
+            private val transformation: InnerTransformation? = null,
+            private val gifToVideo: GifToVideo? = null,
+            private val thumbnail: Thumbnail? = null,
+            private val abs: Abs? = null,
             private val _json: JsonValue? = null,
         ) {
 
-            fun simplePostTransformation(): Optional<SimplePostTransformation> =
-                Optional.ofNullable(simplePostTransformation)
+            fun transformation(): Optional<InnerTransformation> =
+                Optional.ofNullable(transformation)
 
-            fun convertGifToVideo(): Optional<ConvertGifToVideo> =
-                Optional.ofNullable(convertGifToVideo)
+            fun gifToVideo(): Optional<GifToVideo> = Optional.ofNullable(gifToVideo)
 
-            fun generateAThumbnail(): Optional<GenerateAThumbnail> =
-                Optional.ofNullable(generateAThumbnail)
+            fun thumbnail(): Optional<Thumbnail> = Optional.ofNullable(thumbnail)
 
-            fun adaptiveBitrateStreaming(): Optional<AdaptiveBitrateStreaming> =
-                Optional.ofNullable(adaptiveBitrateStreaming)
+            fun abs(): Optional<Abs> = Optional.ofNullable(abs)
 
-            fun isSimplePostTransformation(): Boolean = simplePostTransformation != null
+            fun isTransformation(): Boolean = transformation != null
 
-            fun isConvertGifToVideo(): Boolean = convertGifToVideo != null
+            fun isGifToVideo(): Boolean = gifToVideo != null
 
-            fun isGenerateAThumbnail(): Boolean = generateAThumbnail != null
+            fun isThumbnail(): Boolean = thumbnail != null
 
-            fun isAdaptiveBitrateStreaming(): Boolean = adaptiveBitrateStreaming != null
+            fun isAbs(): Boolean = abs != null
 
-            fun asSimplePostTransformation(): SimplePostTransformation =
-                simplePostTransformation.getOrThrow("simplePostTransformation")
+            fun asTransformation(): InnerTransformation =
+                transformation.getOrThrow("transformation")
 
-            fun asConvertGifToVideo(): ConvertGifToVideo =
-                convertGifToVideo.getOrThrow("convertGifToVideo")
+            fun asGifToVideo(): GifToVideo = gifToVideo.getOrThrow("gifToVideo")
 
-            fun asGenerateAThumbnail(): GenerateAThumbnail =
-                generateAThumbnail.getOrThrow("generateAThumbnail")
+            fun asThumbnail(): Thumbnail = thumbnail.getOrThrow("thumbnail")
 
-            fun asAdaptiveBitrateStreaming(): AdaptiveBitrateStreaming =
-                adaptiveBitrateStreaming.getOrThrow("adaptiveBitrateStreaming")
+            fun asAbs(): Abs = abs.getOrThrow("abs")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
             fun <T> accept(visitor: Visitor<T>): T =
                 when {
-                    simplePostTransformation != null ->
-                        visitor.visitSimplePostTransformation(simplePostTransformation)
-                    convertGifToVideo != null -> visitor.visitConvertGifToVideo(convertGifToVideo)
-                    generateAThumbnail != null ->
-                        visitor.visitGenerateAThumbnail(generateAThumbnail)
-                    adaptiveBitrateStreaming != null ->
-                        visitor.visitAdaptiveBitrateStreaming(adaptiveBitrateStreaming)
+                    transformation != null -> visitor.visitTransformation(transformation)
+                    gifToVideo != null -> visitor.visitGifToVideo(gifToVideo)
+                    thumbnail != null -> visitor.visitThumbnail(thumbnail)
+                    abs != null -> visitor.visitAbs(abs)
                     else -> visitor.unknown(_json)
                 }
 
@@ -4150,26 +3716,20 @@ private constructor(
 
                 accept(
                     object : Visitor<Unit> {
-                        override fun visitSimplePostTransformation(
-                            simplePostTransformation: SimplePostTransformation
-                        ) {
-                            simplePostTransformation.validate()
+                        override fun visitTransformation(transformation: InnerTransformation) {
+                            transformation.validate()
                         }
 
-                        override fun visitConvertGifToVideo(convertGifToVideo: ConvertGifToVideo) {
-                            convertGifToVideo.validate()
+                        override fun visitGifToVideo(gifToVideo: GifToVideo) {
+                            gifToVideo.validate()
                         }
 
-                        override fun visitGenerateAThumbnail(
-                            generateAThumbnail: GenerateAThumbnail
-                        ) {
-                            generateAThumbnail.validate()
+                        override fun visitThumbnail(thumbnail: Thumbnail) {
+                            thumbnail.validate()
                         }
 
-                        override fun visitAdaptiveBitrateStreaming(
-                            adaptiveBitrateStreaming: AdaptiveBitrateStreaming
-                        ) {
-                            adaptiveBitrateStreaming.validate()
+                        override fun visitAbs(abs: Abs) {
+                            abs.validate()
                         }
                     }
                 )
@@ -4194,20 +3754,14 @@ private constructor(
             internal fun validity(): Int =
                 accept(
                     object : Visitor<Int> {
-                        override fun visitSimplePostTransformation(
-                            simplePostTransformation: SimplePostTransformation
-                        ) = simplePostTransformation.validity()
+                        override fun visitTransformation(transformation: InnerTransformation) =
+                            transformation.validity()
 
-                        override fun visitConvertGifToVideo(convertGifToVideo: ConvertGifToVideo) =
-                            convertGifToVideo.validity()
+                        override fun visitGifToVideo(gifToVideo: GifToVideo) = gifToVideo.validity()
 
-                        override fun visitGenerateAThumbnail(
-                            generateAThumbnail: GenerateAThumbnail
-                        ) = generateAThumbnail.validity()
+                        override fun visitThumbnail(thumbnail: Thumbnail) = thumbnail.validity()
 
-                        override fun visitAdaptiveBitrateStreaming(
-                            adaptiveBitrateStreaming: AdaptiveBitrateStreaming
-                        ) = adaptiveBitrateStreaming.validity()
+                        override fun visitAbs(abs: Abs) = abs.validity()
 
                         override fun unknown(json: JsonValue?) = 0
                     }
@@ -4219,28 +3773,20 @@ private constructor(
                 }
 
                 return other is Post &&
-                    simplePostTransformation == other.simplePostTransformation &&
-                    convertGifToVideo == other.convertGifToVideo &&
-                    generateAThumbnail == other.generateAThumbnail &&
-                    adaptiveBitrateStreaming == other.adaptiveBitrateStreaming
+                    transformation == other.transformation &&
+                    gifToVideo == other.gifToVideo &&
+                    thumbnail == other.thumbnail &&
+                    abs == other.abs
             }
 
-            override fun hashCode(): Int =
-                Objects.hash(
-                    simplePostTransformation,
-                    convertGifToVideo,
-                    generateAThumbnail,
-                    adaptiveBitrateStreaming,
-                )
+            override fun hashCode(): Int = Objects.hash(transformation, gifToVideo, thumbnail, abs)
 
             override fun toString(): String =
                 when {
-                    simplePostTransformation != null ->
-                        "Post{simplePostTransformation=$simplePostTransformation}"
-                    convertGifToVideo != null -> "Post{convertGifToVideo=$convertGifToVideo}"
-                    generateAThumbnail != null -> "Post{generateAThumbnail=$generateAThumbnail}"
-                    adaptiveBitrateStreaming != null ->
-                        "Post{adaptiveBitrateStreaming=$adaptiveBitrateStreaming}"
+                    transformation != null -> "Post{transformation=$transformation}"
+                    gifToVideo != null -> "Post{gifToVideo=$gifToVideo}"
+                    thumbnail != null -> "Post{thumbnail=$thumbnail}"
+                    abs != null -> "Post{abs=$abs}"
                     _json != null -> "Post{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid Post")
                 }
@@ -4248,20 +3794,14 @@ private constructor(
             companion object {
 
                 @JvmStatic
-                fun ofSimplePostTransformation(simplePostTransformation: SimplePostTransformation) =
-                    Post(simplePostTransformation = simplePostTransformation)
+                fun ofTransformation(transformation: InnerTransformation) =
+                    Post(transformation = transformation)
 
-                @JvmStatic
-                fun ofConvertGifToVideo(convertGifToVideo: ConvertGifToVideo) =
-                    Post(convertGifToVideo = convertGifToVideo)
+                @JvmStatic fun ofGifToVideo(gifToVideo: GifToVideo) = Post(gifToVideo = gifToVideo)
 
-                @JvmStatic
-                fun ofGenerateAThumbnail(generateAThumbnail: GenerateAThumbnail) =
-                    Post(generateAThumbnail = generateAThumbnail)
+                @JvmStatic fun ofThumbnail(thumbnail: Thumbnail) = Post(thumbnail = thumbnail)
 
-                @JvmStatic
-                fun ofAdaptiveBitrateStreaming(adaptiveBitrateStreaming: AdaptiveBitrateStreaming) =
-                    Post(adaptiveBitrateStreaming = adaptiveBitrateStreaming)
+                @JvmStatic fun ofAbs(abs: Abs) = Post(abs = abs)
             }
 
             /**
@@ -4269,17 +3809,13 @@ private constructor(
              */
             interface Visitor<out T> {
 
-                fun visitSimplePostTransformation(
-                    simplePostTransformation: SimplePostTransformation
-                ): T
+                fun visitTransformation(transformation: InnerTransformation): T
 
-                fun visitConvertGifToVideo(convertGifToVideo: ConvertGifToVideo): T
+                fun visitGifToVideo(gifToVideo: GifToVideo): T
 
-                fun visitGenerateAThumbnail(generateAThumbnail: GenerateAThumbnail): T
+                fun visitThumbnail(thumbnail: Thumbnail): T
 
-                fun visitAdaptiveBitrateStreaming(
-                    adaptiveBitrateStreaming: AdaptiveBitrateStreaming
-                ): T
+                fun visitAbs(abs: Abs): T
 
                 /**
                  * Maps an unknown variant of [Post] to a value of type [T].
@@ -4300,33 +3836,32 @@ private constructor(
 
                 override fun ObjectCodec.deserialize(node: JsonNode): Post {
                     val json = JsonValue.fromJsonNode(node)
+                    val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-                    val bestMatches =
-                        sequenceOf(
-                                tryDeserialize(node, jacksonTypeRef<SimplePostTransformation>())
-                                    ?.let { Post(simplePostTransformation = it, _json = json) },
-                                tryDeserialize(node, jacksonTypeRef<ConvertGifToVideo>())?.let {
-                                    Post(convertGifToVideo = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<GenerateAThumbnail>())?.let {
-                                    Post(generateAThumbnail = it, _json = json)
-                                },
-                                tryDeserialize(node, jacksonTypeRef<AdaptiveBitrateStreaming>())
-                                    ?.let { Post(adaptiveBitrateStreaming = it, _json = json) },
-                            )
-                            .filterNotNull()
-                            .allMaxBy { it.validity() }
-                            .toList()
-                    return when (bestMatches.size) {
-                        // This can happen if what we're deserializing is completely incompatible
-                        // with all the possible variants (e.g. deserializing from boolean).
-                        0 -> Post(_json = json)
-                        1 -> bestMatches.single()
-                        // If there's more than one match with the highest validity, then use the
-                        // first completely valid match, or simply the first match if none are
-                        // completely valid.
-                        else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                    when (type) {
+                        "transformation" -> {
+                            return tryDeserialize(node, jacksonTypeRef<InnerTransformation>())
+                                ?.let { Post(transformation = it, _json = json) }
+                                ?: Post(_json = json)
+                        }
+                        "gif-to-video" -> {
+                            return tryDeserialize(node, jacksonTypeRef<GifToVideo>())?.let {
+                                Post(gifToVideo = it, _json = json)
+                            } ?: Post(_json = json)
+                        }
+                        "thumbnail" -> {
+                            return tryDeserialize(node, jacksonTypeRef<Thumbnail>())?.let {
+                                Post(thumbnail = it, _json = json)
+                            } ?: Post(_json = json)
+                        }
+                        "abs" -> {
+                            return tryDeserialize(node, jacksonTypeRef<Abs>())?.let {
+                                Post(abs = it, _json = json)
+                            } ?: Post(_json = json)
+                        }
                     }
+
+                    return Post(_json = json)
                 }
             }
 
@@ -4338,23 +3873,19 @@ private constructor(
                     provider: SerializerProvider,
                 ) {
                     when {
-                        value.simplePostTransformation != null ->
-                            generator.writeObject(value.simplePostTransformation)
-                        value.convertGifToVideo != null ->
-                            generator.writeObject(value.convertGifToVideo)
-                        value.generateAThumbnail != null ->
-                            generator.writeObject(value.generateAThumbnail)
-                        value.adaptiveBitrateStreaming != null ->
-                            generator.writeObject(value.adaptiveBitrateStreaming)
+                        value.transformation != null -> generator.writeObject(value.transformation)
+                        value.gifToVideo != null -> generator.writeObject(value.gifToVideo)
+                        value.thumbnail != null -> generator.writeObject(value.thumbnail)
+                        value.abs != null -> generator.writeObject(value.abs)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid Post")
                     }
                 }
             }
 
-            class SimplePostTransformation
+            class InnerTransformation
             private constructor(
-                private val type: MultipartField<Type>,
+                private val type: JsonValue,
                 private val value: MultipartField<String>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
@@ -4362,11 +3893,15 @@ private constructor(
                 /**
                  * Transformation type.
                  *
-                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
-                 *   is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 * Expected to always return the following:
+                 * ```java
+                 * JsonValue.from("transformation")
+                 * ```
+                 *
+                 * However, this method can be useful for debugging and logging (e.g. if the server
+                 * responded with an unexpected value).
                  */
-                fun type(): Type = type.value.getRequired("type")
+                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
                 /**
                  * Transformation string (e.g. `w-200,h-200`). Same syntax as ImageKit URL-based
@@ -4377,14 +3912,6 @@ private constructor(
                  *   unexpected value).
                  */
                 fun value(): String = value.value.getRequired("value")
-
-                /**
-                 * Returns the raw multipart value of [type].
-                 *
-                 * Unlike [type], this method doesn't throw if the multipart field has an unexpected
-                 * type.
-                 */
-                @JsonProperty("type") @ExcludeMissing fun _type(): MultipartField<Type> = type
 
                 /**
                  * Returns the raw multipart value of [value].
@@ -4410,43 +3937,44 @@ private constructor(
 
                     /**
                      * Returns a mutable builder for constructing an instance of
-                     * [SimplePostTransformation].
+                     * [InnerTransformation].
                      *
                      * The following fields are required:
                      * ```java
-                     * .type()
                      * .value()
                      * ```
                      */
                     @JvmStatic fun builder() = Builder()
                 }
 
-                /** A builder for [SimplePostTransformation]. */
+                /** A builder for [InnerTransformation]. */
                 class Builder internal constructor() {
 
-                    private var type: MultipartField<Type>? = null
+                    private var type: JsonValue = JsonValue.from("transformation")
                     private var value: MultipartField<String>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(simplePostTransformation: SimplePostTransformation) = apply {
-                        type = simplePostTransformation.type
-                        value = simplePostTransformation.value
+                    internal fun from(innerTransformation: InnerTransformation) = apply {
+                        type = innerTransformation.type
+                        value = innerTransformation.value
                         additionalProperties =
-                            simplePostTransformation.additionalProperties.toMutableMap()
+                            innerTransformation.additionalProperties.toMutableMap()
                     }
 
-                    /** Transformation type. */
-                    fun type(type: Type) = type(MultipartField.of(type))
-
                     /**
-                     * Sets [Builder.type] to an arbitrary multipart value.
+                     * Sets the field to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.type] with a well-typed [Type] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * It is usually unnecessary to call this method because the field defaults to
+                     * the following:
+                     * ```java
+                     * JsonValue.from("transformation")
+                     * ```
+                     *
+                     * This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun type(type: MultipartField<Type>) = apply { this.type = type }
+                    fun type(type: JsonValue) = apply { this.type = type }
 
                     /**
                      * Transformation string (e.g. `w-200,h-200`). Same syntax as ImageKit URL-based
@@ -4486,21 +4014,20 @@ private constructor(
                     }
 
                     /**
-                     * Returns an immutable instance of [SimplePostTransformation].
+                     * Returns an immutable instance of [InnerTransformation].
                      *
                      * Further updates to this [Builder] will not mutate the returned instance.
                      *
                      * The following fields are required:
                      * ```java
-                     * .type()
                      * .value()
                      * ```
                      *
                      * @throws IllegalStateException if any required field is unset.
                      */
-                    fun build(): SimplePostTransformation =
-                        SimplePostTransformation(
-                            checkRequired("type", type),
+                    fun build(): InnerTransformation =
+                        InnerTransformation(
+                            type,
                             checkRequired("value", value),
                             additionalProperties.toMutableMap(),
                         )
@@ -4508,12 +4035,16 @@ private constructor(
 
                 private var validated: Boolean = false
 
-                fun validate(): SimplePostTransformation = apply {
+                fun validate(): InnerTransformation = apply {
                     if (validated) {
                         return@apply
                     }
 
-                    type().validate()
+                    _type().let {
+                        if (it != JsonValue.from("transformation")) {
+                            throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                        }
+                    }
                     value()
                     validated = true
                 }
@@ -4526,140 +4057,12 @@ private constructor(
                         false
                     }
 
-                /** Transformation type. */
-                class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                    Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val TRANSFORMATION = of("transformation")
-
-                        @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                    }
-
-                    /** An enum containing [Type]'s known values. */
-                    enum class Known {
-                        TRANSFORMATION
-                    }
-
-                    /**
-                     * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                     *
-                     * An instance of [Type] can contain an unknown value in a couple of cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        TRANSFORMATION,
-                        /**
-                         * An enum member indicating that [Type] was instantiated with an unknown
-                         * value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            TRANSFORMATION -> Value.TRANSFORMATION
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            TRANSFORMATION -> Known.TRANSFORMATION
-                            else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): Type = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is Type && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
-                }
-
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
                     }
 
-                    return other is SimplePostTransformation &&
+                    return other is InnerTransformation &&
                         type == other.type &&
                         value == other.value &&
                         additionalProperties == other.additionalProperties
@@ -4672,12 +4075,12 @@ private constructor(
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "SimplePostTransformation{type=$type, value=$value, additionalProperties=$additionalProperties}"
+                    "InnerTransformation{type=$type, value=$value, additionalProperties=$additionalProperties}"
             }
 
-            class ConvertGifToVideo
+            class GifToVideo
             private constructor(
-                private val type: MultipartField<Type>,
+                private val type: JsonValue,
                 private val value: MultipartField<String>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
@@ -4685,11 +4088,15 @@ private constructor(
                 /**
                  * Converts an animated GIF into an MP4.
                  *
-                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
-                 *   is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 * Expected to always return the following:
+                 * ```java
+                 * JsonValue.from("gif-to-video")
+                 * ```
+                 *
+                 * However, this method can be useful for debugging and logging (e.g. if the server
+                 * responded with an unexpected value).
                  */
-                fun type(): Type = type.value.getRequired("type")
+                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
                 /**
                  * Optional transformation string to apply to the output video. **Example**: `q-80`
@@ -4698,14 +4105,6 @@ private constructor(
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun value(): Optional<String> = value.value.getOptional("value")
-
-                /**
-                 * Returns the raw multipart value of [type].
-                 *
-                 * Unlike [type], this method doesn't throw if the multipart field has an unexpected
-                 * type.
-                 */
-                @JsonProperty("type") @ExcludeMissing fun _type(): MultipartField<Type> = type
 
                 /**
                  * Returns the raw multipart value of [value].
@@ -4729,43 +4128,37 @@ private constructor(
 
                 companion object {
 
-                    /**
-                     * Returns a mutable builder for constructing an instance of
-                     * [ConvertGifToVideo].
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .type()
-                     * ```
-                     */
+                    /** Returns a mutable builder for constructing an instance of [GifToVideo]. */
                     @JvmStatic fun builder() = Builder()
                 }
 
-                /** A builder for [ConvertGifToVideo]. */
+                /** A builder for [GifToVideo]. */
                 class Builder internal constructor() {
 
-                    private var type: MultipartField<Type>? = null
+                    private var type: JsonValue = JsonValue.from("gif-to-video")
                     private var value: MultipartField<String> = MultipartField.of(null)
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(convertGifToVideo: ConvertGifToVideo) = apply {
-                        type = convertGifToVideo.type
-                        value = convertGifToVideo.value
-                        additionalProperties = convertGifToVideo.additionalProperties.toMutableMap()
+                    internal fun from(gifToVideo: GifToVideo) = apply {
+                        type = gifToVideo.type
+                        value = gifToVideo.value
+                        additionalProperties = gifToVideo.additionalProperties.toMutableMap()
                     }
 
-                    /** Converts an animated GIF into an MP4. */
-                    fun type(type: Type) = type(MultipartField.of(type))
-
                     /**
-                     * Sets [Builder.type] to an arbitrary multipart value.
+                     * Sets the field to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.type] with a well-typed [Type] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * It is usually unnecessary to call this method because the field defaults to
+                     * the following:
+                     * ```java
+                     * JsonValue.from("gif-to-video")
+                     * ```
+                     *
+                     * This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun type(type: MultipartField<Type>) = apply { this.type = type }
+                    fun type(type: JsonValue) = apply { this.type = type }
 
                     /**
                      * Optional transformation string to apply to the output video. **Example**:
@@ -4805,33 +4198,26 @@ private constructor(
                     }
 
                     /**
-                     * Returns an immutable instance of [ConvertGifToVideo].
+                     * Returns an immutable instance of [GifToVideo].
                      *
                      * Further updates to this [Builder] will not mutate the returned instance.
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .type()
-                     * ```
-                     *
-                     * @throws IllegalStateException if any required field is unset.
                      */
-                    fun build(): ConvertGifToVideo =
-                        ConvertGifToVideo(
-                            checkRequired("type", type),
-                            value,
-                            additionalProperties.toMutableMap(),
-                        )
+                    fun build(): GifToVideo =
+                        GifToVideo(type, value, additionalProperties.toMutableMap())
                 }
 
                 private var validated: Boolean = false
 
-                fun validate(): ConvertGifToVideo = apply {
+                fun validate(): GifToVideo = apply {
                     if (validated) {
                         return@apply
                     }
 
-                    type().validate()
+                    _type().let {
+                        if (it != JsonValue.from("gif-to-video")) {
+                            throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                        }
+                    }
                     value()
                     validated = true
                 }
@@ -4844,140 +4230,12 @@ private constructor(
                         false
                     }
 
-                /** Converts an animated GIF into an MP4. */
-                class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                    Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val GIF_TO_VIDEO = of("gif-to-video")
-
-                        @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                    }
-
-                    /** An enum containing [Type]'s known values. */
-                    enum class Known {
-                        GIF_TO_VIDEO
-                    }
-
-                    /**
-                     * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                     *
-                     * An instance of [Type] can contain an unknown value in a couple of cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        GIF_TO_VIDEO,
-                        /**
-                         * An enum member indicating that [Type] was instantiated with an unknown
-                         * value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            GIF_TO_VIDEO -> Value.GIF_TO_VIDEO
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            GIF_TO_VIDEO -> Known.GIF_TO_VIDEO
-                            else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): Type = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is Type && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
-                }
-
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
                     }
 
-                    return other is ConvertGifToVideo &&
+                    return other is GifToVideo &&
                         type == other.type &&
                         value == other.value &&
                         additionalProperties == other.additionalProperties
@@ -4990,12 +4248,12 @@ private constructor(
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "ConvertGifToVideo{type=$type, value=$value, additionalProperties=$additionalProperties}"
+                    "GifToVideo{type=$type, value=$value, additionalProperties=$additionalProperties}"
             }
 
-            class GenerateAThumbnail
+            class Thumbnail
             private constructor(
-                private val type: MultipartField<Type>,
+                private val type: JsonValue,
                 private val value: MultipartField<String>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
@@ -5003,11 +4261,15 @@ private constructor(
                 /**
                  * Generates a thumbnail image.
                  *
-                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
-                 *   is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 * Expected to always return the following:
+                 * ```java
+                 * JsonValue.from("thumbnail")
+                 * ```
+                 *
+                 * However, this method can be useful for debugging and logging (e.g. if the server
+                 * responded with an unexpected value).
                  */
-                fun type(): Type = type.value.getRequired("type")
+                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
                 /**
                  * Optional transformation string. **Example**: `w-150,h-150`
@@ -5016,14 +4278,6 @@ private constructor(
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun value(): Optional<String> = value.value.getOptional("value")
-
-                /**
-                 * Returns the raw multipart value of [type].
-                 *
-                 * Unlike [type], this method doesn't throw if the multipart field has an unexpected
-                 * type.
-                 */
-                @JsonProperty("type") @ExcludeMissing fun _type(): MultipartField<Type> = type
 
                 /**
                  * Returns the raw multipart value of [value].
@@ -5047,44 +4301,37 @@ private constructor(
 
                 companion object {
 
-                    /**
-                     * Returns a mutable builder for constructing an instance of
-                     * [GenerateAThumbnail].
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .type()
-                     * ```
-                     */
+                    /** Returns a mutable builder for constructing an instance of [Thumbnail]. */
                     @JvmStatic fun builder() = Builder()
                 }
 
-                /** A builder for [GenerateAThumbnail]. */
+                /** A builder for [Thumbnail]. */
                 class Builder internal constructor() {
 
-                    private var type: MultipartField<Type>? = null
+                    private var type: JsonValue = JsonValue.from("thumbnail")
                     private var value: MultipartField<String> = MultipartField.of(null)
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(generateAThumbnail: GenerateAThumbnail) = apply {
-                        type = generateAThumbnail.type
-                        value = generateAThumbnail.value
-                        additionalProperties =
-                            generateAThumbnail.additionalProperties.toMutableMap()
+                    internal fun from(thumbnail: Thumbnail) = apply {
+                        type = thumbnail.type
+                        value = thumbnail.value
+                        additionalProperties = thumbnail.additionalProperties.toMutableMap()
                     }
 
-                    /** Generates a thumbnail image. */
-                    fun type(type: Type) = type(MultipartField.of(type))
-
                     /**
-                     * Sets [Builder.type] to an arbitrary multipart value.
+                     * Sets the field to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.type] with a well-typed [Type] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * It is usually unnecessary to call this method because the field defaults to
+                     * the following:
+                     * ```java
+                     * JsonValue.from("thumbnail")
+                     * ```
+                     *
+                     * This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun type(type: MultipartField<Type>) = apply { this.type = type }
+                    fun type(type: JsonValue) = apply { this.type = type }
 
                     /** Optional transformation string. **Example**: `w-150,h-150` */
                     fun value(value: String) = value(MultipartField.of(value))
@@ -5121,33 +4368,26 @@ private constructor(
                     }
 
                     /**
-                     * Returns an immutable instance of [GenerateAThumbnail].
+                     * Returns an immutable instance of [Thumbnail].
                      *
                      * Further updates to this [Builder] will not mutate the returned instance.
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .type()
-                     * ```
-                     *
-                     * @throws IllegalStateException if any required field is unset.
                      */
-                    fun build(): GenerateAThumbnail =
-                        GenerateAThumbnail(
-                            checkRequired("type", type),
-                            value,
-                            additionalProperties.toMutableMap(),
-                        )
+                    fun build(): Thumbnail =
+                        Thumbnail(type, value, additionalProperties.toMutableMap())
                 }
 
                 private var validated: Boolean = false
 
-                fun validate(): GenerateAThumbnail = apply {
+                fun validate(): Thumbnail = apply {
                     if (validated) {
                         return@apply
                     }
 
-                    type().validate()
+                    _type().let {
+                        if (it != JsonValue.from("thumbnail")) {
+                            throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                        }
+                    }
                     value()
                     validated = true
                 }
@@ -5160,140 +4400,12 @@ private constructor(
                         false
                     }
 
-                /** Generates a thumbnail image. */
-                class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                    Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val THUMBNAIL = of("thumbnail")
-
-                        @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                    }
-
-                    /** An enum containing [Type]'s known values. */
-                    enum class Known {
-                        THUMBNAIL
-                    }
-
-                    /**
-                     * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                     *
-                     * An instance of [Type] can contain an unknown value in a couple of cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        THUMBNAIL,
-                        /**
-                         * An enum member indicating that [Type] was instantiated with an unknown
-                         * value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            THUMBNAIL -> Value.THUMBNAIL
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            THUMBNAIL -> Known.THUMBNAIL
-                            else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): Type = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is Type && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
-                }
-
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
                     }
 
-                    return other is GenerateAThumbnail &&
+                    return other is Thumbnail &&
                         type == other.type &&
                         value == other.value &&
                         additionalProperties == other.additionalProperties
@@ -5306,13 +4418,13 @@ private constructor(
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "GenerateAThumbnail{type=$type, value=$value, additionalProperties=$additionalProperties}"
+                    "Thumbnail{type=$type, value=$value, additionalProperties=$additionalProperties}"
             }
 
-            class AdaptiveBitrateStreaming
+            class Abs
             private constructor(
                 private val protocol: MultipartField<Protocol>,
-                private val type: MultipartField<Type>,
+                private val type: JsonValue,
                 private val value: MultipartField<String>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
@@ -5329,11 +4441,15 @@ private constructor(
                 /**
                  * Adaptive Bitrate Streaming (ABS) setup.
                  *
-                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
-                 *   is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
+                 * Expected to always return the following:
+                 * ```java
+                 * JsonValue.from("abs")
+                 * ```
+                 *
+                 * However, this method can be useful for debugging and logging (e.g. if the server
+                 * responded with an unexpected value).
                  */
-                fun type(): Type = type.value.getRequired("type")
+                @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
                 /**
                  * List of different representations you want to create separated by an underscore.
@@ -5353,14 +4469,6 @@ private constructor(
                 @JsonProperty("protocol")
                 @ExcludeMissing
                 fun _protocol(): MultipartField<Protocol> = protocol
-
-                /**
-                 * Returns the raw multipart value of [type].
-                 *
-                 * Unlike [type], this method doesn't throw if the multipart field has an unexpected
-                 * type.
-                 */
-                @JsonProperty("type") @ExcludeMissing fun _type(): MultipartField<Type> = type
 
                 /**
                  * Returns the raw multipart value of [value].
@@ -5385,34 +4493,31 @@ private constructor(
                 companion object {
 
                     /**
-                     * Returns a mutable builder for constructing an instance of
-                     * [AdaptiveBitrateStreaming].
+                     * Returns a mutable builder for constructing an instance of [Abs].
                      *
                      * The following fields are required:
                      * ```java
                      * .protocol()
-                     * .type()
                      * .value()
                      * ```
                      */
                     @JvmStatic fun builder() = Builder()
                 }
 
-                /** A builder for [AdaptiveBitrateStreaming]. */
+                /** A builder for [Abs]. */
                 class Builder internal constructor() {
 
                     private var protocol: MultipartField<Protocol>? = null
-                    private var type: MultipartField<Type>? = null
+                    private var type: JsonValue = JsonValue.from("abs")
                     private var value: MultipartField<String>? = null
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
-                    internal fun from(adaptiveBitrateStreaming: AdaptiveBitrateStreaming) = apply {
-                        protocol = adaptiveBitrateStreaming.protocol
-                        type = adaptiveBitrateStreaming.type
-                        value = adaptiveBitrateStreaming.value
-                        additionalProperties =
-                            adaptiveBitrateStreaming.additionalProperties.toMutableMap()
+                    internal fun from(abs: Abs) = apply {
+                        protocol = abs.protocol
+                        type = abs.type
+                        value = abs.value
+                        additionalProperties = abs.additionalProperties.toMutableMap()
                     }
 
                     /** Streaming protocol to use (`hls` or `dash`). */
@@ -5429,17 +4534,19 @@ private constructor(
                         this.protocol = protocol
                     }
 
-                    /** Adaptive Bitrate Streaming (ABS) setup. */
-                    fun type(type: Type) = type(MultipartField.of(type))
-
                     /**
-                     * Sets [Builder.type] to an arbitrary multipart value.
+                     * Sets the field to an arbitrary JSON value.
                      *
-                     * You should usually call [Builder.type] with a well-typed [Type] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
+                     * It is usually unnecessary to call this method because the field defaults to
+                     * the following:
+                     * ```java
+                     * JsonValue.from("abs")
+                     * ```
+                     *
+                     * This method is primarily for setting the field to an undocumented or not yet
+                     * supported value.
                      */
-                    fun type(type: MultipartField<Type>) = apply { this.type = type }
+                    fun type(type: JsonValue) = apply { this.type = type }
 
                     /**
                      * List of different representations you want to create separated by an
@@ -5479,23 +4586,22 @@ private constructor(
                     }
 
                     /**
-                     * Returns an immutable instance of [AdaptiveBitrateStreaming].
+                     * Returns an immutable instance of [Abs].
                      *
                      * Further updates to this [Builder] will not mutate the returned instance.
                      *
                      * The following fields are required:
                      * ```java
                      * .protocol()
-                     * .type()
                      * .value()
                      * ```
                      *
                      * @throws IllegalStateException if any required field is unset.
                      */
-                    fun build(): AdaptiveBitrateStreaming =
-                        AdaptiveBitrateStreaming(
+                    fun build(): Abs =
+                        Abs(
                             checkRequired("protocol", protocol),
-                            checkRequired("type", type),
+                            type,
                             checkRequired("value", value),
                             additionalProperties.toMutableMap(),
                         )
@@ -5503,13 +4609,17 @@ private constructor(
 
                 private var validated: Boolean = false
 
-                fun validate(): AdaptiveBitrateStreaming = apply {
+                fun validate(): Abs = apply {
                     if (validated) {
                         return@apply
                     }
 
                     protocol().validate()
-                    type().validate()
+                    _type().let {
+                        if (it != JsonValue.from("abs")) {
+                            throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                        }
+                    }
                     value()
                     validated = true
                 }
@@ -5658,140 +4768,12 @@ private constructor(
                     override fun toString() = value.toString()
                 }
 
-                /** Adaptive Bitrate Streaming (ABS) setup. */
-                class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                    Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val ABS = of("abs")
-
-                        @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                    }
-
-                    /** An enum containing [Type]'s known values. */
-                    enum class Known {
-                        ABS
-                    }
-
-                    /**
-                     * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                     *
-                     * An instance of [Type] can contain an unknown value in a couple of cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        ABS,
-                        /**
-                         * An enum member indicating that [Type] was instantiated with an unknown
-                         * value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            ABS -> Value.ABS
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            ABS -> Known.ABS
-                            else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): Type = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is Type && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
-                }
-
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
                     }
 
-                    return other is AdaptiveBitrateStreaming &&
+                    return other is Abs &&
                         protocol == other.protocol &&
                         type == other.type &&
                         value == other.value &&
@@ -5805,7 +4787,7 @@ private constructor(
                 override fun hashCode(): Int = hashCode
 
                 override fun toString() =
-                    "AdaptiveBitrateStreaming{protocol=$protocol, type=$type, value=$value, additionalProperties=$additionalProperties}"
+                    "Abs{protocol=$protocol, type=$type, value=$value, additionalProperties=$additionalProperties}"
             }
         }
 

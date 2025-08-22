@@ -16,8 +16,7 @@ internal class UrlEndpointUpdateParamsTest {
             .addOrigin("origin-id-1")
             .urlPrefix("product-images")
             .urlRewriter(
-                UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.builder()
-                    .type(UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.Type.CLOUDINARY)
+                UrlEndpointUpdateParams.UrlRewriter.Cloudinary.builder()
                     .preserveAssetDeliveryTypes(true)
                     .build()
             )
@@ -43,11 +42,7 @@ internal class UrlEndpointUpdateParamsTest {
                 .addOrigin("origin-id-1")
                 .urlPrefix("product-images")
                 .urlRewriter(
-                    UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.builder()
-                        .type(
-                            UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.Type
-                                .CLOUDINARY
-                        )
+                    UrlEndpointUpdateParams.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )
@@ -61,11 +56,7 @@ internal class UrlEndpointUpdateParamsTest {
         assertThat(body.urlRewriter())
             .contains(
                 UrlEndpointUpdateParams.UrlRewriter.ofCloudinary(
-                    UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.builder()
-                        .type(
-                            UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.Type
-                                .CLOUDINARY
-                        )
+                    UrlEndpointUpdateParams.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )

@@ -31,11 +31,7 @@ internal class UrlEndpointServiceTest {
                     .addOrigin("origin-id-1")
                     .urlPrefix("product-images")
                     .urlRewriter(
-                        UrlEndpointCreateParams.UrlRewriter.CloudinaryUrlRewriter.builder()
-                            .type(
-                                UrlEndpointCreateParams.UrlRewriter.CloudinaryUrlRewriter.Type
-                                    .CLOUDINARY
-                            )
+                        UrlEndpointCreateParams.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
                             .build()
                     )
@@ -64,11 +60,7 @@ internal class UrlEndpointServiceTest {
                     .addOrigin("origin-id-1")
                     .urlPrefix("product-images")
                     .urlRewriter(
-                        UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.builder()
-                            .type(
-                                UrlEndpointUpdateParams.UrlRewriter.CloudinaryUrlRewriter.Type
-                                    .CLOUDINARY
-                            )
+                        UrlEndpointUpdateParams.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
                             .build()
                     )

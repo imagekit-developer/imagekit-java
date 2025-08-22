@@ -27,10 +27,9 @@ internal class FileUploadParamsTest {
             .description("Running shoes")
             .expire(0L)
             .addExtension(
-                FileUploadParams.Extension.RemovedotBgExtension.builder()
-                    .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
+                FileUploadParams.Extension.RemoveBg.builder()
                     .options(
-                        FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
+                        FileUploadParams.Extension.RemoveBg.Options.builder()
                             .addShadow(true)
                             .bgColor("bg_color")
                             .bgImageUrl("bg_image_url")
@@ -66,25 +65,13 @@ internal class FileUploadParamsTest {
             .transformation(
                 FileUploadParams.Transformation.builder()
                     .addPost(
-                        FileUploadParams.Transformation.Post.GenerateAThumbnail.builder()
-                            .type(
-                                FileUploadParams.Transformation.Post.GenerateAThumbnail.Type
-                                    .THUMBNAIL
-                            )
+                        FileUploadParams.Transformation.Post.Thumbnail.builder()
                             .value("w-150,h-150")
                             .build()
                     )
                     .addPost(
-                        FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming.builder()
-                            .protocol(
-                                FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
-                                    .Protocol
-                                    .DASH
-                            )
-                            .type(
-                                FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming.Type
-                                    .ABS
-                            )
+                        FileUploadParams.Transformation.Post.Abs.builder()
+                            .protocol(FileUploadParams.Transformation.Post.Abs.Protocol.DASH)
                             .value("sr-240_360_480_720_1080")
                             .build()
                     )
@@ -114,10 +101,9 @@ internal class FileUploadParamsTest {
                 .description("Running shoes")
                 .expire(0L)
                 .addExtension(
-                    FileUploadParams.Extension.RemovedotBgExtension.builder()
-                        .name(FileUploadParams.Extension.RemovedotBgExtension.Name.REMOVE_BG)
+                    FileUploadParams.Extension.RemoveBg.builder()
                         .options(
-                            FileUploadParams.Extension.RemovedotBgExtension.Options.builder()
+                            FileUploadParams.Extension.RemoveBg.Options.builder()
                                 .addShadow(true)
                                 .bgColor("bg_color")
                                 .bgImageUrl("bg_image_url")
@@ -155,26 +141,13 @@ internal class FileUploadParamsTest {
                 .transformation(
                     FileUploadParams.Transformation.builder()
                         .addPost(
-                            FileUploadParams.Transformation.Post.GenerateAThumbnail.builder()
-                                .type(
-                                    FileUploadParams.Transformation.Post.GenerateAThumbnail.Type
-                                        .THUMBNAIL
-                                )
+                            FileUploadParams.Transformation.Post.Thumbnail.builder()
                                 .value("w-150,h-150")
                                 .build()
                         )
                         .addPost(
-                            FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming.builder()
-                                .protocol(
-                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
-                                        .Protocol
-                                        .DASH
-                                )
-                                .type(
-                                    FileUploadParams.Transformation.Post.AdaptiveBitrateStreaming
-                                        .Type
-                                        .ABS
-                                )
+                            FileUploadParams.Transformation.Post.Abs.builder()
+                                .protocol(FileUploadParams.Transformation.Post.Abs.Protocol.DASH)
                                 .value("sr-240_360_480_720_1080")
                                 .build()
                         )
@@ -214,15 +187,10 @@ internal class FileUploadParamsTest {
                         "extensions" to
                             MultipartField.of(
                                 listOf(
-                                    FileUploadParams.Extension.ofRemovedotBg(
-                                        FileUploadParams.Extension.RemovedotBgExtension.builder()
-                                            .name(
-                                                FileUploadParams.Extension.RemovedotBgExtension.Name
-                                                    .REMOVE_BG
-                                            )
+                                    FileUploadParams.Extension.ofRemoveBg(
+                                        FileUploadParams.Extension.RemoveBg.builder()
                                             .options(
-                                                FileUploadParams.Extension.RemovedotBgExtension
-                                                    .Options
+                                                FileUploadParams.Extension.RemoveBg.Options
                                                     .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
@@ -266,32 +234,15 @@ internal class FileUploadParamsTest {
                             MultipartField.of(
                                 FileUploadParams.Transformation.builder()
                                     .addPost(
-                                        FileUploadParams.Transformation.Post.GenerateAThumbnail
-                                            .builder()
-                                            .type(
-                                                FileUploadParams.Transformation.Post
-                                                    .GenerateAThumbnail
-                                                    .Type
-                                                    .THUMBNAIL
-                                            )
+                                        FileUploadParams.Transformation.Post.Thumbnail.builder()
                                             .value("w-150,h-150")
                                             .build()
                                     )
                                     .addPost(
-                                        FileUploadParams.Transformation.Post
-                                            .AdaptiveBitrateStreaming
-                                            .builder()
+                                        FileUploadParams.Transformation.Post.Abs.builder()
                                             .protocol(
-                                                FileUploadParams.Transformation.Post
-                                                    .AdaptiveBitrateStreaming
-                                                    .Protocol
+                                                FileUploadParams.Transformation.Post.Abs.Protocol
                                                     .DASH
-                                            )
-                                            .type(
-                                                FileUploadParams.Transformation.Post
-                                                    .AdaptiveBitrateStreaming
-                                                    .Type
-                                                    .ABS
                                             )
                                             .value("sr-240_360_480_720_1080")
                                             .build()
