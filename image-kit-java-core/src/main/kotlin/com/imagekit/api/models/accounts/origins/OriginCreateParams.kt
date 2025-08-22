@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.BaseDeserializer
 import com.imagekit.api.core.BaseSerializer
-import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
@@ -30,7 +29,6 @@ import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
 /** **Note:** This API is currently in beta. Creates a new origin and returns the origin object. */
 class OriginCreateParams
@@ -583,7 +581,7 @@ private constructor(
             private val bucket: JsonField<String>,
             private val name: JsonField<String>,
             private val secretKey: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val prefix: JsonField<String>,
@@ -602,7 +600,7 @@ private constructor(
                 @JsonProperty("secretKey")
                 @ExcludeMissing
                 secretKey: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -659,11 +657,15 @@ private constructor(
             fun secretKey(): String = secretKey.getRequired("secretKey")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("S3")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -726,13 +728,6 @@ private constructor(
             fun _secretKey(): JsonField<String> = secretKey
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
              *
              * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has
@@ -782,7 +777,6 @@ private constructor(
                  * .bucket()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -795,7 +789,7 @@ private constructor(
                 private var bucket: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var secretKey: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("S3")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var prefix: JsonField<String> = JsonMissing.of()
@@ -862,16 +856,19 @@ private constructor(
                  */
                 fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("S3")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -949,7 +946,6 @@ private constructor(
                  * .bucket()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -960,7 +956,7 @@ private constructor(
                         checkRequired("bucket", bucket),
                         checkRequired("name", name),
                         checkRequired("secretKey", secretKey),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         prefix,
@@ -979,7 +975,11 @@ private constructor(
                 bucket()
                 name()
                 secretKey()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("S3")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 prefix()
@@ -1006,134 +1006,10 @@ private constructor(
                     (if (bucket.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (secretKey.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("S3")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val S3 = of("S3")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    S3
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    S3,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        S3 -> Value.S3
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        S3 -> Known.S3
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1179,7 +1055,7 @@ private constructor(
             private val endpoint: JsonField<String>,
             private val name: JsonField<String>,
             private val secretKey: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val prefix: JsonField<String>,
@@ -1202,7 +1078,7 @@ private constructor(
                 @JsonProperty("secretKey")
                 @ExcludeMissing
                 secretKey: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -1275,11 +1151,15 @@ private constructor(
             fun secretKey(): String = secretKey.getRequired("secretKey")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("S3_COMPATIBLE")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -1359,13 +1239,6 @@ private constructor(
             fun _secretKey(): JsonField<String> = secretKey
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
              *
              * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has
@@ -1426,7 +1299,6 @@ private constructor(
                  * .endpoint()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -1440,7 +1312,7 @@ private constructor(
                 private var endpoint: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var secretKey: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("S3_COMPATIBLE")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var prefix: JsonField<String> = JsonMissing.of()
@@ -1522,16 +1394,19 @@ private constructor(
                  */
                 fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("S3_COMPATIBLE")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -1625,7 +1500,6 @@ private constructor(
                  * .endpoint()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -1637,7 +1511,7 @@ private constructor(
                         checkRequired("endpoint", endpoint),
                         checkRequired("name", name),
                         checkRequired("secretKey", secretKey),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         prefix,
@@ -1658,7 +1532,11 @@ private constructor(
                 endpoint()
                 name()
                 secretKey()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("S3_COMPATIBLE")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 prefix()
@@ -1687,135 +1565,11 @@ private constructor(
                     (if (endpoint.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (secretKey.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("S3_COMPATIBLE")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0) +
                     (if (s3ForcePathStyle.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val S3_COMPATIBLE = of("S3_COMPATIBLE")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    S3_COMPATIBLE
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    S3_COMPATIBLE,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        S3_COMPATIBLE -> Value.S3_COMPATIBLE
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        S3_COMPATIBLE -> Known.S3_COMPATIBLE
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1864,7 +1618,7 @@ private constructor(
             private val bucket: JsonField<String>,
             private val name: JsonField<String>,
             private val secretKey: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val prefix: JsonField<String>,
@@ -1883,7 +1637,7 @@ private constructor(
                 @JsonProperty("secretKey")
                 @ExcludeMissing
                 secretKey: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -1940,11 +1694,15 @@ private constructor(
             fun secretKey(): String = secretKey.getRequired("secretKey")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("CLOUDINARY_BACKUP")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -2007,13 +1765,6 @@ private constructor(
             fun _secretKey(): JsonField<String> = secretKey
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
              *
              * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has
@@ -2063,7 +1814,6 @@ private constructor(
                  * .bucket()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -2076,7 +1826,7 @@ private constructor(
                 private var bucket: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var secretKey: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("CLOUDINARY_BACKUP")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var prefix: JsonField<String> = JsonMissing.of()
@@ -2143,16 +1893,19 @@ private constructor(
                  */
                 fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("CLOUDINARY_BACKUP")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -2230,7 +1983,6 @@ private constructor(
                  * .bucket()
                  * .name()
                  * .secretKey()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -2241,7 +1993,7 @@ private constructor(
                         checkRequired("bucket", bucket),
                         checkRequired("name", name),
                         checkRequired("secretKey", secretKey),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         prefix,
@@ -2260,7 +2012,11 @@ private constructor(
                 bucket()
                 name()
                 secretKey()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("CLOUDINARY_BACKUP")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 prefix()
@@ -2287,134 +2043,10 @@ private constructor(
                     (if (bucket.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (secretKey.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("CLOUDINARY_BACKUP")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val CLOUDINARY_BACKUP = of("CLOUDINARY_BACKUP")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    CLOUDINARY_BACKUP
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    CLOUDINARY_BACKUP,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        CLOUDINARY_BACKUP -> Value.CLOUDINARY_BACKUP
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        CLOUDINARY_BACKUP -> Known.CLOUDINARY_BACKUP
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2457,7 +2089,7 @@ private constructor(
         private constructor(
             private val baseUrl: JsonField<String>,
             private val name: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val forwardHostHeaderToOrigin: JsonField<Boolean>,
             private val includeCanonicalHeader: JsonField<Boolean>,
@@ -2470,7 +2102,7 @@ private constructor(
                 @ExcludeMissing
                 baseUrl: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -2509,11 +2141,15 @@ private constructor(
             fun name(): String = name.getRequired("name")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("WEB_FOLDER")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -2555,13 +2191,6 @@ private constructor(
              * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-            /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
             /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -2614,7 +2243,6 @@ private constructor(
                  * ```java
                  * .baseUrl()
                  * .name()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -2625,7 +2253,7 @@ private constructor(
 
                 private var baseUrl: JsonField<String>? = null
                 private var name: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("WEB_FOLDER")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var forwardHostHeaderToOrigin: JsonField<Boolean> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
@@ -2666,16 +2294,19 @@ private constructor(
                  */
                 fun name(name: JsonField<String>) = apply { this.name = name }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("WEB_FOLDER")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -2755,7 +2386,6 @@ private constructor(
                  * ```java
                  * .baseUrl()
                  * .name()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -2764,7 +2394,7 @@ private constructor(
                     WebFolder(
                         checkRequired("baseUrl", baseUrl),
                         checkRequired("name", name),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         forwardHostHeaderToOrigin,
                         includeCanonicalHeader,
@@ -2781,7 +2411,11 @@ private constructor(
 
                 baseUrl()
                 name()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("WEB_FOLDER")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 forwardHostHeaderToOrigin()
                 includeCanonicalHeader()
@@ -2806,134 +2440,10 @@ private constructor(
             internal fun validity(): Int =
                 (if (baseUrl.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("WEB_FOLDER")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (forwardHostHeaderToOrigin.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val WEB_FOLDER = of("WEB_FOLDER")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    WEB_FOLDER
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    WEB_FOLDER,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        WEB_FOLDER -> Value.WEB_FOLDER
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        WEB_FOLDER -> Known.WEB_FOLDER
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2971,7 +2481,7 @@ private constructor(
         class WebProxy
         private constructor(
             private val name: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -2980,7 +2490,7 @@ private constructor(
             @JsonCreator
             private constructor(
                 @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -2999,11 +2509,15 @@ private constructor(
             fun name(): String = name.getRequired("name")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("WEB_PROXY")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -3029,13 +2543,6 @@ private constructor(
              * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-            /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
             /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -3077,7 +2584,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .name()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -3087,7 +2593,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var name: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("WEB_PROXY")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -3113,16 +2619,19 @@ private constructor(
                  */
                 fun name(name: JsonField<String>) = apply { this.name = name }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("WEB_PROXY")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -3185,7 +2694,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .name()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -3193,7 +2701,7 @@ private constructor(
                 fun build(): WebProxy =
                     WebProxy(
                         checkRequired("name", name),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         additionalProperties.toMutableMap(),
@@ -3208,7 +2716,11 @@ private constructor(
                 }
 
                 name()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("WEB_PROXY")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 validated = true
@@ -3231,133 +2743,9 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (name.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("WEB_PROXY")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val WEB_PROXY = of("WEB_PROXY")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    WEB_PROXY
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    WEB_PROXY,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        WEB_PROXY -> Value.WEB_PROXY
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        WEB_PROXY -> Known.WEB_PROXY
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3394,7 +2782,7 @@ private constructor(
             private val clientEmail: JsonField<String>,
             private val name: JsonField<String>,
             private val privateKey: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val prefix: JsonField<String>,
@@ -3413,7 +2801,7 @@ private constructor(
                 @JsonProperty("privateKey")
                 @ExcludeMissing
                 privateKey: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -3464,11 +2852,15 @@ private constructor(
             fun privateKey(): String = privateKey.getRequired("privateKey")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("GCS")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -3529,13 +2921,6 @@ private constructor(
             fun _privateKey(): JsonField<String> = privateKey
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
              *
              * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has
@@ -3586,7 +2971,6 @@ private constructor(
                  * .clientEmail()
                  * .name()
                  * .privateKey()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -3599,7 +2983,7 @@ private constructor(
                 private var clientEmail: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var privateKey: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("GCS")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var prefix: JsonField<String> = JsonMissing.of()
@@ -3667,16 +3051,19 @@ private constructor(
                     this.privateKey = privateKey
                 }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("GCS")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -3753,7 +3140,6 @@ private constructor(
                  * .clientEmail()
                  * .name()
                  * .privateKey()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -3764,7 +3150,7 @@ private constructor(
                         checkRequired("clientEmail", clientEmail),
                         checkRequired("name", name),
                         checkRequired("privateKey", privateKey),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         prefix,
@@ -3783,7 +3169,11 @@ private constructor(
                 clientEmail()
                 name()
                 privateKey()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("GCS")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 prefix()
@@ -3810,134 +3200,10 @@ private constructor(
                     (if (clientEmail.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (privateKey.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("GCS")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val GCS = of("GCS")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    GCS
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    GCS,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        GCS -> Value.GCS
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        GCS -> Known.GCS
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -3982,7 +3248,7 @@ private constructor(
             private val container: JsonField<String>,
             private val name: JsonField<String>,
             private val sasToken: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
             private val prefix: JsonField<String>,
@@ -4001,7 +3267,7 @@ private constructor(
                 @JsonProperty("sasToken")
                 @ExcludeMissing
                 sasToken: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("baseUrlForCanonicalHeader")
                 @ExcludeMissing
                 baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
@@ -4052,11 +3318,15 @@ private constructor(
             fun sasToken(): String = sasToken.getRequired("sasToken")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("AZURE_BLOB")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * URL used in the Canonical header (if enabled).
@@ -4118,13 +3388,6 @@ private constructor(
             @JsonProperty("sasToken") @ExcludeMissing fun _sasToken(): JsonField<String> = sasToken
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [baseUrlForCanonicalHeader].
              *
              * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has
@@ -4174,7 +3437,6 @@ private constructor(
                  * .container()
                  * .name()
                  * .sasToken()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -4187,7 +3449,7 @@ private constructor(
                 private var container: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var sasToken: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("AZURE_BLOB")
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
                 private var prefix: JsonField<String> = JsonMissing.of()
@@ -4253,16 +3515,19 @@ private constructor(
                  */
                 fun sasToken(sasToken: JsonField<String>) = apply { this.sasToken = sasToken }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("AZURE_BLOB")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** URL used in the Canonical header (if enabled). */
                 fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
@@ -4339,7 +3604,6 @@ private constructor(
                  * .container()
                  * .name()
                  * .sasToken()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -4350,7 +3614,7 @@ private constructor(
                         checkRequired("container", container),
                         checkRequired("name", name),
                         checkRequired("sasToken", sasToken),
-                        checkRequired("type", type),
+                        type,
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
                         prefix,
@@ -4369,7 +3633,11 @@ private constructor(
                 container()
                 name()
                 sasToken()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("AZURE_BLOB")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
                 prefix()
@@ -4396,134 +3664,10 @@ private constructor(
                     (if (container.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (sasToken.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("AZURE_BLOB")) 1 else 0 } +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (prefix.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val AZURE_BLOB = of("AZURE_BLOB")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    AZURE_BLOB
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    AZURE_BLOB,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        AZURE_BLOB -> Value.AZURE_BLOB
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        AZURE_BLOB -> Known.AZURE_BLOB
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -4569,7 +3713,7 @@ private constructor(
             private val clientSecret: JsonField<String>,
             private val name: JsonField<String>,
             private val password: JsonField<String>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val username: JsonField<String>,
             private val baseUrlForCanonicalHeader: JsonField<String>,
             private val includeCanonicalHeader: JsonField<Boolean>,
@@ -4591,7 +3735,7 @@ private constructor(
                 @JsonProperty("password")
                 @ExcludeMissing
                 password: JsonField<String> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
                 @JsonProperty("username")
                 @ExcludeMissing
                 username: JsonField<String> = JsonMissing.of(),
@@ -4660,11 +3804,15 @@ private constructor(
             fun password(): String = password.getRequired("password")
 
             /**
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("AKENEO_PIM")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * Akeneo API username.
@@ -4734,13 +3882,6 @@ private constructor(
             @JsonProperty("password") @ExcludeMissing fun _password(): JsonField<String> = password
 
             /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            /**
              * Returns the raw JSON value of [username].
              *
              * Unlike [username], this method doesn't throw if the JSON field has an unexpected
@@ -4792,7 +3933,6 @@ private constructor(
                  * .clientSecret()
                  * .name()
                  * .password()
-                 * .type()
                  * .username()
                  * ```
                  */
@@ -4807,7 +3947,7 @@ private constructor(
                 private var clientSecret: JsonField<String>? = null
                 private var name: JsonField<String>? = null
                 private var password: JsonField<String>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("AKENEO_PIM")
                 private var username: JsonField<String>? = null
                 private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
                 private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
@@ -4889,16 +4029,19 @@ private constructor(
                  */
                 fun password(password: JsonField<String>) = apply { this.password = password }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("AKENEO_PIM")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 /** Akeneo API username. */
                 fun username(username: String) = username(JsonField.of(username))
@@ -4977,7 +4120,6 @@ private constructor(
                  * .clientSecret()
                  * .name()
                  * .password()
-                 * .type()
                  * .username()
                  * ```
                  *
@@ -4990,7 +4132,7 @@ private constructor(
                         checkRequired("clientSecret", clientSecret),
                         checkRequired("name", name),
                         checkRequired("password", password),
-                        checkRequired("type", type),
+                        type,
                         checkRequired("username", username),
                         baseUrlForCanonicalHeader,
                         includeCanonicalHeader,
@@ -5010,7 +4152,11 @@ private constructor(
                 clientSecret()
                 name()
                 password()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("AKENEO_PIM")) {
+                        throw ImageKitInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 username()
                 baseUrlForCanonicalHeader()
                 includeCanonicalHeader()
@@ -5038,134 +4184,10 @@ private constructor(
                     (if (clientSecret.asKnown().isPresent) 1 else 0) +
                     (if (name.asKnown().isPresent) 1 else 0) +
                     (if (password.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0) +
+                    type.let { if (it == JsonValue.from("AKENEO_PIM")) 1 else 0 } +
                     (if (username.asKnown().isPresent) 1 else 0) +
                     (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                     (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val AKENEO_PIM = of("AKENEO_PIM")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    AKENEO_PIM
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    AKENEO_PIM,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        AKENEO_PIM -> Value.AKENEO_PIM
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        AKENEO_PIM -> Known.AKENEO_PIM
-                        else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws ImageKitInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        ImageKitInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Type && value == other.value
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {

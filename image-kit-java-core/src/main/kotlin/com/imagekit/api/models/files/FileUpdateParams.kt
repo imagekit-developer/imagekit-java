@@ -764,12 +764,8 @@ private constructor(
                 fun removeAiTagsOfStrings(strings: List<String>) =
                     removeAiTags(RemoveAiTags.ofStrings(strings))
 
-                /**
-                 * Alias for calling [removeAiTags] with
-                 * `RemoveAiTags.ofUnionMember1(unionMember1)`.
-                 */
-                fun removeAiTags(unionMember1: RemoveAiTags.UnionMember1) =
-                    removeAiTags(RemoveAiTags.ofUnionMember1(unionMember1))
+                /** Alias for calling [removeAiTags] with `RemoveAiTags.ofAll()`. */
+                fun removeAiTagsAll() = removeAiTags(RemoveAiTags.ofAll())
 
                 /**
                  * An array of tags associated with the file, such as `["tag1", "tag2"]`. Send
@@ -2154,28 +2150,28 @@ private constructor(
             class RemoveAiTags
             private constructor(
                 private val strings: List<String>? = null,
-                private val unionMember1: UnionMember1? = null,
+                private val all: JsonValue? = null,
                 private val _json: JsonValue? = null,
             ) {
 
                 fun strings(): Optional<List<String>> = Optional.ofNullable(strings)
 
-                fun unionMember1(): Optional<UnionMember1> = Optional.ofNullable(unionMember1)
+                fun all(): Optional<JsonValue> = Optional.ofNullable(all)
 
                 fun isStrings(): Boolean = strings != null
 
-                fun isUnionMember1(): Boolean = unionMember1 != null
+                fun isAll(): Boolean = all != null
 
                 fun asStrings(): List<String> = strings.getOrThrow("strings")
 
-                fun asUnionMember1(): UnionMember1 = unionMember1.getOrThrow("unionMember1")
+                fun asAll(): JsonValue = all.getOrThrow("all")
 
                 fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
                 fun <T> accept(visitor: Visitor<T>): T =
                     when {
                         strings != null -> visitor.visitStrings(strings)
-                        unionMember1 != null -> visitor.visitUnionMember1(unionMember1)
+                        all != null -> visitor.visitAll(all)
                         else -> visitor.unknown(_json)
                     }
 
@@ -2190,8 +2186,14 @@ private constructor(
                         object : Visitor<Unit> {
                             override fun visitStrings(strings: List<String>) {}
 
-                            override fun visitUnionMember1(unionMember1: UnionMember1) {
-                                unionMember1.validate()
+                            override fun visitAll(all: JsonValue) {
+                                all.let {
+                                    if (it != JsonValue.from("all")) {
+                                        throw ImageKitInvalidDataException(
+                                            "'all' is invalid, received $it"
+                                        )
+                                    }
+                                }
                             }
                         }
                     )
@@ -2218,8 +2220,8 @@ private constructor(
                         object : Visitor<Int> {
                             override fun visitStrings(strings: List<String>) = strings.size
 
-                            override fun visitUnionMember1(unionMember1: UnionMember1) =
-                                unionMember1.validity()
+                            override fun visitAll(all: JsonValue) =
+                                all.let { if (it == JsonValue.from("all")) 1 else 0 }
 
                             override fun unknown(json: JsonValue?) = 0
                         }
@@ -2230,17 +2232,15 @@ private constructor(
                         return true
                     }
 
-                    return other is RemoveAiTags &&
-                        strings == other.strings &&
-                        unionMember1 == other.unionMember1
+                    return other is RemoveAiTags && strings == other.strings && all == other.all
                 }
 
-                override fun hashCode(): Int = Objects.hash(strings, unionMember1)
+                override fun hashCode(): Int = Objects.hash(strings, all)
 
                 override fun toString(): String =
                     when {
                         strings != null -> "RemoveAiTags{strings=$strings}"
-                        unionMember1 != null -> "RemoveAiTags{unionMember1=$unionMember1}"
+                        all != null -> "RemoveAiTags{all=$all}"
                         _json != null -> "RemoveAiTags{_unknown=$_json}"
                         else -> throw IllegalStateException("Invalid RemoveAiTags")
                     }
@@ -2251,9 +2251,7 @@ private constructor(
                     fun ofStrings(strings: List<String>) =
                         RemoveAiTags(strings = strings.toImmutable())
 
-                    @JvmStatic
-                    fun ofUnionMember1(unionMember1: UnionMember1) =
-                        RemoveAiTags(unionMember1 = unionMember1)
+                    @JvmStatic fun ofAll() = RemoveAiTags(all = JsonValue.from("all"))
                 }
 
                 /**
@@ -2264,7 +2262,7 @@ private constructor(
 
                     fun visitStrings(strings: List<String>): T
 
-                    fun visitUnionMember1(unionMember1: UnionMember1): T
+                    fun visitAll(all: JsonValue): T
 
                     /**
                      * Maps an unknown variant of [RemoveAiTags] to a value of type [T].
@@ -2288,9 +2286,9 @@ private constructor(
 
                         val bestMatches =
                             sequenceOf(
-                                    tryDeserialize(node, jacksonTypeRef<UnionMember1>())?.let {
-                                        RemoveAiTags(unionMember1 = it, _json = json)
-                                    },
+                                    tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                        ?.let { RemoveAiTags(all = it, _json = json) }
+                                        ?.takeIf { it.isValid() },
                                     tryDeserialize(node, jacksonTypeRef<List<String>>())?.let {
                                         RemoveAiTags(strings = it, _json = json)
                                     },
@@ -2321,142 +2319,11 @@ private constructor(
                     ) {
                         when {
                             value.strings != null -> generator.writeObject(value.strings)
-                            value.unionMember1 != null -> generator.writeObject(value.unionMember1)
+                            value.all != null -> generator.writeObject(value.all)
                             value._json != null -> generator.writeObject(value._json)
                             else -> throw IllegalStateException("Invalid RemoveAiTags")
                         }
                     }
-                }
-
-                class UnionMember1
-                @JsonCreator
-                private constructor(private val value: JsonField<String>) : Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val ALL = of("all")
-
-                        @JvmStatic fun of(value: String) = UnionMember1(JsonField.of(value))
-                    }
-
-                    /** An enum containing [UnionMember1]'s known values. */
-                    enum class Known {
-                        ALL
-                    }
-
-                    /**
-                     * An enum containing [UnionMember1]'s known values, as well as an [_UNKNOWN]
-                     * member.
-                     *
-                     * An instance of [UnionMember1] can contain an unknown value in a couple of
-                     * cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        ALL,
-                        /**
-                         * An enum member indicating that [UnionMember1] was instantiated with an
-                         * unknown value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            ALL -> Value.ALL
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            ALL -> Known.ALL
-                            else ->
-                                throw ImageKitInvalidDataException("Unknown UnionMember1: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): UnionMember1 = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is UnionMember1 && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
                 }
             }
 

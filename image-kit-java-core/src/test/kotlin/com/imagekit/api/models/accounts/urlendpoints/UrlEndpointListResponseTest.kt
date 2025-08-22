@@ -21,10 +21,6 @@ internal class UrlEndpointListResponseTest {
                 .urlRewriter(
                     UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
                         .preserveAssetDeliveryTypes(true)
-                        .type(
-                            UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.Type
-                                .CLOUDINARY
-                        )
                         .build()
                 )
                 .build()
@@ -38,10 +34,6 @@ internal class UrlEndpointListResponseTest {
                 UrlEndpointListResponse.UrlRewriter.ofCloudinary(
                     UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
                         .preserveAssetDeliveryTypes(true)
-                        .type(
-                            UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.Type
-                                .CLOUDINARY
-                        )
                         .build()
                 )
             )
@@ -60,10 +52,6 @@ internal class UrlEndpointListResponseTest {
                 .urlRewriter(
                     UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.builder()
                         .preserveAssetDeliveryTypes(true)
-                        .type(
-                            UrlEndpointListResponse.UrlRewriter.CloudinaryUrlRewriter.Type
-                                .CLOUDINARY
-                        )
                         .build()
                 )
                 .build()
