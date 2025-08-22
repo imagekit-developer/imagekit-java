@@ -46,7 +46,7 @@ ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
     .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("file-name.jpg")
+    .fileName("fileName")
     .build();
 FileUploadResponse response = client.files().upload(params);
 ```
@@ -151,7 +151,7 @@ ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
     .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("file-name.jpg")
+    .fileName("fileName")
     .build();
 CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
 ```
@@ -172,7 +172,7 @@ ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
     .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("file-name.jpg")
+    .fileName("fileName")
     .build();
 CompletableFuture<FileUploadResponse> response = client.files().upload(params);
 ```
@@ -258,7 +258,7 @@ import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
     .file(ByteArrayInputStream("some content".getBytes()))
-    .fileName("file-name.jpg")
+    .fileName("fileName")
     .build();
 HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
 
@@ -505,10 +505,11 @@ To set a documented parameter or property to an undocumented or not yet supporte
 ```java
 import com.imagekit.api.core.JsonValue;
 import com.imagekit.api.models.files.FileUploadParams;
+import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(JsonValue.from(42))
-    .fileName("file-name.jpg")
+    .file(ByteArrayInputStream("some content".getBytes()))
+    .fileName(JsonValue.from(42))
     .build();
 ```
 
