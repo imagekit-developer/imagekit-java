@@ -42,14 +42,14 @@ import kotlin.jvm.optionals.getOrNull
 class FileUpdateParams
 private constructor(
     private val fileId: String?,
-    private val update: Update?,
+    private val body: Body?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun fileId(): Optional<String> = Optional.ofNullable(fileId)
 
-    fun update(): Optional<Update> = Optional.ofNullable(update)
+    fun body(): Optional<Body> = Optional.ofNullable(body)
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -71,14 +71,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var fileId: String? = null
-        private var update: Update? = null
+        private var body: Body? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(fileUpdateParams: FileUpdateParams) = apply {
             fileId = fileUpdateParams.fileId
-            update = fileUpdateParams.update
+            body = fileUpdateParams.body
             additionalHeaders = fileUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileUpdateParams.additionalQueryParams.toBuilder()
         }
@@ -88,21 +88,20 @@ private constructor(
         /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
         fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
 
-        fun update(update: Update?) = apply { this.update = update }
+        fun body(body: Body?) = apply { this.body = body }
 
-        /** Alias for calling [Builder.update] with `update.orElse(null)`. */
-        fun update(update: Optional<Update>) = update(update.getOrNull())
+        /** Alias for calling [Builder.body] with `body.orElse(null)`. */
+        fun body(body: Optional<Body>) = body(body.getOrNull())
 
-        /** Alias for calling [update] with `Update.ofFileDetails(fileDetails)`. */
-        fun update(fileDetails: Update.UpdateFileDetails) =
-            update(Update.ofFileDetails(fileDetails))
+        /** Alias for calling [body] with `Body.ofUpdateFileDetails(updateFileDetails)`. */
+        fun body(updateFileDetails: Body.UpdateFileDetails) =
+            body(Body.ofUpdateFileDetails(updateFileDetails))
 
         /**
-         * Alias for calling [update] with
-         * `Update.ofChangePublicationStatus(changePublicationStatus)`.
+         * Alias for calling [body] with `Body.ofChangePublicationStatus(changePublicationStatus)`.
          */
-        fun update(changePublicationStatus: Update.ChangePublicationStatus) =
-            update(Update.ofChangePublicationStatus(changePublicationStatus))
+        fun body(changePublicationStatus: Body.ChangePublicationStatus) =
+            body(Body.ofChangePublicationStatus(changePublicationStatus))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -208,15 +207,10 @@ private constructor(
          * Further updates to this [Builder] will not mutate the returned instance.
          */
         fun build(): FileUpdateParams =
-            FileUpdateParams(
-                fileId,
-                update,
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
-            )
+            FileUpdateParams(fileId, body, additionalHeaders.build(), additionalQueryParams.build())
     }
 
-    fun _body(): Optional<Update> = Optional.ofNullable(update)
+    fun _body(): Optional<Body> = Optional.ofNullable(body)
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -228,25 +222,27 @@ private constructor(
 
     override fun _queryParams(): QueryParams = additionalQueryParams
 
-    @JsonDeserialize(using = Update.Deserializer::class)
-    @JsonSerialize(using = Update.Serializer::class)
-    class Update
+    @JsonDeserialize(using = Body.Deserializer::class)
+    @JsonSerialize(using = Body.Serializer::class)
+    class Body
     private constructor(
-        private val fileDetails: UpdateFileDetails? = null,
+        private val updateFileDetails: UpdateFileDetails? = null,
         private val changePublicationStatus: ChangePublicationStatus? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun fileDetails(): Optional<UpdateFileDetails> = Optional.ofNullable(fileDetails)
+        fun updateFileDetails(): Optional<UpdateFileDetails> =
+            Optional.ofNullable(updateFileDetails)
 
         fun changePublicationStatus(): Optional<ChangePublicationStatus> =
             Optional.ofNullable(changePublicationStatus)
 
-        fun isFileDetails(): Boolean = fileDetails != null
+        fun isUpdateFileDetails(): Boolean = updateFileDetails != null
 
         fun isChangePublicationStatus(): Boolean = changePublicationStatus != null
 
-        fun asFileDetails(): UpdateFileDetails = fileDetails.getOrThrow("fileDetails")
+        fun asUpdateFileDetails(): UpdateFileDetails =
+            updateFileDetails.getOrThrow("updateFileDetails")
 
         fun asChangePublicationStatus(): ChangePublicationStatus =
             changePublicationStatus.getOrThrow("changePublicationStatus")
@@ -255,7 +251,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                fileDetails != null -> visitor.visitFileDetails(fileDetails)
+                updateFileDetails != null -> visitor.visitUpdateFileDetails(updateFileDetails)
                 changePublicationStatus != null ->
                     visitor.visitChangePublicationStatus(changePublicationStatus)
                 else -> visitor.unknown(_json)
@@ -263,15 +259,15 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): Update = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitFileDetails(fileDetails: UpdateFileDetails) {
-                        fileDetails.validate()
+                    override fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails) {
+                        updateFileDetails.validate()
                     }
 
                     override fun visitChangePublicationStatus(
@@ -302,8 +298,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitFileDetails(fileDetails: UpdateFileDetails) =
-                        fileDetails.validity()
+                    override fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails) =
+                        updateFileDetails.validity()
 
                     override fun visitChangePublicationStatus(
                         changePublicationStatus: ChangePublicationStatus
@@ -318,66 +314,66 @@ private constructor(
                 return true
             }
 
-            return other is Update &&
-                fileDetails == other.fileDetails &&
+            return other is Body &&
+                updateFileDetails == other.updateFileDetails &&
                 changePublicationStatus == other.changePublicationStatus
         }
 
-        override fun hashCode(): Int = Objects.hash(fileDetails, changePublicationStatus)
+        override fun hashCode(): Int = Objects.hash(updateFileDetails, changePublicationStatus)
 
         override fun toString(): String =
             when {
-                fileDetails != null -> "Update{fileDetails=$fileDetails}"
+                updateFileDetails != null -> "Body{updateFileDetails=$updateFileDetails}"
                 changePublicationStatus != null ->
-                    "Update{changePublicationStatus=$changePublicationStatus}"
-                _json != null -> "Update{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Update")
+                    "Body{changePublicationStatus=$changePublicationStatus}"
+                _json != null -> "Body{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Body")
             }
 
         companion object {
 
             @JvmStatic
-            fun ofFileDetails(fileDetails: UpdateFileDetails) = Update(fileDetails = fileDetails)
+            fun ofUpdateFileDetails(updateFileDetails: UpdateFileDetails) =
+                Body(updateFileDetails = updateFileDetails)
 
             @JvmStatic
             fun ofChangePublicationStatus(changePublicationStatus: ChangePublicationStatus) =
-                Update(changePublicationStatus = changePublicationStatus)
+                Body(changePublicationStatus = changePublicationStatus)
         }
 
-        /** An interface that defines how to map each variant of [Update] to a value of type [T]. */
+        /** An interface that defines how to map each variant of [Body] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitFileDetails(fileDetails: UpdateFileDetails): T
+            fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails): T
 
             fun visitChangePublicationStatus(changePublicationStatus: ChangePublicationStatus): T
 
             /**
-             * Maps an unknown variant of [Update] to a value of type [T].
+             * Maps an unknown variant of [Body] to a value of type [T].
              *
-             * An instance of [Update] can contain an unknown variant if it was deserialized from
-             * data that doesn't match any known variant. For example, if the SDK is on an older
-             * version than the API, then the API may respond with new variants that the SDK is
-             * unaware of.
+             * An instance of [Body] can contain an unknown variant if it was deserialized from data
+             * that doesn't match any known variant. For example, if the SDK is on an older version
+             * than the API, then the API may respond with new variants that the SDK is unaware of.
              *
              * @throws ImageKitInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown Update: $json")
+                throw ImageKitInvalidDataException("Unknown Body: $json")
             }
         }
 
-        internal class Deserializer : BaseDeserializer<Update>(Update::class) {
+        internal class Deserializer : BaseDeserializer<Body>(Body::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): Update {
+            override fun ObjectCodec.deserialize(node: JsonNode): Body {
                 val json = JsonValue.fromJsonNode(node)
 
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<UpdateFileDetails>())?.let {
-                                Update(fileDetails = it, _json = json)
+                                Body(updateFileDetails = it, _json = json)
                             },
                             tryDeserialize(node, jacksonTypeRef<ChangePublicationStatus>())?.let {
-                                Update(changePublicationStatus = it, _json = json)
+                                Body(changePublicationStatus = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -386,7 +382,7 @@ private constructor(
                 return when (bestMatches.size) {
                     // This can happen if what we're deserializing is completely incompatible with
                     // all the possible variants (e.g. deserializing from boolean).
-                    0 -> Update(_json = json)
+                    0 -> Body(_json = json)
                     1 -> bestMatches.single()
                     // If there's more than one match with the highest validity, then use the first
                     // completely valid match, or simply the first match if none are completely
@@ -396,19 +392,20 @@ private constructor(
             }
         }
 
-        internal class Serializer : BaseSerializer<Update>(Update::class) {
+        internal class Serializer : BaseSerializer<Body>(Body::class) {
 
             override fun serialize(
-                value: Update,
+                value: Body,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.fileDetails != null -> generator.writeObject(value.fileDetails)
+                    value.updateFileDetails != null ->
+                        generator.writeObject(value.updateFileDetails)
                     value.changePublicationStatus != null ->
                         generator.writeObject(value.changePublicationStatus)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Update")
+                    else -> throw IllegalStateException("Invalid Body")
                 }
             }
         }
@@ -3324,14 +3321,14 @@ private constructor(
 
         return other is FileUpdateParams &&
             fileId == other.fileId &&
-            update == other.update &&
+            body == other.body &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(fileId, update, additionalHeaders, additionalQueryParams)
+        Objects.hash(fileId, body, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileUpdateParams{fileId=$fileId, update=$update, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileUpdateParams{fileId=$fileId, body=$body, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

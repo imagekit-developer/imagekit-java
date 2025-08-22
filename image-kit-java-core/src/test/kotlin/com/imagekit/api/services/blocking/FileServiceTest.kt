@@ -32,11 +32,11 @@ internal class FileServiceTest {
             fileService.update(
                 FileUpdateParams.builder()
                     .fileId("fileId")
-                    .update(
-                        FileUpdateParams.Update.UpdateFileDetails.builder()
+                    .body(
+                        FileUpdateParams.Body.UpdateFileDetails.builder()
                             .customCoordinates("10,10,100,100")
                             .customMetadata(
-                                FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
+                                FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
                                     .putAdditionalProperty("brand", JsonValue.from("bar"))
                                     .putAdditionalProperty("color", JsonValue.from("bar"))
                                     .build()
@@ -44,71 +44,64 @@ internal class FileServiceTest {
                             .description("description")
                             .extensions(
                                 listOf(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofRemovedotBg(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .RemovedotBgExtension
-                                                .builder()
-                                                .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .RemovedotBgExtension
-                                                        .Name
-                                                        .REMOVE_BG
-                                                )
-                                                .options(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .RemovedotBgExtension
-                                                        .Options
-                                                        .builder()
-                                                        .addShadow(true)
-                                                        .bgColor("bg_color")
-                                                        .bgImageUrl("bg_image_url")
-                                                        .semitransparency(true)
-                                                        .build()
-                                                )
-                                                .build()
-                                        ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofAutoTagging(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .builder()
-                                                .maxTags(10L)
-                                                .minConfidence(80L)
-                                                .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .AutoTaggingExtension
-                                                        .Name
-                                                        .GOOGLE_AUTO_TAGGING
-                                                )
-                                                .build()
-                                        ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofAutoTagging(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .builder()
-                                                .maxTags(10L)
-                                                .minConfidence(80L)
-                                                .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .AutoTaggingExtension
-                                                        .Name
-                                                        .AWS_AUTO_TAGGING
-                                                )
-                                                .build()
-                                        ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .RemovedotBgExtension
+                                            .builder()
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .RemovedotBgExtension
+                                                    .Name
+                                                    .REMOVE_BG
+                                            )
+                                            .options(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .RemovedotBgExtension
+                                                    .Options
+                                                    .builder()
+                                                    .addShadow(true)
+                                                    .bgColor("bg_color")
+                                                    .bgImageUrl("bg_image_url")
+                                                    .semitransparency(true)
+                                                    .build()
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .AutoTaggingExtension
+                                            .builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .AutoTaggingExtension
+                                                    .Name
+                                                    .GOOGLE_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoTagging(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension
+                                            .AutoTaggingExtension
+                                            .builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                                    .AutoTaggingExtension
+                                                    .Name
+                                                    .AWS_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension
                                         .ofAutoDescription(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
+                                            FileUpdateParams.Body.UpdateFileDetails.Extension
                                                 .AutoDescriptionExtension
                                                 .builder()
                                                 .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
+                                                    FileUpdateParams.Body.UpdateFileDetails
                                                         .Extension
                                                         .AutoDescriptionExtension
                                                         .Name
