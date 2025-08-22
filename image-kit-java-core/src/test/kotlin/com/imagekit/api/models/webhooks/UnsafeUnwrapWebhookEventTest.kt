@@ -82,7 +82,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationAcceptedWebhookEvent.Type.VIDEO_TRANSFORMATION_ACCEPTED)
                 .build()
 
         val unsafeUnwrapWebhookEvent =
@@ -164,9 +163,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .xRequestId("x_request_id")
                             .userAgent("user_agent")
                             .build()
-                    )
-                    .type(
-                        VideoTransformationAcceptedWebhookEvent.Type.VIDEO_TRANSFORMATION_ACCEPTED
                     )
                     .build()
             )
@@ -259,7 +255,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationReadyWebhookEvent.Type.VIDEO_TRANSFORMATION_READY)
                 .timings(
                     VideoTransformationReadyWebhookEvent.Timings.builder()
                         .downloadDuration(0L)
@@ -366,7 +361,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .userAgent("user_agent")
                             .build()
                     )
-                    .type(VideoTransformationReadyWebhookEvent.Type.VIDEO_TRANSFORMATION_READY)
                     .timings(
                         VideoTransformationReadyWebhookEvent.Timings.builder()
                             .downloadDuration(0L)
@@ -458,7 +452,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationErrorWebhookEvent.Type.VIDEO_TRANSFORMATION_ERROR)
                 .build()
 
         val unsafeUnwrapWebhookEvent =
@@ -553,7 +546,6 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .userAgent("user_agent")
                             .build()
                     )
-                    .type(VideoTransformationErrorWebhookEvent.Type.VIDEO_TRANSFORMATION_ERROR)
                     .build()
             )
 

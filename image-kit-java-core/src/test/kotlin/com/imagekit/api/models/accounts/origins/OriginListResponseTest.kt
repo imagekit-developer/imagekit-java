@@ -23,7 +23,6 @@ internal class OriginListResponseTest {
                 .includeCanonicalHeader(false)
                 .name("US S3 Storage")
                 .prefix("raw-assets")
-                .type(OriginListResponse.S3.Type.S3)
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
@@ -50,7 +49,6 @@ internal class OriginListResponseTest {
                     .includeCanonicalHeader(false)
                     .name("US S3 Storage")
                     .prefix("raw-assets")
-                    .type(OriginListResponse.S3.Type.S3)
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .build()
             )
@@ -75,7 +73,6 @@ internal class OriginListResponseTest {
                 .name("US S3 Storage")
                 .prefix("raw-assets")
                 .s3ForcePathStyle(true)
-                .type(OriginListResponse.S3Compatible.Type.S3_COMPATIBLE)
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
@@ -104,7 +101,6 @@ internal class OriginListResponseTest {
                     .name("US S3 Storage")
                     .prefix("raw-assets")
                     .s3ForcePathStyle(true)
-                    .type(OriginListResponse.S3Compatible.Type.S3_COMPATIBLE)
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .build()
             )

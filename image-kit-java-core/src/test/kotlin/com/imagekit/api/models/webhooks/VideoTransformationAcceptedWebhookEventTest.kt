@@ -77,7 +77,6 @@ internal class VideoTransformationAcceptedWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationAcceptedWebhookEvent.Type.VIDEO_TRANSFORMATION_ACCEPTED)
                 .build()
 
         assertThat(videoTransformationAcceptedWebhookEvent.id()).isEqualTo("id")
@@ -141,8 +140,6 @@ internal class VideoTransformationAcceptedWebhookEventTest {
                     .userAgent("user_agent")
                     .build()
             )
-        assertThat(videoTransformationAcceptedWebhookEvent.type())
-            .isEqualTo(VideoTransformationAcceptedWebhookEvent.Type.VIDEO_TRANSFORMATION_ACCEPTED)
     }
 
     @Test
@@ -213,7 +210,6 @@ internal class VideoTransformationAcceptedWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationAcceptedWebhookEvent.Type.VIDEO_TRANSFORMATION_ACCEPTED)
                 .build()
 
         val roundtrippedVideoTransformationAcceptedWebhookEvent =

@@ -89,7 +89,6 @@ internal class VideoTransformationReadyWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationReadyWebhookEvent.Type.VIDEO_TRANSFORMATION_READY)
                 .timings(
                     VideoTransformationReadyWebhookEvent.Timings.builder()
                         .downloadDuration(0L)
@@ -176,8 +175,6 @@ internal class VideoTransformationReadyWebhookEventTest {
                     .userAgent("user_agent")
                     .build()
             )
-        assertThat(videoTransformationReadyWebhookEvent.type())
-            .isEqualTo(VideoTransformationReadyWebhookEvent.Type.VIDEO_TRANSFORMATION_READY)
         assertThat(videoTransformationReadyWebhookEvent.timings())
             .contains(
                 VideoTransformationReadyWebhookEvent.Timings.builder()
@@ -267,7 +264,6 @@ internal class VideoTransformationReadyWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationReadyWebhookEvent.Type.VIDEO_TRANSFORMATION_READY)
                 .timings(
                     VideoTransformationReadyWebhookEvent.Timings.builder()
                         .downloadDuration(0L)

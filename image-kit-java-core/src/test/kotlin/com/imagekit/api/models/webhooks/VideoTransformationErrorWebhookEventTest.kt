@@ -83,7 +83,6 @@ internal class VideoTransformationErrorWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationErrorWebhookEvent.Type.VIDEO_TRANSFORMATION_ERROR)
                 .build()
 
         assertThat(videoTransformationErrorWebhookEvent.id()).isEqualTo("id")
@@ -158,8 +157,6 @@ internal class VideoTransformationErrorWebhookEventTest {
                     .userAgent("user_agent")
                     .build()
             )
-        assertThat(videoTransformationErrorWebhookEvent.type())
-            .isEqualTo(VideoTransformationErrorWebhookEvent.Type.VIDEO_TRANSFORMATION_ERROR)
     }
 
     @Test
@@ -236,7 +233,6 @@ internal class VideoTransformationErrorWebhookEventTest {
                         .userAgent("user_agent")
                         .build()
                 )
-                .type(VideoTransformationErrorWebhookEvent.Type.VIDEO_TRANSFORMATION_ERROR)
                 .build()
 
         val roundtrippedVideoTransformationErrorWebhookEvent =
