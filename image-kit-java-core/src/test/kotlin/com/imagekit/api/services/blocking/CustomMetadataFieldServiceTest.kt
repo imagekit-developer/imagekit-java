@@ -33,10 +33,7 @@ internal class CustomMetadataFieldServiceTest {
                     .schema(
                         CustomMetadataFieldCreateParams.Schema.builder()
                             .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                            .defaultValue(
-                                CustomMetadataFieldCreateParams.Schema.DefaultValue.UnionMember0
-                                    .ofJsonScalar("Hello")
-                            )
+                            .defaultValue("string")
                             .isValueRequired(true)
                             .maxLength(0.0)
                             .maxValue(3000.0)
@@ -88,10 +85,7 @@ internal class CustomMetadataFieldServiceTest {
                     .label("price")
                     .schema(
                         CustomMetadataFieldUpdateParams.Schema.builder()
-                            .defaultValue(
-                                CustomMetadataFieldUpdateParams.Schema.DefaultValue.UnionMember0
-                                    .ofJsonScalar("Hello")
-                            )
+                            .defaultValue("string")
                             .isValueRequired(true)
                             .maxLength(0.0)
                             .maxValue(3000.0)

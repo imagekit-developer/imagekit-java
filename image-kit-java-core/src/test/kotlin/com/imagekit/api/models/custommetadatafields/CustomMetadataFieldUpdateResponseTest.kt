@@ -19,10 +19,7 @@ internal class CustomMetadataFieldUpdateResponseTest {
                 .schema(
                     CustomMetadataFieldUpdateResponse.Schema.builder()
                         .type(CustomMetadataFieldUpdateResponse.Schema.Type.TEXT)
-                        .defaultValue(
-                            CustomMetadataFieldUpdateResponse.Schema.DefaultValue.UnionMember0
-                                .ofJsonScalar("Hello")
-                        )
+                        .defaultValue("string")
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue("string")
@@ -59,10 +56,7 @@ internal class CustomMetadataFieldUpdateResponseTest {
             .isEqualTo(
                 CustomMetadataFieldUpdateResponse.Schema.builder()
                     .type(CustomMetadataFieldUpdateResponse.Schema.Type.TEXT)
-                    .defaultValue(
-                        CustomMetadataFieldUpdateResponse.Schema.DefaultValue.UnionMember0
-                            .ofJsonScalar("Hello")
-                    )
+                    .defaultValue("string")
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue("string")
@@ -95,10 +89,7 @@ internal class CustomMetadataFieldUpdateResponseTest {
                 .schema(
                     CustomMetadataFieldUpdateResponse.Schema.builder()
                         .type(CustomMetadataFieldUpdateResponse.Schema.Type.TEXT)
-                        .defaultValue(
-                            CustomMetadataFieldUpdateResponse.Schema.DefaultValue.UnionMember0
-                                .ofJsonScalar("Hello")
-                        )
+                        .defaultValue("string")
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue("string")

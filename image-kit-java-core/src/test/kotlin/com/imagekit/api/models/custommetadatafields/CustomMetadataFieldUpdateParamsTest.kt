@@ -14,10 +14,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
             .label("price")
             .schema(
                 CustomMetadataFieldUpdateParams.Schema.builder()
-                    .defaultValue(
-                        CustomMetadataFieldUpdateParams.Schema.DefaultValue.UnionMember0
-                            .ofJsonScalar("Hello")
-                    )
+                    .defaultValue("string")
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
@@ -55,10 +52,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
                 .label("price")
                 .schema(
                     CustomMetadataFieldUpdateParams.Schema.builder()
-                        .defaultValue(
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.UnionMember0
-                                .ofJsonScalar("Hello")
-                        )
+                        .defaultValue("string")
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue(3000.0)
@@ -90,10 +84,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
         assertThat(body.schema())
             .contains(
                 CustomMetadataFieldUpdateParams.Schema.builder()
-                    .defaultValue(
-                        CustomMetadataFieldUpdateParams.Schema.DefaultValue.UnionMember0
-                            .ofJsonScalar("Hello")
-                    )
+                    .defaultValue("string")
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
