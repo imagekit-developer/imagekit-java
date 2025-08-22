@@ -726,20 +726,16 @@ private constructor(
                         }
                 }
 
-                /** Alias for calling [addExtension] with `Extension.ofRemovedotBg(removedotBg)`. */
-                fun addExtension(removedotBg: Extension.RemovedotBgExtension) =
-                    addExtension(Extension.ofRemovedotBg(removedotBg))
+                /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
+                fun addExtension(removeBg: Extension.RemoveBg) =
+                    addExtension(Extension.ofRemoveBg(removeBg))
 
                 /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
                 fun addExtension(autoTagging: Extension.AutoTaggingExtension) =
                     addExtension(Extension.ofAutoTagging(autoTagging))
 
-                /**
-                 * Alias for calling [addExtension] with
-                 * `Extension.ofAutoDescription(autoDescription)`.
-                 */
-                fun addExtension(autoDescription: Extension.AutoDescriptionExtension) =
-                    addExtension(Extension.ofAutoDescription(autoDescription))
+                /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
+                fun addExtensionAiAutoDescription() = addExtension(Extension.ofAiAutoDescription())
 
                 /**
                  * An array of AITags associated with the file that you want to remove, e.g.
@@ -1024,39 +1020,40 @@ private constructor(
             @JsonSerialize(using = Extension.Serializer::class)
             class Extension
             private constructor(
-                private val removedotBg: RemovedotBgExtension? = null,
+                private val removeBg: RemoveBg? = null,
                 private val autoTagging: AutoTaggingExtension? = null,
-                private val autoDescription: AutoDescriptionExtension? = null,
+                private val aiAutoDescription: JsonValue? = null,
                 private val _json: JsonValue? = null,
             ) {
 
-                fun removedotBg(): Optional<RemovedotBgExtension> = Optional.ofNullable(removedotBg)
+                fun removeBg(): Optional<RemoveBg> = Optional.ofNullable(removeBg)
 
                 fun autoTagging(): Optional<AutoTaggingExtension> = Optional.ofNullable(autoTagging)
 
-                fun autoDescription(): Optional<AutoDescriptionExtension> =
-                    Optional.ofNullable(autoDescription)
+                fun aiAutoDescription(): Optional<JsonValue> =
+                    Optional.ofNullable(aiAutoDescription)
 
-                fun isRemovedotBg(): Boolean = removedotBg != null
+                fun isRemoveBg(): Boolean = removeBg != null
 
                 fun isAutoTagging(): Boolean = autoTagging != null
 
-                fun isAutoDescription(): Boolean = autoDescription != null
+                fun isAiAutoDescription(): Boolean = aiAutoDescription != null
 
-                fun asRemovedotBg(): RemovedotBgExtension = removedotBg.getOrThrow("removedotBg")
+                fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
                 fun asAutoTagging(): AutoTaggingExtension = autoTagging.getOrThrow("autoTagging")
 
-                fun asAutoDescription(): AutoDescriptionExtension =
-                    autoDescription.getOrThrow("autoDescription")
+                fun asAiAutoDescription(): JsonValue =
+                    aiAutoDescription.getOrThrow("aiAutoDescription")
 
                 fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
                 fun <T> accept(visitor: Visitor<T>): T =
                     when {
-                        removedotBg != null -> visitor.visitRemovedotBg(removedotBg)
+                        removeBg != null -> visitor.visitRemoveBg(removeBg)
                         autoTagging != null -> visitor.visitAutoTagging(autoTagging)
-                        autoDescription != null -> visitor.visitAutoDescription(autoDescription)
+                        aiAutoDescription != null ->
+                            visitor.visitAiAutoDescription(aiAutoDescription)
                         else -> visitor.unknown(_json)
                     }
 
@@ -1069,18 +1066,24 @@ private constructor(
 
                     accept(
                         object : Visitor<Unit> {
-                            override fun visitRemovedotBg(removedotBg: RemovedotBgExtension) {
-                                removedotBg.validate()
+                            override fun visitRemoveBg(removeBg: RemoveBg) {
+                                removeBg.validate()
                             }
 
                             override fun visitAutoTagging(autoTagging: AutoTaggingExtension) {
                                 autoTagging.validate()
                             }
 
-                            override fun visitAutoDescription(
-                                autoDescription: AutoDescriptionExtension
-                            ) {
-                                autoDescription.validate()
+                            override fun visitAiAutoDescription(aiAutoDescription: JsonValue) {
+                                aiAutoDescription.let {
+                                    if (
+                                        it != JsonValue.from(mapOf("name" to "ai-auto-description"))
+                                    ) {
+                                        throw ImageKitInvalidDataException(
+                                            "'aiAutoDescription' is invalid, received $it"
+                                        )
+                                    }
+                                }
                             }
                         }
                     )
@@ -1105,15 +1108,19 @@ private constructor(
                 internal fun validity(): Int =
                     accept(
                         object : Visitor<Int> {
-                            override fun visitRemovedotBg(removedotBg: RemovedotBgExtension) =
-                                removedotBg.validity()
+                            override fun visitRemoveBg(removeBg: RemoveBg) = removeBg.validity()
 
                             override fun visitAutoTagging(autoTagging: AutoTaggingExtension) =
                                 autoTagging.validity()
 
-                            override fun visitAutoDescription(
-                                autoDescription: AutoDescriptionExtension
-                            ) = autoDescription.validity()
+                            override fun visitAiAutoDescription(aiAutoDescription: JsonValue) =
+                                aiAutoDescription.let {
+                                    if (
+                                        it == JsonValue.from(mapOf("name" to "ai-auto-description"))
+                                    )
+                                        1
+                                    else 0
+                                }
 
                             override fun unknown(json: JsonValue?) = 0
                         }
@@ -1125,36 +1132,38 @@ private constructor(
                     }
 
                     return other is Extension &&
-                        removedotBg == other.removedotBg &&
+                        removeBg == other.removeBg &&
                         autoTagging == other.autoTagging &&
-                        autoDescription == other.autoDescription
+                        aiAutoDescription == other.aiAutoDescription
                 }
 
                 override fun hashCode(): Int =
-                    Objects.hash(removedotBg, autoTagging, autoDescription)
+                    Objects.hash(removeBg, autoTagging, aiAutoDescription)
 
                 override fun toString(): String =
                     when {
-                        removedotBg != null -> "Extension{removedotBg=$removedotBg}"
+                        removeBg != null -> "Extension{removeBg=$removeBg}"
                         autoTagging != null -> "Extension{autoTagging=$autoTagging}"
-                        autoDescription != null -> "Extension{autoDescription=$autoDescription}"
+                        aiAutoDescription != null ->
+                            "Extension{aiAutoDescription=$aiAutoDescription}"
                         _json != null -> "Extension{_unknown=$_json}"
                         else -> throw IllegalStateException("Invalid Extension")
                     }
 
                 companion object {
 
-                    @JvmStatic
-                    fun ofRemovedotBg(removedotBg: RemovedotBgExtension) =
-                        Extension(removedotBg = removedotBg)
+                    @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = Extension(removeBg = removeBg)
 
                     @JvmStatic
                     fun ofAutoTagging(autoTagging: AutoTaggingExtension) =
                         Extension(autoTagging = autoTagging)
 
                     @JvmStatic
-                    fun ofAutoDescription(autoDescription: AutoDescriptionExtension) =
-                        Extension(autoDescription = autoDescription)
+                    fun ofAiAutoDescription() =
+                        Extension(
+                            aiAutoDescription =
+                                JsonValue.from(mapOf("name" to "ai-auto-description"))
+                        )
                 }
 
                 /**
@@ -1163,11 +1172,11 @@ private constructor(
                  */
                 interface Visitor<out T> {
 
-                    fun visitRemovedotBg(removedotBg: RemovedotBgExtension): T
+                    fun visitRemoveBg(removeBg: RemoveBg): T
 
                     fun visitAutoTagging(autoTagging: AutoTaggingExtension): T
 
-                    fun visitAutoDescription(autoDescription: AutoDescriptionExtension): T
+                    fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
                     /**
                      * Maps an unknown variant of [Extension] to a value of type [T].
@@ -1188,30 +1197,24 @@ private constructor(
 
                     override fun ObjectCodec.deserialize(node: JsonNode): Extension {
                         val json = JsonValue.fromJsonNode(node)
+                        val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
-                        val bestMatches =
-                            sequenceOf(
-                                    tryDeserialize(node, jacksonTypeRef<RemovedotBgExtension>())
-                                        ?.let { Extension(removedotBg = it, _json = json) },
-                                    tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())
-                                        ?.let { Extension(autoTagging = it, _json = json) },
-                                    tryDeserialize(node, jacksonTypeRef<AutoDescriptionExtension>())
-                                        ?.let { Extension(autoDescription = it, _json = json) },
-                                )
-                                .filterNotNull()
-                                .allMaxBy { it.validity() }
-                                .toList()
-                        return when (bestMatches.size) {
-                            // This can happen if what we're deserializing is completely
-                            // incompatible with all the possible variants (e.g. deserializing from
-                            // boolean).
-                            0 -> Extension(_json = json)
-                            1 -> bestMatches.single()
-                            // If there's more than one match with the highest validity, then use
-                            // the first completely valid match, or simply the first match if none
-                            // are completely valid.
-                            else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                        when (name) {
+                            "remove-bg" -> {
+                                return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
+                                    Extension(removeBg = it, _json = json)
+                                } ?: Extension(_json = json)
+                            }
+                            "ai-auto-description" -> {
+                                return tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                    ?.let { Extension(aiAutoDescription = it, _json = json) }
+                                    ?.takeIf { it.isValid() } ?: Extension(_json = json)
+                            }
                         }
+
+                        return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
+                            Extension(autoTagging = it, _json = json)
+                        } ?: Extension(_json = json)
                     }
                 }
 
@@ -1223,28 +1226,26 @@ private constructor(
                         provider: SerializerProvider,
                     ) {
                         when {
-                            value.removedotBg != null -> generator.writeObject(value.removedotBg)
+                            value.removeBg != null -> generator.writeObject(value.removeBg)
                             value.autoTagging != null -> generator.writeObject(value.autoTagging)
-                            value.autoDescription != null ->
-                                generator.writeObject(value.autoDescription)
+                            value.aiAutoDescription != null ->
+                                generator.writeObject(value.aiAutoDescription)
                             value._json != null -> generator.writeObject(value._json)
                             else -> throw IllegalStateException("Invalid Extension")
                         }
                     }
                 }
 
-                class RemovedotBgExtension
+                class RemoveBg
                 private constructor(
-                    private val name: JsonField<Name>,
+                    private val name: JsonValue,
                     private val options: JsonField<Options>,
                     private val additionalProperties: MutableMap<String, JsonValue>,
                 ) {
 
                     @JsonCreator
                     private constructor(
-                        @JsonProperty("name")
-                        @ExcludeMissing
-                        name: JsonField<Name> = JsonMissing.of(),
+                        @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
                         @JsonProperty("options")
                         @ExcludeMissing
                         options: JsonField<Options> = JsonMissing.of(),
@@ -1253,25 +1254,21 @@ private constructor(
                     /**
                      * Specifies the background removal extension.
                      *
-                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
-                     *   or is unexpectedly missing or null (e.g. if the server responded with an
-                     *   unexpected value).
+                     * Expected to always return the following:
+                     * ```java
+                     * JsonValue.from("remove-bg")
+                     * ```
+                     *
+                     * However, this method can be useful for debugging and logging (e.g. if the
+                     * server responded with an unexpected value).
                      */
-                    fun name(): Name = name.getRequired("name")
+                    @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
 
                     /**
                      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                      *   (e.g. if the server responded with an unexpected value).
                      */
                     fun options(): Optional<Options> = options.getOptional("options")
-
-                    /**
-                     * Returns the raw JSON value of [name].
-                     *
-                     * Unlike [name], this method doesn't throw if the JSON field has an unexpected
-                     * type.
-                     */
-                    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
 
                     /**
                      * Returns the raw JSON value of [options].
@@ -1297,45 +1294,38 @@ private constructor(
 
                     companion object {
 
-                        /**
-                         * Returns a mutable builder for constructing an instance of
-                         * [RemovedotBgExtension].
-                         *
-                         * The following fields are required:
-                         * ```java
-                         * .name()
-                         * ```
-                         */
+                        /** Returns a mutable builder for constructing an instance of [RemoveBg]. */
                         @JvmStatic fun builder() = Builder()
                     }
 
-                    /** A builder for [RemovedotBgExtension]. */
+                    /** A builder for [RemoveBg]. */
                     class Builder internal constructor() {
 
-                        private var name: JsonField<Name>? = null
+                        private var name: JsonValue = JsonValue.from("remove-bg")
                         private var options: JsonField<Options> = JsonMissing.of()
                         private var additionalProperties: MutableMap<String, JsonValue> =
                             mutableMapOf()
 
                         @JvmSynthetic
-                        internal fun from(removedotBgExtension: RemovedotBgExtension) = apply {
-                            name = removedotBgExtension.name
-                            options = removedotBgExtension.options
-                            additionalProperties =
-                                removedotBgExtension.additionalProperties.toMutableMap()
+                        internal fun from(removeBg: RemoveBg) = apply {
+                            name = removeBg.name
+                            options = removeBg.options
+                            additionalProperties = removeBg.additionalProperties.toMutableMap()
                         }
 
-                        /** Specifies the background removal extension. */
-                        fun name(name: Name) = name(JsonField.of(name))
-
                         /**
-                         * Sets [Builder.name] to an arbitrary JSON value.
+                         * Sets the field to an arbitrary JSON value.
                          *
-                         * You should usually call [Builder.name] with a well-typed [Name] value
-                         * instead. This method is primarily for setting the field to an
-                         * undocumented or not yet supported value.
+                         * It is usually unnecessary to call this method because the field defaults
+                         * to the following:
+                         * ```java
+                         * JsonValue.from("remove-bg")
+                         * ```
+                         *
+                         * This method is primarily for setting the field to an undocumented or not
+                         * yet supported value.
                          */
-                        fun name(name: JsonField<Name>) = apply { this.name = name }
+                        fun name(name: JsonValue) = apply { this.name = name }
 
                         fun options(options: Options) = options(JsonField.of(options))
 
@@ -1371,33 +1361,28 @@ private constructor(
                         }
 
                         /**
-                         * Returns an immutable instance of [RemovedotBgExtension].
+                         * Returns an immutable instance of [RemoveBg].
                          *
                          * Further updates to this [Builder] will not mutate the returned instance.
-                         *
-                         * The following fields are required:
-                         * ```java
-                         * .name()
-                         * ```
-                         *
-                         * @throws IllegalStateException if any required field is unset.
                          */
-                        fun build(): RemovedotBgExtension =
-                            RemovedotBgExtension(
-                                checkRequired("name", name),
-                                options,
-                                additionalProperties.toMutableMap(),
-                            )
+                        fun build(): RemoveBg =
+                            RemoveBg(name, options, additionalProperties.toMutableMap())
                     }
 
                     private var validated: Boolean = false
 
-                    fun validate(): RemovedotBgExtension = apply {
+                    fun validate(): RemoveBg = apply {
                         if (validated) {
                             return@apply
                         }
 
-                        name().validate()
+                        _name().let {
+                            if (it != JsonValue.from("remove-bg")) {
+                                throw ImageKitInvalidDataException(
+                                    "'name' is invalid, received $it"
+                                )
+                            }
+                        }
                         options().ifPresent { it.validate() }
                         validated = true
                     }
@@ -1418,138 +1403,8 @@ private constructor(
                      */
                     @JvmSynthetic
                     internal fun validity(): Int =
-                        (name.asKnown().getOrNull()?.validity() ?: 0) +
+                        name.let { if (it == JsonValue.from("remove-bg")) 1 else 0 } +
                             (options.asKnown().getOrNull()?.validity() ?: 0)
-
-                    /** Specifies the background removal extension. */
-                    class Name
-                    @JsonCreator
-                    private constructor(private val value: JsonField<String>) : Enum {
-
-                        /**
-                         * Returns this class instance's raw value.
-                         *
-                         * This is usually only useful if this instance was deserialized from data
-                         * that doesn't match any known member, and you want to know that value. For
-                         * example, if the SDK is on an older version than the API, then the API may
-                         * respond with new members that the SDK is unaware of.
-                         */
-                        @com.fasterxml.jackson.annotation.JsonValue
-                        fun _value(): JsonField<String> = value
-
-                        companion object {
-
-                            @JvmField val REMOVE_BG = of("remove-bg")
-
-                            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-                        }
-
-                        /** An enum containing [Name]'s known values. */
-                        enum class Known {
-                            REMOVE_BG
-                        }
-
-                        /**
-                         * An enum containing [Name]'s known values, as well as an [_UNKNOWN]
-                         * member.
-                         *
-                         * An instance of [Name] can contain an unknown value in a couple of cases:
-                         * - It was deserialized from data that doesn't match any known member. For
-                         *   example, if the SDK is on an older version than the API, then the API
-                         *   may respond with new members that the SDK is unaware of.
-                         * - It was constructed with an arbitrary value using the [of] method.
-                         */
-                        enum class Value {
-                            REMOVE_BG,
-                            /**
-                             * An enum member indicating that [Name] was instantiated with an
-                             * unknown value.
-                             */
-                            _UNKNOWN,
-                        }
-
-                        /**
-                         * Returns an enum member corresponding to this class instance's value, or
-                         * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                         *
-                         * Use the [known] method instead if you're certain the value is always
-                         * known or if you want to throw for the unknown case.
-                         */
-                        fun value(): Value =
-                            when (this) {
-                                REMOVE_BG -> Value.REMOVE_BG
-                                else -> Value._UNKNOWN
-                            }
-
-                        /**
-                         * Returns an enum member corresponding to this class instance's value.
-                         *
-                         * Use the [value] method instead if you're uncertain the value is always
-                         * known and don't want to throw for the unknown case.
-                         *
-                         * @throws ImageKitInvalidDataException if this class instance's value is a
-                         *   not a known member.
-                         */
-                        fun known(): Known =
-                            when (this) {
-                                REMOVE_BG -> Known.REMOVE_BG
-                                else -> throw ImageKitInvalidDataException("Unknown Name: $value")
-                            }
-
-                        /**
-                         * Returns this class instance's primitive wire representation.
-                         *
-                         * This differs from the [toString] method because that method is primarily
-                         * for debugging and generally doesn't throw.
-                         *
-                         * @throws ImageKitInvalidDataException if this class instance's value does
-                         *   not have the expected primitive type.
-                         */
-                        fun asString(): String =
-                            _value().asString().orElseThrow {
-                                ImageKitInvalidDataException("Value is not a String")
-                            }
-
-                        private var validated: Boolean = false
-
-                        fun validate(): Name = apply {
-                            if (validated) {
-                                return@apply
-                            }
-
-                            known()
-                            validated = true
-                        }
-
-                        fun isValid(): Boolean =
-                            try {
-                                validate()
-                                true
-                            } catch (e: ImageKitInvalidDataException) {
-                                false
-                            }
-
-                        /**
-                         * Returns a score indicating how many valid values are contained in this
-                         * object recursively.
-                         *
-                         * Used for best match union deserialization.
-                         */
-                        @JvmSynthetic
-                        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                        override fun equals(other: Any?): Boolean {
-                            if (this === other) {
-                                return true
-                            }
-
-                            return other is Name && value == other.value
-                        }
-
-                        override fun hashCode() = value.hashCode()
-
-                        override fun toString() = value.toString()
-                    }
 
                     class Options
                     private constructor(
@@ -1871,7 +1726,7 @@ private constructor(
                             return true
                         }
 
-                        return other is RemovedotBgExtension &&
+                        return other is RemoveBg &&
                             name == other.name &&
                             options == other.options &&
                             additionalProperties == other.additionalProperties
@@ -1884,7 +1739,7 @@ private constructor(
                     override fun hashCode(): Int = hashCode
 
                     override fun toString() =
-                        "RemovedotBgExtension{name=$name, options=$options, additionalProperties=$additionalProperties}"
+                        "RemoveBg{name=$name, options=$options, additionalProperties=$additionalProperties}"
                 }
 
                 class AutoTaggingExtension
@@ -2282,306 +2137,6 @@ private constructor(
 
                     override fun toString() =
                         "AutoTaggingExtension{maxTags=$maxTags, minConfidence=$minConfidence, name=$name, additionalProperties=$additionalProperties}"
-                }
-
-                class AutoDescriptionExtension
-                private constructor(
-                    private val name: JsonField<Name>,
-                    private val additionalProperties: MutableMap<String, JsonValue>,
-                ) {
-
-                    @JsonCreator
-                    private constructor(
-                        @JsonProperty("name")
-                        @ExcludeMissing
-                        name: JsonField<Name> = JsonMissing.of()
-                    ) : this(name, mutableMapOf())
-
-                    /**
-                     * Specifies the auto description extension.
-                     *
-                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
-                     *   or is unexpectedly missing or null (e.g. if the server responded with an
-                     *   unexpected value).
-                     */
-                    fun name(): Name = name.getRequired("name")
-
-                    /**
-                     * Returns the raw JSON value of [name].
-                     *
-                     * Unlike [name], this method doesn't throw if the JSON field has an unexpected
-                     * type.
-                     */
-                    @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
-
-                    @JsonAnySetter
-                    private fun putAdditionalProperty(key: String, value: JsonValue) {
-                        additionalProperties.put(key, value)
-                    }
-
-                    @JsonAnyGetter
-                    @ExcludeMissing
-                    fun _additionalProperties(): Map<String, JsonValue> =
-                        Collections.unmodifiableMap(additionalProperties)
-
-                    fun toBuilder() = Builder().from(this)
-
-                    companion object {
-
-                        /**
-                         * Returns a mutable builder for constructing an instance of
-                         * [AutoDescriptionExtension].
-                         *
-                         * The following fields are required:
-                         * ```java
-                         * .name()
-                         * ```
-                         */
-                        @JvmStatic fun builder() = Builder()
-                    }
-
-                    /** A builder for [AutoDescriptionExtension]. */
-                    class Builder internal constructor() {
-
-                        private var name: JsonField<Name>? = null
-                        private var additionalProperties: MutableMap<String, JsonValue> =
-                            mutableMapOf()
-
-                        @JvmSynthetic
-                        internal fun from(autoDescriptionExtension: AutoDescriptionExtension) =
-                            apply {
-                                name = autoDescriptionExtension.name
-                                additionalProperties =
-                                    autoDescriptionExtension.additionalProperties.toMutableMap()
-                            }
-
-                        /** Specifies the auto description extension. */
-                        fun name(name: Name) = name(JsonField.of(name))
-
-                        /**
-                         * Sets [Builder.name] to an arbitrary JSON value.
-                         *
-                         * You should usually call [Builder.name] with a well-typed [Name] value
-                         * instead. This method is primarily for setting the field to an
-                         * undocumented or not yet supported value.
-                         */
-                        fun name(name: JsonField<Name>) = apply { this.name = name }
-
-                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
-                            apply {
-                                this.additionalProperties.clear()
-                                putAllAdditionalProperties(additionalProperties)
-                            }
-
-                        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                            additionalProperties.put(key, value)
-                        }
-
-                        fun putAllAdditionalProperties(
-                            additionalProperties: Map<String, JsonValue>
-                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
-
-                        fun removeAdditionalProperty(key: String) = apply {
-                            additionalProperties.remove(key)
-                        }
-
-                        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                            keys.forEach(::removeAdditionalProperty)
-                        }
-
-                        /**
-                         * Returns an immutable instance of [AutoDescriptionExtension].
-                         *
-                         * Further updates to this [Builder] will not mutate the returned instance.
-                         *
-                         * The following fields are required:
-                         * ```java
-                         * .name()
-                         * ```
-                         *
-                         * @throws IllegalStateException if any required field is unset.
-                         */
-                        fun build(): AutoDescriptionExtension =
-                            AutoDescriptionExtension(
-                                checkRequired("name", name),
-                                additionalProperties.toMutableMap(),
-                            )
-                    }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): AutoDescriptionExtension = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        name().validate()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = (name.asKnown().getOrNull()?.validity() ?: 0)
-
-                    /** Specifies the auto description extension. */
-                    class Name
-                    @JsonCreator
-                    private constructor(private val value: JsonField<String>) : Enum {
-
-                        /**
-                         * Returns this class instance's raw value.
-                         *
-                         * This is usually only useful if this instance was deserialized from data
-                         * that doesn't match any known member, and you want to know that value. For
-                         * example, if the SDK is on an older version than the API, then the API may
-                         * respond with new members that the SDK is unaware of.
-                         */
-                        @com.fasterxml.jackson.annotation.JsonValue
-                        fun _value(): JsonField<String> = value
-
-                        companion object {
-
-                            @JvmField val AI_AUTO_DESCRIPTION = of("ai-auto-description")
-
-                            @JvmStatic fun of(value: String) = Name(JsonField.of(value))
-                        }
-
-                        /** An enum containing [Name]'s known values. */
-                        enum class Known {
-                            AI_AUTO_DESCRIPTION
-                        }
-
-                        /**
-                         * An enum containing [Name]'s known values, as well as an [_UNKNOWN]
-                         * member.
-                         *
-                         * An instance of [Name] can contain an unknown value in a couple of cases:
-                         * - It was deserialized from data that doesn't match any known member. For
-                         *   example, if the SDK is on an older version than the API, then the API
-                         *   may respond with new members that the SDK is unaware of.
-                         * - It was constructed with an arbitrary value using the [of] method.
-                         */
-                        enum class Value {
-                            AI_AUTO_DESCRIPTION,
-                            /**
-                             * An enum member indicating that [Name] was instantiated with an
-                             * unknown value.
-                             */
-                            _UNKNOWN,
-                        }
-
-                        /**
-                         * Returns an enum member corresponding to this class instance's value, or
-                         * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                         *
-                         * Use the [known] method instead if you're certain the value is always
-                         * known or if you want to throw for the unknown case.
-                         */
-                        fun value(): Value =
-                            when (this) {
-                                AI_AUTO_DESCRIPTION -> Value.AI_AUTO_DESCRIPTION
-                                else -> Value._UNKNOWN
-                            }
-
-                        /**
-                         * Returns an enum member corresponding to this class instance's value.
-                         *
-                         * Use the [value] method instead if you're uncertain the value is always
-                         * known and don't want to throw for the unknown case.
-                         *
-                         * @throws ImageKitInvalidDataException if this class instance's value is a
-                         *   not a known member.
-                         */
-                        fun known(): Known =
-                            when (this) {
-                                AI_AUTO_DESCRIPTION -> Known.AI_AUTO_DESCRIPTION
-                                else -> throw ImageKitInvalidDataException("Unknown Name: $value")
-                            }
-
-                        /**
-                         * Returns this class instance's primitive wire representation.
-                         *
-                         * This differs from the [toString] method because that method is primarily
-                         * for debugging and generally doesn't throw.
-                         *
-                         * @throws ImageKitInvalidDataException if this class instance's value does
-                         *   not have the expected primitive type.
-                         */
-                        fun asString(): String =
-                            _value().asString().orElseThrow {
-                                ImageKitInvalidDataException("Value is not a String")
-                            }
-
-                        private var validated: Boolean = false
-
-                        fun validate(): Name = apply {
-                            if (validated) {
-                                return@apply
-                            }
-
-                            known()
-                            validated = true
-                        }
-
-                        fun isValid(): Boolean =
-                            try {
-                                validate()
-                                true
-                            } catch (e: ImageKitInvalidDataException) {
-                                false
-                            }
-
-                        /**
-                         * Returns a score indicating how many valid values are contained in this
-                         * object recursively.
-                         *
-                         * Used for best match union deserialization.
-                         */
-                        @JvmSynthetic
-                        internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                        override fun equals(other: Any?): Boolean {
-                            if (this === other) {
-                                return true
-                            }
-
-                            return other is Name && value == other.value
-                        }
-
-                        override fun hashCode() = value.hashCode()
-
-                        override fun toString() = value.toString()
-                    }
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is AutoDescriptionExtension &&
-                            name == other.name &&
-                            additionalProperties == other.additionalProperties
-                    }
-
-                    private val hashCode: Int by lazy { Objects.hash(name, additionalProperties) }
-
-                    override fun hashCode(): Int = hashCode
-
-                    override fun toString() =
-                        "AutoDescriptionExtension{name=$name, additionalProperties=$additionalProperties}"
                 }
             }
 

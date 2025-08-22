@@ -44,19 +44,12 @@ internal class FileServiceTest {
                             .description("description")
                             .extensions(
                                 listOf(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .RemovedotBgExtension
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemoveBg(
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg
                                             .builder()
-                                            .name(
-                                                FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                    .RemovedotBgExtension
-                                                    .Name
-                                                    .REMOVE_BG
-                                            )
                                             .options(
                                                 FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                    .RemovedotBgExtension
+                                                    .RemoveBg
                                                     .Options
                                                     .builder()
                                                     .addShadow(true)
@@ -96,19 +89,7 @@ internal class FileServiceTest {
                                             .build()
                                     ),
                                     FileUpdateParams.Body.UpdateFileDetails.Extension
-                                        .ofAutoDescription(
-                                            FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .AutoDescriptionExtension
-                                                .builder()
-                                                .name(
-                                                    FileUpdateParams.Body.UpdateFileDetails
-                                                        .Extension
-                                                        .AutoDescriptionExtension
-                                                        .Name
-                                                        .AI_AUTO_DESCRIPTION
-                                                )
-                                                .build()
-                                        ),
+                                        .ofAiAutoDescription(),
                                 )
                             )
                             .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))

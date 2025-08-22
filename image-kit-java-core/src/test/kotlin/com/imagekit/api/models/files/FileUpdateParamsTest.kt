@@ -25,19 +25,10 @@ internal class FileUpdateParamsTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
-                                FileUpdateParams.Body.UpdateFileDetails.Extension
-                                    .RemovedotBgExtension
-                                    .builder()
-                                    .name(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .RemovedotBgExtension
-                                            .Name
-                                            .REMOVE_BG
-                                    )
+                            FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemoveBg(
+                                FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg.builder()
                                     .options(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .RemovedotBgExtension
+                                        FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg
                                             .Options
                                             .builder()
                                             .addShadow(true)
@@ -76,18 +67,7 @@ internal class FileUpdateParamsTest {
                                     )
                                     .build()
                             ),
-                            FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoDescription(
-                                FileUpdateParams.Body.UpdateFileDetails.Extension
-                                    .AutoDescriptionExtension
-                                    .builder()
-                                    .name(
-                                        FileUpdateParams.Body.UpdateFileDetails.Extension
-                                            .AutoDescriptionExtension
-                                            .Name
-                                            .AI_AUTO_DESCRIPTION
-                                    )
-                                    .build()
-                            ),
+                            FileUpdateParams.Body.UpdateFileDetails.Extension.ofAiAutoDescription(),
                         )
                     )
                     .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -125,19 +105,12 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension
-                                        .RemovedotBgExtension
+                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemoveBg(
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg
                                         .builder()
-                                        .name(
-                                            FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .RemovedotBgExtension
-                                                .Name
-                                                .REMOVE_BG
-                                        )
                                         .options(
                                             FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .RemovedotBgExtension
+                                                .RemoveBg
                                                 .Options
                                                 .builder()
                                                 .addShadow(true)
@@ -176,18 +149,8 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoDescription(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension
-                                        .AutoDescriptionExtension
-                                        .builder()
-                                        .name(
-                                            FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .AutoDescriptionExtension
-                                                .Name
-                                                .AI_AUTO_DESCRIPTION
-                                        )
-                                        .build()
-                                ),
+                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                    .ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -214,19 +177,12 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemovedotBg(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension
-                                        .RemovedotBgExtension
+                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofRemoveBg(
+                                    FileUpdateParams.Body.UpdateFileDetails.Extension.RemoveBg
                                         .builder()
-                                        .name(
-                                            FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .RemovedotBgExtension
-                                                .Name
-                                                .REMOVE_BG
-                                        )
                                         .options(
                                             FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .RemovedotBgExtension
+                                                .RemoveBg
                                                 .Options
                                                 .builder()
                                                 .addShadow(true)
@@ -265,18 +221,8 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Body.UpdateFileDetails.Extension.ofAutoDescription(
-                                    FileUpdateParams.Body.UpdateFileDetails.Extension
-                                        .AutoDescriptionExtension
-                                        .builder()
-                                        .name(
-                                            FileUpdateParams.Body.UpdateFileDetails.Extension
-                                                .AutoDescriptionExtension
-                                                .Name
-                                                .AI_AUTO_DESCRIPTION
-                                        )
-                                        .build()
-                                ),
+                                FileUpdateParams.Body.UpdateFileDetails.Extension
+                                    .ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
