@@ -853,16 +853,9 @@ private constructor(
             /** Alias for calling [defaultValue] with `DefaultValue.ofBool(bool)`. */
             fun defaultValue(bool: Boolean) = defaultValue(DefaultValue.ofBool(bool))
 
-            /**
-             * Alias for calling [defaultValue] with
-             * `DefaultValue.ofArrayForMultiSelectTypeFields(arrayForMultiSelectTypeFields)`.
-             */
-            fun defaultValueOfArrayForMultiSelectTypeFields(
-                arrayForMultiSelectTypeFields: List<DefaultValue.UnnamedSchemaWithArrayParent3>
-            ) =
-                defaultValue(
-                    DefaultValue.ofArrayForMultiSelectTypeFields(arrayForMultiSelectTypeFields)
-                )
+            /** Alias for calling [defaultValue] with `DefaultValue.ofMixed(mixed)`. */
+            fun defaultValueOfMixed(mixed: List<DefaultValue.UnnamedSchemaWithArrayParent3>) =
+                defaultValue(DefaultValue.ofMixed(mixed))
 
             /**
              * Sets this custom metadata field as required. Setting custom metadata fields on an
@@ -1254,7 +1247,7 @@ private constructor(
             private val string: String? = null,
             private val number: Double? = null,
             private val bool: Boolean? = null,
-            private val arrayForMultiSelectTypeFields: List<UnnamedSchemaWithArrayParent3>? = null,
+            private val mixed: List<UnnamedSchemaWithArrayParent3>? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -1268,8 +1261,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun arrayForMultiSelectTypeFields(): Optional<List<UnnamedSchemaWithArrayParent3>> =
-                Optional.ofNullable(arrayForMultiSelectTypeFields)
+            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent3>> = Optional.ofNullable(mixed)
 
             fun isString(): Boolean = string != null
 
@@ -1277,7 +1269,7 @@ private constructor(
 
             fun isBool(): Boolean = bool != null
 
-            fun isArrayForMultiSelectTypeFields(): Boolean = arrayForMultiSelectTypeFields != null
+            fun isMixed(): Boolean = mixed != null
 
             fun asString(): String = string.getOrThrow("string")
 
@@ -1289,8 +1281,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun asArrayForMultiSelectTypeFields(): List<UnnamedSchemaWithArrayParent3> =
-                arrayForMultiSelectTypeFields.getOrThrow("arrayForMultiSelectTypeFields")
+            fun asMixed(): List<UnnamedSchemaWithArrayParent3> = mixed.getOrThrow("mixed")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1299,8 +1290,7 @@ private constructor(
                     string != null -> visitor.visitString(string)
                     number != null -> visitor.visitNumber(number)
                     bool != null -> visitor.visitBool(bool)
-                    arrayForMultiSelectTypeFields != null ->
-                        visitor.visitArrayForMultiSelectTypeFields(arrayForMultiSelectTypeFields)
+                    mixed != null -> visitor.visitMixed(mixed)
                     else -> visitor.unknown(_json)
                 }
 
@@ -1319,10 +1309,8 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) {}
 
-                        override fun visitArrayForMultiSelectTypeFields(
-                            arrayForMultiSelectTypeFields: List<UnnamedSchemaWithArrayParent3>
-                        ) {
-                            arrayForMultiSelectTypeFields.forEach { it.validate() }
+                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>) {
+                            mixed.forEach { it.validate() }
                         }
                     }
                 )
@@ -1353,9 +1341,8 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) = 1
 
-                        override fun visitArrayForMultiSelectTypeFields(
-                            arrayForMultiSelectTypeFields: List<UnnamedSchemaWithArrayParent3>
-                        ) = arrayForMultiSelectTypeFields.sumOf { it.validity().toInt() }
+                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>) =
+                            mixed.sumOf { it.validity().toInt() }
 
                         override fun unknown(json: JsonValue?) = 0
                     }
@@ -1370,19 +1357,17 @@ private constructor(
                     string == other.string &&
                     number == other.number &&
                     bool == other.bool &&
-                    arrayForMultiSelectTypeFields == other.arrayForMultiSelectTypeFields
+                    mixed == other.mixed
             }
 
-            override fun hashCode(): Int =
-                Objects.hash(string, number, bool, arrayForMultiSelectTypeFields)
+            override fun hashCode(): Int = Objects.hash(string, number, bool, mixed)
 
             override fun toString(): String =
                 when {
                     string != null -> "DefaultValue{string=$string}"
                     number != null -> "DefaultValue{number=$number}"
                     bool != null -> "DefaultValue{bool=$bool}"
-                    arrayForMultiSelectTypeFields != null ->
-                        "DefaultValue{arrayForMultiSelectTypeFields=$arrayForMultiSelectTypeFields}"
+                    mixed != null -> "DefaultValue{mixed=$mixed}"
                     _json != null -> "DefaultValue{_unknown=$_json}"
                     else -> throw IllegalStateException("Invalid DefaultValue")
                 }
@@ -1400,12 +1385,8 @@ private constructor(
                  * `MultiSelect`.
                  */
                 @JvmStatic
-                fun ofArrayForMultiSelectTypeFields(
-                    arrayForMultiSelectTypeFields: List<UnnamedSchemaWithArrayParent3>
-                ) =
-                    DefaultValue(
-                        arrayForMultiSelectTypeFields = arrayForMultiSelectTypeFields.toImmutable()
-                    )
+                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent3>) =
+                    DefaultValue(mixed = mixed.toImmutable())
             }
 
             /**
@@ -1424,9 +1405,7 @@ private constructor(
                  * Default value should be of type array when custom metadata field type is set to
                  * `MultiSelect`.
                  */
-                fun visitArrayForMultiSelectTypeFields(
-                    arrayForMultiSelectTypeFields: List<UnnamedSchemaWithArrayParent3>
-                ): T
+                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>): T
 
                 /**
                  * Maps an unknown variant of [DefaultValue] to a value of type [T].
@@ -1463,12 +1442,7 @@ private constructor(
                                         node,
                                         jacksonTypeRef<List<UnnamedSchemaWithArrayParent3>>(),
                                     )
-                                    ?.let {
-                                        DefaultValue(
-                                            arrayForMultiSelectTypeFields = it,
-                                            _json = json,
-                                        )
-                                    },
+                                    ?.let { DefaultValue(mixed = it, _json = json) },
                             )
                             .filterNotNull()
                             .allMaxBy { it.validity() }
@@ -1497,8 +1471,7 @@ private constructor(
                         value.string != null -> generator.writeObject(value.string)
                         value.number != null -> generator.writeObject(value.number)
                         value.bool != null -> generator.writeObject(value.bool)
-                        value.arrayForMultiSelectTypeFields != null ->
-                            generator.writeObject(value.arrayForMultiSelectTypeFields)
+                        value.mixed != null -> generator.writeObject(value.mixed)
                         value._json != null -> generator.writeObject(value._json)
                         else -> throw IllegalStateException("Invalid DefaultValue")
                     }
