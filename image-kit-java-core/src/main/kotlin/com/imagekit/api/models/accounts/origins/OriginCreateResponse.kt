@@ -385,7 +385,7 @@ private constructor(
         private val bucket: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonValue,
+        private val prefix: JsonField<String>,
         private val type: JsonField<Type>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -399,7 +399,7 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonValue = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
@@ -449,8 +449,13 @@ private constructor(
          */
         fun name(): String = name.getRequired("name")
 
-        /** Path prefix inside the bucket. */
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonValue = prefix
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun prefix(): String = prefix.getRequired("prefix")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -497,6 +502,13 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
         /**
          * Returns the raw JSON value of [type].
@@ -552,7 +564,7 @@ private constructor(
             private var bucket: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonValue? = null
+            private var prefix: JsonField<String>? = null
             private var type: JsonField<Type>? = null
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -624,7 +636,16 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Path prefix inside the bucket. */
-            fun prefix(prefix: JsonValue) = apply { this.prefix = prefix }
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun type(type: Type) = type(JsonField.of(type))
 
@@ -712,6 +733,7 @@ private constructor(
             bucket()
             includeCanonicalHeader()
             name()
+            prefix()
             type().validate()
             baseUrlForCanonicalHeader()
             validated = true
@@ -737,6 +759,7 @@ private constructor(
                 (if (bucket.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
 
@@ -903,7 +926,7 @@ private constructor(
         private val endpoint: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonValue,
+        private val prefix: JsonField<String>,
         private val s3ForcePathStyle: JsonField<Boolean>,
         private val type: JsonField<Type>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
@@ -921,7 +944,7 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonValue = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("s3ForcePathStyle")
             @ExcludeMissing
             s3ForcePathStyle: JsonField<Boolean> = JsonMissing.of(),
@@ -984,8 +1007,13 @@ private constructor(
          */
         fun name(): String = name.getRequired("name")
 
-        /** Path prefix inside the bucket. */
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonValue = prefix
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun prefix(): String = prefix.getRequired("prefix")
 
         /**
          * Use path-style S3 URLs?
@@ -1047,6 +1075,13 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
         /**
          * Returns the raw JSON value of [s3ForcePathStyle].
@@ -1115,7 +1150,7 @@ private constructor(
             private var endpoint: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonValue? = null
+            private var prefix: JsonField<String>? = null
             private var s3ForcePathStyle: JsonField<Boolean>? = null
             private var type: JsonField<Type>? = null
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
@@ -1202,7 +1237,16 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Path prefix inside the bucket. */
-            fun prefix(prefix: JsonValue) = apply { this.prefix = prefix }
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             /** Use path-style S3 URLs? */
             fun s3ForcePathStyle(s3ForcePathStyle: Boolean) =
@@ -1310,6 +1354,7 @@ private constructor(
             endpoint()
             includeCanonicalHeader()
             name()
+            prefix()
             s3ForcePathStyle()
             type().validate()
             baseUrlForCanonicalHeader()
@@ -1337,6 +1382,7 @@ private constructor(
                 (if (endpoint.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
                 (if (s3ForcePathStyle.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
@@ -1507,7 +1553,7 @@ private constructor(
         private val bucket: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonValue,
+        private val prefix: JsonField<String>,
         private val type: JsonField<Type>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1521,7 +1567,7 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonValue = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
@@ -1571,8 +1617,13 @@ private constructor(
          */
         fun name(): String = name.getRequired("name")
 
-        /** Path prefix inside the bucket. */
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonValue = prefix
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun prefix(): String = prefix.getRequired("prefix")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -1619,6 +1670,13 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
         /**
          * Returns the raw JSON value of [type].
@@ -1674,7 +1732,7 @@ private constructor(
             private var bucket: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonValue? = null
+            private var prefix: JsonField<String>? = null
             private var type: JsonField<Type>? = null
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -1746,7 +1804,16 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Path prefix inside the bucket. */
-            fun prefix(prefix: JsonValue) = apply { this.prefix = prefix }
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun type(type: Type) = type(JsonField.of(type))
 
@@ -1834,6 +1901,7 @@ private constructor(
             bucket()
             includeCanonicalHeader()
             name()
+            prefix()
             type().validate()
             baseUrlForCanonicalHeader()
             validated = true
@@ -1859,6 +1927,7 @@ private constructor(
                 (if (bucket.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
 
@@ -2021,7 +2090,7 @@ private constructor(
     class WebFolder
     private constructor(
         private val id: JsonField<String>,
-        private val baseUrl: JsonValue,
+        private val baseUrl: JsonField<String>,
         private val forwardHostHeaderToOrigin: JsonField<Boolean>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
@@ -2033,7 +2102,7 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonValue = JsonMissing.of(),
+            @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("forwardHostHeaderToOrigin")
             @ExcludeMissing
             forwardHostHeaderToOrigin: JsonField<Boolean> = JsonMissing.of(),
@@ -2065,8 +2134,13 @@ private constructor(
          */
         fun id(): String = id.getRequired("id")
 
-        /** Root URL for the web folder origin. */
-        @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonValue = baseUrl
+        /**
+         * Root URL for the web folder origin.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun baseUrl(): String = baseUrl.getRequired("baseUrl")
 
         /**
          * Forward the Host header to origin?
@@ -2115,6 +2189,13 @@ private constructor(
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrl].
+         *
+         * Unlike [baseUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonField<String> = baseUrl
 
         /**
          * Returns the raw JSON value of [forwardHostHeaderToOrigin].
@@ -2194,7 +2275,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
-            private var baseUrl: JsonValue? = null
+            private var baseUrl: JsonField<String>? = null
             private var forwardHostHeaderToOrigin: JsonField<Boolean>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
@@ -2230,7 +2311,16 @@ private constructor(
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             /** Root URL for the web folder origin. */
-            fun baseUrl(baseUrl: JsonValue) = apply { this.baseUrl = baseUrl }
+            fun baseUrl(baseUrl: String) = baseUrl(JsonField.of(baseUrl))
+
+            /**
+             * Sets [Builder.baseUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun baseUrl(baseUrl: JsonField<String>) = apply { this.baseUrl = baseUrl }
 
             /** Forward the Host header to origin? */
             fun forwardHostHeaderToOrigin(forwardHostHeaderToOrigin: Boolean) =
@@ -2357,6 +2447,7 @@ private constructor(
             }
 
             id()
+            baseUrl()
             forwardHostHeaderToOrigin()
             includeCanonicalHeader()
             name()
@@ -2382,6 +2473,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrl.asKnown().isPresent) 1 else 0) +
                 (if (forwardHostHeaderToOrigin.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
@@ -3006,7 +3098,7 @@ private constructor(
         private val clientEmail: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonValue,
+        private val prefix: JsonField<String>,
         private val type: JsonField<Type>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -3023,7 +3115,7 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonValue = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
@@ -3078,7 +3170,11 @@ private constructor(
          */
         fun name(): String = name.getRequired("name")
 
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonValue = prefix
+        /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun prefix(): String = prefix.getRequired("prefix")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -3136,6 +3232,13 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
+
+        /**
          * Returns the raw JSON value of [type].
          *
          * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
@@ -3191,7 +3294,7 @@ private constructor(
             private var clientEmail: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonValue? = null
+            private var prefix: JsonField<String>? = null
             private var type: JsonField<Type>? = null
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -3275,7 +3378,16 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            fun prefix(prefix: JsonValue) = apply { this.prefix = prefix }
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun type(type: Type) = type(JsonField.of(type))
 
@@ -3366,6 +3478,7 @@ private constructor(
             clientEmail()
             includeCanonicalHeader()
             name()
+            prefix()
             type().validate()
             baseUrlForCanonicalHeader()
             validated = true
@@ -3392,6 +3505,7 @@ private constructor(
                 (if (clientEmail.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
 
@@ -3560,7 +3674,7 @@ private constructor(
         private val container: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonValue,
+        private val prefix: JsonField<String>,
         private val type: JsonField<Type>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -3579,7 +3693,7 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonValue = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
@@ -3634,7 +3748,11 @@ private constructor(
          */
         fun name(): String = name.getRequired("name")
 
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonValue = prefix
+        /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun prefix(): String = prefix.getRequired("prefix")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -3692,6 +3810,13 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
+
+        /**
          * Returns the raw JSON value of [type].
          *
          * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
@@ -3747,7 +3872,7 @@ private constructor(
             private var container: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonValue? = null
+            private var prefix: JsonField<String>? = null
             private var type: JsonField<Type>? = null
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -3831,7 +3956,16 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            fun prefix(prefix: JsonValue) = apply { this.prefix = prefix }
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun type(type: Type) = type(JsonField.of(type))
 
@@ -3922,6 +4056,7 @@ private constructor(
             container()
             includeCanonicalHeader()
             name()
+            prefix()
             type().validate()
             baseUrlForCanonicalHeader()
             validated = true
@@ -3948,6 +4083,7 @@ private constructor(
                 (if (container.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
 
@@ -4112,7 +4248,7 @@ private constructor(
     class AkeneoPim
     private constructor(
         private val id: JsonField<String>,
-        private val baseUrl: JsonValue,
+        private val baseUrl: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
         private val type: JsonField<Type>,
@@ -4123,7 +4259,7 @@ private constructor(
         @JsonCreator
         private constructor(
             @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonValue = JsonMissing.of(),
+            @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonField<String> = JsonMissing.of(),
             @JsonProperty("includeCanonicalHeader")
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
@@ -4151,8 +4287,13 @@ private constructor(
          */
         fun id(): String = id.getRequired("id")
 
-        /** Akeneo instance base URL. */
-        @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonValue = baseUrl
+        /**
+         * Akeneo instance base URL.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun baseUrl(): String = baseUrl.getRequired("baseUrl")
 
         /**
          * Whether to send a Canonical header.
@@ -4192,6 +4333,13 @@ private constructor(
          * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrl].
+         *
+         * Unlike [baseUrl], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonField<String> = baseUrl
 
         /**
          * Returns the raw JSON value of [includeCanonicalHeader].
@@ -4260,7 +4408,7 @@ private constructor(
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
-            private var baseUrl: JsonValue? = null
+            private var baseUrl: JsonField<String>? = null
             private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
             private var type: JsonField<Type>? = null
@@ -4294,7 +4442,16 @@ private constructor(
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             /** Akeneo instance base URL. */
-            fun baseUrl(baseUrl: JsonValue) = apply { this.baseUrl = baseUrl }
+            fun baseUrl(baseUrl: String) = baseUrl(JsonField.of(baseUrl))
+
+            /**
+             * Sets [Builder.baseUrl] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrl] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun baseUrl(baseUrl: JsonField<String>) = apply { this.baseUrl = baseUrl }
 
             /** Whether to send a Canonical header. */
             fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
@@ -4404,6 +4561,7 @@ private constructor(
             }
 
             id()
+            baseUrl()
             includeCanonicalHeader()
             name()
             type().validate()
@@ -4428,6 +4586,7 @@ private constructor(
         @JvmSynthetic
         internal fun validity(): Int =
             (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrl.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
