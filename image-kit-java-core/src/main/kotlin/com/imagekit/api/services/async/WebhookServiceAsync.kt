@@ -4,6 +4,7 @@ package com.imagekit.api.services.async
 
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.webhooks.UnsafeUnwrapWebhookEvent
 import com.imagekit.api.models.webhooks.UnwrapWebhookEvent
 import java.util.function.Consumer
 
@@ -20,6 +21,13 @@ interface WebhookServiceAsync {
      * The original service is not modified.
      */
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookServiceAsync
+
+    /**
+     * Unwraps a webhook event from its JSON representation.
+     *
+     * @throws ImageKitInvalidDataException if the body could not be parsed.
+     */
+    fun unsafeUnwrap(body: String): UnsafeUnwrapWebhookEvent
 
     /**
      * Unwraps a webhook event from its JSON representation.

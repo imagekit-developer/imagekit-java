@@ -5,6 +5,7 @@ package com.imagekit.api.services.blocking
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.webhooks.UnsafeUnwrapWebhookEvent
 import com.imagekit.api.models.webhooks.UnwrapWebhookEvent
 import java.util.function.Consumer
 
@@ -19,6 +20,18 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookService =
         WebhookServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
+    /**
+     * Unwraps a webhook event from its JSON representation.
+     *
+     * @throws ImageKitInvalidDataException if the body could not be parsed.
+     */
+    override fun unsafeUnwrap(body: String): UnsafeUnwrapWebhookEvent =
+        try {
+            clientOptions.jsonMapper.readValue(body, jacksonTypeRef<UnsafeUnwrapWebhookEvent>())
+        } catch (e: Exception) {
+            throw ImageKitInvalidDataException("Error parsing body", e)
+        }
 
     /**
      * Unwraps a webhook event from its JSON representation.
