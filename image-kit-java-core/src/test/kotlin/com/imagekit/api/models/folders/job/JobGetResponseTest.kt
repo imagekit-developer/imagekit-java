@@ -15,14 +15,14 @@ internal class JobGetResponseTest {
             JobGetResponse.builder()
                 .jobId("5d5b1a9b4c8c4c0001f3e4a2")
                 .purgeRequestId("purgeRequestId")
-                .status("Completed")
-                .type("COPY_FOLDER")
+                .status(JobGetResponse.Status.COMPLETED)
+                .type(JobGetResponse.Type.COPY_FOLDER)
                 .build()
 
         assertThat(jobGetResponse.jobId()).contains("5d5b1a9b4c8c4c0001f3e4a2")
         assertThat(jobGetResponse.purgeRequestId()).contains("purgeRequestId")
-        assertThat(jobGetResponse.status()).contains("Completed")
-        assertThat(jobGetResponse.type()).contains("COPY_FOLDER")
+        assertThat(jobGetResponse.status()).contains(JobGetResponse.Status.COMPLETED)
+        assertThat(jobGetResponse.type()).contains(JobGetResponse.Type.COPY_FOLDER)
     }
 
     @Test
@@ -32,8 +32,8 @@ internal class JobGetResponseTest {
             JobGetResponse.builder()
                 .jobId("5d5b1a9b4c8c4c0001f3e4a2")
                 .purgeRequestId("purgeRequestId")
-                .status("Completed")
-                .type("COPY_FOLDER")
+                .status(JobGetResponse.Status.COMPLETED)
+                .type(JobGetResponse.Type.COPY_FOLDER)
                 .build()
 
         val roundtrippedJobGetResponse =
