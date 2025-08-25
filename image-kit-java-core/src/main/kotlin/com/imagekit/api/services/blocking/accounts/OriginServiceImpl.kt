@@ -18,14 +18,11 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
-import com.imagekit.api.models.accounts.origins.OriginCreateResponse
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
-import com.imagekit.api.models.accounts.origins.OriginGetResponse
 import com.imagekit.api.models.accounts.origins.OriginListParams
-import com.imagekit.api.models.accounts.origins.OriginListResponse
+import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
-import com.imagekit.api.models.accounts.origins.OriginUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -44,21 +41,21 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
     override fun create(
         params: OriginCreateParams,
         requestOptions: RequestOptions,
-    ): OriginCreateResponse =
+    ): OriginResponse =
         // post /v1/accounts/origins
         withRawResponse().create(params, requestOptions).parse()
 
     override fun update(
         params: OriginUpdateParams,
         requestOptions: RequestOptions,
-    ): OriginUpdateResponse =
+    ): OriginResponse =
         // put /v1/accounts/origins/{id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: OriginListParams,
         requestOptions: RequestOptions,
-    ): List<OriginListResponse> =
+    ): List<OriginResponse> =
         // get /v1/accounts/origins
         withRawResponse().list(params, requestOptions).parse()
 
@@ -67,7 +64,7 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
         withRawResponse().delete(params, requestOptions)
     }
 
-    override fun get(params: OriginGetParams, requestOptions: RequestOptions): OriginGetResponse =
+    override fun get(params: OriginGetParams, requestOptions: RequestOptions): OriginResponse =
         // get /v1/accounts/origins/{id}
         withRawResponse().get(params, requestOptions).parse()
 
@@ -84,13 +81,13 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<OriginCreateResponse> =
-            jsonHandler<OriginCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<OriginResponse> =
+            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: OriginCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<OriginCreateResponse> {
+        ): HttpResponseFor<OriginResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -112,13 +109,13 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val updateHandler: Handler<OriginUpdateResponse> =
-            jsonHandler<OriginUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<OriginResponse> =
+            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: OriginUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<OriginUpdateResponse> {
+        ): HttpResponseFor<OriginResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -143,13 +140,13 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val listHandler: Handler<List<OriginListResponse>> =
-            jsonHandler<List<OriginListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<OriginResponse>> =
+            jsonHandler<List<OriginResponse>>(clientOptions.jsonMapper)
 
         override fun list(
             params: OriginListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<OriginListResponse>> {
+        ): HttpResponseFor<List<OriginResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -194,13 +191,13 @@ class OriginServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val getHandler: Handler<OriginGetResponse> =
-            jsonHandler<OriginGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<OriginResponse> =
+            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
 
         override fun get(
             params: OriginGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<OriginGetResponse> {
+        ): HttpResponseFor<OriginResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

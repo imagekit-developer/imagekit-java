@@ -25,7 +25,7 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture =
+        val originResponseFuture =
             originServiceAsync.create(
                 OriginCreateParams.builder()
                     .origin(
@@ -42,8 +42,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -57,7 +57,7 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture =
+        val originResponseFuture =
             originServiceAsync.update(
                 OriginUpdateParams.builder()
                     .id("id")
@@ -75,8 +75,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -90,10 +90,10 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originsFuture = originServiceAsync.list()
+        val originResponsesFuture = originServiceAsync.list()
 
-        val origins = originsFuture.get()
-        origins.forEach { it.validate() }
+        val originResponses = originResponsesFuture.get()
+        originResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -123,9 +123,9 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture = originServiceAsync.get("id")
+        val originResponseFuture = originServiceAsync.get("id")
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 }

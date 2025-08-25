@@ -7,14 +7,11 @@ import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
-import com.imagekit.api.models.accounts.origins.OriginCreateResponse
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
-import com.imagekit.api.models.accounts.origins.OriginGetResponse
 import com.imagekit.api.models.accounts.origins.OriginListParams
-import com.imagekit.api.models.accounts.origins.OriginListResponse
+import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
-import com.imagekit.api.models.accounts.origins.OriginUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -35,20 +32,20 @@ interface OriginServiceAsync {
     /**
      * **Note:** This API is currently in beta. Creates a new origin and returns the origin object.
      */
-    fun create(params: OriginCreateParams): CompletableFuture<OriginCreateResponse> =
+    fun create(params: OriginCreateParams): CompletableFuture<OriginResponse> =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: OriginCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<OriginCreateResponse>
+    ): CompletableFuture<OriginResponse>
 
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
      * the updated origin object.
      */
-    fun update(id: String, params: OriginUpdateParams): CompletableFuture<OriginUpdateResponse> =
+    fun update(id: String, params: OriginUpdateParams): CompletableFuture<OriginResponse> =
         update(id, params, RequestOptions.none())
 
     /** @see update */
@@ -56,38 +53,37 @@ interface OriginServiceAsync {
         id: String,
         params: OriginUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<OriginUpdateResponse> =
-        update(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<OriginResponse> = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
-    fun update(params: OriginUpdateParams): CompletableFuture<OriginUpdateResponse> =
+    fun update(params: OriginUpdateParams): CompletableFuture<OriginResponse> =
         update(params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: OriginUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<OriginUpdateResponse>
+    ): CompletableFuture<OriginResponse>
 
     /**
      * **Note:** This API is currently in beta. Returns an array of all configured origins for the
      * current account.
      */
-    fun list(): CompletableFuture<List<OriginListResponse>> = list(OriginListParams.none())
+    fun list(): CompletableFuture<List<OriginResponse>> = list(OriginListParams.none())
 
     /** @see list */
     fun list(
         params: OriginListParams = OriginListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<OriginListResponse>>
+    ): CompletableFuture<List<OriginResponse>>
 
     /** @see list */
     fun list(
         params: OriginListParams = OriginListParams.none()
-    ): CompletableFuture<List<OriginListResponse>> = list(params, RequestOptions.none())
+    ): CompletableFuture<List<OriginResponse>> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<List<OriginListResponse>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<List<OriginResponse>> =
         list(OriginListParams.none(), requestOptions)
 
     /**
@@ -124,33 +120,33 @@ interface OriginServiceAsync {
         delete(id, OriginDeleteParams.none(), requestOptions)
 
     /** **Note:** This API is currently in beta. Retrieves the origin identified by `id`. */
-    fun get(id: String): CompletableFuture<OriginGetResponse> = get(id, OriginGetParams.none())
+    fun get(id: String): CompletableFuture<OriginResponse> = get(id, OriginGetParams.none())
 
     /** @see get */
     fun get(
         id: String,
         params: OriginGetParams = OriginGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<OriginGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<OriginResponse> = get(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see get */
     fun get(
         id: String,
         params: OriginGetParams = OriginGetParams.none(),
-    ): CompletableFuture<OriginGetResponse> = get(id, params, RequestOptions.none())
+    ): CompletableFuture<OriginResponse> = get(id, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: OriginGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<OriginGetResponse>
+    ): CompletableFuture<OriginResponse>
 
     /** @see get */
-    fun get(params: OriginGetParams): CompletableFuture<OriginGetResponse> =
+    fun get(params: OriginGetParams): CompletableFuture<OriginResponse> =
         get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<OriginGetResponse> =
+    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<OriginResponse> =
         get(id, OriginGetParams.none(), requestOptions)
 
     /**
@@ -171,16 +167,14 @@ interface OriginServiceAsync {
          * Returns a raw HTTP response for `post /v1/accounts/origins`, but is otherwise the same as
          * [OriginServiceAsync.create].
          */
-        fun create(
-            params: OriginCreateParams
-        ): CompletableFuture<HttpResponseFor<OriginCreateResponse>> =
+        fun create(params: OriginCreateParams): CompletableFuture<HttpResponseFor<OriginResponse>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: OriginCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<OriginCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<OriginResponse>>
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the
@@ -189,7 +183,7 @@ interface OriginServiceAsync {
         fun update(
             id: String,
             params: OriginUpdateParams,
-        ): CompletableFuture<HttpResponseFor<OriginUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             update(id, params, RequestOptions.none())
 
         /** @see update */
@@ -197,44 +191,42 @@ interface OriginServiceAsync {
             id: String,
             params: OriginUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<OriginUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
-        fun update(
-            params: OriginUpdateParams
-        ): CompletableFuture<HttpResponseFor<OriginUpdateResponse>> =
+        fun update(params: OriginUpdateParams): CompletableFuture<HttpResponseFor<OriginResponse>> =
             update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: OriginUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<OriginUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<OriginResponse>>
 
         /**
          * Returns a raw HTTP response for `get /v1/accounts/origins`, but is otherwise the same as
          * [OriginServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<List<OriginListResponse>>> =
+        fun list(): CompletableFuture<HttpResponseFor<List<OriginResponse>>> =
             list(OriginListParams.none())
 
         /** @see list */
         fun list(
             params: OriginListParams = OriginListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<OriginListResponse>>>
+        ): CompletableFuture<HttpResponseFor<List<OriginResponse>>>
 
         /** @see list */
         fun list(
             params: OriginListParams = OriginListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<OriginListResponse>>> =
+        ): CompletableFuture<HttpResponseFor<List<OriginResponse>>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<OriginListResponse>>> =
+        ): CompletableFuture<HttpResponseFor<List<OriginResponse>>> =
             list(OriginListParams.none(), requestOptions)
 
         /**
@@ -276,7 +268,7 @@ interface OriginServiceAsync {
          * Returns a raw HTTP response for `get /v1/accounts/origins/{id}`, but is otherwise the
          * same as [OriginServiceAsync.get].
          */
-        fun get(id: String): CompletableFuture<HttpResponseFor<OriginGetResponse>> =
+        fun get(id: String): CompletableFuture<HttpResponseFor<OriginResponse>> =
             get(id, OriginGetParams.none())
 
         /** @see get */
@@ -284,31 +276,31 @@ interface OriginServiceAsync {
             id: String,
             params: OriginGetParams = OriginGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<OriginGetResponse>> =
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see get */
         fun get(
             id: String,
             params: OriginGetParams = OriginGetParams.none(),
-        ): CompletableFuture<HttpResponseFor<OriginGetResponse>> =
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             get(id, params, RequestOptions.none())
 
         /** @see get */
         fun get(
             params: OriginGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<OriginGetResponse>>
+        ): CompletableFuture<HttpResponseFor<OriginResponse>>
 
         /** @see get */
-        fun get(params: OriginGetParams): CompletableFuture<HttpResponseFor<OriginGetResponse>> =
+        fun get(params: OriginGetParams): CompletableFuture<HttpResponseFor<OriginResponse>> =
             get(params, RequestOptions.none())
 
         /** @see get */
         fun get(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<OriginGetResponse>> =
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             get(id, OriginGetParams.none(), requestOptions)
     }
 }

@@ -25,7 +25,7 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin =
+        val originResponse =
             originService.create(
                 OriginCreateParams.builder()
                     .origin(
@@ -42,7 +42,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        origin.validate()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -56,7 +56,7 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin =
+        val originResponse =
             originService.update(
                 OriginUpdateParams.builder()
                     .id("id")
@@ -74,7 +74,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        origin.validate()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -88,9 +88,9 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origins = originService.list()
+        val originResponses = originService.list()
 
-        origins.forEach { it.validate() }
+        originResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -118,8 +118,8 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin = originService.get("id")
+        val originResponse = originService.get("id")
 
-        origin.validate()
+        originResponse.validate()
     }
 }

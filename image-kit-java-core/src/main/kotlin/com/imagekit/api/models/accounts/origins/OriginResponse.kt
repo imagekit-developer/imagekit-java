@@ -28,9 +28,9 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Origin object as returned by the API (sensitive fields removed). */
-@JsonDeserialize(using = OriginUpdateResponse.Deserializer::class)
-@JsonSerialize(using = OriginUpdateResponse.Serializer::class)
-class OriginUpdateResponse
+@JsonDeserialize(using = OriginResponse.Deserializer::class)
+@JsonSerialize(using = OriginResponse.Serializer::class)
+class OriginResponse
 private constructor(
     private val s3: S3? = null,
     private val s3Compatible: S3Compatible? = null,
@@ -108,7 +108,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): OriginUpdateResponse = apply {
+    fun validate(): OriginResponse = apply {
         if (validated) {
             return@apply
         }
@@ -194,7 +194,7 @@ private constructor(
             return true
         }
 
-        return other is OriginUpdateResponse &&
+        return other is OriginResponse &&
             s3 == other.s3 &&
             s3Compatible == other.s3Compatible &&
             cloudinaryBackup == other.cloudinaryBackup &&
@@ -219,47 +219,42 @@ private constructor(
 
     override fun toString(): String =
         when {
-            s3 != null -> "OriginUpdateResponse{s3=$s3}"
-            s3Compatible != null -> "OriginUpdateResponse{s3Compatible=$s3Compatible}"
-            cloudinaryBackup != null -> "OriginUpdateResponse{cloudinaryBackup=$cloudinaryBackup}"
-            webFolder != null -> "OriginUpdateResponse{webFolder=$webFolder}"
-            webProxy != null -> "OriginUpdateResponse{webProxy=$webProxy}"
-            gcs != null -> "OriginUpdateResponse{gcs=$gcs}"
-            azureBlob != null -> "OriginUpdateResponse{azureBlob=$azureBlob}"
-            akeneoPim != null -> "OriginUpdateResponse{akeneoPim=$akeneoPim}"
-            _json != null -> "OriginUpdateResponse{_unknown=$_json}"
-            else -> throw IllegalStateException("Invalid OriginUpdateResponse")
+            s3 != null -> "OriginResponse{s3=$s3}"
+            s3Compatible != null -> "OriginResponse{s3Compatible=$s3Compatible}"
+            cloudinaryBackup != null -> "OriginResponse{cloudinaryBackup=$cloudinaryBackup}"
+            webFolder != null -> "OriginResponse{webFolder=$webFolder}"
+            webProxy != null -> "OriginResponse{webProxy=$webProxy}"
+            gcs != null -> "OriginResponse{gcs=$gcs}"
+            azureBlob != null -> "OriginResponse{azureBlob=$azureBlob}"
+            akeneoPim != null -> "OriginResponse{akeneoPim=$akeneoPim}"
+            _json != null -> "OriginResponse{_unknown=$_json}"
+            else -> throw IllegalStateException("Invalid OriginResponse")
         }
 
     companion object {
 
-        @JvmStatic fun ofS3(s3: S3) = OriginUpdateResponse(s3 = s3)
+        @JvmStatic fun ofS3(s3: S3) = OriginResponse(s3 = s3)
 
         @JvmStatic
-        fun ofS3Compatible(s3Compatible: S3Compatible) =
-            OriginUpdateResponse(s3Compatible = s3Compatible)
+        fun ofS3Compatible(s3Compatible: S3Compatible) = OriginResponse(s3Compatible = s3Compatible)
 
         @JvmStatic
         fun ofCloudinaryBackup(cloudinaryBackup: CloudinaryBackup) =
-            OriginUpdateResponse(cloudinaryBackup = cloudinaryBackup)
+            OriginResponse(cloudinaryBackup = cloudinaryBackup)
 
-        @JvmStatic
-        fun ofWebFolder(webFolder: WebFolder) = OriginUpdateResponse(webFolder = webFolder)
+        @JvmStatic fun ofWebFolder(webFolder: WebFolder) = OriginResponse(webFolder = webFolder)
 
-        @JvmStatic fun ofWebProxy(webProxy: WebProxy) = OriginUpdateResponse(webProxy = webProxy)
+        @JvmStatic fun ofWebProxy(webProxy: WebProxy) = OriginResponse(webProxy = webProxy)
 
-        @JvmStatic fun ofGcs(gcs: Gcs) = OriginUpdateResponse(gcs = gcs)
+        @JvmStatic fun ofGcs(gcs: Gcs) = OriginResponse(gcs = gcs)
 
-        @JvmStatic
-        fun ofAzureBlob(azureBlob: AzureBlob) = OriginUpdateResponse(azureBlob = azureBlob)
+        @JvmStatic fun ofAzureBlob(azureBlob: AzureBlob) = OriginResponse(azureBlob = azureBlob)
 
-        @JvmStatic
-        fun ofAkeneoPim(akeneoPim: AkeneoPim) = OriginUpdateResponse(akeneoPim = akeneoPim)
+        @JvmStatic fun ofAkeneoPim(akeneoPim: AkeneoPim) = OriginResponse(akeneoPim = akeneoPim)
     }
 
     /**
-     * An interface that defines how to map each variant of [OriginUpdateResponse] to a value of
-     * type [T].
+     * An interface that defines how to map each variant of [OriginResponse] to a value of type [T].
      */
     interface Visitor<out T> {
 
@@ -280,78 +275,77 @@ private constructor(
         fun visitAkeneoPim(akeneoPim: AkeneoPim): T
 
         /**
-         * Maps an unknown variant of [OriginUpdateResponse] to a value of type [T].
+         * Maps an unknown variant of [OriginResponse] to a value of type [T].
          *
-         * An instance of [OriginUpdateResponse] can contain an unknown variant if it was
-         * deserialized from data that doesn't match any known variant. For example, if the SDK is
-         * on an older version than the API, then the API may respond with new variants that the SDK
-         * is unaware of.
+         * An instance of [OriginResponse] can contain an unknown variant if it was deserialized
+         * from data that doesn't match any known variant. For example, if the SDK is on an older
+         * version than the API, then the API may respond with new variants that the SDK is unaware
+         * of.
          *
          * @throws ImageKitInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw ImageKitInvalidDataException("Unknown OriginUpdateResponse: $json")
+            throw ImageKitInvalidDataException("Unknown OriginResponse: $json")
         }
     }
 
-    internal class Deserializer :
-        BaseDeserializer<OriginUpdateResponse>(OriginUpdateResponse::class) {
+    internal class Deserializer : BaseDeserializer<OriginResponse>(OriginResponse::class) {
 
-        override fun ObjectCodec.deserialize(node: JsonNode): OriginUpdateResponse {
+        override fun ObjectCodec.deserialize(node: JsonNode): OriginResponse {
             val json = JsonValue.fromJsonNode(node)
             val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
             when (type) {
                 "S3" -> {
                     return tryDeserialize(node, jacksonTypeRef<S3>())?.let {
-                        OriginUpdateResponse(s3 = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(s3 = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "S3_COMPATIBLE" -> {
                     return tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
-                        OriginUpdateResponse(s3Compatible = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(s3Compatible = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "CLOUDINARY_BACKUP" -> {
                     return tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
-                        OriginUpdateResponse(cloudinaryBackup = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(cloudinaryBackup = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "WEB_FOLDER" -> {
                     return tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
-                        OriginUpdateResponse(webFolder = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(webFolder = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "WEB_PROXY" -> {
                     return tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
-                        OriginUpdateResponse(webProxy = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(webProxy = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "GCS" -> {
                     return tryDeserialize(node, jacksonTypeRef<Gcs>())?.let {
-                        OriginUpdateResponse(gcs = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(gcs = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "AZURE_BLOB" -> {
                     return tryDeserialize(node, jacksonTypeRef<AzureBlob>())?.let {
-                        OriginUpdateResponse(azureBlob = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(azureBlob = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
                 "AKENEO_PIM" -> {
                     return tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
-                        OriginUpdateResponse(akeneoPim = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
+                        OriginResponse(akeneoPim = it, _json = json)
+                    } ?: OriginResponse(_json = json)
                 }
             }
 
-            return OriginUpdateResponse(_json = json)
+            return OriginResponse(_json = json)
         }
     }
 
-    internal class Serializer : BaseSerializer<OriginUpdateResponse>(OriginUpdateResponse::class) {
+    internal class Serializer : BaseSerializer<OriginResponse>(OriginResponse::class) {
 
         override fun serialize(
-            value: OriginUpdateResponse,
+            value: OriginResponse,
             generator: JsonGenerator,
             provider: SerializerProvider,
         ) {
@@ -365,7 +359,7 @@ private constructor(
                 value.azureBlob != null -> generator.writeObject(value.azureBlob)
                 value.akeneoPim != null -> generator.writeObject(value.akeneoPim)
                 value._json != null -> generator.writeObject(value._json)
-                else -> throw IllegalStateException("Invalid OriginUpdateResponse")
+                else -> throw IllegalStateException("Invalid OriginResponse")
             }
         }
     }
