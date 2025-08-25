@@ -70,7 +70,7 @@ internal class FolderServiceAsyncTest {
                 .build()
         val folderServiceAsync = client.folders()
 
-        val responseFuture =
+        val asyncBulkJobResponseFuture =
             folderServiceAsync.copy(
                 FolderCopyParams.builder()
                     .destinationPath("/path/of/destination/folder")
@@ -79,8 +79,8 @@ internal class FolderServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val asyncBulkJobResponse = asyncBulkJobResponseFuture.get()
+        asyncBulkJobResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -94,7 +94,7 @@ internal class FolderServiceAsyncTest {
                 .build()
         val folderServiceAsync = client.folders()
 
-        val responseFuture =
+        val asyncBulkJobResponseFuture =
             folderServiceAsync.move(
                 FolderMoveParams.builder()
                     .destinationPath("/path/of/destination/folder")
@@ -102,8 +102,8 @@ internal class FolderServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val asyncBulkJobResponse = asyncBulkJobResponseFuture.get()
+        asyncBulkJobResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -117,7 +117,7 @@ internal class FolderServiceAsyncTest {
                 .build()
         val folderServiceAsync = client.folders()
 
-        val responseFuture =
+        val asyncBulkJobResponseFuture =
             folderServiceAsync.rename(
                 FolderRenameParams.builder()
                     .folderPath("/path/of/folder")
@@ -126,7 +126,7 @@ internal class FolderServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val asyncBulkJobResponse = asyncBulkJobResponseFuture.get()
+        asyncBulkJobResponse.validate()
     }
 }

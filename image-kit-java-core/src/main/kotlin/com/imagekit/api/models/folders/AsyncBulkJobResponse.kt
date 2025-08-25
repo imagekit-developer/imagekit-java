@@ -5,17 +5,42 @@ package com.imagekit.api.models.folders
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonProperty
 import com.imagekit.api.core.ExcludeMissing
+import com.imagekit.api.core.JsonField
+import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
+import com.imagekit.api.core.checkRequired
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Collections
 import java.util.Objects
 
 /** Job submitted successfully. A `jobId` will be returned. */
 class AsyncBulkJobResponse
-private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
+private constructor(
+    private val jobId: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
+) {
 
-    @JsonCreator private constructor() : this(mutableMapOf())
+    @JsonCreator
+    private constructor(
+        @JsonProperty("jobId") @ExcludeMissing jobId: JsonField<String> = JsonMissing.of()
+    ) : this(jobId, mutableMapOf())
+
+    /**
+     * Unique identifier of the bulk job. This can be used to check the status of the bulk job.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun jobId(): String = jobId.getRequired("jobId")
+
+    /**
+     * Returns the raw JSON value of [jobId].
+     *
+     * Unlike [jobId], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("jobId") @ExcludeMissing fun _jobId(): JsonField<String> = jobId
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -31,19 +56,41 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [AsyncBulkJobResponse]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [AsyncBulkJobResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .jobId()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
     /** A builder for [AsyncBulkJobResponse]. */
     class Builder internal constructor() {
 
+        private var jobId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(asyncBulkJobResponse: AsyncBulkJobResponse) = apply {
+            jobId = asyncBulkJobResponse.jobId
             additionalProperties = asyncBulkJobResponse.additionalProperties.toMutableMap()
         }
+
+        /**
+         * Unique identifier of the bulk job. This can be used to check the status of the bulk job.
+         */
+        fun jobId(jobId: String) = jobId(JsonField.of(jobId))
+
+        /**
+         * Sets [Builder.jobId] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.jobId] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun jobId(jobId: JsonField<String>) = apply { this.jobId = jobId }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -68,9 +115,16 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
          * Returns an immutable instance of [AsyncBulkJobResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .jobId()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): AsyncBulkJobResponse =
-            AsyncBulkJobResponse(additionalProperties.toMutableMap())
+            AsyncBulkJobResponse(checkRequired("jobId", jobId), additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -80,6 +134,7 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
             return@apply
         }
 
+        jobId()
         validated = true
     }
 
@@ -96,19 +151,22 @@ private constructor(private val additionalProperties: MutableMap<String, JsonVal
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic internal fun validity(): Int = 0
+    @JvmSynthetic internal fun validity(): Int = (if (jobId.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is AsyncBulkJobResponse && additionalProperties == other.additionalProperties
+        return other is AsyncBulkJobResponse &&
+            jobId == other.jobId &&
+            additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(jobId, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() = "AsyncBulkJobResponse{additionalProperties=$additionalProperties}"
+    override fun toString() =
+        "AsyncBulkJobResponse{jobId=$jobId, additionalProperties=$additionalProperties}"
 }

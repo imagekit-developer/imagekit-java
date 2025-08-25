@@ -68,7 +68,7 @@ internal class FolderServiceTest {
                 .build()
         val folderService = client.folders()
 
-        val response =
+        val asyncBulkJobResponse =
             folderService.copy(
                 FolderCopyParams.builder()
                     .destinationPath("/path/of/destination/folder")
@@ -77,7 +77,7 @@ internal class FolderServiceTest {
                     .build()
             )
 
-        response.validate()
+        asyncBulkJobResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -91,7 +91,7 @@ internal class FolderServiceTest {
                 .build()
         val folderService = client.folders()
 
-        val response =
+        val asyncBulkJobResponse =
             folderService.move(
                 FolderMoveParams.builder()
                     .destinationPath("/path/of/destination/folder")
@@ -99,7 +99,7 @@ internal class FolderServiceTest {
                     .build()
             )
 
-        response.validate()
+        asyncBulkJobResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -113,7 +113,7 @@ internal class FolderServiceTest {
                 .build()
         val folderService = client.folders()
 
-        val response =
+        val asyncBulkJobResponse =
             folderService.rename(
                 FolderRenameParams.builder()
                     .folderPath("/path/of/folder")
@@ -122,6 +122,6 @@ internal class FolderServiceTest {
                     .build()
             )
 
-        response.validate()
+        asyncBulkJobResponse.validate()
     }
 }

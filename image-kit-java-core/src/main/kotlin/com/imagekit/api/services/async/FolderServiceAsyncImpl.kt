@@ -15,16 +15,14 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
+import com.imagekit.api.models.folders.AsyncBulkJobResponse
 import com.imagekit.api.models.folders.FolderCopyParams
-import com.imagekit.api.models.folders.FolderCopyResponse
 import com.imagekit.api.models.folders.FolderCreateParams
 import com.imagekit.api.models.folders.FolderCreateResponse
 import com.imagekit.api.models.folders.FolderDeleteParams
 import com.imagekit.api.models.folders.FolderDeleteResponse
 import com.imagekit.api.models.folders.FolderMoveParams
-import com.imagekit.api.models.folders.FolderMoveResponse
 import com.imagekit.api.models.folders.FolderRenameParams
-import com.imagekit.api.models.folders.FolderRenameResponse
 import com.imagekit.api.services.async.folders.JobServiceAsync
 import com.imagekit.api.services.async.folders.JobServiceAsyncImpl
 import java.util.concurrent.CompletableFuture
@@ -63,21 +61,21 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun copy(
         params: FolderCopyParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FolderCopyResponse> =
+    ): CompletableFuture<AsyncBulkJobResponse> =
         // post /v1/bulkJobs/copyFolder
         withRawResponse().copy(params, requestOptions).thenApply { it.parse() }
 
     override fun move(
         params: FolderMoveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FolderMoveResponse> =
+    ): CompletableFuture<AsyncBulkJobResponse> =
         // post /v1/bulkJobs/moveFolder
         withRawResponse().move(params, requestOptions).thenApply { it.parse() }
 
     override fun rename(
         params: FolderRenameParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FolderRenameResponse> =
+    ): CompletableFuture<AsyncBulkJobResponse> =
         // post /v1/bulkJobs/renameFolder
         withRawResponse().rename(params, requestOptions).thenApply { it.parse() }
 
@@ -162,13 +160,13 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val copyHandler: Handler<FolderCopyResponse> =
-            jsonHandler<FolderCopyResponse>(clientOptions.jsonMapper)
+        private val copyHandler: Handler<AsyncBulkJobResponse> =
+            jsonHandler<AsyncBulkJobResponse>(clientOptions.jsonMapper)
 
         override fun copy(
             params: FolderCopyParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FolderCopyResponse>> {
+        ): CompletableFuture<HttpResponseFor<AsyncBulkJobResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -193,13 +191,13 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val moveHandler: Handler<FolderMoveResponse> =
-            jsonHandler<FolderMoveResponse>(clientOptions.jsonMapper)
+        private val moveHandler: Handler<AsyncBulkJobResponse> =
+            jsonHandler<AsyncBulkJobResponse>(clientOptions.jsonMapper)
 
         override fun move(
             params: FolderMoveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FolderMoveResponse>> {
+        ): CompletableFuture<HttpResponseFor<AsyncBulkJobResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -224,13 +222,13 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val renameHandler: Handler<FolderRenameResponse> =
-            jsonHandler<FolderRenameResponse>(clientOptions.jsonMapper)
+        private val renameHandler: Handler<AsyncBulkJobResponse> =
+            jsonHandler<AsyncBulkJobResponse>(clientOptions.jsonMapper)
 
         override fun rename(
             params: FolderRenameParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FolderRenameResponse>> {
+        ): CompletableFuture<HttpResponseFor<AsyncBulkJobResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)

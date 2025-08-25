@@ -11,13 +11,15 @@ internal class AsyncBulkJobResponseTest {
 
     @Test
     fun create() {
-        val asyncBulkJobResponse = AsyncBulkJobResponse.builder().build()
+        val asyncBulkJobResponse = AsyncBulkJobResponse.builder().jobId("jobId").build()
+
+        assertThat(asyncBulkJobResponse.jobId()).isEqualTo("jobId")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val asyncBulkJobResponse = AsyncBulkJobResponse.builder().build()
+        val asyncBulkJobResponse = AsyncBulkJobResponse.builder().jobId("jobId").build()
 
         val roundtrippedAsyncBulkJobResponse =
             jsonMapper.readValue(
