@@ -25,10 +25,10 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.files().versions()
 
-        val versionsFuture = versionServiceAsync.list("fileId")
+        val filesFuture = versionServiceAsync.list("fileId")
 
-        val versions = versionsFuture.get()
-        versions.forEach { it.validate() }
+        val files = filesFuture.get()
+        files.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -62,13 +62,13 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.files().versions()
 
-        val versionFuture =
+        val fileFuture =
             versionServiceAsync.get(
                 VersionGetParams.builder().fileId("fileId").versionId("versionId").build()
             )
 
-        val version = versionFuture.get()
-        version.validate()
+        val file = fileFuture.get()
+        file.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -82,12 +82,12 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.files().versions()
 
-        val responseFuture =
+        val fileFuture =
             versionServiceAsync.restore(
                 VersionRestoreParams.builder().fileId("fileId").versionId("versionId").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val file = fileFuture.get()
+        file.validate()
     }
 }

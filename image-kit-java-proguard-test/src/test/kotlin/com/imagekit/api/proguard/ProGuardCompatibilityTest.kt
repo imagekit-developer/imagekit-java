@@ -7,7 +7,7 @@ import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.models.assets.AssetListResponse
-import com.imagekit.api.models.files.FileUpdateResponse
+import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -65,34 +65,18 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun fileUpdateResponseRoundtrip() {
+    fun fileRoundtrip() {
         val jsonMapper = jsonMapper()
-        val fileUpdateResponse =
-            FileUpdateResponse.builder()
+        val file =
+            File.builder()
                 .addAiTag(
-                    FileUpdateResponse.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
+                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    FileUpdateResponse.CustomMetadata.builder()
+                    File.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .extensionStatus(
-                    FileUpdateResponse.ExtensionStatus.builder()
-                        .aiAutoDescription(
-                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
-                        )
-                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
-                        .googleAutoTagging(
-                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
-                        )
-                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
                         .build()
                 )
                 .fileId("fileId")
@@ -107,39 +91,32 @@ internal class ProGuardCompatibilityTest {
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
-                .type(FileUpdateResponse.Type.FILE)
+                .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
 
-        val roundtrippedFileUpdateResponse =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(fileUpdateResponse),
-                jacksonTypeRef<FileUpdateResponse>(),
-            )
+        val roundtrippedFile =
+            jsonMapper.readValue(jsonMapper.writeValueAsString(file), jacksonTypeRef<File>())
 
-        assertThat(roundtrippedFileUpdateResponse).isEqualTo(fileUpdateResponse)
+        assertThat(roundtrippedFile).isEqualTo(file)
     }
 
     @Test
     fun assetListResponseRoundtrip() {
         val jsonMapper = jsonMapper()
         val assetListResponse =
-            AssetListResponse.ofFileDetails(
-                AssetListResponse.FileDetails.builder()
+            AssetListResponse.ofFile(
+                File.builder()
                     .addAiTag(
-                        AssetListResponse.FileDetails.AiTag.builder()
-                            .confidence(0.0)
-                            .name("name")
-                            .source("source")
-                            .build()
+                        File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                     )
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        AssetListResponse.FileDetails.CustomMetadata.builder()
+                        File.CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -155,15 +132,10 @@ internal class ProGuardCompatibilityTest {
                     .size(0.0)
                     .addTag("string")
                     .thumbnail("https://example.com")
-                    .type(AssetListResponse.FileDetails.Type.FILE)
+                    .type(File.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .url("https://example.com")
-                    .versionInfo(
-                        AssetListResponse.FileDetails.VersionInfo.builder()
-                            .id("id")
-                            .name("name")
-                            .build()
-                    )
+                    .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                     .width(0.0)
                     .build()
             )

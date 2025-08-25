@@ -16,14 +16,12 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
 import com.imagekit.api.models.files.versions.VersionGetParams
-import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
-import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
-import com.imagekit.api.models.files.versions.VersionRestoreResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -43,7 +41,7 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun list(
         params: VersionListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<VersionListResponse>> =
+    ): CompletableFuture<List<File>> =
         // get /v1/files/{fileId}/versions
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -57,14 +55,14 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun get(
         params: VersionGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionGetResponse> =
+    ): CompletableFuture<File> =
         // get /v1/files/{fileId}/versions/{versionId}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     override fun restore(
         params: VersionRestoreParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionRestoreResponse> =
+    ): CompletableFuture<File> =
         // put /v1/files/{fileId}/versions/{versionId}/restore
         withRawResponse().restore(params, requestOptions).thenApply { it.parse() }
 
@@ -81,13 +79,13 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<List<VersionListResponse>> =
-            jsonHandler<List<VersionListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<File>> =
+            jsonHandler<List<File>>(clientOptions.jsonMapper)
 
         override fun list(
             params: VersionListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<VersionListResponse>>> {
+        ): CompletableFuture<HttpResponseFor<List<File>>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -154,13 +152,12 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val getHandler: Handler<VersionGetResponse> =
-            jsonHandler<VersionGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<File> = jsonHandler<File>(clientOptions.jsonMapper)
 
         override fun get(
             params: VersionGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionGetResponse>> {
+        ): CompletableFuture<HttpResponseFor<File>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())
@@ -193,13 +190,12 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val restoreHandler: Handler<VersionRestoreResponse> =
-            jsonHandler<VersionRestoreResponse>(clientOptions.jsonMapper)
+        private val restoreHandler: Handler<File> = jsonHandler<File>(clientOptions.jsonMapper)
 
         override fun restore(
             params: VersionRestoreParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionRestoreResponse>> {
+        ): CompletableFuture<HttpResponseFor<File>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())

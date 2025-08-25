@@ -6,6 +6,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.files.File
+import com.imagekit.api.models.files.Folder
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -16,20 +18,16 @@ import org.junit.jupiter.params.provider.EnumSource
 internal class AssetListResponseTest {
 
     @Test
-    fun ofFileDetails() {
-        val fileDetails =
-            AssetListResponse.FileDetails.builder()
+    fun ofFile() {
+        val file =
+            File.builder()
                 .addAiTag(
-                    AssetListResponse.FileDetails.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
+                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    AssetListResponse.FileDetails.CustomMetadata.builder()
+                    File.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -45,41 +43,32 @@ internal class AssetListResponseTest {
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
-                .type(AssetListResponse.FileDetails.Type.FILE)
+                .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(
-                    AssetListResponse.FileDetails.VersionInfo.builder()
-                        .id("id")
-                        .name("name")
-                        .build()
-                )
+                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
 
-        val assetListResponse = AssetListResponse.ofFileDetails(fileDetails)
+        val assetListResponse = AssetListResponse.ofFile(file)
 
-        assertThat(assetListResponse.fileDetails()).contains(fileDetails)
+        assertThat(assetListResponse.file()).contains(file)
         assertThat(assetListResponse.folder()).isEmpty
     }
 
     @Test
-    fun ofFileDetailsRoundtrip() {
+    fun ofFileRoundtrip() {
         val jsonMapper = jsonMapper()
         val assetListResponse =
-            AssetListResponse.ofFileDetails(
-                AssetListResponse.FileDetails.builder()
+            AssetListResponse.ofFile(
+                File.builder()
                     .addAiTag(
-                        AssetListResponse.FileDetails.AiTag.builder()
-                            .confidence(0.0)
-                            .name("name")
-                            .source("source")
-                            .build()
+                        File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                     )
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        AssetListResponse.FileDetails.CustomMetadata.builder()
+                        File.CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -95,15 +84,10 @@ internal class AssetListResponseTest {
                     .size(0.0)
                     .addTag("string")
                     .thumbnail("https://example.com")
-                    .type(AssetListResponse.FileDetails.Type.FILE)
+                    .type(File.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .url("https://example.com")
-                    .versionInfo(
-                        AssetListResponse.FileDetails.VersionInfo.builder()
-                            .id("id")
-                            .name("name")
-                            .build()
-                    )
+                    .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                     .width(0.0)
                     .build()
             )
@@ -120,18 +104,18 @@ internal class AssetListResponseTest {
     @Test
     fun ofFolder() {
         val folder =
-            AssetListResponse.Folder.builder()
+            Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .folderId("folderId")
                 .folderPath("folderPath")
                 .name("name")
-                .type(AssetListResponse.Folder.Type.FOLDER)
+                .type(Folder.Type.FOLDER)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
         val assetListResponse = AssetListResponse.ofFolder(folder)
 
-        assertThat(assetListResponse.fileDetails()).isEmpty
+        assertThat(assetListResponse.file()).isEmpty
         assertThat(assetListResponse.folder()).contains(folder)
     }
 
@@ -140,12 +124,12 @@ internal class AssetListResponseTest {
         val jsonMapper = jsonMapper()
         val assetListResponse =
             AssetListResponse.ofFolder(
-                AssetListResponse.Folder.builder()
+                Folder.builder()
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .folderId("folderId")
                     .folderPath("folderPath")
                     .name("name")
-                    .type(AssetListResponse.Folder.Type.FOLDER)
+                    .type(Folder.Type.FOLDER)
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )

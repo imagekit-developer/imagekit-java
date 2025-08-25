@@ -25,9 +25,9 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.files().versions()
 
-        val versions = versionService.list("fileId")
+        val files = versionService.list("fileId")
 
-        versions.forEach { it.validate() }
+        files.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -60,12 +60,12 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.files().versions()
 
-        val version =
+        val file =
             versionService.get(
                 VersionGetParams.builder().fileId("fileId").versionId("versionId").build()
             )
 
-        version.validate()
+        file.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -79,11 +79,11 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.files().versions()
 
-        val response =
+        val file =
             versionService.restore(
                 VersionRestoreParams.builder().fileId("fileId").versionId("versionId").build()
             )
 
-        response.validate()
+        file.validate()
     }
 }

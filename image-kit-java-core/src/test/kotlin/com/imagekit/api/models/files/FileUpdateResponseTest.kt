@@ -17,29 +17,13 @@ internal class FileUpdateResponseTest {
         val fileUpdateResponse =
             FileUpdateResponse.builder()
                 .addAiTag(
-                    FileUpdateResponse.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
+                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    FileUpdateResponse.CustomMetadata.builder()
+                    File.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .extensionStatus(
-                    FileUpdateResponse.ExtensionStatus.builder()
-                        .aiAutoDescription(
-                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
-                        )
-                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
-                        .googleAutoTagging(
-                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
-                        )
-                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
                         .build()
                 )
                 .fileId("fileId")
@@ -54,37 +38,36 @@ internal class FileUpdateResponseTest {
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
-                .type(FileUpdateResponse.Type.FILE)
+                .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
+                .extensionStatus(
+                    FileUpdateResponse.ExtensionStatus.builder()
+                        .aiAutoDescription(
+                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
+                        )
+                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
+                        .googleAutoTagging(
+                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
+                        )
+                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
+                        .build()
+                )
                 .build()
 
         assertThat(fileUpdateResponse.aiTags().getOrNull())
             .containsExactly(
-                FileUpdateResponse.AiTag.builder()
-                    .confidence(0.0)
-                    .name("name")
-                    .source("source")
-                    .build()
+                File.AiTag.builder().confidence(0.0).name("name").source("source").build()
             )
         assertThat(fileUpdateResponse.createdAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateResponse.customCoordinates()).contains("customCoordinates")
         assertThat(fileUpdateResponse.customMetadata())
             .contains(
-                FileUpdateResponse.CustomMetadata.builder()
+                File.CustomMetadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
-            )
-        assertThat(fileUpdateResponse.extensionStatus())
-            .contains(
-                FileUpdateResponse.ExtensionStatus.builder()
-                    .aiAutoDescription(FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS)
-                    .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
-                    .googleAutoTagging(FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS)
-                    .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
                     .build()
             )
         assertThat(fileUpdateResponse.fileId()).contains("fileId")
@@ -99,13 +82,22 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.size()).contains(0.0)
         assertThat(fileUpdateResponse.tags().getOrNull()).containsExactly("string")
         assertThat(fileUpdateResponse.thumbnail()).contains("https://example.com")
-        assertThat(fileUpdateResponse.type()).contains(FileUpdateResponse.Type.FILE)
+        assertThat(fileUpdateResponse.type()).contains(File.Type.FILE)
         assertThat(fileUpdateResponse.updatedAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateResponse.url()).contains("https://example.com")
         assertThat(fileUpdateResponse.versionInfo())
-            .contains(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
+            .contains(File.VersionInfo.builder().id("id").name("name").build())
         assertThat(fileUpdateResponse.width()).contains(0.0)
+        assertThat(fileUpdateResponse.extensionStatus())
+            .contains(
+                FileUpdateResponse.ExtensionStatus.builder()
+                    .aiAutoDescription(FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS)
+                    .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
+                    .googleAutoTagging(FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS)
+                    .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
+                    .build()
+            )
     }
 
     @Test
@@ -114,29 +106,13 @@ internal class FileUpdateResponseTest {
         val fileUpdateResponse =
             FileUpdateResponse.builder()
                 .addAiTag(
-                    FileUpdateResponse.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
+                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    FileUpdateResponse.CustomMetadata.builder()
+                    File.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
-                        .build()
-                )
-                .extensionStatus(
-                    FileUpdateResponse.ExtensionStatus.builder()
-                        .aiAutoDescription(
-                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
-                        )
-                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
-                        .googleAutoTagging(
-                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
-                        )
-                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
                         .build()
                 )
                 .fileId("fileId")
@@ -151,11 +127,23 @@ internal class FileUpdateResponseTest {
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
-                .type(FileUpdateResponse.Type.FILE)
+                .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
+                .extensionStatus(
+                    FileUpdateResponse.ExtensionStatus.builder()
+                        .aiAutoDescription(
+                            FileUpdateResponse.ExtensionStatus.AiAutoDescription.SUCCESS
+                        )
+                        .awsAutoTagging(FileUpdateResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
+                        .googleAutoTagging(
+                            FileUpdateResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
+                        )
+                        .removeBg(FileUpdateResponse.ExtensionStatus.RemoveBg.SUCCESS)
+                        .build()
+                )
                 .build()
 
         val roundtrippedFileUpdateResponse =

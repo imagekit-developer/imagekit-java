@@ -16,14 +16,12 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
 import com.imagekit.api.models.files.versions.VersionGetParams
-import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
-import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
-import com.imagekit.api.models.files.versions.VersionRestoreResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -39,10 +37,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService =
         VersionServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(
-        params: VersionListParams,
-        requestOptions: RequestOptions,
-    ): List<VersionListResponse> =
+    override fun list(params: VersionListParams, requestOptions: RequestOptions): List<File> =
         // get /v1/files/{fileId}/versions
         withRawResponse().list(params, requestOptions).parse()
 
@@ -53,14 +48,11 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
         // delete /v1/files/{fileId}/versions/{versionId}
         withRawResponse().delete(params, requestOptions).parse()
 
-    override fun get(params: VersionGetParams, requestOptions: RequestOptions): VersionGetResponse =
+    override fun get(params: VersionGetParams, requestOptions: RequestOptions): File =
         // get /v1/files/{fileId}/versions/{versionId}
         withRawResponse().get(params, requestOptions).parse()
 
-    override fun restore(
-        params: VersionRestoreParams,
-        requestOptions: RequestOptions,
-    ): VersionRestoreResponse =
+    override fun restore(params: VersionRestoreParams, requestOptions: RequestOptions): File =
         // put /v1/files/{fileId}/versions/{versionId}/restore
         withRawResponse().restore(params, requestOptions).parse()
 
@@ -77,13 +69,13 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<List<VersionListResponse>> =
-            jsonHandler<List<VersionListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<File>> =
+            jsonHandler<List<File>>(clientOptions.jsonMapper)
 
         override fun list(
             params: VersionListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<VersionListResponse>> {
+        ): HttpResponseFor<List<File>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -144,13 +136,12 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val getHandler: Handler<VersionGetResponse> =
-            jsonHandler<VersionGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<File> = jsonHandler<File>(clientOptions.jsonMapper)
 
         override fun get(
             params: VersionGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<VersionGetResponse> {
+        ): HttpResponseFor<File> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())
@@ -180,13 +171,12 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val restoreHandler: Handler<VersionRestoreResponse> =
-            jsonHandler<VersionRestoreResponse>(clientOptions.jsonMapper)
+        private val restoreHandler: Handler<File> = jsonHandler<File>(clientOptions.jsonMapper)
 
         override fun restore(
             params: VersionRestoreParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<VersionRestoreResponse> {
+        ): HttpResponseFor<File> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())

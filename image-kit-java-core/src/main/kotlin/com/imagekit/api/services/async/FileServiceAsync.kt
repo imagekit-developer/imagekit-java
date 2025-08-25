@@ -6,11 +6,11 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
 import com.imagekit.api.models.files.FileGetParams
-import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
 import com.imagekit.api.models.files.FileRenameParams
@@ -139,34 +139,30 @@ interface FileServiceAsync {
     /**
      * This API returns an object with details or attributes about the current version of the file.
      */
-    fun get(fileId: String): CompletableFuture<FileGetResponse> = get(fileId, FileGetParams.none())
+    fun get(fileId: String): CompletableFuture<File> = get(fileId, FileGetParams.none())
 
     /** @see get */
     fun get(
         fileId: String,
         params: FileGetParams = FileGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileGetResponse> =
-        get(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): CompletableFuture<File> = get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see get */
-    fun get(
-        fileId: String,
-        params: FileGetParams = FileGetParams.none(),
-    ): CompletableFuture<FileGetResponse> = get(fileId, params, RequestOptions.none())
+    fun get(fileId: String, params: FileGetParams = FileGetParams.none()): CompletableFuture<File> =
+        get(fileId, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: FileGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileGetResponse>
+    ): CompletableFuture<File>
 
     /** @see get */
-    fun get(params: FileGetParams): CompletableFuture<FileGetResponse> =
-        get(params, RequestOptions.none())
+    fun get(params: FileGetParams): CompletableFuture<File> = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(fileId: String, requestOptions: RequestOptions): CompletableFuture<FileGetResponse> =
+    fun get(fileId: String, requestOptions: RequestOptions): CompletableFuture<File> =
         get(fileId, FileGetParams.none(), requestOptions)
 
     /**
@@ -344,7 +340,7 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `get /v1/files/{fileId}/details`, but is otherwise the
          * same as [FileServiceAsync.get].
          */
-        fun get(fileId: String): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+        fun get(fileId: String): CompletableFuture<HttpResponseFor<File>> =
             get(fileId, FileGetParams.none())
 
         /** @see get */
@@ -352,31 +348,30 @@ interface FileServiceAsync {
             fileId: String,
             params: FileGetParams = FileGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+        ): CompletableFuture<HttpResponseFor<File>> =
             get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see get */
         fun get(
             fileId: String,
             params: FileGetParams = FileGetParams.none(),
-        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
-            get(fileId, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<File>> = get(fileId, params, RequestOptions.none())
 
         /** @see get */
         fun get(
             params: FileGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileGetResponse>>
+        ): CompletableFuture<HttpResponseFor<File>>
 
         /** @see get */
-        fun get(params: FileGetParams): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+        fun get(params: FileGetParams): CompletableFuture<HttpResponseFor<File>> =
             get(params, RequestOptions.none())
 
         /** @see get */
         fun get(
             fileId: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileGetResponse>> =
+        ): CompletableFuture<HttpResponseFor<File>> =
             get(fileId, FileGetParams.none(), requestOptions)
 
         /**

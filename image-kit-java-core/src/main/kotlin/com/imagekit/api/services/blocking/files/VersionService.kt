@@ -6,14 +6,12 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
 import com.imagekit.api.models.files.versions.VersionGetParams
-import com.imagekit.api.models.files.versions.VersionGetResponse
 import com.imagekit.api.models.files.versions.VersionListParams
-import com.imagekit.api.models.files.versions.VersionListResponse
 import com.imagekit.api.models.files.versions.VersionRestoreParams
-import com.imagekit.api.models.files.versions.VersionRestoreResponse
 import java.util.function.Consumer
 
 interface VersionService {
@@ -31,33 +29,30 @@ interface VersionService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): VersionService
 
     /** This API returns details of all versions of a file. */
-    fun list(fileId: String): List<VersionListResponse> = list(fileId, VersionListParams.none())
+    fun list(fileId: String): List<File> = list(fileId, VersionListParams.none())
 
     /** @see list */
     fun list(
         fileId: String,
         params: VersionListParams = VersionListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<VersionListResponse> = list(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): List<File> = list(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see list */
-    fun list(
-        fileId: String,
-        params: VersionListParams = VersionListParams.none(),
-    ): List<VersionListResponse> = list(fileId, params, RequestOptions.none())
+    fun list(fileId: String, params: VersionListParams = VersionListParams.none()): List<File> =
+        list(fileId, params, RequestOptions.none())
 
     /** @see list */
     fun list(
         params: VersionListParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<VersionListResponse>
+    ): List<File>
 
     /** @see list */
-    fun list(params: VersionListParams): List<VersionListResponse> =
-        list(params, RequestOptions.none())
+    fun list(params: VersionListParams): List<File> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(fileId: String, requestOptions: RequestOptions): List<VersionListResponse> =
+    fun list(fileId: String, requestOptions: RequestOptions): List<File> =
         list(fileId, VersionListParams.none(), requestOptions)
 
     /**
@@ -87,7 +82,7 @@ interface VersionService {
     ): VersionDeleteResponse
 
     /** This API returns an object with details or attributes of a file version. */
-    fun get(versionId: String, params: VersionGetParams): VersionGetResponse =
+    fun get(versionId: String, params: VersionGetParams): File =
         get(versionId, params, RequestOptions.none())
 
     /** @see get */
@@ -95,19 +90,16 @@ interface VersionService {
         versionId: String,
         params: VersionGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionGetResponse = get(params.toBuilder().versionId(versionId).build(), requestOptions)
+    ): File = get(params.toBuilder().versionId(versionId).build(), requestOptions)
 
     /** @see get */
-    fun get(params: VersionGetParams): VersionGetResponse = get(params, RequestOptions.none())
+    fun get(params: VersionGetParams): File = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(
-        params: VersionGetParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionGetResponse
+    fun get(params: VersionGetParams, requestOptions: RequestOptions = RequestOptions.none()): File
 
     /** This API restores a file version as the current file version. */
-    fun restore(versionId: String, params: VersionRestoreParams): VersionRestoreResponse =
+    fun restore(versionId: String, params: VersionRestoreParams): File =
         restore(versionId, params, RequestOptions.none())
 
     /** @see restore */
@@ -115,18 +107,16 @@ interface VersionService {
         versionId: String,
         params: VersionRestoreParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRestoreResponse =
-        restore(params.toBuilder().versionId(versionId).build(), requestOptions)
+    ): File = restore(params.toBuilder().versionId(versionId).build(), requestOptions)
 
     /** @see restore */
-    fun restore(params: VersionRestoreParams): VersionRestoreResponse =
-        restore(params, RequestOptions.none())
+    fun restore(params: VersionRestoreParams): File = restore(params, RequestOptions.none())
 
     /** @see restore */
     fun restore(
         params: VersionRestoreParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionRestoreResponse
+    ): File
 
     /** A view of [VersionService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -143,7 +133,7 @@ interface VersionService {
          * same as [VersionService.list].
          */
         @MustBeClosed
-        fun list(fileId: String): HttpResponseFor<List<VersionListResponse>> =
+        fun list(fileId: String): HttpResponseFor<List<File>> =
             list(fileId, VersionListParams.none())
 
         /** @see list */
@@ -152,7 +142,7 @@ interface VersionService {
             fileId: String,
             params: VersionListParams = VersionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<VersionListResponse>> =
+        ): HttpResponseFor<List<File>> =
             list(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see list */
@@ -160,26 +150,23 @@ interface VersionService {
         fun list(
             fileId: String,
             params: VersionListParams = VersionListParams.none(),
-        ): HttpResponseFor<List<VersionListResponse>> = list(fileId, params, RequestOptions.none())
+        ): HttpResponseFor<List<File>> = list(fileId, params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: VersionListParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<VersionListResponse>>
+        ): HttpResponseFor<List<File>>
 
         /** @see list */
         @MustBeClosed
-        fun list(params: VersionListParams): HttpResponseFor<List<VersionListResponse>> =
+        fun list(params: VersionListParams): HttpResponseFor<List<File>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            fileId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<List<VersionListResponse>> =
+        fun list(fileId: String, requestOptions: RequestOptions): HttpResponseFor<List<File>> =
             list(fileId, VersionListParams.none(), requestOptions)
 
         /**
@@ -218,7 +205,7 @@ interface VersionService {
          * otherwise the same as [VersionService.get].
          */
         @MustBeClosed
-        fun get(versionId: String, params: VersionGetParams): HttpResponseFor<VersionGetResponse> =
+        fun get(versionId: String, params: VersionGetParams): HttpResponseFor<File> =
             get(versionId, params, RequestOptions.none())
 
         /** @see get */
@@ -227,12 +214,12 @@ interface VersionService {
             versionId: String,
             params: VersionGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionGetResponse> =
+        ): HttpResponseFor<File> =
             get(params.toBuilder().versionId(versionId).build(), requestOptions)
 
         /** @see get */
         @MustBeClosed
-        fun get(params: VersionGetParams): HttpResponseFor<VersionGetResponse> =
+        fun get(params: VersionGetParams): HttpResponseFor<File> =
             get(params, RequestOptions.none())
 
         /** @see get */
@@ -240,17 +227,14 @@ interface VersionService {
         fun get(
             params: VersionGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionGetResponse>
+        ): HttpResponseFor<File>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/{fileId}/versions/{versionId}/restore`,
          * but is otherwise the same as [VersionService.restore].
          */
         @MustBeClosed
-        fun restore(
-            versionId: String,
-            params: VersionRestoreParams,
-        ): HttpResponseFor<VersionRestoreResponse> =
+        fun restore(versionId: String, params: VersionRestoreParams): HttpResponseFor<File> =
             restore(versionId, params, RequestOptions.none())
 
         /** @see restore */
@@ -259,12 +243,12 @@ interface VersionService {
             versionId: String,
             params: VersionRestoreParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRestoreResponse> =
+        ): HttpResponseFor<File> =
             restore(params.toBuilder().versionId(versionId).build(), requestOptions)
 
         /** @see restore */
         @MustBeClosed
-        fun restore(params: VersionRestoreParams): HttpResponseFor<VersionRestoreResponse> =
+        fun restore(params: VersionRestoreParams): HttpResponseFor<File> =
             restore(params, RequestOptions.none())
 
         /** @see restore */
@@ -272,6 +256,6 @@ interface VersionService {
         fun restore(
             params: VersionRestoreParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionRestoreResponse>
+        ): HttpResponseFor<File>
     }
 }

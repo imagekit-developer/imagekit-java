@@ -20,13 +20,13 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/** Object containing details of a file or file version. */
 class FileUpdateResponse
 private constructor(
-    private val aiTags: JsonField<List<AiTag>>,
+    private val aiTags: JsonField<List<File.AiTag>>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customCoordinates: JsonField<String>,
-    private val customMetadata: JsonField<CustomMetadata>,
-    private val extensionStatus: JsonField<ExtensionStatus>,
+    private val customMetadata: JsonField<File.CustomMetadata>,
     private val fileId: JsonField<String>,
     private val filePath: JsonField<String>,
     private val fileType: JsonField<String>,
@@ -39,17 +39,20 @@ private constructor(
     private val size: JsonField<Double>,
     private val tags: JsonField<List<String>>,
     private val thumbnail: JsonField<String>,
-    private val type: JsonField<Type>,
+    private val type: JsonField<File.Type>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val url: JsonField<String>,
-    private val versionInfo: JsonField<VersionInfo>,
+    private val versionInfo: JsonField<File.VersionInfo>,
     private val width: JsonField<Double>,
+    private val extensionStatus: JsonField<ExtensionStatus>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("AITags") @ExcludeMissing aiTags: JsonField<List<AiTag>> = JsonMissing.of(),
+        @JsonProperty("AITags")
+        @ExcludeMissing
+        aiTags: JsonField<List<File.AiTag>> = JsonMissing.of(),
         @JsonProperty("createdAt")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -58,10 +61,7 @@ private constructor(
         customCoordinates: JsonField<String> = JsonMissing.of(),
         @JsonProperty("customMetadata")
         @ExcludeMissing
-        customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
-        @JsonProperty("extensionStatus")
-        @ExcludeMissing
-        extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of(),
+        customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of(),
         @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("filePath") @ExcludeMissing filePath: JsonField<String> = JsonMissing.of(),
         @JsonProperty("fileType") @ExcludeMissing fileType: JsonField<String> = JsonMissing.of(),
@@ -78,21 +78,23 @@ private constructor(
         @JsonProperty("size") @ExcludeMissing size: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("thumbnail") @ExcludeMissing thumbnail: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonField<File.Type> = JsonMissing.of(),
         @JsonProperty("updatedAt")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("versionInfo")
         @ExcludeMissing
-        versionInfo: JsonField<VersionInfo> = JsonMissing.of(),
+        versionInfo: JsonField<File.VersionInfo> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Double> = JsonMissing.of(),
+        @JsonProperty("extensionStatus")
+        @ExcludeMissing
+        extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of(),
     ) : this(
         aiTags,
         createdAt,
         customCoordinates,
         customMetadata,
-        extensionStatus,
         fileId,
         filePath,
         fileType,
@@ -110,8 +112,34 @@ private constructor(
         url,
         versionInfo,
         width,
+        extensionStatus,
         mutableMapOf(),
     )
+
+    fun toFile(): File =
+        File.builder()
+            .aiTags(aiTags)
+            .createdAt(createdAt)
+            .customCoordinates(customCoordinates)
+            .customMetadata(customMetadata)
+            .fileId(fileId)
+            .filePath(filePath)
+            .fileType(fileType)
+            .hasAlpha(hasAlpha)
+            .height(height)
+            .isPrivateFile(isPrivateFile)
+            .isPublished(isPublished)
+            .mime(mime)
+            .name(name)
+            .size(size)
+            .tags(tags)
+            .thumbnail(thumbnail)
+            .type(type)
+            .updatedAt(updatedAt)
+            .url(url)
+            .versionInfo(versionInfo)
+            .width(width)
+            .build()
 
     /**
      * An array of tags assigned to the file by auto tagging.
@@ -119,7 +147,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun aiTags(): Optional<List<AiTag>> = aiTags.getOptional("AITags")
+    fun aiTags(): Optional<List<File.AiTag>> = aiTags.getOptional("AITags")
 
     /**
      * Date and time when the file was uploaded. The date and time is in ISO8601 format.
@@ -143,14 +171,8 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun customMetadata(): Optional<CustomMetadata> = customMetadata.getOptional("customMetadata")
-
-    /**
-     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun extensionStatus(): Optional<ExtensionStatus> =
-        extensionStatus.getOptional("extensionStatus")
+    fun customMetadata(): Optional<File.CustomMetadata> =
+        customMetadata.getOptional("customMetadata")
 
     /**
      * Unique identifier of the asset.
@@ -257,7 +279,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun type(): Optional<Type> = type.getOptional("type")
+    fun type(): Optional<File.Type> = type.getOptional("type")
 
     /**
      * Date and time when the file was last updated. The date and time is in ISO8601 format.
@@ -281,7 +303,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun versionInfo(): Optional<VersionInfo> = versionInfo.getOptional("versionInfo")
+    fun versionInfo(): Optional<File.VersionInfo> = versionInfo.getOptional("versionInfo")
 
     /**
      * Width of the file.
@@ -292,11 +314,18 @@ private constructor(
     fun width(): Optional<Double> = width.getOptional("width")
 
     /**
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun extensionStatus(): Optional<ExtensionStatus> =
+        extensionStatus.getOptional("extensionStatus")
+
+    /**
      * Returns the raw JSON value of [aiTags].
      *
      * Unlike [aiTags], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("AITags") @ExcludeMissing fun _aiTags(): JsonField<List<AiTag>> = aiTags
+    @JsonProperty("AITags") @ExcludeMissing fun _aiTags(): JsonField<List<File.AiTag>> = aiTags
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -324,16 +353,7 @@ private constructor(
      */
     @JsonProperty("customMetadata")
     @ExcludeMissing
-    fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
-
-    /**
-     * Returns the raw JSON value of [extensionStatus].
-     *
-     * Unlike [extensionStatus], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("extensionStatus")
-    @ExcludeMissing
-    fun _extensionStatus(): JsonField<ExtensionStatus> = extensionStatus
+    fun _customMetadata(): JsonField<File.CustomMetadata> = customMetadata
 
     /**
      * Returns the raw JSON value of [fileId].
@@ -428,7 +448,7 @@ private constructor(
      *
      * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<File.Type> = type
 
     /**
      * Returns the raw JSON value of [updatedAt].
@@ -453,7 +473,7 @@ private constructor(
      */
     @JsonProperty("versionInfo")
     @ExcludeMissing
-    fun _versionInfo(): JsonField<VersionInfo> = versionInfo
+    fun _versionInfo(): JsonField<File.VersionInfo> = versionInfo
 
     /**
      * Returns the raw JSON value of [width].
@@ -461,6 +481,15 @@ private constructor(
      * Unlike [width], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Double> = width
+
+    /**
+     * Returns the raw JSON value of [extensionStatus].
+     *
+     * Unlike [extensionStatus], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("extensionStatus")
+    @ExcludeMissing
+    fun _extensionStatus(): JsonField<ExtensionStatus> = extensionStatus
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -483,11 +512,10 @@ private constructor(
     /** A builder for [FileUpdateResponse]. */
     class Builder internal constructor() {
 
-        private var aiTags: JsonField<MutableList<AiTag>>? = null
+        private var aiTags: JsonField<MutableList<File.AiTag>>? = null
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
-        private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
-        private var extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of()
+        private var customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of()
         private var fileId: JsonField<String> = JsonMissing.of()
         private var filePath: JsonField<String> = JsonMissing.of()
         private var fileType: JsonField<String> = JsonMissing.of()
@@ -500,11 +528,12 @@ private constructor(
         private var size: JsonField<Double> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var thumbnail: JsonField<String> = JsonMissing.of()
-        private var type: JsonField<Type> = JsonMissing.of()
+        private var type: JsonField<File.Type> = JsonMissing.of()
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var url: JsonField<String> = JsonMissing.of()
-        private var versionInfo: JsonField<VersionInfo> = JsonMissing.of()
+        private var versionInfo: JsonField<File.VersionInfo> = JsonMissing.of()
         private var width: JsonField<Double> = JsonMissing.of()
+        private var extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -513,7 +542,6 @@ private constructor(
             createdAt = fileUpdateResponse.createdAt
             customCoordinates = fileUpdateResponse.customCoordinates
             customMetadata = fileUpdateResponse.customMetadata
-            extensionStatus = fileUpdateResponse.extensionStatus
             fileId = fileUpdateResponse.fileId
             filePath = fileUpdateResponse.filePath
             fileType = fileUpdateResponse.fileType
@@ -531,32 +559,33 @@ private constructor(
             url = fileUpdateResponse.url
             versionInfo = fileUpdateResponse.versionInfo
             width = fileUpdateResponse.width
+            extensionStatus = fileUpdateResponse.extensionStatus
             additionalProperties = fileUpdateResponse.additionalProperties.toMutableMap()
         }
 
         /** An array of tags assigned to the file by auto tagging. */
-        fun aiTags(aiTags: List<AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
+        fun aiTags(aiTags: List<File.AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
 
         /** Alias for calling [Builder.aiTags] with `aiTags.orElse(null)`. */
-        fun aiTags(aiTags: Optional<List<AiTag>>) = aiTags(aiTags.getOrNull())
+        fun aiTags(aiTags: Optional<List<File.AiTag>>) = aiTags(aiTags.getOrNull())
 
         /**
          * Sets [Builder.aiTags] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.aiTags] with a well-typed `List<AiTag>` value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.aiTags] with a well-typed `List<File.AiTag>` value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun aiTags(aiTags: JsonField<List<AiTag>>) = apply {
+        fun aiTags(aiTags: JsonField<List<File.AiTag>>) = apply {
             this.aiTags = aiTags.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [AiTag] to [aiTags].
+         * Adds a single [File.AiTag] to [aiTags].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAiTag(aiTag: AiTag) = apply {
+        fun addAiTag(aiTag: File.AiTag) = apply {
             aiTags =
                 (aiTags ?: JsonField.of(mutableListOf())).also {
                     checkKnown("aiTags", it).add(aiTag)
@@ -595,32 +624,18 @@ private constructor(
         }
 
         /** An object with custom metadata for the file. */
-        fun customMetadata(customMetadata: CustomMetadata) =
+        fun customMetadata(customMetadata: File.CustomMetadata) =
             customMetadata(JsonField.of(customMetadata))
 
         /**
          * Sets [Builder.customMetadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customMetadata] with a well-typed [CustomMetadata] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
-            this.customMetadata = customMetadata
-        }
-
-        fun extensionStatus(extensionStatus: ExtensionStatus) =
-            extensionStatus(JsonField.of(extensionStatus))
-
-        /**
-         * Sets [Builder.extensionStatus] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.extensionStatus] with a well-typed [ExtensionStatus]
+         * You should usually call [Builder.customMetadata] with a well-typed [File.CustomMetadata]
          * value instead. This method is primarily for setting the field to an undocumented or not
          * yet supported value.
          */
-        fun extensionStatus(extensionStatus: JsonField<ExtensionStatus>) = apply {
-            this.extensionStatus = extensionStatus
+        fun customMetadata(customMetadata: JsonField<File.CustomMetadata>) = apply {
+            this.customMetadata = customMetadata
         }
 
         /** Unique identifier of the asset. */
@@ -787,15 +802,15 @@ private constructor(
         fun thumbnail(thumbnail: JsonField<String>) = apply { this.thumbnail = thumbnail }
 
         /** Type of the asset. */
-        fun type(type: Type) = type(JsonField.of(type))
+        fun type(type: File.Type) = type(JsonField.of(type))
 
         /**
          * Sets [Builder.type] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+         * You should usually call [Builder.type] with a well-typed [File.Type] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonField<File.Type>) = apply { this.type = type }
 
         /** Date and time when the file was last updated. The date and time is in ISO8601 format. */
         fun updatedAt(updatedAt: OffsetDateTime) = updatedAt(JsonField.of(updatedAt))
@@ -821,16 +836,16 @@ private constructor(
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         /** An object with details of the file version. */
-        fun versionInfo(versionInfo: VersionInfo) = versionInfo(JsonField.of(versionInfo))
+        fun versionInfo(versionInfo: File.VersionInfo) = versionInfo(JsonField.of(versionInfo))
 
         /**
          * Sets [Builder.versionInfo] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.versionInfo] with a well-typed [VersionInfo] value
+         * You should usually call [Builder.versionInfo] with a well-typed [File.VersionInfo] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun versionInfo(versionInfo: JsonField<VersionInfo>) = apply {
+        fun versionInfo(versionInfo: JsonField<File.VersionInfo>) = apply {
             this.versionInfo = versionInfo
         }
 
@@ -844,6 +859,20 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun width(width: JsonField<Double>) = apply { this.width = width }
+
+        fun extensionStatus(extensionStatus: ExtensionStatus) =
+            extensionStatus(JsonField.of(extensionStatus))
+
+        /**
+         * Sets [Builder.extensionStatus] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.extensionStatus] with a well-typed [ExtensionStatus]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun extensionStatus(extensionStatus: JsonField<ExtensionStatus>) = apply {
+            this.extensionStatus = extensionStatus
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -875,7 +904,6 @@ private constructor(
                 createdAt,
                 customCoordinates,
                 customMetadata,
-                extensionStatus,
                 fileId,
                 filePath,
                 fileType,
@@ -893,6 +921,7 @@ private constructor(
                 url,
                 versionInfo,
                 width,
+                extensionStatus,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -908,7 +937,6 @@ private constructor(
         createdAt()
         customCoordinates()
         customMetadata().ifPresent { it.validate() }
-        extensionStatus().ifPresent { it.validate() }
         fileId()
         filePath()
         fileType()
@@ -926,6 +954,7 @@ private constructor(
         url()
         versionInfo().ifPresent { it.validate() }
         width()
+        extensionStatus().ifPresent { it.validate() }
         validated = true
     }
 
@@ -948,7 +977,6 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (customCoordinates.asKnown().isPresent) 1 else 0) +
             (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
-            (extensionStatus.asKnown().getOrNull()?.validity() ?: 0) +
             (if (fileId.asKnown().isPresent) 1 else 0) +
             (if (filePath.asKnown().isPresent) 1 else 0) +
             (if (fileType.asKnown().isPresent) 1 else 0) +
@@ -965,326 +993,8 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
             (versionInfo.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (width.asKnown().isPresent) 1 else 0)
-
-    class AiTag
-    private constructor(
-        private val confidence: JsonField<Double>,
-        private val name: JsonField<String>,
-        private val source: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("confidence")
-            @ExcludeMissing
-            confidence: JsonField<Double> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("source") @ExcludeMissing source: JsonField<String> = JsonMissing.of(),
-        ) : this(confidence, name, source, mutableMapOf())
-
-        /**
-         * Confidence score of the tag.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun confidence(): Optional<Double> = confidence.getOptional("confidence")
-
-        /**
-         * Name of the tag.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun name(): Optional<String> = name.getOptional("name")
-
-        /**
-         * Source of the tag. Possible values are `google-auto-tagging` and `aws-auto-tagging`.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun source(): Optional<String> = source.getOptional("source")
-
-        /**
-         * Returns the raw JSON value of [confidence].
-         *
-         * Unlike [confidence], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("confidence")
-        @ExcludeMissing
-        fun _confidence(): JsonField<Double> = confidence
-
-        /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        /**
-         * Returns the raw JSON value of [source].
-         *
-         * Unlike [source], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("source") @ExcludeMissing fun _source(): JsonField<String> = source
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [AiTag]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [AiTag]. */
-        class Builder internal constructor() {
-
-            private var confidence: JsonField<Double> = JsonMissing.of()
-            private var name: JsonField<String> = JsonMissing.of()
-            private var source: JsonField<String> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(aiTag: AiTag) = apply {
-                confidence = aiTag.confidence
-                name = aiTag.name
-                source = aiTag.source
-                additionalProperties = aiTag.additionalProperties.toMutableMap()
-            }
-
-            /** Confidence score of the tag. */
-            fun confidence(confidence: Double) = confidence(JsonField.of(confidence))
-
-            /**
-             * Sets [Builder.confidence] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.confidence] with a well-typed [Double] value
-             * instead. This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun confidence(confidence: JsonField<Double>) = apply { this.confidence = confidence }
-
-            /** Name of the tag. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
-            /**
-             * Source of the tag. Possible values are `google-auto-tagging` and `aws-auto-tagging`.
-             */
-            fun source(source: String) = source(JsonField.of(source))
-
-            /**
-             * Sets [Builder.source] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.source] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun source(source: JsonField<String>) = apply { this.source = source }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [AiTag].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): AiTag =
-                AiTag(confidence, name, source, additionalProperties.toMutableMap())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): AiTag = apply {
-            if (validated) {
-                return@apply
-            }
-
-            confidence()
-            name()
-            source()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (confidence.asKnown().isPresent) 1 else 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
-                (if (source.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is AiTag &&
-                confidence == other.confidence &&
-                name == other.name &&
-                source == other.source &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy {
-            Objects.hash(confidence, name, source, additionalProperties)
-        }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "AiTag{confidence=$confidence, name=$name, source=$source, additionalProperties=$additionalProperties}"
-    }
-
-    /** An object with custom metadata for the file. */
-    class CustomMetadata
-    @JsonCreator
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
-    ) {
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [CustomMetadata]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [CustomMetadata]. */
-        class Builder internal constructor() {
-
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(customMetadata: CustomMetadata) = apply {
-                additionalProperties = customMetadata.additionalProperties.toMutableMap()
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [CustomMetadata].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): CustomMetadata = CustomMetadata(additionalProperties.toImmutable())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): CustomMetadata = apply {
-            if (validated) {
-                return@apply
-            }
-
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is CustomMetadata && additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
-    }
+            (if (width.asKnown().isPresent) 1 else 0) +
+            (extensionStatus.asKnown().getOrNull()?.validity() ?: 0)
 
     class ExtensionStatus
     private constructor(
@@ -2114,310 +1824,6 @@ private constructor(
             "ExtensionStatus{aiAutoDescription=$aiAutoDescription, awsAutoTagging=$awsAutoTagging, googleAutoTagging=$googleAutoTagging, removeBg=$removeBg, additionalProperties=$additionalProperties}"
     }
 
-    /** Type of the asset. */
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val FILE = of("file")
-
-            @JvmField val FILE_VERSION = of("file-version")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            FILE,
-            FILE_VERSION,
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            FILE,
-            FILE_VERSION,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                FILE -> Value.FILE
-                FILE_VERSION -> Value.FILE_VERSION
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                FILE -> Known.FILE
-                FILE_VERSION -> Known.FILE_VERSION
-                else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                ImageKitInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
-    /** An object with details of the file version. */
-    class VersionInfo
-    private constructor(
-        private val id: JsonField<String>,
-        private val name: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-        ) : this(id, name, mutableMapOf())
-
-        /**
-         * Unique identifier of the file version.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun id(): Optional<String> = id.getOptional("id")
-
-        /**
-         * Name of the file version.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun name(): Optional<String> = name.getOptional("name")
-
-        /**
-         * Returns the raw JSON value of [id].
-         *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-        /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [VersionInfo]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [VersionInfo]. */
-        class Builder internal constructor() {
-
-            private var id: JsonField<String> = JsonMissing.of()
-            private var name: JsonField<String> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(versionInfo: VersionInfo) = apply {
-                id = versionInfo.id
-                name = versionInfo.name
-                additionalProperties = versionInfo.additionalProperties.toMutableMap()
-            }
-
-            /** Unique identifier of the file version. */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
-
-            /** Name of the file version. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [VersionInfo].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): VersionInfo = VersionInfo(id, name, additionalProperties.toMutableMap())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): VersionInfo = apply {
-            if (validated) {
-                return@apply
-            }
-
-            id()
-            name()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is VersionInfo &&
-                id == other.id &&
-                name == other.name &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "VersionInfo{id=$id, name=$name, additionalProperties=$additionalProperties}"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
@@ -2428,7 +1834,6 @@ private constructor(
             createdAt == other.createdAt &&
             customCoordinates == other.customCoordinates &&
             customMetadata == other.customMetadata &&
-            extensionStatus == other.extensionStatus &&
             fileId == other.fileId &&
             filePath == other.filePath &&
             fileType == other.fileType &&
@@ -2446,6 +1851,7 @@ private constructor(
             url == other.url &&
             versionInfo == other.versionInfo &&
             width == other.width &&
+            extensionStatus == other.extensionStatus &&
             additionalProperties == other.additionalProperties
     }
 
@@ -2455,7 +1861,6 @@ private constructor(
             createdAt,
             customCoordinates,
             customMetadata,
-            extensionStatus,
             fileId,
             filePath,
             fileType,
@@ -2473,6 +1878,7 @@ private constructor(
             url,
             versionInfo,
             width,
+            extensionStatus,
             additionalProperties,
         )
     }
@@ -2480,5 +1886,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, extensionStatus=$extensionStatus, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, additionalProperties=$additionalProperties}"
+        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, extensionStatus=$extensionStatus, additionalProperties=$additionalProperties}"
 }

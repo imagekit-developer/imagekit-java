@@ -18,11 +18,11 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.multipartFormData
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
 import com.imagekit.api.models.files.FileGetParams
-import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
 import com.imagekit.api.models.files.FileRenameParams
@@ -89,7 +89,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun get(
         params: FileGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileGetResponse> =
+    ): CompletableFuture<File> =
         // get /v1/files/{fileId}/details
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
@@ -237,13 +237,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val getHandler: Handler<FileGetResponse> =
-            jsonHandler<FileGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<File> = jsonHandler<File>(clientOptions.jsonMapper)
 
         override fun get(
             params: FileGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileGetResponse>> {
+        ): CompletableFuture<HttpResponseFor<File>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())

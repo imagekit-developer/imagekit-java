@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.imagekit.api.models.files.versions
+package com.imagekit.api.models.files
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -21,7 +21,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a file or file version. */
-class VersionGetResponse
+class File
 private constructor(
     private val aiTags: JsonField<List<AiTag>>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -456,11 +456,11 @@ private constructor(
 
     companion object {
 
-        /** Returns a mutable builder for constructing an instance of [VersionGetResponse]. */
+        /** Returns a mutable builder for constructing an instance of [File]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [VersionGetResponse]. */
+    /** A builder for [File]. */
     class Builder internal constructor() {
 
         private var aiTags: JsonField<MutableList<AiTag>>? = null
@@ -487,29 +487,29 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(versionGetResponse: VersionGetResponse) = apply {
-            aiTags = versionGetResponse.aiTags.map { it.toMutableList() }
-            createdAt = versionGetResponse.createdAt
-            customCoordinates = versionGetResponse.customCoordinates
-            customMetadata = versionGetResponse.customMetadata
-            fileId = versionGetResponse.fileId
-            filePath = versionGetResponse.filePath
-            fileType = versionGetResponse.fileType
-            hasAlpha = versionGetResponse.hasAlpha
-            height = versionGetResponse.height
-            isPrivateFile = versionGetResponse.isPrivateFile
-            isPublished = versionGetResponse.isPublished
-            mime = versionGetResponse.mime
-            name = versionGetResponse.name
-            size = versionGetResponse.size
-            tags = versionGetResponse.tags.map { it.toMutableList() }
-            thumbnail = versionGetResponse.thumbnail
-            type = versionGetResponse.type
-            updatedAt = versionGetResponse.updatedAt
-            url = versionGetResponse.url
-            versionInfo = versionGetResponse.versionInfo
-            width = versionGetResponse.width
-            additionalProperties = versionGetResponse.additionalProperties.toMutableMap()
+        internal fun from(file: File) = apply {
+            aiTags = file.aiTags.map { it.toMutableList() }
+            createdAt = file.createdAt
+            customCoordinates = file.customCoordinates
+            customMetadata = file.customMetadata
+            fileId = file.fileId
+            filePath = file.filePath
+            fileType = file.fileType
+            hasAlpha = file.hasAlpha
+            height = file.height
+            isPrivateFile = file.isPrivateFile
+            isPublished = file.isPublished
+            mime = file.mime
+            name = file.name
+            size = file.size
+            tags = file.tags.map { it.toMutableList() }
+            thumbnail = file.thumbnail
+            type = file.type
+            updatedAt = file.updatedAt
+            url = file.url
+            versionInfo = file.versionInfo
+            width = file.width
+            additionalProperties = file.additionalProperties.toMutableMap()
         }
 
         /** An array of tags assigned to the file by auto tagging. */
@@ -829,12 +829,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [VersionGetResponse].
+         * Returns an immutable instance of [File].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): VersionGetResponse =
-            VersionGetResponse(
+        fun build(): File =
+            File(
                 (aiTags ?: JsonMissing.of()).map { it.toImmutable() },
                 createdAt,
                 customCoordinates,
@@ -862,7 +862,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): VersionGetResponse = apply {
+    fun validate(): File = apply {
         if (validated) {
             return@apply
         }
@@ -1556,7 +1556,7 @@ private constructor(
             return true
         }
 
-        return other is VersionGetResponse &&
+        return other is File &&
             aiTags == other.aiTags &&
             createdAt == other.createdAt &&
             customCoordinates == other.customCoordinates &&
@@ -1611,5 +1611,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "VersionGetResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, additionalProperties=$additionalProperties}"
+        "File{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, additionalProperties=$additionalProperties}"
 }

@@ -7,11 +7,11 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
 import com.imagekit.api.models.files.FileGetParams
-import com.imagekit.api.models.files.FileGetResponse
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileMoveResponse
 import com.imagekit.api.models.files.FileRenameParams
@@ -126,30 +126,27 @@ interface FileService {
     /**
      * This API returns an object with details or attributes about the current version of the file.
      */
-    fun get(fileId: String): FileGetResponse = get(fileId, FileGetParams.none())
+    fun get(fileId: String): File = get(fileId, FileGetParams.none())
 
     /** @see get */
     fun get(
         fileId: String,
         params: FileGetParams = FileGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileGetResponse = get(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): File = get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see get */
-    fun get(fileId: String, params: FileGetParams = FileGetParams.none()): FileGetResponse =
+    fun get(fileId: String, params: FileGetParams = FileGetParams.none()): File =
         get(fileId, params, RequestOptions.none())
 
     /** @see get */
-    fun get(
-        params: FileGetParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileGetResponse
+    fun get(params: FileGetParams, requestOptions: RequestOptions = RequestOptions.none()): File
 
     /** @see get */
-    fun get(params: FileGetParams): FileGetResponse = get(params, RequestOptions.none())
+    fun get(params: FileGetParams): File = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(fileId: String, requestOptions: RequestOptions): FileGetResponse =
+    fun get(fileId: String, requestOptions: RequestOptions): File =
         get(fileId, FileGetParams.none(), requestOptions)
 
     /**
@@ -331,8 +328,7 @@ interface FileService {
          * same as [FileService.get].
          */
         @MustBeClosed
-        fun get(fileId: String): HttpResponseFor<FileGetResponse> =
-            get(fileId, FileGetParams.none())
+        fun get(fileId: String): HttpResponseFor<File> = get(fileId, FileGetParams.none())
 
         /** @see get */
         @MustBeClosed
@@ -340,31 +336,29 @@ interface FileService {
             fileId: String,
             params: FileGetParams = FileGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileGetResponse> =
-            get(params.toBuilder().fileId(fileId).build(), requestOptions)
+        ): HttpResponseFor<File> = get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see get */
         @MustBeClosed
         fun get(
             fileId: String,
             params: FileGetParams = FileGetParams.none(),
-        ): HttpResponseFor<FileGetResponse> = get(fileId, params, RequestOptions.none())
+        ): HttpResponseFor<File> = get(fileId, params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
         fun get(
             params: FileGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileGetResponse>
+        ): HttpResponseFor<File>
 
         /** @see get */
         @MustBeClosed
-        fun get(params: FileGetParams): HttpResponseFor<FileGetResponse> =
-            get(params, RequestOptions.none())
+        fun get(params: FileGetParams): HttpResponseFor<File> = get(params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
-        fun get(fileId: String, requestOptions: RequestOptions): HttpResponseFor<FileGetResponse> =
+        fun get(fileId: String, requestOptions: RequestOptions): HttpResponseFor<File> =
             get(fileId, FileGetParams.none(), requestOptions)
 
         /**
