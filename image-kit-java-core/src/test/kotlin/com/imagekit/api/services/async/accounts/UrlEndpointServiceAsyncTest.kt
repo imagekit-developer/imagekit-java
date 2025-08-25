@@ -4,8 +4,8 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpoint
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -25,16 +25,16 @@ internal class UrlEndpointServiceAsyncTest {
                 .build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
-        val urlEndpointFuture =
+        val urlEndpointResponseFuture =
             urlEndpointServiceAsync.create(
                 UrlEndpointCreateParams.builder()
-                    .urlEndpoint(
-                        UrlEndpoint.builder()
+                    .urlEndpointRequest(
+                        UrlEndpointRequest.builder()
                             .description("My custom URL endpoint")
                             .addOrigin("origin-id-1")
                             .urlPrefix("product-images")
                             .urlRewriter(
-                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                     .preserveAssetDeliveryTypes(true)
                                     .build()
                             )
@@ -43,8 +43,8 @@ internal class UrlEndpointServiceAsyncTest {
                     .build()
             )
 
-        val urlEndpoint = urlEndpointFuture.get()
-        urlEndpoint.validate()
+        val urlEndpointResponse = urlEndpointResponseFuture.get()
+        urlEndpointResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -58,17 +58,17 @@ internal class UrlEndpointServiceAsyncTest {
                 .build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
-        val urlEndpointFuture =
+        val urlEndpointResponseFuture =
             urlEndpointServiceAsync.update(
                 UrlEndpointUpdateParams.builder()
                     .id("id")
-                    .urlEndpoint(
-                        UrlEndpoint.builder()
+                    .urlEndpointRequest(
+                        UrlEndpointRequest.builder()
                             .description("My custom URL endpoint")
                             .addOrigin("origin-id-1")
                             .urlPrefix("product-images")
                             .urlRewriter(
-                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                     .preserveAssetDeliveryTypes(true)
                                     .build()
                             )
@@ -77,8 +77,8 @@ internal class UrlEndpointServiceAsyncTest {
                     .build()
             )
 
-        val urlEndpoint = urlEndpointFuture.get()
-        urlEndpoint.validate()
+        val urlEndpointResponse = urlEndpointResponseFuture.get()
+        urlEndpointResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -92,10 +92,10 @@ internal class UrlEndpointServiceAsyncTest {
                 .build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
-        val urlEndpointsFuture = urlEndpointServiceAsync.list()
+        val urlEndpointResponsesFuture = urlEndpointServiceAsync.list()
 
-        val urlEndpoints = urlEndpointsFuture.get()
-        urlEndpoints.forEach { it.validate() }
+        val urlEndpointResponses = urlEndpointResponsesFuture.get()
+        urlEndpointResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -125,9 +125,9 @@ internal class UrlEndpointServiceAsyncTest {
                 .build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
-        val urlEndpointFuture = urlEndpointServiceAsync.get("id")
+        val urlEndpointResponseFuture = urlEndpointServiceAsync.get("id")
 
-        val urlEndpoint = urlEndpointFuture.get()
-        urlEndpoint.validate()
+        val urlEndpointResponse = urlEndpointResponseFuture.get()
+        urlEndpointResponse.validate()
     }
 }

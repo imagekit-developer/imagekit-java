@@ -18,7 +18,7 @@ import kotlin.jvm.optionals.getOrNull
 class UrlEndpointUpdateParams
 private constructor(
     private val id: String?,
-    private val urlEndpoint: UrlEndpoint,
+    private val urlEndpointRequest: UrlEndpointRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -30,9 +30,10 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Schema for URL endpoint resource. */
-    fun urlEndpoint(): UrlEndpoint = urlEndpoint
+    fun urlEndpointRequest(): UrlEndpointRequest = urlEndpointRequest
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = urlEndpoint._additionalProperties()
+    fun _additionalBodyProperties(): Map<String, JsonValue> =
+        urlEndpointRequest._additionalProperties()
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -49,7 +50,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .urlEndpoint()
+         * .urlEndpointRequest()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -59,14 +60,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
-        private var urlEndpoint: UrlEndpoint? = null
+        private var urlEndpointRequest: UrlEndpointRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(urlEndpointUpdateParams: UrlEndpointUpdateParams) = apply {
             id = urlEndpointUpdateParams.id
-            urlEndpoint = urlEndpointUpdateParams.urlEndpoint
+            urlEndpointRequest = urlEndpointUpdateParams.urlEndpointRequest
             additionalHeaders = urlEndpointUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = urlEndpointUpdateParams.additionalQueryParams.toBuilder()
         }
@@ -81,7 +82,9 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** Schema for URL endpoint resource. */
-        fun urlEndpoint(urlEndpoint: UrlEndpoint) = apply { this.urlEndpoint = urlEndpoint }
+        fun urlEndpointRequest(urlEndpointRequest: UrlEndpointRequest) = apply {
+            this.urlEndpointRequest = urlEndpointRequest
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -188,7 +191,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .urlEndpoint()
+         * .urlEndpointRequest()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -196,13 +199,13 @@ private constructor(
         fun build(): UrlEndpointUpdateParams =
             UrlEndpointUpdateParams(
                 id,
-                checkRequired("urlEndpoint", urlEndpoint),
+                checkRequired("urlEndpointRequest", urlEndpointRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): UrlEndpoint = urlEndpoint
+    fun _body(): UrlEndpointRequest = urlEndpointRequest
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -221,14 +224,14 @@ private constructor(
 
         return other is UrlEndpointUpdateParams &&
             id == other.id &&
-            urlEndpoint == other.urlEndpoint &&
+            urlEndpointRequest == other.urlEndpointRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(id, urlEndpoint, additionalHeaders, additionalQueryParams)
+        Objects.hash(id, urlEndpointRequest, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UrlEndpointUpdateParams{id=$id, urlEndpoint=$urlEndpoint, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UrlEndpointUpdateParams{id=$id, urlEndpointRequest=$urlEndpointRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

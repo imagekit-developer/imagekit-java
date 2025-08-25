@@ -18,14 +18,11 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointDeleteParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListResponse
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -45,21 +42,21 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
     override fun create(
         params: UrlEndpointCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<UrlEndpointCreateResponse> =
+    ): CompletableFuture<UrlEndpointResponse> =
         // post /v1/accounts/url-endpoints
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: UrlEndpointUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<UrlEndpointUpdateResponse> =
+    ): CompletableFuture<UrlEndpointResponse> =
         // put /v1/accounts/url-endpoints/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: UrlEndpointListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<UrlEndpointListResponse>> =
+    ): CompletableFuture<List<UrlEndpointResponse>> =
         // get /v1/accounts/url-endpoints
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -73,7 +70,7 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
     override fun get(
         params: UrlEndpointGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<UrlEndpointGetResponse> =
+    ): CompletableFuture<UrlEndpointResponse> =
         // get /v1/accounts/url-endpoints/{id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
@@ -90,13 +87,13 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<UrlEndpointCreateResponse> =
-            jsonHandler<UrlEndpointCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: UrlEndpointCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<UrlEndpointCreateResponse>> {
+        ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -121,13 +118,13 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val updateHandler: Handler<UrlEndpointUpdateResponse> =
-            jsonHandler<UrlEndpointUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: UrlEndpointUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<UrlEndpointUpdateResponse>> {
+        ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -155,13 +152,13 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val listHandler: Handler<List<UrlEndpointListResponse>> =
-            jsonHandler<List<UrlEndpointListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<UrlEndpointResponse>> =
+            jsonHandler<List<UrlEndpointResponse>>(clientOptions.jsonMapper)
 
         override fun list(
             params: UrlEndpointListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<UrlEndpointListResponse>>> {
+        ): CompletableFuture<HttpResponseFor<List<UrlEndpointResponse>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -212,13 +209,13 @@ class UrlEndpointServiceAsyncImpl internal constructor(private val clientOptions
                 }
         }
 
-        private val getHandler: Handler<UrlEndpointGetResponse> =
-            jsonHandler<UrlEndpointGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun get(
             params: UrlEndpointGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<UrlEndpointGetResponse>> {
+        ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

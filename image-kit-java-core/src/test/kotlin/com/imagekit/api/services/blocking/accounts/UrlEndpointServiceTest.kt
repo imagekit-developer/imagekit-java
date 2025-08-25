@@ -4,8 +4,8 @@ package com.imagekit.api.services.blocking.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpoint
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -25,16 +25,16 @@ internal class UrlEndpointServiceTest {
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
-        val urlEndpoint =
+        val urlEndpointResponse =
             urlEndpointService.create(
                 UrlEndpointCreateParams.builder()
-                    .urlEndpoint(
-                        UrlEndpoint.builder()
+                    .urlEndpointRequest(
+                        UrlEndpointRequest.builder()
                             .description("My custom URL endpoint")
                             .addOrigin("origin-id-1")
                             .urlPrefix("product-images")
                             .urlRewriter(
-                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                     .preserveAssetDeliveryTypes(true)
                                     .build()
                             )
@@ -43,7 +43,7 @@ internal class UrlEndpointServiceTest {
                     .build()
             )
 
-        urlEndpoint.validate()
+        urlEndpointResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -57,17 +57,17 @@ internal class UrlEndpointServiceTest {
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
-        val urlEndpoint =
+        val urlEndpointResponse =
             urlEndpointService.update(
                 UrlEndpointUpdateParams.builder()
                     .id("id")
-                    .urlEndpoint(
-                        UrlEndpoint.builder()
+                    .urlEndpointRequest(
+                        UrlEndpointRequest.builder()
                             .description("My custom URL endpoint")
                             .addOrigin("origin-id-1")
                             .urlPrefix("product-images")
                             .urlRewriter(
-                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                     .preserveAssetDeliveryTypes(true)
                                     .build()
                             )
@@ -76,7 +76,7 @@ internal class UrlEndpointServiceTest {
                     .build()
             )
 
-        urlEndpoint.validate()
+        urlEndpointResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -90,9 +90,9 @@ internal class UrlEndpointServiceTest {
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
-        val urlEndpoints = urlEndpointService.list()
+        val urlEndpointResponses = urlEndpointService.list()
 
-        urlEndpoints.forEach { it.validate() }
+        urlEndpointResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -120,8 +120,8 @@ internal class UrlEndpointServiceTest {
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
-        val urlEndpoint = urlEndpointService.get("id")
+        val urlEndpointResponse = urlEndpointService.get("id")
 
-        urlEndpoint.validate()
+        urlEndpointResponse.validate()
     }
 }

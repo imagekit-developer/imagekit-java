@@ -30,7 +30,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** URL‑endpoint object as returned by the API. */
-class UrlEndpointCreateResponse
+class UrlEndpointResponse
 private constructor(
     private val id: JsonField<String>,
     private val description: JsonField<String>,
@@ -151,7 +151,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [UrlEndpointCreateResponse].
+         * Returns a mutable builder for constructing an instance of [UrlEndpointResponse].
          *
          * The following fields are required:
          * ```java
@@ -164,7 +164,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UrlEndpointCreateResponse]. */
+    /** A builder for [UrlEndpointResponse]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -175,13 +175,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(urlEndpointCreateResponse: UrlEndpointCreateResponse) = apply {
-            id = urlEndpointCreateResponse.id
-            description = urlEndpointCreateResponse.description
-            origins = urlEndpointCreateResponse.origins.map { it.toMutableList() }
-            urlPrefix = urlEndpointCreateResponse.urlPrefix
-            urlRewriter = urlEndpointCreateResponse.urlRewriter
-            additionalProperties = urlEndpointCreateResponse.additionalProperties.toMutableMap()
+        internal fun from(urlEndpointResponse: UrlEndpointResponse) = apply {
+            id = urlEndpointResponse.id
+            description = urlEndpointResponse.description
+            origins = urlEndpointResponse.origins.map { it.toMutableList() }
+            urlPrefix = urlEndpointResponse.urlPrefix
+            urlRewriter = urlEndpointResponse.urlRewriter
+            additionalProperties = urlEndpointResponse.additionalProperties.toMutableMap()
         }
 
         /**
@@ -314,7 +314,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UrlEndpointCreateResponse].
+         * Returns an immutable instance of [UrlEndpointResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -328,8 +328,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UrlEndpointCreateResponse =
-            UrlEndpointCreateResponse(
+        fun build(): UrlEndpointResponse =
+            UrlEndpointResponse(
                 checkRequired("id", id),
                 checkRequired("description", description),
                 checkRequired("origins", origins).map { it.toImmutable() },
@@ -341,7 +341,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UrlEndpointCreateResponse = apply {
+    fun validate(): UrlEndpointResponse = apply {
         if (validated) {
             return@apply
         }
@@ -805,7 +805,7 @@ private constructor(
             return true
         }
 
-        return other is UrlEndpointCreateResponse &&
+        return other is UrlEndpointResponse &&
             id == other.id &&
             description == other.description &&
             origins == other.origins &&
@@ -821,5 +821,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UrlEndpointCreateResponse{id=$id, description=$description, origins=$origins, urlPrefix=$urlPrefix, urlRewriter=$urlRewriter, additionalProperties=$additionalProperties}"
+        "UrlEndpointResponse{id=$id, description=$description, origins=$origins, urlPrefix=$urlPrefix, urlRewriter=$urlRewriter, additionalProperties=$additionalProperties}"
 }

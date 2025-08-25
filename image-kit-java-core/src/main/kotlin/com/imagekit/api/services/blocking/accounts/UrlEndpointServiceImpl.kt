@@ -18,14 +18,11 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointDeleteParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListResponse
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -44,21 +41,21 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
     override fun create(
         params: UrlEndpointCreateParams,
         requestOptions: RequestOptions,
-    ): UrlEndpointCreateResponse =
+    ): UrlEndpointResponse =
         // post /v1/accounts/url-endpoints
         withRawResponse().create(params, requestOptions).parse()
 
     override fun update(
         params: UrlEndpointUpdateParams,
         requestOptions: RequestOptions,
-    ): UrlEndpointUpdateResponse =
+    ): UrlEndpointResponse =
         // put /v1/accounts/url-endpoints/{id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: UrlEndpointListParams,
         requestOptions: RequestOptions,
-    ): List<UrlEndpointListResponse> =
+    ): List<UrlEndpointResponse> =
         // get /v1/accounts/url-endpoints
         withRawResponse().list(params, requestOptions).parse()
 
@@ -70,7 +67,7 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
     override fun get(
         params: UrlEndpointGetParams,
         requestOptions: RequestOptions,
-    ): UrlEndpointGetResponse =
+    ): UrlEndpointResponse =
         // get /v1/accounts/url-endpoints/{id}
         withRawResponse().get(params, requestOptions).parse()
 
@@ -87,13 +84,13 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<UrlEndpointCreateResponse> =
-            jsonHandler<UrlEndpointCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun create(
             params: UrlEndpointCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UrlEndpointCreateResponse> {
+        ): HttpResponseFor<UrlEndpointResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -115,13 +112,13 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val updateHandler: Handler<UrlEndpointUpdateResponse> =
-            jsonHandler<UrlEndpointUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun update(
             params: UrlEndpointUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UrlEndpointUpdateResponse> {
+        ): HttpResponseFor<UrlEndpointResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -146,13 +143,13 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val listHandler: Handler<List<UrlEndpointListResponse>> =
-            jsonHandler<List<UrlEndpointListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<UrlEndpointResponse>> =
+            jsonHandler<List<UrlEndpointResponse>>(clientOptions.jsonMapper)
 
         override fun list(
             params: UrlEndpointListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<UrlEndpointListResponse>> {
+        ): HttpResponseFor<List<UrlEndpointResponse>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -197,13 +194,13 @@ class UrlEndpointServiceImpl internal constructor(private val clientOptions: Cli
             }
         }
 
-        private val getHandler: Handler<UrlEndpointGetResponse> =
-            jsonHandler<UrlEndpointGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<UrlEndpointResponse> =
+            jsonHandler<UrlEndpointResponse>(clientOptions.jsonMapper)
 
         override fun get(
             params: UrlEndpointGetParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<UrlEndpointGetResponse> {
+        ): HttpResponseFor<UrlEndpointResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

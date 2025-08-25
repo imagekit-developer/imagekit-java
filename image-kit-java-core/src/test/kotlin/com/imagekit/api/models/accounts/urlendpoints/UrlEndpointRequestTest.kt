@@ -8,29 +8,29 @@ import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UrlEndpointTest {
+internal class UrlEndpointRequestTest {
 
     @Test
     fun create() {
-        val urlEndpoint =
-            UrlEndpoint.builder()
+        val urlEndpointRequest =
+            UrlEndpointRequest.builder()
                 .description("My custom URL endpoint")
                 .addOrigin("origin-id-1")
                 .urlPrefix("product-images")
                 .urlRewriter(
-                    UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                    UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )
                 .build()
 
-        assertThat(urlEndpoint.description()).isEqualTo("My custom URL endpoint")
-        assertThat(urlEndpoint.origins().getOrNull()).containsExactly("origin-id-1")
-        assertThat(urlEndpoint.urlPrefix()).contains("product-images")
-        assertThat(urlEndpoint.urlRewriter())
+        assertThat(urlEndpointRequest.description()).isEqualTo("My custom URL endpoint")
+        assertThat(urlEndpointRequest.origins().getOrNull()).containsExactly("origin-id-1")
+        assertThat(urlEndpointRequest.urlPrefix()).contains("product-images")
+        assertThat(urlEndpointRequest.urlRewriter())
             .contains(
-                UrlEndpoint.UrlRewriter.ofCloudinary(
-                    UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                UrlEndpointRequest.UrlRewriter.ofCloudinary(
+                    UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )
@@ -40,24 +40,24 @@ internal class UrlEndpointTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val urlEndpoint =
-            UrlEndpoint.builder()
+        val urlEndpointRequest =
+            UrlEndpointRequest.builder()
                 .description("My custom URL endpoint")
                 .addOrigin("origin-id-1")
                 .urlPrefix("product-images")
                 .urlRewriter(
-                    UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                    UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
                         .build()
                 )
                 .build()
 
-        val roundtrippedUrlEndpoint =
+        val roundtrippedUrlEndpointRequest =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(urlEndpoint),
-                jacksonTypeRef<UrlEndpoint>(),
+                jsonMapper.writeValueAsString(urlEndpointRequest),
+                jacksonTypeRef<UrlEndpointRequest>(),
             )
 
-        assertThat(roundtrippedUrlEndpoint).isEqualTo(urlEndpoint)
+        assertThat(roundtrippedUrlEndpointRequest).isEqualTo(urlEndpointRequest)
     }
 }

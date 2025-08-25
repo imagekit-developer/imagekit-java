@@ -11,13 +11,13 @@ internal class UrlEndpointUpdateParamsTest {
     fun create() {
         UrlEndpointUpdateParams.builder()
             .id("id")
-            .urlEndpoint(
-                UrlEndpoint.builder()
+            .urlEndpointRequest(
+                UrlEndpointRequest.builder()
                     .description("My custom URL endpoint")
                     .addOrigin("origin-id-1")
                     .urlPrefix("product-images")
                     .urlRewriter(
-                        UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                        UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
                             .build()
                     )
@@ -31,7 +31,9 @@ internal class UrlEndpointUpdateParamsTest {
         val params =
             UrlEndpointUpdateParams.builder()
                 .id("id")
-                .urlEndpoint(UrlEndpoint.builder().description("My custom URL endpoint").build())
+                .urlEndpointRequest(
+                    UrlEndpointRequest.builder().description("My custom URL endpoint").build()
+                )
                 .build()
 
         assertThat(params._pathParam(0)).isEqualTo("id")
@@ -44,13 +46,13 @@ internal class UrlEndpointUpdateParamsTest {
         val params =
             UrlEndpointUpdateParams.builder()
                 .id("id")
-                .urlEndpoint(
-                    UrlEndpoint.builder()
+                .urlEndpointRequest(
+                    UrlEndpointRequest.builder()
                         .description("My custom URL endpoint")
                         .addOrigin("origin-id-1")
                         .urlPrefix("product-images")
                         .urlRewriter(
-                            UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                            UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                 .preserveAssetDeliveryTypes(true)
                                 .build()
                         )
@@ -62,12 +64,12 @@ internal class UrlEndpointUpdateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                UrlEndpoint.builder()
+                UrlEndpointRequest.builder()
                     .description("My custom URL endpoint")
                     .addOrigin("origin-id-1")
                     .urlPrefix("product-images")
                     .urlRewriter(
-                        UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                        UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
                             .build()
                     )
@@ -80,12 +82,14 @@ internal class UrlEndpointUpdateParamsTest {
         val params =
             UrlEndpointUpdateParams.builder()
                 .id("id")
-                .urlEndpoint(UrlEndpoint.builder().description("My custom URL endpoint").build())
+                .urlEndpointRequest(
+                    UrlEndpointRequest.builder().description("My custom URL endpoint").build()
+                )
                 .build()
 
         val body = params._body()
 
         assertThat(body)
-            .isEqualTo(UrlEndpoint.builder().description("My custom URL endpoint").build())
+            .isEqualTo(UrlEndpointRequest.builder().description("My custom URL endpoint").build())
     }
 }

@@ -15,15 +15,16 @@ import java.util.Objects
  */
 class UrlEndpointCreateParams
 private constructor(
-    private val urlEndpoint: UrlEndpoint,
+    private val urlEndpointRequest: UrlEndpointRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** Schema for URL endpoint resource. */
-    fun urlEndpoint(): UrlEndpoint = urlEndpoint
+    fun urlEndpointRequest(): UrlEndpointRequest = urlEndpointRequest
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = urlEndpoint._additionalProperties()
+    fun _additionalBodyProperties(): Map<String, JsonValue> =
+        urlEndpointRequest._additionalProperties()
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -40,7 +41,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .urlEndpoint()
+         * .urlEndpointRequest()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -49,19 +50,21 @@ private constructor(
     /** A builder for [UrlEndpointCreateParams]. */
     class Builder internal constructor() {
 
-        private var urlEndpoint: UrlEndpoint? = null
+        private var urlEndpointRequest: UrlEndpointRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(urlEndpointCreateParams: UrlEndpointCreateParams) = apply {
-            urlEndpoint = urlEndpointCreateParams.urlEndpoint
+            urlEndpointRequest = urlEndpointCreateParams.urlEndpointRequest
             additionalHeaders = urlEndpointCreateParams.additionalHeaders.toBuilder()
             additionalQueryParams = urlEndpointCreateParams.additionalQueryParams.toBuilder()
         }
 
         /** Schema for URL endpoint resource. */
-        fun urlEndpoint(urlEndpoint: UrlEndpoint) = apply { this.urlEndpoint = urlEndpoint }
+        fun urlEndpointRequest(urlEndpointRequest: UrlEndpointRequest) = apply {
+            this.urlEndpointRequest = urlEndpointRequest
+        }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -168,20 +171,20 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .urlEndpoint()
+         * .urlEndpointRequest()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): UrlEndpointCreateParams =
             UrlEndpointCreateParams(
-                checkRequired("urlEndpoint", urlEndpoint),
+                checkRequired("urlEndpointRequest", urlEndpointRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): UrlEndpoint = urlEndpoint
+    fun _body(): UrlEndpointRequest = urlEndpointRequest
 
     override fun _headers(): Headers = additionalHeaders
 
@@ -193,14 +196,14 @@ private constructor(
         }
 
         return other is UrlEndpointCreateParams &&
-            urlEndpoint == other.urlEndpoint &&
+            urlEndpointRequest == other.urlEndpointRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(urlEndpoint, additionalHeaders, additionalQueryParams)
+        Objects.hash(urlEndpointRequest, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "UrlEndpointCreateParams{urlEndpoint=$urlEndpoint, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "UrlEndpointCreateParams{urlEndpointRequest=$urlEndpointRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }
