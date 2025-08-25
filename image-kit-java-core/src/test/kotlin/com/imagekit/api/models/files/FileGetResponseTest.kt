@@ -5,6 +5,7 @@ package com.imagekit.api.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ internal class FileGetResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     FileGetResponse.CustomMetadata.builder()
@@ -40,10 +41,10 @@ internal class FileGetResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(FileGetResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(FileGetResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
@@ -56,7 +57,8 @@ internal class FileGetResponseTest {
                     .source("source")
                     .build()
             )
-        assertThat(fileGetResponse.createdAt()).contains("createdAt")
+        assertThat(fileGetResponse.createdAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileGetResponse.customCoordinates()).contains("customCoordinates")
         assertThat(fileGetResponse.customMetadata())
             .contains(
@@ -75,10 +77,11 @@ internal class FileGetResponseTest {
         assertThat(fileGetResponse.name()).contains("name")
         assertThat(fileGetResponse.size()).contains(0.0)
         assertThat(fileGetResponse.tags().getOrNull()).containsExactly("string")
-        assertThat(fileGetResponse.thumbnail()).contains("thumbnail")
-        assertThat(fileGetResponse.type()).contains("type")
-        assertThat(fileGetResponse.updatedAt()).contains("updatedAt")
-        assertThat(fileGetResponse.url()).contains("url")
+        assertThat(fileGetResponse.thumbnail()).contains("https://example.com")
+        assertThat(fileGetResponse.type()).contains(FileGetResponse.Type.FILE)
+        assertThat(fileGetResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(fileGetResponse.url()).contains("https://example.com")
         assertThat(fileGetResponse.versionInfo())
             .contains(FileGetResponse.VersionInfo.builder().id("id").name("name").build())
         assertThat(fileGetResponse.width()).contains(0.0)
@@ -96,7 +99,7 @@ internal class FileGetResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     FileGetResponse.CustomMetadata.builder()
@@ -114,10 +117,10 @@ internal class FileGetResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(FileGetResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(FileGetResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()

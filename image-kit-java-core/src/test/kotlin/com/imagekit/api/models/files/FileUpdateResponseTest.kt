@@ -5,6 +5,7 @@ package com.imagekit.api.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ internal class FileUpdateResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     FileUpdateResponse.CustomMetadata.builder()
@@ -52,10 +53,10 @@ internal class FileUpdateResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(FileUpdateResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
@@ -68,7 +69,8 @@ internal class FileUpdateResponseTest {
                     .source("source")
                     .build()
             )
-        assertThat(fileUpdateResponse.createdAt()).contains("createdAt")
+        assertThat(fileUpdateResponse.createdAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateResponse.customCoordinates()).contains("customCoordinates")
         assertThat(fileUpdateResponse.customMetadata())
             .contains(
@@ -96,10 +98,11 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.name()).contains("name")
         assertThat(fileUpdateResponse.size()).contains(0.0)
         assertThat(fileUpdateResponse.tags().getOrNull()).containsExactly("string")
-        assertThat(fileUpdateResponse.thumbnail()).contains("thumbnail")
-        assertThat(fileUpdateResponse.type()).contains("type")
-        assertThat(fileUpdateResponse.updatedAt()).contains("updatedAt")
-        assertThat(fileUpdateResponse.url()).contains("url")
+        assertThat(fileUpdateResponse.thumbnail()).contains("https://example.com")
+        assertThat(fileUpdateResponse.type()).contains(FileUpdateResponse.Type.FILE)
+        assertThat(fileUpdateResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(fileUpdateResponse.url()).contains("https://example.com")
         assertThat(fileUpdateResponse.versionInfo())
             .contains(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
         assertThat(fileUpdateResponse.width()).contains(0.0)
@@ -117,7 +120,7 @@ internal class FileUpdateResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     FileUpdateResponse.CustomMetadata.builder()
@@ -147,10 +150,10 @@ internal class FileUpdateResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(FileUpdateResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()

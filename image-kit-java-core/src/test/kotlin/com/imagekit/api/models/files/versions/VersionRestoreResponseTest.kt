@@ -5,6 +5,7 @@ package com.imagekit.api.models.files.versions
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,7 +30,7 @@ internal class VersionRestoreResponseTest {
                         .source("aws-auto-tagging")
                         .build()
                 )
-                .createdAt("2019-08-24T06:14:41.313Z")
+                .createdAt(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
                 .customCoordinates(null)
                 .customMetadata(
                     VersionRestoreResponse.CustomMetadata.builder()
@@ -51,8 +52,8 @@ internal class VersionRestoreResponseTest {
                 .thumbnail(
                     "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313&tr=n-ik_ml_thumbnail"
                 )
-                .type("file")
-                .updatedAt("2019-08-24T06:14:41.313Z")
+                .type(VersionRestoreResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
                 .url(
                     "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313"
                 )
@@ -78,7 +79,8 @@ internal class VersionRestoreResponseTest {
                     .source("aws-auto-tagging")
                     .build(),
             )
-        assertThat(versionRestoreResponse.createdAt()).contains("2019-08-24T06:14:41.313Z")
+        assertThat(versionRestoreResponse.createdAt())
+            .contains(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
         assertThat(versionRestoreResponse.customCoordinates()).isEmpty
         assertThat(versionRestoreResponse.customMetadata())
             .contains(
@@ -103,8 +105,9 @@ internal class VersionRestoreResponseTest {
             .contains(
                 "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313&tr=n-ik_ml_thumbnail"
             )
-        assertThat(versionRestoreResponse.type()).contains("file")
-        assertThat(versionRestoreResponse.updatedAt()).contains("2019-08-24T06:14:41.313Z")
+        assertThat(versionRestoreResponse.type()).contains(VersionRestoreResponse.Type.FILE)
+        assertThat(versionRestoreResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
         assertThat(versionRestoreResponse.url())
             .contains(
                 "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313"
@@ -138,7 +141,7 @@ internal class VersionRestoreResponseTest {
                         .source("aws-auto-tagging")
                         .build()
                 )
-                .createdAt("2019-08-24T06:14:41.313Z")
+                .createdAt(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
                 .customCoordinates(null)
                 .customMetadata(
                     VersionRestoreResponse.CustomMetadata.builder()
@@ -160,8 +163,8 @@ internal class VersionRestoreResponseTest {
                 .thumbnail(
                     "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313&tr=n-ik_ml_thumbnail"
                 )
-                .type("file")
-                .updatedAt("2019-08-24T06:14:41.313Z")
+                .type(VersionRestoreResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-08-24T06:14:41.313Z"))
                 .url(
                     "https://ik.imagekit.io/your_imagekit_id/images/products/file.jpg?updatedAt=1566630881313"
                 )

@@ -5,6 +5,7 @@ package com.imagekit.api.models.files.versions
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ internal class VersionGetResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     VersionGetResponse.CustomMetadata.builder()
@@ -40,10 +41,10 @@ internal class VersionGetResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(VersionGetResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(VersionGetResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
@@ -56,7 +57,8 @@ internal class VersionGetResponseTest {
                     .source("source")
                     .build()
             )
-        assertThat(versionGetResponse.createdAt()).contains("createdAt")
+        assertThat(versionGetResponse.createdAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(versionGetResponse.customCoordinates()).contains("customCoordinates")
         assertThat(versionGetResponse.customMetadata())
             .contains(
@@ -75,10 +77,11 @@ internal class VersionGetResponseTest {
         assertThat(versionGetResponse.name()).contains("name")
         assertThat(versionGetResponse.size()).contains(0.0)
         assertThat(versionGetResponse.tags().getOrNull()).containsExactly("string")
-        assertThat(versionGetResponse.thumbnail()).contains("thumbnail")
-        assertThat(versionGetResponse.type()).contains("type")
-        assertThat(versionGetResponse.updatedAt()).contains("updatedAt")
-        assertThat(versionGetResponse.url()).contains("url")
+        assertThat(versionGetResponse.thumbnail()).contains("https://example.com")
+        assertThat(versionGetResponse.type()).contains(VersionGetResponse.Type.FILE)
+        assertThat(versionGetResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(versionGetResponse.url()).contains("https://example.com")
         assertThat(versionGetResponse.versionInfo())
             .contains(VersionGetResponse.VersionInfo.builder().id("id").name("name").build())
         assertThat(versionGetResponse.width()).contains(0.0)
@@ -96,7 +99,7 @@ internal class VersionGetResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     VersionGetResponse.CustomMetadata.builder()
@@ -114,10 +117,10 @@ internal class VersionGetResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(VersionGetResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(VersionGetResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()

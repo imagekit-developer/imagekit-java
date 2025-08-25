@@ -5,6 +5,7 @@ package com.imagekit.api.models.files.versions
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -22,7 +23,7 @@ internal class VersionListResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     VersionListResponse.CustomMetadata.builder()
@@ -40,10 +41,10 @@ internal class VersionListResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(VersionListResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(
                     VersionListResponse.VersionInfo.builder().id("id").name("name").build()
                 )
@@ -58,7 +59,8 @@ internal class VersionListResponseTest {
                     .source("source")
                     .build()
             )
-        assertThat(versionListResponse.createdAt()).contains("createdAt")
+        assertThat(versionListResponse.createdAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(versionListResponse.customCoordinates()).contains("customCoordinates")
         assertThat(versionListResponse.customMetadata())
             .contains(
@@ -77,10 +79,11 @@ internal class VersionListResponseTest {
         assertThat(versionListResponse.name()).contains("name")
         assertThat(versionListResponse.size()).contains(0.0)
         assertThat(versionListResponse.tags().getOrNull()).containsExactly("string")
-        assertThat(versionListResponse.thumbnail()).contains("thumbnail")
-        assertThat(versionListResponse.type()).contains("type")
-        assertThat(versionListResponse.updatedAt()).contains("updatedAt")
-        assertThat(versionListResponse.url()).contains("url")
+        assertThat(versionListResponse.thumbnail()).contains("https://example.com")
+        assertThat(versionListResponse.type()).contains(VersionListResponse.Type.FILE)
+        assertThat(versionListResponse.updatedAt())
+            .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(versionListResponse.url()).contains("https://example.com")
         assertThat(versionListResponse.versionInfo())
             .contains(VersionListResponse.VersionInfo.builder().id("id").name("name").build())
         assertThat(versionListResponse.width()).contains(0.0)
@@ -98,7 +101,7 @@ internal class VersionListResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     VersionListResponse.CustomMetadata.builder()
@@ -116,10 +119,10 @@ internal class VersionListResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(VersionListResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(
                     VersionListResponse.VersionInfo.builder().id("id").name("name").build()
                 )

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -25,7 +26,7 @@ internal class AssetListResponseTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     AssetListResponse.FileDetails.CustomMetadata.builder()
@@ -43,10 +44,10 @@ internal class AssetListResponseTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(AssetListResponse.FileDetails.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(
                     AssetListResponse.FileDetails.VersionInfo.builder()
                         .id("id")
@@ -59,7 +60,7 @@ internal class AssetListResponseTest {
         val assetListResponse = AssetListResponse.ofFileDetails(fileDetails)
 
         assertThat(assetListResponse.fileDetails()).contains(fileDetails)
-        assertThat(assetListResponse.folderDetails()).isEmpty
+        assertThat(assetListResponse.folder()).isEmpty
     }
 
     @Test
@@ -75,7 +76,7 @@ internal class AssetListResponseTest {
                             .source("source")
                             .build()
                     )
-                    .createdAt("createdAt")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .customCoordinates("customCoordinates")
                     .customMetadata(
                         AssetListResponse.FileDetails.CustomMetadata.builder()
@@ -93,10 +94,10 @@ internal class AssetListResponseTest {
                     .name("name")
                     .size(0.0)
                     .addTag("string")
-                    .thumbnail("thumbnail")
-                    .type("type")
-                    .updatedAt("updatedAt")
-                    .url("url")
+                    .thumbnail("https://example.com")
+                    .type(AssetListResponse.FileDetails.Type.FILE)
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .url("https://example.com")
                     .versionInfo(
                         AssetListResponse.FileDetails.VersionInfo.builder()
                             .id("id")
@@ -117,35 +118,35 @@ internal class AssetListResponseTest {
     }
 
     @Test
-    fun ofFolderDetails() {
-        val folderDetails =
-            AssetListResponse.FolderDetails.builder()
-                .createdAt("createdAt")
+    fun ofFolder() {
+        val folder =
+            AssetListResponse.Folder.builder()
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .folderId("folderId")
                 .folderPath("folderPath")
                 .name("name")
-                .type(AssetListResponse.FolderDetails.Type.FOLDER)
-                .updatedAt("updatedAt")
+                .type(AssetListResponse.Folder.Type.FOLDER)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .build()
 
-        val assetListResponse = AssetListResponse.ofFolderDetails(folderDetails)
+        val assetListResponse = AssetListResponse.ofFolder(folder)
 
         assertThat(assetListResponse.fileDetails()).isEmpty
-        assertThat(assetListResponse.folderDetails()).contains(folderDetails)
+        assertThat(assetListResponse.folder()).contains(folder)
     }
 
     @Test
-    fun ofFolderDetailsRoundtrip() {
+    fun ofFolderRoundtrip() {
         val jsonMapper = jsonMapper()
         val assetListResponse =
-            AssetListResponse.ofFolderDetails(
-                AssetListResponse.FolderDetails.builder()
-                    .createdAt("createdAt")
+            AssetListResponse.ofFolder(
+                AssetListResponse.Folder.builder()
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .folderId("folderId")
                     .folderPath("folderPath")
                     .name("name")
-                    .type(AssetListResponse.FolderDetails.Type.FOLDER)
-                    .updatedAt("updatedAt")
+                    .type(AssetListResponse.Folder.Type.FOLDER)
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
 

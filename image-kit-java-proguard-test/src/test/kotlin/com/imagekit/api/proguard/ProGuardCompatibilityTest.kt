@@ -8,6 +8,7 @@ import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.models.assets.AssetListResponse
 import com.imagekit.api.models.files.FileUpdateResponse
+import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 import org.assertj.core.api.Assertions.assertThat
@@ -75,7 +76,7 @@ internal class ProGuardCompatibilityTest {
                         .source("source")
                         .build()
                 )
-                .createdAt("createdAt")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
                     FileUpdateResponse.CustomMetadata.builder()
@@ -105,10 +106,10 @@ internal class ProGuardCompatibilityTest {
                 .name("name")
                 .size(0.0)
                 .addTag("string")
-                .thumbnail("thumbnail")
-                .type("type")
-                .updatedAt("updatedAt")
-                .url("url")
+                .thumbnail("https://example.com")
+                .type(FileUpdateResponse.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
                 .versionInfo(FileUpdateResponse.VersionInfo.builder().id("id").name("name").build())
                 .width(0.0)
                 .build()
@@ -135,7 +136,7 @@ internal class ProGuardCompatibilityTest {
                             .source("source")
                             .build()
                     )
-                    .createdAt("createdAt")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .customCoordinates("customCoordinates")
                     .customMetadata(
                         AssetListResponse.FileDetails.CustomMetadata.builder()
@@ -153,10 +154,10 @@ internal class ProGuardCompatibilityTest {
                     .name("name")
                     .size(0.0)
                     .addTag("string")
-                    .thumbnail("thumbnail")
-                    .type("type")
-                    .updatedAt("updatedAt")
-                    .url("url")
+                    .thumbnail("https://example.com")
+                    .type(AssetListResponse.FileDetails.Type.FILE)
+                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .url("https://example.com")
                     .versionInfo(
                         AssetListResponse.FileDetails.VersionInfo.builder()
                             .id("id")
