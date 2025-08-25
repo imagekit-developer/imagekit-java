@@ -16,7 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 /** Job submitted successfully. A `jobId` will be returned. */
-class AsyncBulkJobResponse
+class JobResponse
 private constructor(
     private val jobId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -57,7 +57,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [AsyncBulkJobResponse].
+         * Returns a mutable builder for constructing an instance of [JobResponse].
          *
          * The following fields are required:
          * ```java
@@ -67,16 +67,16 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [AsyncBulkJobResponse]. */
+    /** A builder for [JobResponse]. */
     class Builder internal constructor() {
 
         private var jobId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(asyncBulkJobResponse: AsyncBulkJobResponse) = apply {
-            jobId = asyncBulkJobResponse.jobId
-            additionalProperties = asyncBulkJobResponse.additionalProperties.toMutableMap()
+        internal fun from(jobResponse: JobResponse) = apply {
+            jobId = jobResponse.jobId
+            additionalProperties = jobResponse.additionalProperties.toMutableMap()
         }
 
         /**
@@ -112,7 +112,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [AsyncBulkJobResponse].
+         * Returns an immutable instance of [JobResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -123,13 +123,13 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): AsyncBulkJobResponse =
-            AsyncBulkJobResponse(checkRequired("jobId", jobId), additionalProperties.toMutableMap())
+        fun build(): JobResponse =
+            JobResponse(checkRequired("jobId", jobId), additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
 
-    fun validate(): AsyncBulkJobResponse = apply {
+    fun validate(): JobResponse = apply {
         if (validated) {
             return@apply
         }
@@ -158,7 +158,7 @@ private constructor(
             return true
         }
 
-        return other is AsyncBulkJobResponse &&
+        return other is JobResponse &&
             jobId == other.jobId &&
             additionalProperties == other.additionalProperties
     }
@@ -168,5 +168,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "AsyncBulkJobResponse{jobId=$jobId, additionalProperties=$additionalProperties}"
+        "JobResponse{jobId=$jobId, additionalProperties=$additionalProperties}"
 }
