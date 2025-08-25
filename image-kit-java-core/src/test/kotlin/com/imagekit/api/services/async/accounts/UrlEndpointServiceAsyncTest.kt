@@ -4,6 +4,7 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpoint
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -27,12 +28,16 @@ internal class UrlEndpointServiceAsyncTest {
         val urlEndpointFuture =
             urlEndpointServiceAsync.create(
                 UrlEndpointCreateParams.builder()
-                    .description("My custom URL endpoint")
-                    .addOrigin("origin-id-1")
-                    .urlPrefix("product-images")
-                    .urlRewriter(
-                        UrlEndpointCreateParams.UrlRewriter.Cloudinary.builder()
-                            .preserveAssetDeliveryTypes(true)
+                    .urlEndpoint(
+                        UrlEndpoint.builder()
+                            .description("My custom URL endpoint")
+                            .addOrigin("origin-id-1")
+                            .urlPrefix("product-images")
+                            .urlRewriter(
+                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                    .preserveAssetDeliveryTypes(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
@@ -57,12 +62,16 @@ internal class UrlEndpointServiceAsyncTest {
             urlEndpointServiceAsync.update(
                 UrlEndpointUpdateParams.builder()
                     .id("id")
-                    .description("My custom URL endpoint")
-                    .addOrigin("origin-id-1")
-                    .urlPrefix("product-images")
-                    .urlRewriter(
-                        UrlEndpointUpdateParams.UrlRewriter.Cloudinary.builder()
-                            .preserveAssetDeliveryTypes(true)
+                    .urlEndpoint(
+                        UrlEndpoint.builder()
+                            .description("My custom URL endpoint")
+                            .addOrigin("origin-id-1")
+                            .urlPrefix("product-images")
+                            .urlRewriter(
+                                UrlEndpoint.UrlRewriter.Cloudinary.builder()
+                                    .preserveAssetDeliveryTypes(true)
+                                    .build()
+                            )
                             .build()
                     )
                     .build()
