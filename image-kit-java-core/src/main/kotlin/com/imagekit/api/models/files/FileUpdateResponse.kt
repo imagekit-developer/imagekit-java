@@ -14,6 +14,7 @@ import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.checkKnown
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.File
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects

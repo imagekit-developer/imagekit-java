@@ -16,7 +16,7 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
-import com.imagekit.api.models.files.File
+import com.imagekit.api.models.File
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
 import com.imagekit.api.models.files.versions.VersionGetParams
