@@ -27,6 +27,7 @@ private constructor(
     private val bitRate: JsonField<Long>,
     private val customCoordinates: JsonField<String>,
     private val customMetadata: JsonField<CustomMetadata>,
+    private val description: JsonField<String>,
     private val duration: JsonField<Long>,
     private val embeddedMetadata: JsonField<EmbeddedMetadata>,
     private val extensionStatus: JsonField<ExtensionStatus>,
@@ -61,6 +62,9 @@ private constructor(
         @JsonProperty("customMetadata")
         @ExcludeMissing
         customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("embeddedMetadata")
         @ExcludeMissing
@@ -99,6 +103,7 @@ private constructor(
         bitRate,
         customCoordinates,
         customMetadata,
+        description,
         duration,
         embeddedMetadata,
         extensionStatus,
@@ -164,6 +169,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun customMetadata(): Optional<CustomMetadata> = customMetadata.getOptional("customMetadata")
+
+    /**
+     * Optional text to describe the contents of the file. Can be set by the user or the
+     * ai-auto-description extension.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * The duration of the video in seconds (only for video).
@@ -366,6 +380,13 @@ private constructor(
     fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
 
     /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
      * Returns the raw JSON value of [duration].
      *
      * Unlike [duration], this method doesn't throw if the JSON field has an unexpected type.
@@ -530,6 +551,7 @@ private constructor(
         private var bitRate: JsonField<Long> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
         private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
+        private var description: JsonField<String> = JsonMissing.of()
         private var duration: JsonField<Long> = JsonMissing.of()
         private var embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of()
         private var extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of()
@@ -557,6 +579,7 @@ private constructor(
             bitRate = fileUploadResponse.bitRate
             customCoordinates = fileUploadResponse.customCoordinates
             customMetadata = fileUploadResponse.customMetadata
+            description = fileUploadResponse.description
             duration = fileUploadResponse.duration
             embeddedMetadata = fileUploadResponse.embeddedMetadata
             extensionStatus = fileUploadResponse.extensionStatus
@@ -672,6 +695,21 @@ private constructor(
         fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
             this.customMetadata = customMetadata
         }
+
+        /**
+         * Optional text to describe the contents of the file. Can be set by the user or the
+         * ai-auto-description extension.
+         */
+        fun description(description: String) = description(JsonField.of(description))
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { this.description = description }
 
         /** The duration of the video in seconds (only for video). */
         fun duration(duration: Long) = duration(JsonField.of(duration))
@@ -969,6 +1007,7 @@ private constructor(
                 bitRate,
                 customCoordinates,
                 customMetadata,
+                description,
                 duration,
                 embeddedMetadata,
                 extensionStatus,
@@ -1003,6 +1042,7 @@ private constructor(
         bitRate()
         customCoordinates()
         customMetadata().ifPresent { it.validate() }
+        description()
         duration()
         embeddedMetadata().ifPresent { it.validate() }
         extensionStatus().ifPresent { it.validate() }
@@ -1044,6 +1084,7 @@ private constructor(
             (if (bitRate.asKnown().isPresent) 1 else 0) +
             (if (customCoordinates.asKnown().isPresent) 1 else 0) +
             (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
             (if (duration.asKnown().isPresent) 1 else 0) +
             (embeddedMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (extensionStatus.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2333,6 +2374,7 @@ private constructor(
             bitRate == other.bitRate &&
             customCoordinates == other.customCoordinates &&
             customMetadata == other.customMetadata &&
+            description == other.description &&
             duration == other.duration &&
             embeddedMetadata == other.embeddedMetadata &&
             extensionStatus == other.extensionStatus &&
@@ -2361,6 +2403,7 @@ private constructor(
             bitRate,
             customCoordinates,
             customMetadata,
+            description,
             duration,
             embeddedMetadata,
             extensionStatus,
@@ -2386,5 +2429,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileUploadResponse{aiTags=$aiTags, audioCodec=$audioCodec, bitRate=$bitRate, customCoordinates=$customCoordinates, customMetadata=$customMetadata, duration=$duration, embeddedMetadata=$embeddedMetadata, extensionStatus=$extensionStatus, fileId=$fileId, filePath=$filePath, fileType=$fileType, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, metadata=$metadata, name=$name, size=$size, tags=$tags, thumbnailUrl=$thumbnailUrl, url=$url, versionInfo=$versionInfo, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
+        "FileUploadResponse{aiTags=$aiTags, audioCodec=$audioCodec, bitRate=$bitRate, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, duration=$duration, embeddedMetadata=$embeddedMetadata, extensionStatus=$extensionStatus, fileId=$fileId, filePath=$filePath, fileType=$fileType, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, metadata=$metadata, name=$name, size=$size, tags=$tags, thumbnailUrl=$thumbnailUrl, url=$url, versionInfo=$versionInfo, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
 }

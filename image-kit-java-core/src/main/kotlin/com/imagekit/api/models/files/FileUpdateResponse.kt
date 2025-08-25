@@ -27,6 +27,7 @@ private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
     private val customCoordinates: JsonField<String>,
     private val customMetadata: JsonField<File.CustomMetadata>,
+    private val description: JsonField<String>,
     private val fileId: JsonField<String>,
     private val filePath: JsonField<String>,
     private val fileType: JsonField<String>,
@@ -62,6 +63,9 @@ private constructor(
         @JsonProperty("customMetadata")
         @ExcludeMissing
         customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("filePath") @ExcludeMissing filePath: JsonField<String> = JsonMissing.of(),
         @JsonProperty("fileType") @ExcludeMissing fileType: JsonField<String> = JsonMissing.of(),
@@ -95,6 +99,7 @@ private constructor(
         createdAt,
         customCoordinates,
         customMetadata,
+        description,
         fileId,
         filePath,
         fileType,
@@ -122,6 +127,7 @@ private constructor(
             .createdAt(createdAt)
             .customCoordinates(customCoordinates)
             .customMetadata(customMetadata)
+            .description(description)
             .fileId(fileId)
             .filePath(filePath)
             .fileType(fileType)
@@ -173,6 +179,15 @@ private constructor(
      */
     fun customMetadata(): Optional<File.CustomMetadata> =
         customMetadata.getOptional("customMetadata")
+
+    /**
+     * Optional text to describe the contents of the file. Can be set by the user or the
+     * ai-auto-description extension.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = description.getOptional("description")
 
     /**
      * Unique identifier of the asset.
@@ -356,6 +371,13 @@ private constructor(
     fun _customMetadata(): JsonField<File.CustomMetadata> = customMetadata
 
     /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
      * Returns the raw JSON value of [fileId].
      *
      * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
@@ -516,6 +538,7 @@ private constructor(
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
         private var customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of()
+        private var description: JsonField<String> = JsonMissing.of()
         private var fileId: JsonField<String> = JsonMissing.of()
         private var filePath: JsonField<String> = JsonMissing.of()
         private var fileType: JsonField<String> = JsonMissing.of()
@@ -542,6 +565,7 @@ private constructor(
             createdAt = fileUpdateResponse.createdAt
             customCoordinates = fileUpdateResponse.customCoordinates
             customMetadata = fileUpdateResponse.customMetadata
+            description = fileUpdateResponse.description
             fileId = fileUpdateResponse.fileId
             filePath = fileUpdateResponse.filePath
             fileType = fileUpdateResponse.fileType
@@ -637,6 +661,21 @@ private constructor(
         fun customMetadata(customMetadata: JsonField<File.CustomMetadata>) = apply {
             this.customMetadata = customMetadata
         }
+
+        /**
+         * Optional text to describe the contents of the file. Can be set by the user or the
+         * ai-auto-description extension.
+         */
+        fun description(description: String) = description(JsonField.of(description))
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { this.description = description }
 
         /** Unique identifier of the asset. */
         fun fileId(fileId: String) = fileId(JsonField.of(fileId))
@@ -904,6 +943,7 @@ private constructor(
                 createdAt,
                 customCoordinates,
                 customMetadata,
+                description,
                 fileId,
                 filePath,
                 fileType,
@@ -937,6 +977,7 @@ private constructor(
         createdAt()
         customCoordinates()
         customMetadata().ifPresent { it.validate() }
+        description()
         fileId()
         filePath()
         fileType()
@@ -977,6 +1018,7 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (customCoordinates.asKnown().isPresent) 1 else 0) +
             (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
             (if (fileId.asKnown().isPresent) 1 else 0) +
             (if (filePath.asKnown().isPresent) 1 else 0) +
             (if (fileType.asKnown().isPresent) 1 else 0) +
@@ -1834,6 +1876,7 @@ private constructor(
             createdAt == other.createdAt &&
             customCoordinates == other.customCoordinates &&
             customMetadata == other.customMetadata &&
+            description == other.description &&
             fileId == other.fileId &&
             filePath == other.filePath &&
             fileType == other.fileType &&
@@ -1861,6 +1904,7 @@ private constructor(
             createdAt,
             customCoordinates,
             customMetadata,
+            description,
             fileId,
             filePath,
             fileType,
@@ -1886,5 +1930,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, extensionStatus=$extensionStatus, additionalProperties=$additionalProperties}"
+        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, extensionStatus=$extensionStatus, additionalProperties=$additionalProperties}"
 }

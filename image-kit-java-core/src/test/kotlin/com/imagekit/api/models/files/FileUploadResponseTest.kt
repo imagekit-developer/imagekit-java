@@ -30,6 +30,7 @@ internal class FileUploadResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
+                .description("description")
                 .duration(0L)
                 .embeddedMetadata(
                     FileUploadResponse.EmbeddedMetadata.builder()
@@ -166,6 +167,7 @@ internal class FileUploadResponseTest {
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
+        assertThat(fileUploadResponse.description()).contains("description")
         assertThat(fileUploadResponse.duration()).contains(0L)
         assertThat(fileUploadResponse.embeddedMetadata())
             .contains(
@@ -307,6 +309,7 @@ internal class FileUploadResponseTest {
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
+                .description("description")
                 .duration(0L)
                 .embeddedMetadata(
                     FileUploadResponse.EmbeddedMetadata.builder()
