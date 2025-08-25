@@ -11,7 +11,7 @@ internal class OriginCreateParamsTest {
     fun create() {
         OriginCreateParams.builder()
             .origin(
-                OriginCreateParams.Origin.S3.builder()
+                Origin.S3.builder()
                     .accessKey("AKIATEST123")
                     .bucket("test-bucket")
                     .name("My S3 Origin")
@@ -29,7 +29,7 @@ internal class OriginCreateParamsTest {
         val params =
             OriginCreateParams.builder()
                 .origin(
-                    OriginCreateParams.Origin.S3.builder()
+                    Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -45,8 +45,8 @@ internal class OriginCreateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                OriginCreateParams.Origin.ofS3(
-                    OriginCreateParams.Origin.S3.builder()
+                Origin.ofS3(
+                    Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -64,7 +64,7 @@ internal class OriginCreateParamsTest {
         val params =
             OriginCreateParams.builder()
                 .origin(
-                    OriginCreateParams.Origin.S3.builder()
+                    Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
@@ -77,8 +77,8 @@ internal class OriginCreateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                OriginCreateParams.Origin.ofS3(
-                    OriginCreateParams.Origin.S3.builder()
+                Origin.ofS3(
+                    Origin.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")

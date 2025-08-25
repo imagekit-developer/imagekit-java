@@ -4,6 +4,7 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
+import com.imagekit.api.models.accounts.origins.Origin
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -28,7 +29,7 @@ internal class OriginServiceAsyncTest {
             originServiceAsync.create(
                 OriginCreateParams.builder()
                     .origin(
-                        OriginCreateParams.Origin.S3.builder()
+                        Origin.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
@@ -61,7 +62,7 @@ internal class OriginServiceAsyncTest {
                 OriginUpdateParams.builder()
                     .id("id")
                     .origin(
-                        OriginUpdateParams.Origin.S3.builder()
+                        Origin.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")

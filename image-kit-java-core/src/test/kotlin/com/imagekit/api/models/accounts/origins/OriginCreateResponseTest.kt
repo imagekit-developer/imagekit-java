@@ -18,12 +18,14 @@ internal class OriginCreateResponseTest {
     fun ofS3() {
         val s3 =
             OriginCreateResponse.S3.builder()
-                .id("id")
+                .accessKey("AKIAIOSFODNN7EXAMPLE")
                 .bucket("product-images")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
-                .prefix("raw-assets")
+                .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
+                .prefix("raw-assets")
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofS3(s3)
@@ -33,8 +35,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -44,12 +46,14 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofS3(
                 OriginCreateResponse.S3.builder()
-                    .id("id")
+                    .accessKey("AKIAIOSFODNN7EXAMPLE")
                     .bucket("product-images")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
-                    .prefix("raw-assets")
+                    .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
+                    .prefix("raw-assets")
                     .build()
             )
 
@@ -66,14 +70,16 @@ internal class OriginCreateResponseTest {
     fun ofS3Compatible() {
         val s3Compatible =
             OriginCreateResponse.S3Compatible.builder()
-                .id("id")
+                .accessKey("AKIAIOSFODNN7EXAMPLE")
                 .bucket("product-images")
                 .endpoint("https://s3.eu-central-1.wasabisys.com")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
+                .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                .id("id")
+                .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
                 .prefix("raw-assets")
                 .s3ForcePathStyle(true)
-                .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofS3Compatible(s3Compatible)
@@ -83,8 +89,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -94,14 +100,16 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofS3Compatible(
                 OriginCreateResponse.S3Compatible.builder()
-                    .id("id")
+                    .accessKey("AKIAIOSFODNN7EXAMPLE")
                     .bucket("product-images")
                     .endpoint("https://s3.eu-central-1.wasabisys.com")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
+                    .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                    .id("id")
+                    .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
                     .prefix("raw-assets")
                     .s3ForcePathStyle(true)
-                    .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .build()
             )
 
@@ -118,12 +126,14 @@ internal class OriginCreateResponseTest {
     fun ofCloudinaryBackup() {
         val cloudinaryBackup =
             OriginCreateResponse.CloudinaryBackup.builder()
-                .id("id")
+                .accessKey("AKIAIOSFODNN7EXAMPLE")
                 .bucket("product-images")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
-                .prefix("raw-assets")
+                .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
+                .prefix("raw-assets")
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofCloudinaryBackup(cloudinaryBackup)
@@ -133,8 +143,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).contains(cloudinaryBackup)
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -144,12 +154,14 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofCloudinaryBackup(
                 OriginCreateResponse.CloudinaryBackup.builder()
-                    .id("id")
+                    .accessKey("AKIAIOSFODNN7EXAMPLE")
                     .bucket("product-images")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
-                    .prefix("raw-assets")
+                    .secretKey("wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
+                    .prefix("raw-assets")
                     .build()
             )
 
@@ -166,12 +178,12 @@ internal class OriginCreateResponseTest {
     fun ofWebFolder() {
         val webFolder =
             OriginCreateResponse.WebFolder.builder()
-                .id("id")
                 .baseUrl("https://images.example.com/assets")
+                .name("US S3 Storage")
+                .id("id")
+                .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .forwardHostHeaderToOrigin(false)
                 .includeCanonicalHeader(false)
-                .name("US S3 Storage")
-                .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofWebFolder(webFolder)
@@ -181,8 +193,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).contains(webFolder)
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -192,12 +204,12 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofWebFolder(
                 OriginCreateResponse.WebFolder.builder()
-                    .id("id")
                     .baseUrl("https://images.example.com/assets")
+                    .name("US S3 Storage")
+                    .id("id")
+                    .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .forwardHostHeaderToOrigin(false)
                     .includeCanonicalHeader(false)
-                    .name("US S3 Storage")
-                    .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .build()
             )
 
@@ -214,10 +226,10 @@ internal class OriginCreateResponseTest {
     fun ofWebProxy() {
         val webProxy =
             OriginCreateResponse.WebProxy.builder()
-                .id("id")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofWebProxy(webProxy)
@@ -227,8 +239,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).contains(webProxy)
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
@@ -238,10 +250,10 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofWebProxy(
                 OriginCreateResponse.WebProxy.builder()
-                    .id("id")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
                     .build()
             )
 
@@ -255,43 +267,46 @@ internal class OriginCreateResponseTest {
     }
 
     @Test
-    fun ofGcs() {
-        val gcs =
-            OriginCreateResponse.Gcs.builder()
-                .id("id")
+    fun ofGoogleCloudStorageGcs() {
+        val googleCloudStorageGcs =
+            OriginCreateResponse.GoogleCloudStorageGcs.builder()
                 .bucket("gcs-media")
                 .clientEmail("service-account@project.iam.gserviceaccount.com")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
-                .prefix("products")
+                .privateKey("-----BEGIN PRIVATE KEY-----\\nMIIEv...")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
+                .prefix("products")
                 .build()
 
-        val originCreateResponse = OriginCreateResponse.ofGcs(gcs)
+        val originCreateResponse =
+            OriginCreateResponse.ofGoogleCloudStorageGcs(googleCloudStorageGcs)
 
         assertThat(originCreateResponse.s3()).isEmpty
         assertThat(originCreateResponse.s3Compatible()).isEmpty
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).contains(gcs)
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).contains(googleCloudStorageGcs)
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
     @Test
-    fun ofGcsRoundtrip() {
+    fun ofGoogleCloudStorageGcsRoundtrip() {
         val jsonMapper = jsonMapper()
         val originCreateResponse =
-            OriginCreateResponse.ofGcs(
-                OriginCreateResponse.Gcs.builder()
-                    .id("id")
+            OriginCreateResponse.ofGoogleCloudStorageGcs(
+                OriginCreateResponse.GoogleCloudStorageGcs.builder()
                     .bucket("gcs-media")
                     .clientEmail("service-account@project.iam.gserviceaccount.com")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
-                    .prefix("products")
+                    .privateKey("-----BEGIN PRIVATE KEY-----\\nMIIEv...")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
+                    .prefix("products")
                     .build()
             )
 
@@ -305,43 +320,45 @@ internal class OriginCreateResponseTest {
     }
 
     @Test
-    fun ofAzureBlob() {
-        val azureBlob =
-            OriginCreateResponse.AzureBlob.builder()
-                .id("id")
+    fun ofAzureBlobStorage() {
+        val azureBlobStorage =
+            OriginCreateResponse.AzureBlobStorage.builder()
                 .accountName("account123")
                 .container("images")
-                .includeCanonicalHeader(false)
                 .name("US S3 Storage")
-                .prefix("uploads")
+                .sasToken("?sv=2023-01-03&sr=c&sig=abc123")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
+                .prefix("uploads")
                 .build()
 
-        val originCreateResponse = OriginCreateResponse.ofAzureBlob(azureBlob)
+        val originCreateResponse = OriginCreateResponse.ofAzureBlobStorage(azureBlobStorage)
 
         assertThat(originCreateResponse.s3()).isEmpty
         assertThat(originCreateResponse.s3Compatible()).isEmpty
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).contains(azureBlob)
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).contains(azureBlobStorage)
         assertThat(originCreateResponse.akeneoPim()).isEmpty
     }
 
     @Test
-    fun ofAzureBlobRoundtrip() {
+    fun ofAzureBlobStorageRoundtrip() {
         val jsonMapper = jsonMapper()
         val originCreateResponse =
-            OriginCreateResponse.ofAzureBlob(
-                OriginCreateResponse.AzureBlob.builder()
-                    .id("id")
+            OriginCreateResponse.ofAzureBlobStorage(
+                OriginCreateResponse.AzureBlobStorage.builder()
                     .accountName("account123")
                     .container("images")
-                    .includeCanonicalHeader(false)
                     .name("US S3 Storage")
-                    .prefix("uploads")
+                    .sasToken("?sv=2023-01-03&sr=c&sig=abc123")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
+                    .prefix("uploads")
                     .build()
             )
 
@@ -358,11 +375,15 @@ internal class OriginCreateResponseTest {
     fun ofAkeneoPim() {
         val akeneoPim =
             OriginCreateResponse.AkeneoPim.builder()
-                .id("id")
                 .baseUrl("https://akeneo.company.com")
-                .includeCanonicalHeader(false)
+                .clientId("akeneo-client-id")
+                .clientSecret("akeneo-client-secret")
                 .name("US S3 Storage")
+                .password("strongpassword123")
+                .username("integration-user")
+                .id("id")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .includeCanonicalHeader(false)
                 .build()
 
         val originCreateResponse = OriginCreateResponse.ofAkeneoPim(akeneoPim)
@@ -372,8 +393,8 @@ internal class OriginCreateResponseTest {
         assertThat(originCreateResponse.cloudinaryBackup()).isEmpty
         assertThat(originCreateResponse.webFolder()).isEmpty
         assertThat(originCreateResponse.webProxy()).isEmpty
-        assertThat(originCreateResponse.gcs()).isEmpty
-        assertThat(originCreateResponse.azureBlob()).isEmpty
+        assertThat(originCreateResponse.googleCloudStorageGcs()).isEmpty
+        assertThat(originCreateResponse.azureBlobStorage()).isEmpty
         assertThat(originCreateResponse.akeneoPim()).contains(akeneoPim)
     }
 
@@ -383,11 +404,15 @@ internal class OriginCreateResponseTest {
         val originCreateResponse =
             OriginCreateResponse.ofAkeneoPim(
                 OriginCreateResponse.AkeneoPim.builder()
-                    .id("id")
                     .baseUrl("https://akeneo.company.com")
-                    .includeCanonicalHeader(false)
+                    .clientId("akeneo-client-id")
+                    .clientSecret("akeneo-client-secret")
                     .name("US S3 Storage")
+                    .password("strongpassword123")
+                    .username("integration-user")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
                     .build()
             )
 

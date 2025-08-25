@@ -19,15 +19,14 @@ import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
+import com.imagekit.api.core.allMaxBy
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
-import kotlin.jvm.optionals.getOrNull
 
-/** Origin object as returned by the API (sensitive fields removed). */
 @JsonDeserialize(using = OriginUpdateResponse.Deserializer::class)
 @JsonSerialize(using = OriginUpdateResponse.Serializer::class)
 class OriginUpdateResponse
@@ -37,8 +36,8 @@ private constructor(
     private val cloudinaryBackup: CloudinaryBackup? = null,
     private val webFolder: WebFolder? = null,
     private val webProxy: WebProxy? = null,
-    private val gcs: Gcs? = null,
-    private val azureBlob: AzureBlob? = null,
+    private val googleCloudStorageGcs: GoogleCloudStorageGcs? = null,
+    private val azureBlobStorage: AzureBlobStorage? = null,
     private val akeneoPim: AkeneoPim? = null,
     private val _json: JsonValue? = null,
 ) {
@@ -53,9 +52,10 @@ private constructor(
 
     fun webProxy(): Optional<WebProxy> = Optional.ofNullable(webProxy)
 
-    fun gcs(): Optional<Gcs> = Optional.ofNullable(gcs)
+    fun googleCloudStorageGcs(): Optional<GoogleCloudStorageGcs> =
+        Optional.ofNullable(googleCloudStorageGcs)
 
-    fun azureBlob(): Optional<AzureBlob> = Optional.ofNullable(azureBlob)
+    fun azureBlobStorage(): Optional<AzureBlobStorage> = Optional.ofNullable(azureBlobStorage)
 
     fun akeneoPim(): Optional<AkeneoPim> = Optional.ofNullable(akeneoPim)
 
@@ -69,9 +69,9 @@ private constructor(
 
     fun isWebProxy(): Boolean = webProxy != null
 
-    fun isGcs(): Boolean = gcs != null
+    fun isGoogleCloudStorageGcs(): Boolean = googleCloudStorageGcs != null
 
-    fun isAzureBlob(): Boolean = azureBlob != null
+    fun isAzureBlobStorage(): Boolean = azureBlobStorage != null
 
     fun isAkeneoPim(): Boolean = akeneoPim != null
 
@@ -85,9 +85,10 @@ private constructor(
 
     fun asWebProxy(): WebProxy = webProxy.getOrThrow("webProxy")
 
-    fun asGcs(): Gcs = gcs.getOrThrow("gcs")
+    fun asGoogleCloudStorageGcs(): GoogleCloudStorageGcs =
+        googleCloudStorageGcs.getOrThrow("googleCloudStorageGcs")
 
-    fun asAzureBlob(): AzureBlob = azureBlob.getOrThrow("azureBlob")
+    fun asAzureBlobStorage(): AzureBlobStorage = azureBlobStorage.getOrThrow("azureBlobStorage")
 
     fun asAkeneoPim(): AkeneoPim = akeneoPim.getOrThrow("akeneoPim")
 
@@ -100,8 +101,9 @@ private constructor(
             cloudinaryBackup != null -> visitor.visitCloudinaryBackup(cloudinaryBackup)
             webFolder != null -> visitor.visitWebFolder(webFolder)
             webProxy != null -> visitor.visitWebProxy(webProxy)
-            gcs != null -> visitor.visitGcs(gcs)
-            azureBlob != null -> visitor.visitAzureBlob(azureBlob)
+            googleCloudStorageGcs != null ->
+                visitor.visitGoogleCloudStorageGcs(googleCloudStorageGcs)
+            azureBlobStorage != null -> visitor.visitAzureBlobStorage(azureBlobStorage)
             akeneoPim != null -> visitor.visitAkeneoPim(akeneoPim)
             else -> visitor.unknown(_json)
         }
@@ -135,12 +137,14 @@ private constructor(
                     webProxy.validate()
                 }
 
-                override fun visitGcs(gcs: Gcs) {
-                    gcs.validate()
+                override fun visitGoogleCloudStorageGcs(
+                    googleCloudStorageGcs: GoogleCloudStorageGcs
+                ) {
+                    googleCloudStorageGcs.validate()
                 }
 
-                override fun visitAzureBlob(azureBlob: AzureBlob) {
-                    azureBlob.validate()
+                override fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage) {
+                    azureBlobStorage.validate()
                 }
 
                 override fun visitAkeneoPim(akeneoPim: AkeneoPim) {
@@ -179,9 +183,12 @@ private constructor(
 
                 override fun visitWebProxy(webProxy: WebProxy) = webProxy.validity()
 
-                override fun visitGcs(gcs: Gcs) = gcs.validity()
+                override fun visitGoogleCloudStorageGcs(
+                    googleCloudStorageGcs: GoogleCloudStorageGcs
+                ) = googleCloudStorageGcs.validity()
 
-                override fun visitAzureBlob(azureBlob: AzureBlob) = azureBlob.validity()
+                override fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage) =
+                    azureBlobStorage.validity()
 
                 override fun visitAkeneoPim(akeneoPim: AkeneoPim) = akeneoPim.validity()
 
@@ -200,8 +207,8 @@ private constructor(
             cloudinaryBackup == other.cloudinaryBackup &&
             webFolder == other.webFolder &&
             webProxy == other.webProxy &&
-            gcs == other.gcs &&
-            azureBlob == other.azureBlob &&
+            googleCloudStorageGcs == other.googleCloudStorageGcs &&
+            azureBlobStorage == other.azureBlobStorage &&
             akeneoPim == other.akeneoPim
     }
 
@@ -212,8 +219,8 @@ private constructor(
             cloudinaryBackup,
             webFolder,
             webProxy,
-            gcs,
-            azureBlob,
+            googleCloudStorageGcs,
+            azureBlobStorage,
             akeneoPim,
         )
 
@@ -224,8 +231,9 @@ private constructor(
             cloudinaryBackup != null -> "OriginUpdateResponse{cloudinaryBackup=$cloudinaryBackup}"
             webFolder != null -> "OriginUpdateResponse{webFolder=$webFolder}"
             webProxy != null -> "OriginUpdateResponse{webProxy=$webProxy}"
-            gcs != null -> "OriginUpdateResponse{gcs=$gcs}"
-            azureBlob != null -> "OriginUpdateResponse{azureBlob=$azureBlob}"
+            googleCloudStorageGcs != null ->
+                "OriginUpdateResponse{googleCloudStorageGcs=$googleCloudStorageGcs}"
+            azureBlobStorage != null -> "OriginUpdateResponse{azureBlobStorage=$azureBlobStorage}"
             akeneoPim != null -> "OriginUpdateResponse{akeneoPim=$akeneoPim}"
             _json != null -> "OriginUpdateResponse{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid OriginUpdateResponse")
@@ -248,10 +256,13 @@ private constructor(
 
         @JvmStatic fun ofWebProxy(webProxy: WebProxy) = OriginUpdateResponse(webProxy = webProxy)
 
-        @JvmStatic fun ofGcs(gcs: Gcs) = OriginUpdateResponse(gcs = gcs)
+        @JvmStatic
+        fun ofGoogleCloudStorageGcs(googleCloudStorageGcs: GoogleCloudStorageGcs) =
+            OriginUpdateResponse(googleCloudStorageGcs = googleCloudStorageGcs)
 
         @JvmStatic
-        fun ofAzureBlob(azureBlob: AzureBlob) = OriginUpdateResponse(azureBlob = azureBlob)
+        fun ofAzureBlobStorage(azureBlobStorage: AzureBlobStorage) =
+            OriginUpdateResponse(azureBlobStorage = azureBlobStorage)
 
         @JvmStatic
         fun ofAkeneoPim(akeneoPim: AkeneoPim) = OriginUpdateResponse(akeneoPim = akeneoPim)
@@ -273,9 +284,9 @@ private constructor(
 
         fun visitWebProxy(webProxy: WebProxy): T
 
-        fun visitGcs(gcs: Gcs): T
+        fun visitGoogleCloudStorageGcs(googleCloudStorageGcs: GoogleCloudStorageGcs): T
 
-        fun visitAzureBlob(azureBlob: AzureBlob): T
+        fun visitAzureBlobStorage(azureBlobStorage: AzureBlobStorage): T
 
         fun visitAkeneoPim(akeneoPim: AkeneoPim): T
 
@@ -299,52 +310,46 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): OriginUpdateResponse {
             val json = JsonValue.fromJsonNode(node)
-            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-            when (type) {
-                "S3" -> {
-                    return tryDeserialize(node, jacksonTypeRef<S3>())?.let {
-                        OriginUpdateResponse(s3 = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "S3_COMPATIBLE" -> {
-                    return tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
-                        OriginUpdateResponse(s3Compatible = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "CLOUDINARY_BACKUP" -> {
-                    return tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
-                        OriginUpdateResponse(cloudinaryBackup = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "WEB_FOLDER" -> {
-                    return tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
-                        OriginUpdateResponse(webFolder = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "WEB_PROXY" -> {
-                    return tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
-                        OriginUpdateResponse(webProxy = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "GCS" -> {
-                    return tryDeserialize(node, jacksonTypeRef<Gcs>())?.let {
-                        OriginUpdateResponse(gcs = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "AZURE_BLOB" -> {
-                    return tryDeserialize(node, jacksonTypeRef<AzureBlob>())?.let {
-                        OriginUpdateResponse(azureBlob = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
-                "AKENEO_PIM" -> {
-                    return tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
-                        OriginUpdateResponse(akeneoPim = it, _json = json)
-                    } ?: OriginUpdateResponse(_json = json)
-                }
+            val bestMatches =
+                sequenceOf(
+                        tryDeserialize(node, jacksonTypeRef<S3>())?.let {
+                            OriginUpdateResponse(s3 = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<S3Compatible>())?.let {
+                            OriginUpdateResponse(s3Compatible = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<CloudinaryBackup>())?.let {
+                            OriginUpdateResponse(cloudinaryBackup = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<WebFolder>())?.let {
+                            OriginUpdateResponse(webFolder = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<WebProxy>())?.let {
+                            OriginUpdateResponse(webProxy = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<GoogleCloudStorageGcs>())?.let {
+                            OriginUpdateResponse(googleCloudStorageGcs = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<AzureBlobStorage>())?.let {
+                            OriginUpdateResponse(azureBlobStorage = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<AkeneoPim>())?.let {
+                            OriginUpdateResponse(akeneoPim = it, _json = json)
+                        },
+                    )
+                    .filterNotNull()
+                    .allMaxBy { it.validity() }
+                    .toList()
+            return when (bestMatches.size) {
+                // This can happen if what we're deserializing is completely incompatible with all
+                // the possible variants (e.g. deserializing from boolean).
+                0 -> OriginUpdateResponse(_json = json)
+                1 -> bestMatches.single()
+                // If there's more than one match with the highest validity, then use the first
+                // completely valid match, or simply the first match if none are completely valid.
+                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
             }
-
-            return OriginUpdateResponse(_json = json)
         }
     }
 
@@ -361,8 +366,9 @@ private constructor(
                 value.cloudinaryBackup != null -> generator.writeObject(value.cloudinaryBackup)
                 value.webFolder != null -> generator.writeObject(value.webFolder)
                 value.webProxy != null -> generator.writeObject(value.webProxy)
-                value.gcs != null -> generator.writeObject(value.gcs)
-                value.azureBlob != null -> generator.writeObject(value.azureBlob)
+                value.googleCloudStorageGcs != null ->
+                    generator.writeObject(value.googleCloudStorageGcs)
+                value.azureBlobStorage != null -> generator.writeObject(value.azureBlobStorage)
                 value.akeneoPim != null -> generator.writeObject(value.akeneoPim)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid OriginUpdateResponse")
@@ -372,48 +378,57 @@ private constructor(
 
     class S3
     private constructor(
-        private val id: JsonField<String>,
+        private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonField<String>,
+        private val secretKey: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
+        private val prefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
+            @JsonProperty("accessKey")
             @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            accessKey: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("secretKey")
+            @ExcludeMissing
+            secretKey: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
+            accessKey,
             bucket,
-            includeCanonicalHeader,
             name,
-            prefix,
+            secretKey,
             type,
+            id,
             baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
+            prefix,
             mutableMapOf(),
         )
 
         /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
+         * Access key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun id(): String = id.getRequired("id")
+        fun accessKey(): String = accessKey.getRequired("accessKey")
 
         /**
          * S3 bucket name.
@@ -424,15 +439,6 @@ private constructor(
         fun bucket(): String = bucket.getRequired("bucket")
 
         /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
-
-        /**
          * Display name of the origin.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -441,12 +447,12 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Path prefix inside the bucket.
+         * Secret key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun prefix(): String = prefix.getRequired("prefix")
+        fun secretKey(): String = secretKey.getRequired("secretKey")
 
         /**
          * Expected to always return the following:
@@ -460,6 +466,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -469,11 +481,28 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
+
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun prefix(): Optional<String> = prefix.getOptional("prefix")
+
+        /**
+         * Returns the raw JSON value of [accessKey].
+         *
+         * Unlike [accessKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("accessKey") @ExcludeMissing fun _accessKey(): JsonField<String> = accessKey
 
         /**
          * Returns the raw JSON value of [bucket].
@@ -481,6 +510,37 @@ private constructor(
          * Unlike [bucket], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("bucket") @ExcludeMissing fun _bucket(): JsonField<String> = bucket
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [secretKey].
+         *
+         * Unlike [secretKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("secretKey") @ExcludeMissing fun _secretKey(): JsonField<String> = secretKey
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
+         *
+         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("baseUrlForCanonicalHeader")
+        @ExcludeMissing
+        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         /**
          * Returns the raw JSON value of [includeCanonicalHeader].
@@ -493,28 +553,11 @@ private constructor(
         fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
 
         /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        /**
          * Returns the raw JSON value of [prefix].
          *
          * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
-
-        /**
-         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
-         *
-         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("baseUrlForCanonicalHeader")
-        @ExcludeMissing
-        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -535,11 +578,10 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .secretKey()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -548,41 +590,42 @@ private constructor(
         /** A builder for [S3]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
+            private var accessKey: JsonField<String>? = null
             private var bucket: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonField<String>? = null
+            private var secretKey: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("S3")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
+            private var prefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(s3: S3) = apply {
-                id = s3.id
+                accessKey = s3.accessKey
                 bucket = s3.bucket
-                includeCanonicalHeader = s3.includeCanonicalHeader
                 name = s3.name
-                prefix = s3.prefix
+                secretKey = s3.secretKey
                 type = s3.type
+                id = s3.id
                 baseUrlForCanonicalHeader = s3.baseUrlForCanonicalHeader
+                includeCanonicalHeader = s3.includeCanonicalHeader
+                prefix = s3.prefix
                 additionalProperties = s3.additionalProperties.toMutableMap()
             }
 
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
+            /** Access key for the bucket. */
+            fun accessKey(accessKey: String) = accessKey(JsonField.of(accessKey))
 
             /**
-             * Sets [Builder.id] to an arbitrary JSON value.
+             * Sets [Builder.accessKey] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.accessKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun id(id: JsonField<String>) = apply { this.id = id }
+            fun accessKey(accessKey: JsonField<String>) = apply { this.accessKey = accessKey }
 
             /** S3 bucket name. */
             fun bucket(bucket: String) = bucket(JsonField.of(bucket))
@@ -595,6 +638,70 @@ private constructor(
              * supported value.
              */
             fun bucket(bucket: JsonField<String>) = apply { this.bucket = bucket }
+
+            /** Display name of the origin. */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /** Secret key for the bucket. */
+            fun secretKey(secretKey: String) = secretKey(JsonField.of(secretKey))
+
+            /**
+             * Sets [Builder.secretKey] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.secretKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("S3")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun type(type: JsonValue) = apply { this.type = type }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /** URL used in the Canonical header (if enabled). */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
+                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
+
+            /**
+             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
+             * [String] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
+                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
 
             /** Whether to send a Canonical header. */
             fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
@@ -611,18 +718,6 @@ private constructor(
                 this.includeCanonicalHeader = includeCanonicalHeader
             }
 
-            /** Display name of the origin. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
             /** Path prefix inside the bucket. */
             fun prefix(prefix: String) = prefix(JsonField.of(prefix))
 
@@ -634,35 +729,6 @@ private constructor(
              * supported value.
              */
             fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
-
-            /**
-             * Sets the field to an arbitrary JSON value.
-             *
-             * It is usually unnecessary to call this method because the field defaults to the
-             * following:
-             * ```java
-             * JsonValue.from("S3")
-             * ```
-             *
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun type(type: JsonValue) = apply { this.type = type }
-
-            /** URL used in the Canonical header (if enabled). */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
-                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
-
-            /**
-             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
-             * [String] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
-                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
-            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -690,24 +756,25 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .secretKey()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): S3 =
                 S3(
-                    checkRequired("id", id),
+                    checkRequired("accessKey", accessKey),
                     checkRequired("bucket", bucket),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
-                    checkRequired("prefix", prefix),
+                    checkRequired("secretKey", secretKey),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
+                    prefix,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -719,17 +786,19 @@ private constructor(
                 return@apply
             }
 
-            id()
+            accessKey()
             bucket()
-            includeCanonicalHeader()
             name()
-            prefix()
+            secretKey()
             _type().let {
                 if (it != JsonValue.from("S3")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
+            prefix()
             validated = true
         }
 
@@ -749,13 +818,15 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
+            (if (accessKey.asKnown().isPresent) 1 else 0) +
                 (if (bucket.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (secretKey.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("S3")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -763,25 +834,29 @@ private constructor(
             }
 
             return other is S3 &&
-                id == other.id &&
+                accessKey == other.accessKey &&
                 bucket == other.bucket &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
-                prefix == other.prefix &&
+                secretKey == other.secretKey &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
+                prefix == other.prefix &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
+                accessKey,
                 bucket,
-                includeCanonicalHeader,
                 name,
-                prefix,
+                secretKey,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
+                prefix,
                 additionalProperties,
             )
         }
@@ -789,63 +864,72 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "S3{id=$id, bucket=$bucket, includeCanonicalHeader=$includeCanonicalHeader, name=$name, prefix=$prefix, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "S3{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
     }
 
     class S3Compatible
     private constructor(
-        private val id: JsonField<String>,
+        private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
         private val endpoint: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
+        private val secretKey: JsonField<String>,
+        private val type: JsonValue,
+        private val id: JsonField<String>,
+        private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
         private val prefix: JsonField<String>,
         private val s3ForcePathStyle: JsonField<Boolean>,
-        private val type: JsonValue,
-        private val baseUrlForCanonicalHeader: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("accessKey")
+            @ExcludeMissing
+            accessKey: JsonField<String> = JsonMissing.of(),
             @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
             @JsonProperty("endpoint")
             @ExcludeMissing
             endpoint: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("secretKey")
+            @ExcludeMissing
+            secretKey: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("baseUrlForCanonicalHeader")
+            @ExcludeMissing
+            baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
             @JsonProperty("includeCanonicalHeader")
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
             @JsonProperty("s3ForcePathStyle")
             @ExcludeMissing
             s3ForcePathStyle: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-            @JsonProperty("baseUrlForCanonicalHeader")
-            @ExcludeMissing
-            baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
+            accessKey,
             bucket,
             endpoint,
-            includeCanonicalHeader,
             name,
+            secretKey,
+            type,
+            id,
+            baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
             prefix,
             s3ForcePathStyle,
-            type,
-            baseUrlForCanonicalHeader,
             mutableMapOf(),
         )
 
         /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
+         * Access key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun id(): String = id.getRequired("id")
+        fun accessKey(): String = accessKey.getRequired("accessKey")
 
         /**
          * S3 bucket name.
@@ -864,15 +948,6 @@ private constructor(
         fun endpoint(): String = endpoint.getRequired("endpoint")
 
         /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
-
-        /**
          * Display name of the origin.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -881,20 +956,12 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Path prefix inside the bucket.
+         * Secret key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun prefix(): String = prefix.getRequired("prefix")
-
-        /**
-         * Use path-style S3 URLs?
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun s3ForcePathStyle(): Boolean = s3ForcePathStyle.getRequired("s3ForcePathStyle")
+        fun secretKey(): String = secretKey.getRequired("secretKey")
 
         /**
          * Expected to always return the following:
@@ -908,6 +975,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -917,11 +990,36 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
+
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun prefix(): Optional<String> = prefix.getOptional("prefix")
+
+        /**
+         * Use path-style S3 URLs?
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun s3ForcePathStyle(): Optional<Boolean> = s3ForcePathStyle.getOptional("s3ForcePathStyle")
+
+        /**
+         * Returns the raw JSON value of [accessKey].
+         *
+         * Unlike [accessKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("accessKey") @ExcludeMissing fun _accessKey(): JsonField<String> = accessKey
 
         /**
          * Returns the raw JSON value of [bucket].
@@ -938,6 +1036,37 @@ private constructor(
         @JsonProperty("endpoint") @ExcludeMissing fun _endpoint(): JsonField<String> = endpoint
 
         /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [secretKey].
+         *
+         * Unlike [secretKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("secretKey") @ExcludeMissing fun _secretKey(): JsonField<String> = secretKey
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
+         *
+         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("baseUrlForCanonicalHeader")
+        @ExcludeMissing
+        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
+
+        /**
          * Returns the raw JSON value of [includeCanonicalHeader].
          *
          * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
@@ -946,13 +1075,6 @@ private constructor(
         @JsonProperty("includeCanonicalHeader")
         @ExcludeMissing
         fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
-
-        /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         /**
          * Returns the raw JSON value of [prefix].
@@ -970,16 +1092,6 @@ private constructor(
         @JsonProperty("s3ForcePathStyle")
         @ExcludeMissing
         fun _s3ForcePathStyle(): JsonField<Boolean> = s3ForcePathStyle
-
-        /**
-         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
-         *
-         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("baseUrlForCanonicalHeader")
-        @ExcludeMissing
-        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1000,13 +1112,11 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
              * .endpoint()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
-             * .s3ForcePathStyle()
+             * .secretKey()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -1015,45 +1125,46 @@ private constructor(
         /** A builder for [S3Compatible]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
+            private var accessKey: JsonField<String>? = null
             private var bucket: JsonField<String>? = null
             private var endpoint: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonField<String>? = null
-            private var s3ForcePathStyle: JsonField<Boolean>? = null
+            private var secretKey: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("S3_COMPATIBLE")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
+            private var prefix: JsonField<String> = JsonMissing.of()
+            private var s3ForcePathStyle: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(s3Compatible: S3Compatible) = apply {
-                id = s3Compatible.id
+                accessKey = s3Compatible.accessKey
                 bucket = s3Compatible.bucket
                 endpoint = s3Compatible.endpoint
-                includeCanonicalHeader = s3Compatible.includeCanonicalHeader
                 name = s3Compatible.name
+                secretKey = s3Compatible.secretKey
+                type = s3Compatible.type
+                id = s3Compatible.id
+                baseUrlForCanonicalHeader = s3Compatible.baseUrlForCanonicalHeader
+                includeCanonicalHeader = s3Compatible.includeCanonicalHeader
                 prefix = s3Compatible.prefix
                 s3ForcePathStyle = s3Compatible.s3ForcePathStyle
-                type = s3Compatible.type
-                baseUrlForCanonicalHeader = s3Compatible.baseUrlForCanonicalHeader
                 additionalProperties = s3Compatible.additionalProperties.toMutableMap()
             }
 
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
+            /** Access key for the bucket. */
+            fun accessKey(accessKey: String) = accessKey(JsonField.of(accessKey))
 
             /**
-             * Sets [Builder.id] to an arbitrary JSON value.
+             * Sets [Builder.accessKey] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.accessKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun id(id: JsonField<String>) = apply { this.id = id }
+            fun accessKey(accessKey: JsonField<String>) = apply { this.accessKey = accessKey }
 
             /** S3 bucket name. */
             fun bucket(bucket: String) = bucket(JsonField.of(bucket))
@@ -1079,6 +1190,70 @@ private constructor(
              */
             fun endpoint(endpoint: JsonField<String>) = apply { this.endpoint = endpoint }
 
+            /** Display name of the origin. */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /** Secret key for the bucket. */
+            fun secretKey(secretKey: String) = secretKey(JsonField.of(secretKey))
+
+            /**
+             * Sets [Builder.secretKey] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.secretKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("S3_COMPATIBLE")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun type(type: JsonValue) = apply { this.type = type }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /** URL used in the Canonical header (if enabled). */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
+                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
+
+            /**
+             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
+             * [String] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
+                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
+
             /** Whether to send a Canonical header. */
             fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
                 includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
@@ -1093,18 +1268,6 @@ private constructor(
             fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
                 this.includeCanonicalHeader = includeCanonicalHeader
             }
-
-            /** Display name of the origin. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Path prefix inside the bucket. */
             fun prefix(prefix: String) = prefix(JsonField.of(prefix))
@@ -1133,35 +1296,6 @@ private constructor(
                 this.s3ForcePathStyle = s3ForcePathStyle
             }
 
-            /**
-             * Sets the field to an arbitrary JSON value.
-             *
-             * It is usually unnecessary to call this method because the field defaults to the
-             * following:
-             * ```java
-             * JsonValue.from("S3_COMPATIBLE")
-             * ```
-             *
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun type(type: JsonValue) = apply { this.type = type }
-
-            /** URL used in the Canonical header (if enabled). */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
-                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
-
-            /**
-             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
-             * [String] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
-                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
-            }
-
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1188,28 +1322,28 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
              * .endpoint()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
-             * .s3ForcePathStyle()
+             * .secretKey()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): S3Compatible =
                 S3Compatible(
-                    checkRequired("id", id),
+                    checkRequired("accessKey", accessKey),
                     checkRequired("bucket", bucket),
                     checkRequired("endpoint", endpoint),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
-                    checkRequired("prefix", prefix),
-                    checkRequired("s3ForcePathStyle", s3ForcePathStyle),
+                    checkRequired("secretKey", secretKey),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
+                    prefix,
+                    s3ForcePathStyle,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1221,19 +1355,21 @@ private constructor(
                 return@apply
             }
 
-            id()
+            accessKey()
             bucket()
             endpoint()
-            includeCanonicalHeader()
             name()
-            prefix()
-            s3ForcePathStyle()
+            secretKey()
             _type().let {
                 if (it != JsonValue.from("S3_COMPATIBLE")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
+            prefix()
+            s3ForcePathStyle()
             validated = true
         }
 
@@ -1253,15 +1389,17 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
+            (if (accessKey.asKnown().isPresent) 1 else 0) +
                 (if (bucket.asKnown().isPresent) 1 else 0) +
                 (if (endpoint.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0) +
-                (if (s3ForcePathStyle.asKnown().isPresent) 1 else 0) +
+                (if (secretKey.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("S3_COMPATIBLE")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (s3ForcePathStyle.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1269,29 +1407,33 @@ private constructor(
             }
 
             return other is S3Compatible &&
-                id == other.id &&
+                accessKey == other.accessKey &&
                 bucket == other.bucket &&
                 endpoint == other.endpoint &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
+                secretKey == other.secretKey &&
+                type == other.type &&
+                id == other.id &&
+                baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
                 prefix == other.prefix &&
                 s3ForcePathStyle == other.s3ForcePathStyle &&
-                type == other.type &&
-                baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
+                accessKey,
                 bucket,
                 endpoint,
-                includeCanonicalHeader,
                 name,
+                secretKey,
+                type,
+                id,
+                baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
                 prefix,
                 s3ForcePathStyle,
-                type,
-                baseUrlForCanonicalHeader,
                 additionalProperties,
             )
         }
@@ -1299,53 +1441,62 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "S3Compatible{id=$id, bucket=$bucket, endpoint=$endpoint, includeCanonicalHeader=$includeCanonicalHeader, name=$name, prefix=$prefix, s3ForcePathStyle=$s3ForcePathStyle, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "S3Compatible{accessKey=$accessKey, bucket=$bucket, endpoint=$endpoint, name=$name, secretKey=$secretKey, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, s3ForcePathStyle=$s3ForcePathStyle, additionalProperties=$additionalProperties}"
     }
 
     class CloudinaryBackup
     private constructor(
-        private val id: JsonField<String>,
+        private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonField<String>,
+        private val secretKey: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
+        private val prefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
+            @JsonProperty("accessKey")
             @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            accessKey: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("secretKey")
+            @ExcludeMissing
+            secretKey: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
+            accessKey,
             bucket,
-            includeCanonicalHeader,
             name,
-            prefix,
+            secretKey,
             type,
+            id,
             baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
+            prefix,
             mutableMapOf(),
         )
 
         /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
+         * Access key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun id(): String = id.getRequired("id")
+        fun accessKey(): String = accessKey.getRequired("accessKey")
 
         /**
          * S3 bucket name.
@@ -1356,15 +1507,6 @@ private constructor(
         fun bucket(): String = bucket.getRequired("bucket")
 
         /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
-
-        /**
          * Display name of the origin.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -1373,12 +1515,12 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Path prefix inside the bucket.
+         * Secret key for the bucket.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun prefix(): String = prefix.getRequired("prefix")
+        fun secretKey(): String = secretKey.getRequired("secretKey")
 
         /**
          * Expected to always return the following:
@@ -1392,6 +1534,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1401,11 +1549,28 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
+
+        /**
+         * Path prefix inside the bucket.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun prefix(): Optional<String> = prefix.getOptional("prefix")
+
+        /**
+         * Returns the raw JSON value of [accessKey].
+         *
+         * Unlike [accessKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("accessKey") @ExcludeMissing fun _accessKey(): JsonField<String> = accessKey
 
         /**
          * Returns the raw JSON value of [bucket].
@@ -1413,6 +1578,37 @@ private constructor(
          * Unlike [bucket], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("bucket") @ExcludeMissing fun _bucket(): JsonField<String> = bucket
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [secretKey].
+         *
+         * Unlike [secretKey], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("secretKey") @ExcludeMissing fun _secretKey(): JsonField<String> = secretKey
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
+         *
+         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("baseUrlForCanonicalHeader")
+        @ExcludeMissing
+        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         /**
          * Returns the raw JSON value of [includeCanonicalHeader].
@@ -1425,28 +1621,11 @@ private constructor(
         fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
 
         /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        /**
          * Returns the raw JSON value of [prefix].
          *
          * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
-
-        /**
-         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
-         *
-         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("baseUrlForCanonicalHeader")
-        @ExcludeMissing
-        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -1467,11 +1646,10 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .secretKey()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -1480,41 +1658,42 @@ private constructor(
         /** A builder for [CloudinaryBackup]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
+            private var accessKey: JsonField<String>? = null
             private var bucket: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonField<String>? = null
+            private var secretKey: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("CLOUDINARY_BACKUP")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
+            private var prefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(cloudinaryBackup: CloudinaryBackup) = apply {
-                id = cloudinaryBackup.id
+                accessKey = cloudinaryBackup.accessKey
                 bucket = cloudinaryBackup.bucket
-                includeCanonicalHeader = cloudinaryBackup.includeCanonicalHeader
                 name = cloudinaryBackup.name
-                prefix = cloudinaryBackup.prefix
+                secretKey = cloudinaryBackup.secretKey
                 type = cloudinaryBackup.type
+                id = cloudinaryBackup.id
                 baseUrlForCanonicalHeader = cloudinaryBackup.baseUrlForCanonicalHeader
+                includeCanonicalHeader = cloudinaryBackup.includeCanonicalHeader
+                prefix = cloudinaryBackup.prefix
                 additionalProperties = cloudinaryBackup.additionalProperties.toMutableMap()
             }
 
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
+            /** Access key for the bucket. */
+            fun accessKey(accessKey: String) = accessKey(JsonField.of(accessKey))
 
             /**
-             * Sets [Builder.id] to an arbitrary JSON value.
+             * Sets [Builder.accessKey] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.accessKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun id(id: JsonField<String>) = apply { this.id = id }
+            fun accessKey(accessKey: JsonField<String>) = apply { this.accessKey = accessKey }
 
             /** S3 bucket name. */
             fun bucket(bucket: String) = bucket(JsonField.of(bucket))
@@ -1527,6 +1706,70 @@ private constructor(
              * supported value.
              */
             fun bucket(bucket: JsonField<String>) = apply { this.bucket = bucket }
+
+            /** Display name of the origin. */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /** Secret key for the bucket. */
+            fun secretKey(secretKey: String) = secretKey(JsonField.of(secretKey))
+
+            /**
+             * Sets [Builder.secretKey] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.secretKey] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun secretKey(secretKey: JsonField<String>) = apply { this.secretKey = secretKey }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("CLOUDINARY_BACKUP")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun type(type: JsonValue) = apply { this.type = type }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /** URL used in the Canonical header (if enabled). */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
+                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
+
+            /**
+             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
+             * [String] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
+                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
 
             /** Whether to send a Canonical header. */
             fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
@@ -1543,18 +1786,6 @@ private constructor(
                 this.includeCanonicalHeader = includeCanonicalHeader
             }
 
-            /** Display name of the origin. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
             /** Path prefix inside the bucket. */
             fun prefix(prefix: String) = prefix(JsonField.of(prefix))
 
@@ -1566,35 +1797,6 @@ private constructor(
              * supported value.
              */
             fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
-
-            /**
-             * Sets the field to an arbitrary JSON value.
-             *
-             * It is usually unnecessary to call this method because the field defaults to the
-             * following:
-             * ```java
-             * JsonValue.from("CLOUDINARY_BACKUP")
-             * ```
-             *
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun type(type: JsonValue) = apply { this.type = type }
-
-            /** URL used in the Canonical header (if enabled). */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
-                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
-
-            /**
-             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
-             * [String] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
-                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
-            }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -1622,24 +1824,25 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .accessKey()
              * .bucket()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .secretKey()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): CloudinaryBackup =
                 CloudinaryBackup(
-                    checkRequired("id", id),
+                    checkRequired("accessKey", accessKey),
                     checkRequired("bucket", bucket),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
-                    checkRequired("prefix", prefix),
+                    checkRequired("secretKey", secretKey),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
+                    prefix,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1651,17 +1854,19 @@ private constructor(
                 return@apply
             }
 
-            id()
+            accessKey()
             bucket()
-            includeCanonicalHeader()
             name()
-            prefix()
+            secretKey()
             _type().let {
                 if (it != JsonValue.from("CLOUDINARY_BACKUP")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
+            prefix()
             validated = true
         }
 
@@ -1681,13 +1886,15 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
+            (if (accessKey.asKnown().isPresent) 1 else 0) +
                 (if (bucket.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (secretKey.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("CLOUDINARY_BACKUP")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1695,25 +1902,29 @@ private constructor(
             }
 
             return other is CloudinaryBackup &&
-                id == other.id &&
+                accessKey == other.accessKey &&
                 bucket == other.bucket &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
-                prefix == other.prefix &&
+                secretKey == other.secretKey &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
+                prefix == other.prefix &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
+                accessKey,
                 bucket,
-                includeCanonicalHeader,
                 name,
-                prefix,
+                secretKey,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
+                prefix,
                 additionalProperties,
             )
         }
@@ -1721,55 +1932,46 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CloudinaryBackup{id=$id, bucket=$bucket, includeCanonicalHeader=$includeCanonicalHeader, name=$name, prefix=$prefix, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "CloudinaryBackup{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
     }
 
     class WebFolder
     private constructor(
-        private val id: JsonField<String>,
         private val baseUrl: JsonField<String>,
-        private val forwardHostHeaderToOrigin: JsonField<Boolean>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val forwardHostHeaderToOrigin: JsonField<Boolean>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("baseUrlForCanonicalHeader")
+            @ExcludeMissing
+            baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
             @JsonProperty("forwardHostHeaderToOrigin")
             @ExcludeMissing
             forwardHostHeaderToOrigin: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("includeCanonicalHeader")
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
-            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-            @JsonProperty("baseUrlForCanonicalHeader")
-            @ExcludeMissing
-            baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
             baseUrl,
-            forwardHostHeaderToOrigin,
-            includeCanonicalHeader,
             name,
             type,
+            id,
             baseUrlForCanonicalHeader,
+            forwardHostHeaderToOrigin,
+            includeCanonicalHeader,
             mutableMapOf(),
         )
-
-        /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun id(): String = id.getRequired("id")
 
         /**
          * Root URL for the web folder origin.
@@ -1778,24 +1980,6 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun baseUrl(): String = baseUrl.getRequired("baseUrl")
-
-        /**
-         * Forward the Host header to origin?
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun forwardHostHeaderToOrigin(): Boolean =
-            forwardHostHeaderToOrigin.getRequired("forwardHostHeaderToOrigin")
-
-        /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
 
         /**
          * Display name of the origin.
@@ -1817,6 +2001,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1826,11 +2016,22 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Forward the Host header to origin?
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun forwardHostHeaderToOrigin(): Optional<Boolean> =
+            forwardHostHeaderToOrigin.getOptional("forwardHostHeaderToOrigin")
+
+        /**
+         * Whether to send a Canonical header.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
 
         /**
          * Returns the raw JSON value of [baseUrl].
@@ -1838,6 +2039,30 @@ private constructor(
          * Unlike [baseUrl], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonField<String> = baseUrl
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        /**
+         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
+         *
+         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("baseUrlForCanonicalHeader")
+        @ExcludeMissing
+        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
 
         /**
          * Returns the raw JSON value of [forwardHostHeaderToOrigin].
@@ -1859,23 +2084,6 @@ private constructor(
         @ExcludeMissing
         fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
 
-        /**
-         * Returns the raw JSON value of [name].
-         *
-         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
-
-        /**
-         * Returns the raw JSON value of [baseUrlForCanonicalHeader].
-         *
-         * Unlike [baseUrlForCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("baseUrlForCanonicalHeader")
-        @ExcludeMissing
-        fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
-
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1895,10 +2103,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .baseUrl()
-             * .forwardHostHeaderToOrigin()
-             * .includeCanonicalHeader()
              * .name()
              * ```
              */
@@ -1908,41 +2113,26 @@ private constructor(
         /** A builder for [WebFolder]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
             private var baseUrl: JsonField<String>? = null
-            private var forwardHostHeaderToOrigin: JsonField<Boolean>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("WEB_FOLDER")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var forwardHostHeaderToOrigin: JsonField<Boolean> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(webFolder: WebFolder) = apply {
-                id = webFolder.id
                 baseUrl = webFolder.baseUrl
-                forwardHostHeaderToOrigin = webFolder.forwardHostHeaderToOrigin
-                includeCanonicalHeader = webFolder.includeCanonicalHeader
                 name = webFolder.name
                 type = webFolder.type
+                id = webFolder.id
                 baseUrlForCanonicalHeader = webFolder.baseUrlForCanonicalHeader
+                forwardHostHeaderToOrigin = webFolder.forwardHostHeaderToOrigin
+                includeCanonicalHeader = webFolder.includeCanonicalHeader
                 additionalProperties = webFolder.additionalProperties.toMutableMap()
             }
-
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
 
             /** Root URL for the web folder origin. */
             fun baseUrl(baseUrl: String) = baseUrl(JsonField.of(baseUrl))
@@ -1955,6 +2145,58 @@ private constructor(
              * supported value.
              */
             fun baseUrl(baseUrl: JsonField<String>) = apply { this.baseUrl = baseUrl }
+
+            /** Display name of the origin. */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("WEB_FOLDER")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun type(type: JsonValue) = apply { this.type = type }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /** URL used in the Canonical header (if enabled). */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
+                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
+
+            /**
+             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
+             * [String] value instead. This method is primarily for setting the field to an
+             * undocumented or not yet supported value.
+             */
+            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
+                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
 
             /** Forward the Host header to origin? */
             fun forwardHostHeaderToOrigin(forwardHostHeaderToOrigin: Boolean) =
@@ -1986,47 +2228,6 @@ private constructor(
                 this.includeCanonicalHeader = includeCanonicalHeader
             }
 
-            /** Display name of the origin. */
-            fun name(name: String) = name(JsonField.of(name))
-
-            /**
-             * Sets [Builder.name] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.name] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun name(name: JsonField<String>) = apply { this.name = name }
-
-            /**
-             * Sets the field to an arbitrary JSON value.
-             *
-             * It is usually unnecessary to call this method because the field defaults to the
-             * following:
-             * ```java
-             * JsonValue.from("WEB_FOLDER")
-             * ```
-             *
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun type(type: JsonValue) = apply { this.type = type }
-
-            /** URL used in the Canonical header (if enabled). */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
-                baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
-
-            /**
-             * Sets [Builder.baseUrlForCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.baseUrlForCanonicalHeader] with a well-typed
-             * [String] value instead. This method is primarily for setting the field to an
-             * undocumented or not yet supported value.
-             */
-            fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
-                this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
-            }
-
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -2053,10 +2254,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .baseUrl()
-             * .forwardHostHeaderToOrigin()
-             * .includeCanonicalHeader()
              * .name()
              * ```
              *
@@ -2064,13 +2262,13 @@ private constructor(
              */
             fun build(): WebFolder =
                 WebFolder(
-                    checkRequired("id", id),
                     checkRequired("baseUrl", baseUrl),
-                    checkRequired("forwardHostHeaderToOrigin", forwardHostHeaderToOrigin),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    forwardHostHeaderToOrigin,
+                    includeCanonicalHeader,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -2082,17 +2280,17 @@ private constructor(
                 return@apply
             }
 
-            id()
             baseUrl()
-            forwardHostHeaderToOrigin()
-            includeCanonicalHeader()
             name()
             _type().let {
                 if (it != JsonValue.from("WEB_FOLDER")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            forwardHostHeaderToOrigin()
+            includeCanonicalHeader()
             validated = true
         }
 
@@ -2112,13 +2310,13 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
-                (if (baseUrl.asKnown().isPresent) 1 else 0) +
-                (if (forwardHostHeaderToOrigin.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+            (if (baseUrl.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("WEB_FOLDER")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (forwardHostHeaderToOrigin.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2126,25 +2324,25 @@ private constructor(
             }
 
             return other is WebFolder &&
-                id == other.id &&
                 baseUrl == other.baseUrl &&
-                forwardHostHeaderToOrigin == other.forwardHostHeaderToOrigin &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                forwardHostHeaderToOrigin == other.forwardHostHeaderToOrigin &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
                 baseUrl,
-                forwardHostHeaderToOrigin,
-                includeCanonicalHeader,
                 name,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                forwardHostHeaderToOrigin,
+                includeCanonicalHeader,
                 additionalProperties,
             )
         }
@@ -2152,49 +2350,31 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WebFolder{id=$id, baseUrl=$baseUrl, forwardHostHeaderToOrigin=$forwardHostHeaderToOrigin, includeCanonicalHeader=$includeCanonicalHeader, name=$name, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "WebFolder{baseUrl=$baseUrl, name=$name, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, forwardHostHeaderToOrigin=$forwardHostHeaderToOrigin, includeCanonicalHeader=$includeCanonicalHeader, additionalProperties=$additionalProperties}"
     }
 
     class WebProxy
     private constructor(
-        private val id: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
-            @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
-        ) : this(id, includeCanonicalHeader, name, type, baseUrlForCanonicalHeader, mutableMapOf())
-
-        /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun id(): String = id.getRequired("id")
-
-        /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(name, type, id, baseUrlForCanonicalHeader, includeCanonicalHeader, mutableMapOf())
 
         /**
          * Display name of the origin.
@@ -2216,6 +2396,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -2225,21 +2411,13 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-        /**
-         * Returns the raw JSON value of [includeCanonicalHeader].
-         *
-         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("includeCanonicalHeader")
-        @ExcludeMissing
-        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
 
         /**
          * Returns the raw JSON value of [name].
@@ -2247,6 +2425,13 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
         /**
          * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -2257,6 +2442,16 @@ private constructor(
         @JsonProperty("baseUrlForCanonicalHeader")
         @ExcludeMissing
         fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [includeCanonicalHeader].
+         *
+         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("includeCanonicalHeader")
+        @ExcludeMissing
+        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2277,8 +2472,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
-             * .includeCanonicalHeader()
              * .name()
              * ```
              */
@@ -2288,51 +2481,21 @@ private constructor(
         /** A builder for [WebProxy]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("WEB_PROXY")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(webProxy: WebProxy) = apply {
-                id = webProxy.id
-                includeCanonicalHeader = webProxy.includeCanonicalHeader
                 name = webProxy.name
                 type = webProxy.type
+                id = webProxy.id
                 baseUrlForCanonicalHeader = webProxy.baseUrlForCanonicalHeader
+                includeCanonicalHeader = webProxy.includeCanonicalHeader
                 additionalProperties = webProxy.additionalProperties.toMutableMap()
-            }
-
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
-
-            /** Whether to send a Canonical header. */
-            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
-                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
-
-            /**
-             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
-                this.includeCanonicalHeader = includeCanonicalHeader
             }
 
             /** Display name of the origin. */
@@ -2361,6 +2524,17 @@ private constructor(
              */
             fun type(type: JsonValue) = apply { this.type = type }
 
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
             /** URL used in the Canonical header (if enabled). */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
                 baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
@@ -2374,6 +2548,21 @@ private constructor(
              */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
                 this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
+
+            /** Whether to send a Canonical header. */
+            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
+                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
+
+            /**
+             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
+                this.includeCanonicalHeader = includeCanonicalHeader
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -2402,8 +2591,6 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
-             * .includeCanonicalHeader()
              * .name()
              * ```
              *
@@ -2411,11 +2598,11 @@ private constructor(
              */
             fun build(): WebProxy =
                 WebProxy(
-                    checkRequired("id", id),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -2427,15 +2614,15 @@ private constructor(
                 return@apply
             }
 
-            id()
-            includeCanonicalHeader()
             name()
             _type().let {
                 if (it != JsonValue.from("WEB_PROXY")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
             validated = true
         }
 
@@ -2455,11 +2642,11 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
-                (if (name.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("WEB_PROXY")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -2467,21 +2654,21 @@ private constructor(
             }
 
             return other is WebProxy &&
-                id == other.id &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
-                includeCanonicalHeader,
                 name,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
                 additionalProperties,
             )
         }
@@ -2489,58 +2676,54 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "WebProxy{id=$id, includeCanonicalHeader=$includeCanonicalHeader, name=$name, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "WebProxy{name=$name, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, additionalProperties=$additionalProperties}"
     }
 
-    class Gcs
+    class GoogleCloudStorageGcs
     private constructor(
-        private val id: JsonField<String>,
         private val bucket: JsonField<String>,
         private val clientEmail: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonField<String>,
+        private val privateKey: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
+        private val prefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("bucket") @ExcludeMissing bucket: JsonField<String> = JsonMissing.of(),
             @JsonProperty("clientEmail")
             @ExcludeMissing
             clientEmail: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
-            @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("privateKey")
+            @ExcludeMissing
+            privateKey: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
             bucket,
             clientEmail,
-            includeCanonicalHeader,
             name,
-            prefix,
+            privateKey,
             type,
+            id,
             baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
+            prefix,
             mutableMapOf(),
         )
-
-        /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun id(): String = id.getRequired("id")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -2555,15 +2738,6 @@ private constructor(
         fun clientEmail(): String = clientEmail.getRequired("clientEmail")
 
         /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
-
-        /**
          * Display name of the origin.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -2575,7 +2749,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun prefix(): String = prefix.getRequired("prefix")
+        fun privateKey(): String = privateKey.getRequired("privateKey")
 
         /**
          * Expected to always return the following:
@@ -2589,6 +2763,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -2598,11 +2778,19 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
+
+        /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun prefix(): Optional<String> = prefix.getOptional("prefix")
 
         /**
          * Returns the raw JSON value of [bucket].
@@ -2621,16 +2809,6 @@ private constructor(
         fun _clientEmail(): JsonField<String> = clientEmail
 
         /**
-         * Returns the raw JSON value of [includeCanonicalHeader].
-         *
-         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("includeCanonicalHeader")
-        @ExcludeMissing
-        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
-
-        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -2638,11 +2816,20 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         /**
-         * Returns the raw JSON value of [prefix].
+         * Returns the raw JSON value of [privateKey].
          *
-         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [privateKey], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
+        @JsonProperty("privateKey")
+        @ExcludeMissing
+        fun _privateKey(): JsonField<String> = privateKey
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
         /**
          * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -2653,6 +2840,23 @@ private constructor(
         @JsonProperty("baseUrlForCanonicalHeader")
         @ExcludeMissing
         fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [includeCanonicalHeader].
+         *
+         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("includeCanonicalHeader")
+        @ExcludeMissing
+        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2669,61 +2873,46 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [Gcs].
+             * Returns a mutable builder for constructing an instance of [GoogleCloudStorageGcs].
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .bucket()
              * .clientEmail()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .privateKey()
              * ```
              */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [Gcs]. */
+        /** A builder for [GoogleCloudStorageGcs]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
             private var bucket: JsonField<String>? = null
             private var clientEmail: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonField<String>? = null
+            private var privateKey: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("GCS")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
+            private var prefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(gcs: Gcs) = apply {
-                id = gcs.id
-                bucket = gcs.bucket
-                clientEmail = gcs.clientEmail
-                includeCanonicalHeader = gcs.includeCanonicalHeader
-                name = gcs.name
-                prefix = gcs.prefix
-                type = gcs.type
-                baseUrlForCanonicalHeader = gcs.baseUrlForCanonicalHeader
-                additionalProperties = gcs.additionalProperties.toMutableMap()
+            internal fun from(googleCloudStorageGcs: GoogleCloudStorageGcs) = apply {
+                bucket = googleCloudStorageGcs.bucket
+                clientEmail = googleCloudStorageGcs.clientEmail
+                name = googleCloudStorageGcs.name
+                privateKey = googleCloudStorageGcs.privateKey
+                type = googleCloudStorageGcs.type
+                id = googleCloudStorageGcs.id
+                baseUrlForCanonicalHeader = googleCloudStorageGcs.baseUrlForCanonicalHeader
+                includeCanonicalHeader = googleCloudStorageGcs.includeCanonicalHeader
+                prefix = googleCloudStorageGcs.prefix
+                additionalProperties = googleCloudStorageGcs.additionalProperties.toMutableMap()
             }
-
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun bucket(bucket: String) = bucket(JsonField.of(bucket))
 
@@ -2749,21 +2938,6 @@ private constructor(
                 this.clientEmail = clientEmail
             }
 
-            /** Whether to send a Canonical header. */
-            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
-                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
-
-            /**
-             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
-                this.includeCanonicalHeader = includeCanonicalHeader
-            }
-
             /** Display name of the origin. */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -2776,16 +2950,16 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+            fun privateKey(privateKey: String) = privateKey(JsonField.of(privateKey))
 
             /**
-             * Sets [Builder.prefix] to an arbitrary JSON value.
+             * Sets [Builder.privateKey] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
+             * You should usually call [Builder.privateKey] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
+            fun privateKey(privateKey: JsonField<String>) = apply { this.privateKey = privateKey }
 
             /**
              * Sets the field to an arbitrary JSON value.
@@ -2801,6 +2975,17 @@ private constructor(
              */
             fun type(type: JsonValue) = apply { this.type = type }
 
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
             /** URL used in the Canonical header (if enabled). */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
                 baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
@@ -2815,6 +3000,32 @@ private constructor(
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
                 this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
             }
+
+            /** Whether to send a Canonical header. */
+            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
+                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
+
+            /**
+             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
+                this.includeCanonicalHeader = includeCanonicalHeader
+            }
+
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -2836,55 +3047,55 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [Gcs].
+             * Returns an immutable instance of [GoogleCloudStorageGcs].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .bucket()
              * .clientEmail()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .privateKey()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Gcs =
-                Gcs(
-                    checkRequired("id", id),
+            fun build(): GoogleCloudStorageGcs =
+                GoogleCloudStorageGcs(
                     checkRequired("bucket", bucket),
                     checkRequired("clientEmail", clientEmail),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
-                    checkRequired("prefix", prefix),
+                    checkRequired("privateKey", privateKey),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
+                    prefix,
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
-        fun validate(): Gcs = apply {
+        fun validate(): GoogleCloudStorageGcs = apply {
             if (validated) {
                 return@apply
             }
 
-            id()
             bucket()
             clientEmail()
-            includeCanonicalHeader()
             name()
-            prefix()
+            privateKey()
             _type().let {
                 if (it != JsonValue.from("GCS")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
+            prefix()
             validated = true
         }
 
@@ -2904,42 +3115,45 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
-                (if (bucket.asKnown().isPresent) 1 else 0) +
+            (if (bucket.asKnown().isPresent) 1 else 0) +
                 (if (clientEmail.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (privateKey.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("GCS")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is Gcs &&
-                id == other.id &&
+            return other is GoogleCloudStorageGcs &&
                 bucket == other.bucket &&
                 clientEmail == other.clientEmail &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
-                prefix == other.prefix &&
+                privateKey == other.privateKey &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
+                prefix == other.prefix &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
                 bucket,
                 clientEmail,
-                includeCanonicalHeader,
                 name,
-                prefix,
+                privateKey,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
+                prefix,
                 additionalProperties,
             )
         }
@@ -2947,60 +3161,56 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Gcs{id=$id, bucket=$bucket, clientEmail=$clientEmail, includeCanonicalHeader=$includeCanonicalHeader, name=$name, prefix=$prefix, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "GoogleCloudStorageGcs{bucket=$bucket, clientEmail=$clientEmail, name=$name, privateKey=$privateKey, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
     }
 
-    class AzureBlob
+    class AzureBlobStorage
     private constructor(
-        private val id: JsonField<String>,
         private val accountName: JsonField<String>,
         private val container: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
         private val name: JsonField<String>,
-        private val prefix: JsonField<String>,
+        private val sasToken: JsonField<String>,
         private val type: JsonValue,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
+        private val prefix: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("accountName")
             @ExcludeMissing
             accountName: JsonField<String> = JsonMissing.of(),
             @JsonProperty("container")
             @ExcludeMissing
             container: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
-            @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("sasToken")
+            @ExcludeMissing
+            sasToken: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
         ) : this(
-            id,
             accountName,
             container,
-            includeCanonicalHeader,
             name,
-            prefix,
+            sasToken,
             type,
+            id,
             baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
+            prefix,
             mutableMapOf(),
         )
-
-        /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun id(): String = id.getRequired("id")
 
         /**
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -3015,15 +3225,6 @@ private constructor(
         fun container(): String = container.getRequired("container")
 
         /**
-         * Whether to send a Canonical header.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
-
-        /**
          * Display name of the origin.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -3035,7 +3236,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun prefix(): String = prefix.getRequired("prefix")
+        fun sasToken(): String = sasToken.getRequired("sasToken")
 
         /**
          * Expected to always return the following:
@@ -3049,6 +3250,12 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -3058,11 +3265,19 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
+
+        /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun prefix(): Optional<String> = prefix.getOptional("prefix")
 
         /**
          * Returns the raw JSON value of [accountName].
@@ -3081,16 +3296,6 @@ private constructor(
         @JsonProperty("container") @ExcludeMissing fun _container(): JsonField<String> = container
 
         /**
-         * Returns the raw JSON value of [includeCanonicalHeader].
-         *
-         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
-         */
-        @JsonProperty("includeCanonicalHeader")
-        @ExcludeMissing
-        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
-
-        /**
          * Returns the raw JSON value of [name].
          *
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
@@ -3098,11 +3303,18 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         /**
-         * Returns the raw JSON value of [prefix].
+         * Returns the raw JSON value of [sasToken].
          *
-         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [sasToken], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
+        @JsonProperty("sasToken") @ExcludeMissing fun _sasToken(): JsonField<String> = sasToken
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
         /**
          * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -3113,6 +3325,23 @@ private constructor(
         @JsonProperty("baseUrlForCanonicalHeader")
         @ExcludeMissing
         fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [includeCanonicalHeader].
+         *
+         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("includeCanonicalHeader")
+        @ExcludeMissing
+        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [prefix].
+         *
+         * Unlike [prefix], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3129,61 +3358,46 @@ private constructor(
         companion object {
 
             /**
-             * Returns a mutable builder for constructing an instance of [AzureBlob].
+             * Returns a mutable builder for constructing an instance of [AzureBlobStorage].
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .accountName()
              * .container()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .sasToken()
              * ```
              */
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [AzureBlob]. */
+        /** A builder for [AzureBlobStorage]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
             private var accountName: JsonField<String>? = null
             private var container: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
             private var name: JsonField<String>? = null
-            private var prefix: JsonField<String>? = null
+            private var sasToken: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("AZURE_BLOB")
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
+            private var prefix: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(azureBlob: AzureBlob) = apply {
-                id = azureBlob.id
-                accountName = azureBlob.accountName
-                container = azureBlob.container
-                includeCanonicalHeader = azureBlob.includeCanonicalHeader
-                name = azureBlob.name
-                prefix = azureBlob.prefix
-                type = azureBlob.type
-                baseUrlForCanonicalHeader = azureBlob.baseUrlForCanonicalHeader
-                additionalProperties = azureBlob.additionalProperties.toMutableMap()
+            internal fun from(azureBlobStorage: AzureBlobStorage) = apply {
+                accountName = azureBlobStorage.accountName
+                container = azureBlobStorage.container
+                name = azureBlobStorage.name
+                sasToken = azureBlobStorage.sasToken
+                type = azureBlobStorage.type
+                id = azureBlobStorage.id
+                baseUrlForCanonicalHeader = azureBlobStorage.baseUrlForCanonicalHeader
+                includeCanonicalHeader = azureBlobStorage.includeCanonicalHeader
+                prefix = azureBlobStorage.prefix
+                additionalProperties = azureBlobStorage.additionalProperties.toMutableMap()
             }
-
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
 
             fun accountName(accountName: String) = accountName(JsonField.of(accountName))
 
@@ -3209,21 +3423,6 @@ private constructor(
              */
             fun container(container: JsonField<String>) = apply { this.container = container }
 
-            /** Whether to send a Canonical header. */
-            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
-                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
-
-            /**
-             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
-             */
-            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
-                this.includeCanonicalHeader = includeCanonicalHeader
-            }
-
             /** Display name of the origin. */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -3236,16 +3435,16 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+            fun sasToken(sasToken: String) = sasToken(JsonField.of(sasToken))
 
             /**
-             * Sets [Builder.prefix] to an arbitrary JSON value.
+             * Sets [Builder.sasToken] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * You should usually call [Builder.sasToken] with a well-typed [String] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
+            fun sasToken(sasToken: JsonField<String>) = apply { this.sasToken = sasToken }
 
             /**
              * Sets the field to an arbitrary JSON value.
@@ -3261,6 +3460,17 @@ private constructor(
              */
             fun type(type: JsonValue) = apply { this.type = type }
 
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
             /** URL used in the Canonical header (if enabled). */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
                 baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
@@ -3275,6 +3485,32 @@ private constructor(
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
                 this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
             }
+
+            /** Whether to send a Canonical header. */
+            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
+                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
+
+            /**
+             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
+                this.includeCanonicalHeader = includeCanonicalHeader
+            }
+
+            fun prefix(prefix: String) = prefix(JsonField.of(prefix))
+
+            /**
+             * Sets [Builder.prefix] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.prefix] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -3296,55 +3532,55 @@ private constructor(
             }
 
             /**
-             * Returns an immutable instance of [AzureBlob].
+             * Returns an immutable instance of [AzureBlobStorage].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .accountName()
              * .container()
-             * .includeCanonicalHeader()
              * .name()
-             * .prefix()
+             * .sasToken()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): AzureBlob =
-                AzureBlob(
-                    checkRequired("id", id),
+            fun build(): AzureBlobStorage =
+                AzureBlobStorage(
                     checkRequired("accountName", accountName),
                     checkRequired("container", container),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
                     checkRequired("name", name),
-                    checkRequired("prefix", prefix),
+                    checkRequired("sasToken", sasToken),
                     type,
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
+                    prefix,
                     additionalProperties.toMutableMap(),
                 )
         }
 
         private var validated: Boolean = false
 
-        fun validate(): AzureBlob = apply {
+        fun validate(): AzureBlobStorage = apply {
             if (validated) {
                 return@apply
             }
 
-            id()
             accountName()
             container()
-            includeCanonicalHeader()
             name()
-            prefix()
+            sasToken()
             _type().let {
                 if (it != JsonValue.from("AZURE_BLOB")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
+            prefix()
             validated = true
         }
 
@@ -3364,42 +3600,45 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
-                (if (accountName.asKnown().isPresent) 1 else 0) +
+            (if (accountName.asKnown().isPresent) 1 else 0) +
                 (if (container.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (sasToken.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("AZURE_BLOB")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (prefix.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
-            return other is AzureBlob &&
-                id == other.id &&
+            return other is AzureBlobStorage &&
                 accountName == other.accountName &&
                 container == other.container &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
                 name == other.name &&
-                prefix == other.prefix &&
+                sasToken == other.sasToken &&
                 type == other.type &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
+                prefix == other.prefix &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
                 accountName,
                 container,
-                includeCanonicalHeader,
                 name,
-                prefix,
+                sasToken,
                 type,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
+                prefix,
                 additionalProperties,
             )
         }
@@ -3407,50 +3646,61 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AzureBlob{id=$id, accountName=$accountName, container=$container, includeCanonicalHeader=$includeCanonicalHeader, name=$name, prefix=$prefix, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "AzureBlobStorage{accountName=$accountName, container=$container, name=$name, sasToken=$sasToken, type=$type, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
     }
 
     class AkeneoPim
     private constructor(
-        private val id: JsonField<String>,
         private val baseUrl: JsonField<String>,
-        private val includeCanonicalHeader: JsonField<Boolean>,
+        private val clientId: JsonField<String>,
+        private val clientSecret: JsonField<String>,
         private val name: JsonField<String>,
+        private val password: JsonField<String>,
         private val type: JsonValue,
+        private val username: JsonField<String>,
+        private val id: JsonField<String>,
         private val baseUrlForCanonicalHeader: JsonField<String>,
+        private val includeCanonicalHeader: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrl") @ExcludeMissing baseUrl: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("includeCanonicalHeader")
+            @JsonProperty("clientId")
             @ExcludeMissing
-            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
+            clientId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("clientSecret")
+            @ExcludeMissing
+            clientSecret: JsonField<String> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("password")
+            @ExcludeMissing
+            password: JsonField<String> = JsonMissing.of(),
             @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+            @JsonProperty("username")
+            @ExcludeMissing
+            username: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
             @JsonProperty("baseUrlForCanonicalHeader")
             @ExcludeMissing
             baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("includeCanonicalHeader")
+            @ExcludeMissing
+            includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
-            id,
             baseUrl,
-            includeCanonicalHeader,
+            clientId,
+            clientSecret,
             name,
+            password,
             type,
+            username,
+            id,
             baseUrlForCanonicalHeader,
+            includeCanonicalHeader,
             mutableMapOf(),
         )
-
-        /**
-         * Unique identifier for the origin. This is generated by ImageKit when you create a new
-         * origin.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun id(): String = id.getRequired("id")
 
         /**
          * Akeneo instance base URL.
@@ -3461,13 +3711,20 @@ private constructor(
         fun baseUrl(): String = baseUrl.getRequired("baseUrl")
 
         /**
-         * Whether to send a Canonical header.
+         * Akeneo API client ID.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun includeCanonicalHeader(): Boolean =
-            includeCanonicalHeader.getRequired("includeCanonicalHeader")
+        fun clientId(): String = clientId.getRequired("clientId")
+
+        /**
+         * Akeneo API client secret.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun clientSecret(): String = clientSecret.getRequired("clientSecret")
 
         /**
          * Display name of the origin.
@@ -3476,6 +3733,14 @@ private constructor(
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
         fun name(): String = name.getRequired("name")
+
+        /**
+         * Akeneo API password.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun password(): String = password.getRequired("password")
 
         /**
          * Expected to always return the following:
@@ -3489,6 +3754,20 @@ private constructor(
         @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
         /**
+         * Akeneo API username.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun username(): String = username.getRequired("username")
+
+        /**
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun id(): Optional<String> = id.getOptional("id")
+
+        /**
          * URL used in the Canonical header (if enabled).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -3498,11 +3777,13 @@ private constructor(
             baseUrlForCanonicalHeader.getOptional("baseUrlForCanonicalHeader")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Whether to send a Canonical header.
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        fun includeCanonicalHeader(): Optional<Boolean> =
+            includeCanonicalHeader.getOptional("includeCanonicalHeader")
 
         /**
          * Returns the raw JSON value of [baseUrl].
@@ -3512,14 +3793,21 @@ private constructor(
         @JsonProperty("baseUrl") @ExcludeMissing fun _baseUrl(): JsonField<String> = baseUrl
 
         /**
-         * Returns the raw JSON value of [includeCanonicalHeader].
+         * Returns the raw JSON value of [clientId].
          *
-         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
-         * unexpected type.
+         * Unlike [clientId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("includeCanonicalHeader")
+        @JsonProperty("clientId") @ExcludeMissing fun _clientId(): JsonField<String> = clientId
+
+        /**
+         * Returns the raw JSON value of [clientSecret].
+         *
+         * Unlike [clientSecret], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("clientSecret")
         @ExcludeMissing
-        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
+        fun _clientSecret(): JsonField<String> = clientSecret
 
         /**
          * Returns the raw JSON value of [name].
@@ -3527,6 +3815,27 @@ private constructor(
          * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        /**
+         * Returns the raw JSON value of [password].
+         *
+         * Unlike [password], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("password") @ExcludeMissing fun _password(): JsonField<String> = password
+
+        /**
+         * Returns the raw JSON value of [username].
+         *
+         * Unlike [username], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("username") @ExcludeMissing fun _username(): JsonField<String> = username
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
         /**
          * Returns the raw JSON value of [baseUrlForCanonicalHeader].
@@ -3537,6 +3846,16 @@ private constructor(
         @JsonProperty("baseUrlForCanonicalHeader")
         @ExcludeMissing
         fun _baseUrlForCanonicalHeader(): JsonField<String> = baseUrlForCanonicalHeader
+
+        /**
+         * Returns the raw JSON value of [includeCanonicalHeader].
+         *
+         * Unlike [includeCanonicalHeader], this method doesn't throw if the JSON field has an
+         * unexpected type.
+         */
+        @JsonProperty("includeCanonicalHeader")
+        @ExcludeMissing
+        fun _includeCanonicalHeader(): JsonField<Boolean> = includeCanonicalHeader
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3557,10 +3876,12 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .baseUrl()
-             * .includeCanonicalHeader()
+             * .clientId()
+             * .clientSecret()
              * .name()
+             * .password()
+             * .username()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -3569,39 +3890,32 @@ private constructor(
         /** A builder for [AkeneoPim]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
             private var baseUrl: JsonField<String>? = null
-            private var includeCanonicalHeader: JsonField<Boolean>? = null
+            private var clientId: JsonField<String>? = null
+            private var clientSecret: JsonField<String>? = null
             private var name: JsonField<String>? = null
+            private var password: JsonField<String>? = null
             private var type: JsonValue = JsonValue.from("AKENEO_PIM")
+            private var username: JsonField<String>? = null
+            private var id: JsonField<String> = JsonMissing.of()
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
+            private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(akeneoPim: AkeneoPim) = apply {
-                id = akeneoPim.id
                 baseUrl = akeneoPim.baseUrl
-                includeCanonicalHeader = akeneoPim.includeCanonicalHeader
+                clientId = akeneoPim.clientId
+                clientSecret = akeneoPim.clientSecret
                 name = akeneoPim.name
+                password = akeneoPim.password
                 type = akeneoPim.type
+                username = akeneoPim.username
+                id = akeneoPim.id
                 baseUrlForCanonicalHeader = akeneoPim.baseUrlForCanonicalHeader
+                includeCanonicalHeader = akeneoPim.includeCanonicalHeader
                 additionalProperties = akeneoPim.additionalProperties.toMutableMap()
             }
-
-            /**
-             * Unique identifier for the origin. This is generated by ImageKit when you create a new
-             * origin.
-             */
-            fun id(id: String) = id(JsonField.of(id))
-
-            /**
-             * Sets [Builder.id] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun id(id: JsonField<String>) = apply { this.id = id }
 
             /** Akeneo instance base URL. */
             fun baseUrl(baseUrl: String) = baseUrl(JsonField.of(baseUrl))
@@ -3615,19 +3929,30 @@ private constructor(
              */
             fun baseUrl(baseUrl: JsonField<String>) = apply { this.baseUrl = baseUrl }
 
-            /** Whether to send a Canonical header. */
-            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
-                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
+            /** Akeneo API client ID. */
+            fun clientId(clientId: String) = clientId(JsonField.of(clientId))
 
             /**
-             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
+             * Sets [Builder.clientId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.clientId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
-                this.includeCanonicalHeader = includeCanonicalHeader
+            fun clientId(clientId: JsonField<String>) = apply { this.clientId = clientId }
+
+            /** Akeneo API client secret. */
+            fun clientSecret(clientSecret: String) = clientSecret(JsonField.of(clientSecret))
+
+            /**
+             * Sets [Builder.clientSecret] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.clientSecret] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun clientSecret(clientSecret: JsonField<String>) = apply {
+                this.clientSecret = clientSecret
             }
 
             /** Display name of the origin. */
@@ -3641,6 +3966,18 @@ private constructor(
              * value.
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
+
+            /** Akeneo API password. */
+            fun password(password: String) = password(JsonField.of(password))
+
+            /**
+             * Sets [Builder.password] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.password] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun password(password: JsonField<String>) = apply { this.password = password }
 
             /**
              * Sets the field to an arbitrary JSON value.
@@ -3656,6 +3993,29 @@ private constructor(
              */
             fun type(type: JsonValue) = apply { this.type = type }
 
+            /** Akeneo API username. */
+            fun username(username: String) = username(JsonField.of(username))
+
+            /**
+             * Sets [Builder.username] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.username] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun username(username: JsonField<String>) = apply { this.username = username }
+
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
             /** URL used in the Canonical header (if enabled). */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: String) =
                 baseUrlForCanonicalHeader(JsonField.of(baseUrlForCanonicalHeader))
@@ -3669,6 +4029,21 @@ private constructor(
              */
             fun baseUrlForCanonicalHeader(baseUrlForCanonicalHeader: JsonField<String>) = apply {
                 this.baseUrlForCanonicalHeader = baseUrlForCanonicalHeader
+            }
+
+            /** Whether to send a Canonical header. */
+            fun includeCanonicalHeader(includeCanonicalHeader: Boolean) =
+                includeCanonicalHeader(JsonField.of(includeCanonicalHeader))
+
+            /**
+             * Sets [Builder.includeCanonicalHeader] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.includeCanonicalHeader] with a well-typed [Boolean]
+             * value instead. This method is primarily for setting the field to an undocumented or
+             * not yet supported value.
+             */
+            fun includeCanonicalHeader(includeCanonicalHeader: JsonField<Boolean>) = apply {
+                this.includeCanonicalHeader = includeCanonicalHeader
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -3697,22 +4072,28 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
              * .baseUrl()
-             * .includeCanonicalHeader()
+             * .clientId()
+             * .clientSecret()
              * .name()
+             * .password()
+             * .username()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): AkeneoPim =
                 AkeneoPim(
-                    checkRequired("id", id),
                     checkRequired("baseUrl", baseUrl),
-                    checkRequired("includeCanonicalHeader", includeCanonicalHeader),
+                    checkRequired("clientId", clientId),
+                    checkRequired("clientSecret", clientSecret),
                     checkRequired("name", name),
+                    checkRequired("password", password),
                     type,
+                    checkRequired("username", username),
+                    id,
                     baseUrlForCanonicalHeader,
+                    includeCanonicalHeader,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -3724,16 +4105,20 @@ private constructor(
                 return@apply
             }
 
-            id()
             baseUrl()
-            includeCanonicalHeader()
+            clientId()
+            clientSecret()
             name()
+            password()
             _type().let {
                 if (it != JsonValue.from("AKENEO_PIM")) {
                     throw ImageKitInvalidDataException("'type' is invalid, received $it")
                 }
             }
+            username()
+            id()
             baseUrlForCanonicalHeader()
+            includeCanonicalHeader()
             validated = true
         }
 
@@ -3753,12 +4138,16 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (id.asKnown().isPresent) 1 else 0) +
-                (if (baseUrl.asKnown().isPresent) 1 else 0) +
-                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
+            (if (baseUrl.asKnown().isPresent) 1 else 0) +
+                (if (clientId.asKnown().isPresent) 1 else 0) +
+                (if (clientSecret.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
+                (if (password.asKnown().isPresent) 1 else 0) +
                 type.let { if (it == JsonValue.from("AKENEO_PIM")) 1 else 0 } +
-                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0)
+                (if (username.asKnown().isPresent) 1 else 0) +
+                (if (id.asKnown().isPresent) 1 else 0) +
+                (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
+                (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -3766,23 +4155,31 @@ private constructor(
             }
 
             return other is AkeneoPim &&
-                id == other.id &&
                 baseUrl == other.baseUrl &&
-                includeCanonicalHeader == other.includeCanonicalHeader &&
+                clientId == other.clientId &&
+                clientSecret == other.clientSecret &&
                 name == other.name &&
+                password == other.password &&
                 type == other.type &&
+                username == other.username &&
+                id == other.id &&
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
+                includeCanonicalHeader == other.includeCanonicalHeader &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                id,
                 baseUrl,
-                includeCanonicalHeader,
+                clientId,
+                clientSecret,
                 name,
+                password,
                 type,
+                username,
+                id,
                 baseUrlForCanonicalHeader,
+                includeCanonicalHeader,
                 additionalProperties,
             )
         }
@@ -3790,6 +4187,6 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AkeneoPim{id=$id, baseUrl=$baseUrl, includeCanonicalHeader=$includeCanonicalHeader, name=$name, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, additionalProperties=$additionalProperties}"
+            "AkeneoPim{baseUrl=$baseUrl, clientId=$clientId, clientSecret=$clientSecret, name=$name, password=$password, type=$type, username=$username, id=$id, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, additionalProperties=$additionalProperties}"
     }
 }
