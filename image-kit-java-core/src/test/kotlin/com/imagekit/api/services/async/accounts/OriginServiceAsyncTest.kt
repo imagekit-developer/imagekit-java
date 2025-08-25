@@ -25,15 +25,14 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originResponseFuture =
+        val originFuture =
             originServiceAsync.create(
                 OriginCreateParams.builder()
                     .origin(
                         Origin.S3.builder()
-                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .secretKey("secrettest123")
+                            .id("id")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -42,8 +41,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val originResponse = originResponseFuture.get()
-        originResponse.validate()
+        val origin = originFuture.get()
+        origin.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -57,16 +56,15 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originResponseFuture =
+        val originFuture =
             originServiceAsync.update(
                 OriginUpdateParams.builder()
                     .id("id")
                     .origin(
                         Origin.S3.builder()
-                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .secretKey("secrettest123")
+                            .id("id")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -75,8 +73,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val originResponse = originResponseFuture.get()
-        originResponse.validate()
+        val origin = originFuture.get()
+        origin.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -90,10 +88,10 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originResponsesFuture = originServiceAsync.list()
+        val originsFuture = originServiceAsync.list()
 
-        val originResponses = originResponsesFuture.get()
-        originResponses.forEach { it.validate() }
+        val origins = originsFuture.get()
+        origins.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -123,9 +121,9 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originResponseFuture = originServiceAsync.get("id")
+        val originFuture = originServiceAsync.get("id")
 
-        val originResponse = originResponseFuture.get()
-        originResponse.validate()
+        val origin = originFuture.get()
+        origin.validate()
     }
 }

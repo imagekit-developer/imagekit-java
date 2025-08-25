@@ -17,11 +17,11 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
+import com.imagekit.api.models.accounts.origins.Origin
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
 import com.imagekit.api.models.accounts.origins.OriginListParams
-import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
@@ -42,21 +42,21 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun create(
         params: OriginCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<OriginResponse> =
+    ): CompletableFuture<Origin> =
         // post /v1/accounts/origins
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
     override fun update(
         params: OriginUpdateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<OriginResponse> =
+    ): CompletableFuture<Origin> =
         // put /v1/accounts/origins/{id}
         withRawResponse().update(params, requestOptions).thenApply { it.parse() }
 
     override fun list(
         params: OriginListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<List<OriginResponse>> =
+    ): CompletableFuture<List<Origin>> =
         // get /v1/accounts/origins
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -70,7 +70,7 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun get(
         params: OriginGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<OriginResponse> =
+    ): CompletableFuture<Origin> =
         // get /v1/accounts/origins/{id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
@@ -87,13 +87,12 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<OriginResponse> =
-            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<Origin> = jsonHandler<Origin>(clientOptions.jsonMapper)
 
         override fun create(
             params: OriginCreateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<OriginResponse>> {
+        ): CompletableFuture<HttpResponseFor<Origin>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -118,13 +117,12 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val updateHandler: Handler<OriginResponse> =
-            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Origin> = jsonHandler<Origin>(clientOptions.jsonMapper)
 
         override fun update(
             params: OriginUpdateParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<OriginResponse>> {
+        ): CompletableFuture<HttpResponseFor<Origin>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -152,13 +150,13 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val listHandler: Handler<List<OriginResponse>> =
-            jsonHandler<List<OriginResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<Origin>> =
+            jsonHandler<List<Origin>>(clientOptions.jsonMapper)
 
         override fun list(
             params: OriginListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<List<OriginResponse>>> {
+        ): CompletableFuture<HttpResponseFor<List<Origin>>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -209,13 +207,12 @@ class OriginServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val getHandler: Handler<OriginResponse> =
-            jsonHandler<OriginResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<Origin> = jsonHandler<Origin>(clientOptions.jsonMapper)
 
         override fun get(
             params: OriginGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<OriginResponse>> {
+        ): CompletableFuture<HttpResponseFor<Origin>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

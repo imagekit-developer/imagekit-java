@@ -12,10 +12,9 @@ internal class OriginCreateParamsTest {
         OriginCreateParams.builder()
             .origin(
                 Origin.S3.builder()
-                    .accessKey("AKIATEST123")
                     .bucket("test-bucket")
                     .name("My S3 Origin")
-                    .secretKey("secrettest123")
+                    .id("id")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .includeCanonicalHeader(false)
                     .prefix("images")
@@ -30,10 +29,9 @@ internal class OriginCreateParamsTest {
             OriginCreateParams.builder()
                 .origin(
                     Origin.S3.builder()
-                        .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
-                        .secretKey("secrettest123")
+                        .id("id")
                         .baseUrlForCanonicalHeader("https://cdn.example.com")
                         .includeCanonicalHeader(false)
                         .prefix("images")
@@ -47,10 +45,9 @@ internal class OriginCreateParamsTest {
             .isEqualTo(
                 Origin.ofS3(
                     Origin.S3.builder()
-                        .accessKey("AKIATEST123")
                         .bucket("test-bucket")
                         .name("My S3 Origin")
-                        .secretKey("secrettest123")
+                        .id("id")
                         .baseUrlForCanonicalHeader("https://cdn.example.com")
                         .includeCanonicalHeader(false)
                         .prefix("images")
@@ -63,28 +60,14 @@ internal class OriginCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             OriginCreateParams.builder()
-                .origin(
-                    Origin.S3.builder()
-                        .accessKey("AKIATEST123")
-                        .bucket("test-bucket")
-                        .name("My S3 Origin")
-                        .secretKey("secrettest123")
-                        .build()
-                )
+                .origin(Origin.S3.builder().bucket("test-bucket").name("My S3 Origin").build())
                 .build()
 
         val body = params._body()
 
         assertThat(body)
             .isEqualTo(
-                Origin.ofS3(
-                    Origin.S3.builder()
-                        .accessKey("AKIATEST123")
-                        .bucket("test-bucket")
-                        .name("My S3 Origin")
-                        .secretKey("secrettest123")
-                        .build()
-                )
+                Origin.ofS3(Origin.S3.builder().bucket("test-bucket").name("My S3 Origin").build())
             )
     }
 }

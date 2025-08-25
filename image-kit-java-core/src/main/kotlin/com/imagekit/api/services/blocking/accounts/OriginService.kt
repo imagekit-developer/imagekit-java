@@ -7,11 +7,11 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.accounts.origins.Origin
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
 import com.imagekit.api.models.accounts.origins.OriginListParams
-import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import java.util.function.Consumer
 
@@ -32,19 +32,19 @@ interface OriginService {
     /**
      * **Note:** This API is currently in beta. Creates a new origin and returns the origin object.
      */
-    fun create(params: OriginCreateParams): OriginResponse = create(params, RequestOptions.none())
+    fun create(params: OriginCreateParams): Origin = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: OriginCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): OriginResponse
+    ): Origin
 
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
      * the updated origin object.
      */
-    fun update(id: String, params: OriginUpdateParams): OriginResponse =
+    fun update(id: String, params: OriginUpdateParams): Origin =
         update(id, params, RequestOptions.none())
 
     /** @see update */
@@ -52,35 +52,35 @@ interface OriginService {
         id: String,
         params: OriginUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): OriginResponse = update(params.toBuilder().id(id).build(), requestOptions)
+    ): Origin = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
-    fun update(params: OriginUpdateParams): OriginResponse = update(params, RequestOptions.none())
+    fun update(params: OriginUpdateParams): Origin = update(params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: OriginUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): OriginResponse
+    ): Origin
 
     /**
      * **Note:** This API is currently in beta. Returns an array of all configured origins for the
      * current account.
      */
-    fun list(): List<OriginResponse> = list(OriginListParams.none())
+    fun list(): List<Origin> = list(OriginListParams.none())
 
     /** @see list */
     fun list(
         params: OriginListParams = OriginListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<OriginResponse>
+    ): List<Origin>
 
     /** @see list */
-    fun list(params: OriginListParams = OriginListParams.none()): List<OriginResponse> =
+    fun list(params: OriginListParams = OriginListParams.none()): List<Origin> =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): List<OriginResponse> =
+    fun list(requestOptions: RequestOptions): List<Origin> =
         list(OriginListParams.none(), requestOptions)
 
     /**
@@ -111,30 +111,27 @@ interface OriginService {
         delete(id, OriginDeleteParams.none(), requestOptions)
 
     /** **Note:** This API is currently in beta. Retrieves the origin identified by `id`. */
-    fun get(id: String): OriginResponse = get(id, OriginGetParams.none())
+    fun get(id: String): Origin = get(id, OriginGetParams.none())
 
     /** @see get */
     fun get(
         id: String,
         params: OriginGetParams = OriginGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): OriginResponse = get(params.toBuilder().id(id).build(), requestOptions)
+    ): Origin = get(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see get */
-    fun get(id: String, params: OriginGetParams = OriginGetParams.none()): OriginResponse =
+    fun get(id: String, params: OriginGetParams = OriginGetParams.none()): Origin =
         get(id, params, RequestOptions.none())
 
     /** @see get */
-    fun get(
-        params: OriginGetParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): OriginResponse
+    fun get(params: OriginGetParams, requestOptions: RequestOptions = RequestOptions.none()): Origin
 
     /** @see get */
-    fun get(params: OriginGetParams): OriginResponse = get(params, RequestOptions.none())
+    fun get(params: OriginGetParams): Origin = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(id: String, requestOptions: RequestOptions): OriginResponse =
+    fun get(id: String, requestOptions: RequestOptions): Origin =
         get(id, OriginGetParams.none(), requestOptions)
 
     /** A view of [OriginService] that provides access to raw HTTP responses for each method. */
@@ -152,7 +149,7 @@ interface OriginService {
          * [OriginService.create].
          */
         @MustBeClosed
-        fun create(params: OriginCreateParams): HttpResponseFor<OriginResponse> =
+        fun create(params: OriginCreateParams): HttpResponseFor<Origin> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -160,14 +157,14 @@ interface OriginService {
         fun create(
             params: OriginCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OriginResponse>
+        ): HttpResponseFor<Origin>
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the
          * same as [OriginService.update].
          */
         @MustBeClosed
-        fun update(id: String, params: OriginUpdateParams): HttpResponseFor<OriginResponse> =
+        fun update(id: String, params: OriginUpdateParams): HttpResponseFor<Origin> =
             update(id, params, RequestOptions.none())
 
         /** @see update */
@@ -176,12 +173,11 @@ interface OriginService {
             id: String,
             params: OriginUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OriginResponse> =
-            update(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<Origin> = update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         @MustBeClosed
-        fun update(params: OriginUpdateParams): HttpResponseFor<OriginResponse> =
+        fun update(params: OriginUpdateParams): HttpResponseFor<Origin> =
             update(params, RequestOptions.none())
 
         /** @see update */
@@ -189,31 +185,30 @@ interface OriginService {
         fun update(
             params: OriginUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OriginResponse>
+        ): HttpResponseFor<Origin>
 
         /**
          * Returns a raw HTTP response for `get /v1/accounts/origins`, but is otherwise the same as
          * [OriginService.list].
          */
-        @MustBeClosed
-        fun list(): HttpResponseFor<List<OriginResponse>> = list(OriginListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<List<Origin>> = list(OriginListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: OriginListParams = OriginListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<OriginResponse>>
+        ): HttpResponseFor<List<Origin>>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: OriginListParams = OriginListParams.none()
-        ): HttpResponseFor<List<OriginResponse>> = list(params, RequestOptions.none())
+        ): HttpResponseFor<List<Origin>> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<List<OriginResponse>> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<Origin>> =
             list(OriginListParams.none(), requestOptions)
 
         /**
@@ -257,8 +252,7 @@ interface OriginService {
          * Returns a raw HTTP response for `get /v1/accounts/origins/{id}`, but is otherwise the
          * same as [OriginService.get].
          */
-        @MustBeClosed
-        fun get(id: String): HttpResponseFor<OriginResponse> = get(id, OriginGetParams.none())
+        @MustBeClosed fun get(id: String): HttpResponseFor<Origin> = get(id, OriginGetParams.none())
 
         /** @see get */
         @MustBeClosed
@@ -266,30 +260,30 @@ interface OriginService {
             id: String,
             params: OriginGetParams = OriginGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OriginResponse> = get(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponseFor<Origin> = get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: OriginGetParams = OriginGetParams.none(),
-        ): HttpResponseFor<OriginResponse> = get(id, params, RequestOptions.none())
+        ): HttpResponseFor<Origin> = get(id, params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
         fun get(
             params: OriginGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OriginResponse>
+        ): HttpResponseFor<Origin>
 
         /** @see get */
         @MustBeClosed
-        fun get(params: OriginGetParams): HttpResponseFor<OriginResponse> =
+        fun get(params: OriginGetParams): HttpResponseFor<Origin> =
             get(params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
-        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<OriginResponse> =
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<Origin> =
             get(id, OriginGetParams.none(), requestOptions)
     }
 }

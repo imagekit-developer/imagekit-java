@@ -25,15 +25,14 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val originResponse =
+        val origin =
             originService.create(
                 OriginCreateParams.builder()
                     .origin(
                         Origin.S3.builder()
-                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .secretKey("secrettest123")
+                            .id("id")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -42,7 +41,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        originResponse.validate()
+        origin.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -56,16 +55,15 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val originResponse =
+        val origin =
             originService.update(
                 OriginUpdateParams.builder()
                     .id("id")
                     .origin(
                         Origin.S3.builder()
-                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .secretKey("secrettest123")
+                            .id("id")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -74,7 +72,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        originResponse.validate()
+        origin.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -88,9 +86,9 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val originResponses = originService.list()
+        val origins = originService.list()
 
-        originResponses.forEach { it.validate() }
+        origins.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -118,8 +116,8 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val originResponse = originService.get("id")
+        val origin = originService.get("id")
 
-        originResponse.validate()
+        origin.validate()
     }
 }
