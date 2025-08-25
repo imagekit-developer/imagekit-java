@@ -6,7 +6,7 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.models.File
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.versions.VersionDeleteParams
 import com.imagekit.api.models.files.versions.VersionDeleteResponse
 import com.imagekit.api.models.files.versions.VersionGetParams

@@ -7,7 +7,7 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponse
 import com.imagekit.api.core.http.HttpResponseFor
-import com.imagekit.api.models.File
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams

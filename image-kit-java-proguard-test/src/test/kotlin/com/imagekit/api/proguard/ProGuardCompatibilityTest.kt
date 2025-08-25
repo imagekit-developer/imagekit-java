@@ -6,9 +6,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.File
 import com.imagekit.api.models.assets.AssetListResponse
-import com.imagekit.api.models.files.Metadata
+import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -66,103 +65,44 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun metadataRoundtrip() {
+    fun fileRoundtrip() {
         val jsonMapper = jsonMapper()
-        val metadata =
-            Metadata.builder()
-                .audioCodec("audioCodec")
-                .bitRate(0L)
-                .density(0L)
-                .duration(0L)
-                .exif(
-                    Metadata.Exif.builder()
-                        .exif(
-                            Metadata.Exif.InnerExif.builder()
-                                .apertureValue(0.0)
-                                .colorSpace(0L)
-                                .createDate("CreateDate")
-                                .customRendered(0L)
-                                .dateTimeOriginal("DateTimeOriginal")
-                                .exifImageHeight(0L)
-                                .exifImageWidth(0L)
-                                .exifVersion("ExifVersion")
-                                .exposureCompensation(0.0)
-                                .exposureMode(0L)
-                                .exposureProgram(0L)
-                                .exposureTime(0.0)
-                                .flash(0L)
-                                .flashpixVersion("FlashpixVersion")
-                                .fNumber(0.0)
-                                .focalLength(0L)
-                                .focalPlaneResolutionUnit(0L)
-                                .focalPlaneXResolution(0.0)
-                                .focalPlaneYResolution(0.0)
-                                .interopOffset(0L)
-                                .iso(0L)
-                                .meteringMode(0L)
-                                .sceneCaptureType(0L)
-                                .shutterSpeedValue(0.0)
-                                .subSecTime("SubSecTime")
-                                .whiteBalance(0L)
-                                .build()
-                        )
-                        .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
-                        .image(
-                            Metadata.Exif.Image.builder()
-                                .exifOffset(0L)
-                                .gpsInfo(0L)
-                                .make("Make")
-                                .model("Model")
-                                .modifyDate("ModifyDate")
-                                .orientation(0L)
-                                .resolutionUnit(0L)
-                                .software("Software")
-                                .xResolution(0L)
-                                .yCbCrPositioning(0L)
-                                .yResolution(0L)
-                                .build()
-                        )
-                        .interoperability(
-                            Metadata.Exif.Interoperability.builder()
-                                .interopIndex("InteropIndex")
-                                .interopVersion("InteropVersion")
-                                .build()
-                        )
-                        .makernote(
-                            Metadata.Exif.Makernote.builder()
-                                .putAdditionalProperty("foo", JsonValue.from("bar"))
-                                .build()
-                        )
-                        .thumbnail(
-                            Metadata.Exif.Thumbnail.builder()
-                                .compression(0L)
-                                .resolutionUnit(0L)
-                                .thumbnailLength(0L)
-                                .thumbnailOffset(0L)
-                                .xResolution(0L)
-                                .yResolution(0L)
-                                .build()
-                        )
+        val file =
+            File.builder()
+                .addAiTag(
+                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
+                )
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .customCoordinates("customCoordinates")
+                .customMetadata(
+                    File.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
-                .format("format")
-                .hasColorProfile(true)
-                .hasTransparency(true)
-                .height(0L)
-                .pHash("pHash")
-                .quality(0L)
-                .size(0L)
-                .videoCodec("videoCodec")
-                .width(0L)
+                .description("description")
+                .fileId("fileId")
+                .filePath("filePath")
+                .fileType("fileType")
+                .hasAlpha(true)
+                .height(0.0)
+                .isPrivateFile(true)
+                .isPublished(true)
+                .mime("mime")
+                .name("name")
+                .size(0.0)
+                .addTag("string")
+                .thumbnail("https://example.com")
+                .type(File.Type.FILE)
+                .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .url("https://example.com")
+                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .width(0.0)
                 .build()
 
-        val roundtrippedMetadata =
-            jsonMapper.readValue(
-                jsonMapper.writeValueAsString(metadata),
-                jacksonTypeRef<Metadata>(),
-            )
+        val roundtrippedFile =
+            jsonMapper.readValue(jsonMapper.writeValueAsString(file), jacksonTypeRef<File>())
 
-        assertThat(roundtrippedMetadata).isEqualTo(metadata)
+        assertThat(roundtrippedFile).isEqualTo(file)
     }
 
     @Test
