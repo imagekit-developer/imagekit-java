@@ -18,7 +18,7 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.multipartFormData
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
-import com.imagekit.api.models.assets.File
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileCopyResponse
 import com.imagekit.api.models.files.FileDeleteParams
