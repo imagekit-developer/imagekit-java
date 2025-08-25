@@ -14,8 +14,6 @@ import com.imagekit.api.core.BaseSerializer
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.errors.ImageKitInvalidDataException
-import com.imagekit.api.models.files.File
-import com.imagekit.api.models.files.Folder
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull

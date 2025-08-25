@@ -6,8 +6,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.errors.ImageKitInvalidDataException
-import com.imagekit.api.models.files.File
-import com.imagekit.api.models.files.Folder
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
