@@ -5,14 +5,12 @@ package com.imagekit.api.services.async
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.custommetadatafields.CustomMetadataField
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteParams
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -36,18 +34,17 @@ interface CustomMetadataFieldServiceAsync {
      * a field for an asset can be set using the media library UI or programmatically through upload
      * or update assets API.
      */
-    fun create(
-        params: CustomMetadataFieldCreateParams
-    ): CompletableFuture<CustomMetadataFieldCreateResponse> = create(params, RequestOptions.none())
+    fun create(params: CustomMetadataFieldCreateParams): CompletableFuture<CustomMetadataField> =
+        create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: CustomMetadataFieldCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomMetadataFieldCreateResponse>
+    ): CompletableFuture<CustomMetadataField>
 
     /** This API updates the label or schema of an existing custom metadata field. */
-    fun update(id: String): CompletableFuture<CustomMetadataFieldUpdateResponse> =
+    fun update(id: String): CompletableFuture<CustomMetadataField> =
         update(id, CustomMetadataFieldUpdateParams.none())
 
     /** @see update */
@@ -55,32 +52,27 @@ interface CustomMetadataFieldServiceAsync {
         id: String,
         params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomMetadataFieldUpdateResponse> =
+    ): CompletableFuture<CustomMetadataField> =
         update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
-    ): CompletableFuture<CustomMetadataFieldUpdateResponse> =
-        update(id, params, RequestOptions.none())
+    ): CompletableFuture<CustomMetadataField> = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: CustomMetadataFieldUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomMetadataFieldUpdateResponse>
+    ): CompletableFuture<CustomMetadataField>
 
     /** @see update */
-    fun update(
-        params: CustomMetadataFieldUpdateParams
-    ): CompletableFuture<CustomMetadataFieldUpdateResponse> = update(params, RequestOptions.none())
+    fun update(params: CustomMetadataFieldUpdateParams): CompletableFuture<CustomMetadataField> =
+        update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CustomMetadataFieldUpdateResponse> =
+    fun update(id: String, requestOptions: RequestOptions): CompletableFuture<CustomMetadataField> =
         update(id, CustomMetadataFieldUpdateParams.none(), requestOptions)
 
     /**
@@ -88,25 +80,22 @@ interface CustomMetadataFieldServiceAsync {
      * returns only non deleted field objects, but you can include deleted fields in the API
      * response.
      */
-    fun list(): CompletableFuture<List<CustomMetadataFieldListResponse>> =
+    fun list(): CompletableFuture<List<CustomMetadataField>> =
         list(CustomMetadataFieldListParams.none())
 
     /** @see list */
     fun list(
         params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<List<CustomMetadataFieldListResponse>>
+    ): CompletableFuture<List<CustomMetadataField>>
 
     /** @see list */
     fun list(
         params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none()
-    ): CompletableFuture<List<CustomMetadataFieldListResponse>> =
-        list(params, RequestOptions.none())
+    ): CompletableFuture<List<CustomMetadataField>> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(
-        requestOptions: RequestOptions
-    ): CompletableFuture<List<CustomMetadataFieldListResponse>> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<List<CustomMetadataField>> =
         list(CustomMetadataFieldListParams.none(), requestOptions)
 
     /**
@@ -170,22 +159,20 @@ interface CustomMetadataFieldServiceAsync {
          */
         fun create(
             params: CustomMetadataFieldCreateParams
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldCreateResponse>> =
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             create(params, RequestOptions.none())
 
         /** @see create */
         fun create(
             params: CustomMetadataFieldCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldCreateResponse>>
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>>
 
         /**
          * Returns a raw HTTP response for `patch /v1/customMetadataFields/{id}`, but is otherwise
          * the same as [CustomMetadataFieldServiceAsync.update].
          */
-        fun update(
-            id: String
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>> =
+        fun update(id: String): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             update(id, CustomMetadataFieldUpdateParams.none())
 
         /** @see update */
@@ -193,58 +180,58 @@ interface CustomMetadataFieldServiceAsync {
             id: String,
             params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
         fun update(
             id: String,
             params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             update(id, params, RequestOptions.none())
 
         /** @see update */
         fun update(
             params: CustomMetadataFieldUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>>
 
         /** @see update */
         fun update(
             params: CustomMetadataFieldUpdateParams
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             update(params, RequestOptions.none())
 
         /** @see update */
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldUpdateResponse>> =
+        ): CompletableFuture<HttpResponseFor<CustomMetadataField>> =
             update(id, CustomMetadataFieldUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /v1/customMetadataFields`, but is otherwise the same
          * as [CustomMetadataFieldServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<List<CustomMetadataFieldListResponse>>> =
+        fun list(): CompletableFuture<HttpResponseFor<List<CustomMetadataField>>> =
             list(CustomMetadataFieldListParams.none())
 
         /** @see list */
         fun list(
             params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<List<CustomMetadataFieldListResponse>>>
+        ): CompletableFuture<HttpResponseFor<List<CustomMetadataField>>>
 
         /** @see list */
         fun list(
             params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none()
-        ): CompletableFuture<HttpResponseFor<List<CustomMetadataFieldListResponse>>> =
+        ): CompletableFuture<HttpResponseFor<List<CustomMetadataField>>> =
             list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<List<CustomMetadataFieldListResponse>>> =
+        ): CompletableFuture<HttpResponseFor<List<CustomMetadataField>>> =
             list(CustomMetadataFieldListParams.none(), requestOptions)
 
         /**

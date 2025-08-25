@@ -32,7 +32,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a custom metadata field. */
-class CustomMetadataFieldCreateResponse
+class CustomMetadataField
 private constructor(
     private val id: JsonField<String>,
     private val label: JsonField<String>,
@@ -126,8 +126,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [CustomMetadataFieldCreateResponse].
+         * Returns a mutable builder for constructing an instance of [CustomMetadataField].
          *
          * The following fields are required:
          * ```java
@@ -140,7 +139,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [CustomMetadataFieldCreateResponse]. */
+    /** A builder for [CustomMetadataField]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -150,15 +149,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(customMetadataFieldCreateResponse: CustomMetadataFieldCreateResponse) =
-            apply {
-                id = customMetadataFieldCreateResponse.id
-                label = customMetadataFieldCreateResponse.label
-                name = customMetadataFieldCreateResponse.name
-                schema = customMetadataFieldCreateResponse.schema
-                additionalProperties =
-                    customMetadataFieldCreateResponse.additionalProperties.toMutableMap()
-            }
+        internal fun from(customMetadataField: CustomMetadataField) = apply {
+            id = customMetadataField.id
+            label = customMetadataField.label
+            name = customMetadataField.name
+            schema = customMetadataField.schema
+            additionalProperties = customMetadataField.additionalProperties.toMutableMap()
+        }
 
         /** Unique identifier for the custom metadata field. Use this to update the field. */
         fun id(id: String) = id(JsonField.of(id))
@@ -230,7 +227,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [CustomMetadataFieldCreateResponse].
+         * Returns an immutable instance of [CustomMetadataField].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -244,8 +241,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): CustomMetadataFieldCreateResponse =
-            CustomMetadataFieldCreateResponse(
+        fun build(): CustomMetadataField =
+            CustomMetadataField(
                 checkRequired("id", id),
                 checkRequired("label", label),
                 checkRequired("name", name),
@@ -256,7 +253,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): CustomMetadataFieldCreateResponse = apply {
+    fun validate(): CustomMetadataField = apply {
         if (validated) {
             return@apply
         }
@@ -1970,7 +1967,7 @@ private constructor(
             return true
         }
 
-        return other is CustomMetadataFieldCreateResponse &&
+        return other is CustomMetadataField &&
             id == other.id &&
             label == other.label &&
             name == other.name &&
@@ -1985,5 +1982,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CustomMetadataFieldCreateResponse{id=$id, label=$label, name=$name, schema=$schema, additionalProperties=$additionalProperties}"
+        "CustomMetadataField{id=$id, label=$label, name=$name, schema=$schema, additionalProperties=$additionalProperties}"
 }

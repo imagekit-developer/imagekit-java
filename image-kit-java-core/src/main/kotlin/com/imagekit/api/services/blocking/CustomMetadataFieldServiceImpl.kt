@@ -16,14 +16,12 @@ import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
+import com.imagekit.api.models.custommetadatafields.CustomMetadataField
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteParams
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateResponse
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -44,21 +42,21 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
     override fun create(
         params: CustomMetadataFieldCreateParams,
         requestOptions: RequestOptions,
-    ): CustomMetadataFieldCreateResponse =
+    ): CustomMetadataField =
         // post /v1/customMetadataFields
         withRawResponse().create(params, requestOptions).parse()
 
     override fun update(
         params: CustomMetadataFieldUpdateParams,
         requestOptions: RequestOptions,
-    ): CustomMetadataFieldUpdateResponse =
+    ): CustomMetadataField =
         // patch /v1/customMetadataFields/{id}
         withRawResponse().update(params, requestOptions).parse()
 
     override fun list(
         params: CustomMetadataFieldListParams,
         requestOptions: RequestOptions,
-    ): List<CustomMetadataFieldListResponse> =
+    ): List<CustomMetadataField> =
         // get /v1/customMetadataFields
         withRawResponse().list(params, requestOptions).parse()
 
@@ -82,13 +80,13 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<CustomMetadataFieldCreateResponse> =
-            jsonHandler<CustomMetadataFieldCreateResponse>(clientOptions.jsonMapper)
+        private val createHandler: Handler<CustomMetadataField> =
+            jsonHandler<CustomMetadataField>(clientOptions.jsonMapper)
 
         override fun create(
             params: CustomMetadataFieldCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataFieldCreateResponse> {
+        ): HttpResponseFor<CustomMetadataField> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -110,13 +108,13 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
             }
         }
 
-        private val updateHandler: Handler<CustomMetadataFieldUpdateResponse> =
-            jsonHandler<CustomMetadataFieldUpdateResponse>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<CustomMetadataField> =
+            jsonHandler<CustomMetadataField>(clientOptions.jsonMapper)
 
         override fun update(
             params: CustomMetadataFieldUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse> {
+        ): HttpResponseFor<CustomMetadataField> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -141,13 +139,13 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
             }
         }
 
-        private val listHandler: Handler<List<CustomMetadataFieldListResponse>> =
-            jsonHandler<List<CustomMetadataFieldListResponse>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<CustomMetadataField>> =
+            jsonHandler<List<CustomMetadataField>>(clientOptions.jsonMapper)
 
         override fun list(
             params: CustomMetadataFieldListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<CustomMetadataFieldListResponse>> {
+        ): HttpResponseFor<List<CustomMetadataField>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)

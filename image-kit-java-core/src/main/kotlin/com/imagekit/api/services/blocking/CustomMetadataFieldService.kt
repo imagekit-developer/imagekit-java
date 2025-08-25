@@ -6,14 +6,12 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.custommetadatafields.CustomMetadataField
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteParams
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListResponse
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateParams
-import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateResponse
 import java.util.function.Consumer
 
 interface CustomMetadataFieldService {
@@ -36,44 +34,43 @@ interface CustomMetadataFieldService {
      * a field for an asset can be set using the media library UI or programmatically through upload
      * or update assets API.
      */
-    fun create(params: CustomMetadataFieldCreateParams): CustomMetadataFieldCreateResponse =
+    fun create(params: CustomMetadataFieldCreateParams): CustomMetadataField =
         create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
         params: CustomMetadataFieldCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomMetadataFieldCreateResponse
+    ): CustomMetadataField
 
     /** This API updates the label or schema of an existing custom metadata field. */
-    fun update(id: String): CustomMetadataFieldUpdateResponse =
-        update(id, CustomMetadataFieldUpdateParams.none())
+    fun update(id: String): CustomMetadataField = update(id, CustomMetadataFieldUpdateParams.none())
 
     /** @see update */
     fun update(
         id: String,
         params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomMetadataFieldUpdateResponse = update(params.toBuilder().id(id).build(), requestOptions)
+    ): CustomMetadataField = update(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see update */
     fun update(
         id: String,
         params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
-    ): CustomMetadataFieldUpdateResponse = update(id, params, RequestOptions.none())
+    ): CustomMetadataField = update(id, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: CustomMetadataFieldUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomMetadataFieldUpdateResponse
+    ): CustomMetadataField
 
     /** @see update */
-    fun update(params: CustomMetadataFieldUpdateParams): CustomMetadataFieldUpdateResponse =
+    fun update(params: CustomMetadataFieldUpdateParams): CustomMetadataField =
         update(params, RequestOptions.none())
 
     /** @see update */
-    fun update(id: String, requestOptions: RequestOptions): CustomMetadataFieldUpdateResponse =
+    fun update(id: String, requestOptions: RequestOptions): CustomMetadataField =
         update(id, CustomMetadataFieldUpdateParams.none(), requestOptions)
 
     /**
@@ -81,21 +78,21 @@ interface CustomMetadataFieldService {
      * returns only non deleted field objects, but you can include deleted fields in the API
      * response.
      */
-    fun list(): List<CustomMetadataFieldListResponse> = list(CustomMetadataFieldListParams.none())
+    fun list(): List<CustomMetadataField> = list(CustomMetadataFieldListParams.none())
 
     /** @see list */
     fun list(
         params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): List<CustomMetadataFieldListResponse>
+    ): List<CustomMetadataField>
 
     /** @see list */
     fun list(
         params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none()
-    ): List<CustomMetadataFieldListResponse> = list(params, RequestOptions.none())
+    ): List<CustomMetadataField> = list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): List<CustomMetadataFieldListResponse> =
+    fun list(requestOptions: RequestOptions): List<CustomMetadataField> =
         list(CustomMetadataFieldListParams.none(), requestOptions)
 
     /**
@@ -152,9 +149,7 @@ interface CustomMetadataFieldService {
          * same as [CustomMetadataFieldService.create].
          */
         @MustBeClosed
-        fun create(
-            params: CustomMetadataFieldCreateParams
-        ): HttpResponseFor<CustomMetadataFieldCreateResponse> =
+        fun create(params: CustomMetadataFieldCreateParams): HttpResponseFor<CustomMetadataField> =
             create(params, RequestOptions.none())
 
         /** @see create */
@@ -162,14 +157,14 @@ interface CustomMetadataFieldService {
         fun create(
             params: CustomMetadataFieldCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomMetadataFieldCreateResponse>
+        ): HttpResponseFor<CustomMetadataField>
 
         /**
          * Returns a raw HTTP response for `patch /v1/customMetadataFields/{id}`, but is otherwise
          * the same as [CustomMetadataFieldService.update].
          */
         @MustBeClosed
-        fun update(id: String): HttpResponseFor<CustomMetadataFieldUpdateResponse> =
+        fun update(id: String): HttpResponseFor<CustomMetadataField> =
             update(id, CustomMetadataFieldUpdateParams.none())
 
         /** @see update */
@@ -178,7 +173,7 @@ interface CustomMetadataFieldService {
             id: String,
             params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse> =
+        ): HttpResponseFor<CustomMetadataField> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see update */
@@ -186,21 +181,18 @@ interface CustomMetadataFieldService {
         fun update(
             id: String,
             params: CustomMetadataFieldUpdateParams = CustomMetadataFieldUpdateParams.none(),
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse> =
-            update(id, params, RequestOptions.none())
+        ): HttpResponseFor<CustomMetadataField> = update(id, params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
             params: CustomMetadataFieldUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse>
+        ): HttpResponseFor<CustomMetadataField>
 
         /** @see update */
         @MustBeClosed
-        fun update(
-            params: CustomMetadataFieldUpdateParams
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse> =
+        fun update(params: CustomMetadataFieldUpdateParams): HttpResponseFor<CustomMetadataField> =
             update(params, RequestOptions.none())
 
         /** @see update */
@@ -208,7 +200,7 @@ interface CustomMetadataFieldService {
         fun update(
             id: String,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataFieldUpdateResponse> =
+        ): HttpResponseFor<CustomMetadataField> =
             update(id, CustomMetadataFieldUpdateParams.none(), requestOptions)
 
         /**
@@ -216,7 +208,7 @@ interface CustomMetadataFieldService {
          * as [CustomMetadataFieldService.list].
          */
         @MustBeClosed
-        fun list(): HttpResponseFor<List<CustomMetadataFieldListResponse>> =
+        fun list(): HttpResponseFor<List<CustomMetadataField>> =
             list(CustomMetadataFieldListParams.none())
 
         /** @see list */
@@ -224,20 +216,17 @@ interface CustomMetadataFieldService {
         fun list(
             params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<List<CustomMetadataFieldListResponse>>
+        ): HttpResponseFor<List<CustomMetadataField>>
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: CustomMetadataFieldListParams = CustomMetadataFieldListParams.none()
-        ): HttpResponseFor<List<CustomMetadataFieldListResponse>> =
-            list(params, RequestOptions.none())
+        ): HttpResponseFor<List<CustomMetadataField>> = list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(
-            requestOptions: RequestOptions
-        ): HttpResponseFor<List<CustomMetadataFieldListResponse>> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<List<CustomMetadataField>> =
             list(CustomMetadataFieldListParams.none(), requestOptions)
 
         /**
