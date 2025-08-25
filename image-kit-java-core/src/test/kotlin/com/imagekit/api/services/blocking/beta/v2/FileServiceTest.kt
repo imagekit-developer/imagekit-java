@@ -39,27 +39,32 @@ internal class FileServiceTest {
                             .build()
                     )
                     .description("Running shoes")
-                    .addExtension(
-                        FileUploadParams.Extension.RemoveBg.builder()
-                            .options(
-                                FileUploadParams.Extension.RemoveBg.Options.builder()
-                                    .addShadow(true)
-                                    .bgColor("bg_color")
-                                    .bgImageUrl("bg_image_url")
-                                    .semitransparency(true)
+                    .extensions(
+                        listOf(
+                            FileUploadParams.Extension.ofRemoveBg(
+                                FileUploadParams.Extension.RemoveBg.builder()
+                                    .options(
+                                        FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            .addShadow(true)
+                                            .bgColor("bg_color")
+                                            .bgImageUrl("bg_image_url")
+                                            .semitransparency(true)
+                                            .build()
+                                    )
                                     .build()
-                            )
-                            .build()
-                    )
-                    .addExtension(
-                        FileUploadParams.Extension.AutoTaggingExtension.builder()
-                            .maxTags(5L)
-                            .minConfidence(95L)
-                            .name(
-                                FileUploadParams.Extension.AutoTaggingExtension.Name
-                                    .GOOGLE_AUTO_TAGGING
-                            )
-                            .build()
+                            ),
+                            FileUploadParams.Extension.ofAutoTagging(
+                                FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                    .maxTags(5L)
+                                    .minConfidence(95L)
+                                    .name(
+                                        FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            .GOOGLE_AUTO_TAGGING
+                                    )
+                                    .build()
+                            ),
+                            FileUploadParams.Extension.ofAiAutoDescription(),
+                        )
                     )
                     .folder("folder")
                     .isPrivateFile(true)
