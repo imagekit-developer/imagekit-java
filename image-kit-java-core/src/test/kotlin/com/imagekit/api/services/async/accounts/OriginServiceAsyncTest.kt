@@ -4,7 +4,6 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
-import com.imagekit.api.models.accounts.origins.Origin
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -25,14 +24,15 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture =
+        val originResponseFuture =
             originServiceAsync.create(
                 OriginCreateParams.builder()
                     .origin(
-                        Origin.S3.builder()
+                        OriginCreateParams.Origin.S3.builder()
+                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .id("id")
+                            .secretKey("secrettest123")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -41,8 +41,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -56,15 +56,16 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture =
+        val originResponseFuture =
             originServiceAsync.update(
                 OriginUpdateParams.builder()
                     .id("id")
                     .origin(
-                        Origin.S3.builder()
+                        OriginUpdateParams.Origin.S3.builder()
+                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .id("id")
+                            .secretKey("secrettest123")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -73,8 +74,8 @@ internal class OriginServiceAsyncTest {
                     .build()
             )
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -88,10 +89,10 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originsFuture = originServiceAsync.list()
+        val originResponsesFuture = originServiceAsync.list()
 
-        val origins = originsFuture.get()
-        origins.forEach { it.validate() }
+        val originResponses = originResponsesFuture.get()
+        originResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -121,9 +122,9 @@ internal class OriginServiceAsyncTest {
                 .build()
         val originServiceAsync = client.accounts().origins()
 
-        val originFuture = originServiceAsync.get("id")
+        val originResponseFuture = originServiceAsync.get("id")
 
-        val origin = originFuture.get()
-        origin.validate()
+        val originResponse = originResponseFuture.get()
+        originResponse.validate()
     }
 }

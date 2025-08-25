@@ -4,7 +4,6 @@ package com.imagekit.api.services.blocking.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
-import com.imagekit.api.models.accounts.origins.Origin
 import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -25,14 +24,15 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin =
+        val originResponse =
             originService.create(
                 OriginCreateParams.builder()
                     .origin(
-                        Origin.S3.builder()
+                        OriginCreateParams.Origin.S3.builder()
+                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .id("id")
+                            .secretKey("secrettest123")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -41,7 +41,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        origin.validate()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -55,15 +55,16 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin =
+        val originResponse =
             originService.update(
                 OriginUpdateParams.builder()
                     .id("id")
                     .origin(
-                        Origin.S3.builder()
+                        OriginUpdateParams.Origin.S3.builder()
+                            .accessKey("AKIATEST123")
                             .bucket("test-bucket")
                             .name("My S3 Origin")
-                            .id("id")
+                            .secretKey("secrettest123")
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
@@ -72,7 +73,7 @@ internal class OriginServiceTest {
                     .build()
             )
 
-        origin.validate()
+        originResponse.validate()
     }
 
     @Disabled("Prism tests are disabled")
@@ -86,9 +87,9 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origins = originService.list()
+        val originResponses = originService.list()
 
-        origins.forEach { it.validate() }
+        originResponses.forEach { it.validate() }
     }
 
     @Disabled("Prism tests are disabled")
@@ -116,8 +117,8 @@ internal class OriginServiceTest {
                 .build()
         val originService = client.accounts().origins()
 
-        val origin = originService.get("id")
+        val originResponse = originService.get("id")
 
-        origin.validate()
+        originResponse.validate()
     }
 }
