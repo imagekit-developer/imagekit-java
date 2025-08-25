@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.imagekit.api.models.files.metadata
+package com.imagekit.api.models.files
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
@@ -8,20 +8,20 @@ import com.imagekit.api.core.jsonMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class MetadataGetResponseTest {
+internal class MetadataTest {
 
     @Test
     fun create() {
-        val metadataGetResponse =
-            MetadataGetResponse.builder()
+        val metadata =
+            Metadata.builder()
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .density(0L)
                 .duration(0L)
                 .exif(
-                    MetadataGetResponse.Exif.builder()
+                    Metadata.Exif.builder()
                         .exif(
-                            MetadataGetResponse.Exif.InnerExif.builder()
+                            Metadata.Exif.InnerExif.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -50,9 +50,9 @@ internal class MetadataGetResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                        .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                         .image(
-                            MetadataGetResponse.Exif.Image.builder()
+                            Metadata.Exif.Image.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -67,18 +67,18 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            MetadataGetResponse.Exif.Interoperability.builder()
+                            Metadata.Exif.Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
                         )
                         .makernote(
-                            MetadataGetResponse.Exif.Makernote.builder()
+                            Metadata.Exif.Makernote.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .thumbnail(
-                            MetadataGetResponse.Exif.Thumbnail.builder()
+                            Metadata.Exif.Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)
@@ -100,15 +100,15 @@ internal class MetadataGetResponseTest {
                 .width(0L)
                 .build()
 
-        assertThat(metadataGetResponse.audioCodec()).contains("audioCodec")
-        assertThat(metadataGetResponse.bitRate()).contains(0L)
-        assertThat(metadataGetResponse.density()).contains(0L)
-        assertThat(metadataGetResponse.duration()).contains(0L)
-        assertThat(metadataGetResponse.exif())
+        assertThat(metadata.audioCodec()).contains("audioCodec")
+        assertThat(metadata.bitRate()).contains(0L)
+        assertThat(metadata.density()).contains(0L)
+        assertThat(metadata.duration()).contains(0L)
+        assertThat(metadata.exif())
             .contains(
-                MetadataGetResponse.Exif.builder()
+                Metadata.Exif.builder()
                     .exif(
-                        MetadataGetResponse.Exif.InnerExif.builder()
+                        Metadata.Exif.InnerExif.builder()
                             .apertureValue(0.0)
                             .colorSpace(0L)
                             .createDate("CreateDate")
@@ -137,9 +137,9 @@ internal class MetadataGetResponseTest {
                             .whiteBalance(0L)
                             .build()
                     )
-                    .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                    .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                     .image(
-                        MetadataGetResponse.Exif.Image.builder()
+                        Metadata.Exif.Image.builder()
                             .exifOffset(0L)
                             .gpsInfo(0L)
                             .make("Make")
@@ -154,18 +154,18 @@ internal class MetadataGetResponseTest {
                             .build()
                     )
                     .interoperability(
-                        MetadataGetResponse.Exif.Interoperability.builder()
+                        Metadata.Exif.Interoperability.builder()
                             .interopIndex("InteropIndex")
                             .interopVersion("InteropVersion")
                             .build()
                     )
                     .makernote(
-                        MetadataGetResponse.Exif.Makernote.builder()
+                        Metadata.Exif.Makernote.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .thumbnail(
-                        MetadataGetResponse.Exif.Thumbnail.builder()
+                        Metadata.Exif.Thumbnail.builder()
                             .compression(0L)
                             .resolutionUnit(0L)
                             .thumbnailLength(0L)
@@ -176,30 +176,30 @@ internal class MetadataGetResponseTest {
                     )
                     .build()
             )
-        assertThat(metadataGetResponse.format()).contains("format")
-        assertThat(metadataGetResponse.hasColorProfile()).contains(true)
-        assertThat(metadataGetResponse.hasTransparency()).contains(true)
-        assertThat(metadataGetResponse.height()).contains(0L)
-        assertThat(metadataGetResponse.pHash()).contains("pHash")
-        assertThat(metadataGetResponse.quality()).contains(0L)
-        assertThat(metadataGetResponse.size()).contains(0L)
-        assertThat(metadataGetResponse.videoCodec()).contains("videoCodec")
-        assertThat(metadataGetResponse.width()).contains(0L)
+        assertThat(metadata.format()).contains("format")
+        assertThat(metadata.hasColorProfile()).contains(true)
+        assertThat(metadata.hasTransparency()).contains(true)
+        assertThat(metadata.height()).contains(0L)
+        assertThat(metadata.pHash()).contains("pHash")
+        assertThat(metadata.quality()).contains(0L)
+        assertThat(metadata.size()).contains(0L)
+        assertThat(metadata.videoCodec()).contains("videoCodec")
+        assertThat(metadata.width()).contains(0L)
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val metadataGetResponse =
-            MetadataGetResponse.builder()
+        val metadata =
+            Metadata.builder()
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .density(0L)
                 .duration(0L)
                 .exif(
-                    MetadataGetResponse.Exif.builder()
+                    Metadata.Exif.builder()
                         .exif(
-                            MetadataGetResponse.Exif.InnerExif.builder()
+                            Metadata.Exif.InnerExif.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -228,9 +228,9 @@ internal class MetadataGetResponseTest {
                                 .whiteBalance(0L)
                                 .build()
                         )
-                        .gps(MetadataGetResponse.Exif.Gps.builder().addGpsVersionId(0L).build())
+                        .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                         .image(
-                            MetadataGetResponse.Exif.Image.builder()
+                            Metadata.Exif.Image.builder()
                                 .exifOffset(0L)
                                 .gpsInfo(0L)
                                 .make("Make")
@@ -245,18 +245,18 @@ internal class MetadataGetResponseTest {
                                 .build()
                         )
                         .interoperability(
-                            MetadataGetResponse.Exif.Interoperability.builder()
+                            Metadata.Exif.Interoperability.builder()
                                 .interopIndex("InteropIndex")
                                 .interopVersion("InteropVersion")
                                 .build()
                         )
                         .makernote(
-                            MetadataGetResponse.Exif.Makernote.builder()
+                            Metadata.Exif.Makernote.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .thumbnail(
-                            MetadataGetResponse.Exif.Thumbnail.builder()
+                            Metadata.Exif.Thumbnail.builder()
                                 .compression(0L)
                                 .resolutionUnit(0L)
                                 .thumbnailLength(0L)
@@ -278,12 +278,12 @@ internal class MetadataGetResponseTest {
                 .width(0L)
                 .build()
 
-        val roundtrippedMetadataGetResponse =
+        val roundtrippedMetadata =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(metadataGetResponse),
-                jacksonTypeRef<MetadataGetResponse>(),
+                jsonMapper.writeValueAsString(metadata),
+                jacksonTypeRef<Metadata>(),
             )
 
-        assertThat(roundtrippedMetadataGetResponse).isEqualTo(metadataGetResponse)
+        assertThat(roundtrippedMetadata).isEqualTo(metadata)
     }
 }

@@ -6,10 +6,9 @@ import com.google.errorprone.annotations.MustBeClosed
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
+import com.imagekit.api.models.files.Metadata
 import com.imagekit.api.models.files.metadata.MetadataGetFromUrlParams
-import com.imagekit.api.models.files.metadata.MetadataGetFromUrlResponse
 import com.imagekit.api.models.files.metadata.MetadataGetParams
-import com.imagekit.api.models.files.metadata.MetadataGetResponse
 import java.util.function.Consumer
 
 interface MetadataService {
@@ -33,45 +32,43 @@ interface MetadataService {
      * You can also get the metadata in upload API response by passing `metadata` in
      * `responseFields` parameter.
      */
-    fun get(fileId: String): MetadataGetResponse = get(fileId, MetadataGetParams.none())
+    fun get(fileId: String): Metadata = get(fileId, MetadataGetParams.none())
 
     /** @see get */
     fun get(
         fileId: String,
         params: MetadataGetParams = MetadataGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MetadataGetResponse = get(params.toBuilder().fileId(fileId).build(), requestOptions)
+    ): Metadata = get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see get */
-    fun get(
-        fileId: String,
-        params: MetadataGetParams = MetadataGetParams.none(),
-    ): MetadataGetResponse = get(fileId, params, RequestOptions.none())
+    fun get(fileId: String, params: MetadataGetParams = MetadataGetParams.none()): Metadata =
+        get(fileId, params, RequestOptions.none())
 
     /** @see get */
     fun get(
         params: MetadataGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MetadataGetResponse
+    ): Metadata
 
     /** @see get */
-    fun get(params: MetadataGetParams): MetadataGetResponse = get(params, RequestOptions.none())
+    fun get(params: MetadataGetParams): Metadata = get(params, RequestOptions.none())
 
     /** @see get */
-    fun get(fileId: String, requestOptions: RequestOptions): MetadataGetResponse =
+    fun get(fileId: String, requestOptions: RequestOptions): Metadata =
         get(fileId, MetadataGetParams.none(), requestOptions)
 
     /**
      * Get image EXIF, pHash, and other metadata from ImageKit.io powered remote URL using this API.
      */
-    fun getFromUrl(params: MetadataGetFromUrlParams): MetadataGetFromUrlResponse =
+    fun getFromUrl(params: MetadataGetFromUrlParams): Metadata =
         getFromUrl(params, RequestOptions.none())
 
     /** @see getFromUrl */
     fun getFromUrl(
         params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): MetadataGetFromUrlResponse
+    ): Metadata
 
     /** A view of [MetadataService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -88,8 +85,7 @@ interface MetadataService {
          * same as [MetadataService.get].
          */
         @MustBeClosed
-        fun get(fileId: String): HttpResponseFor<MetadataGetResponse> =
-            get(fileId, MetadataGetParams.none())
+        fun get(fileId: String): HttpResponseFor<Metadata> = get(fileId, MetadataGetParams.none())
 
         /** @see get */
         @MustBeClosed
@@ -97,7 +93,7 @@ interface MetadataService {
             fileId: String,
             params: MetadataGetParams = MetadataGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MetadataGetResponse> =
+        ): HttpResponseFor<Metadata> =
             get(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see get */
@@ -105,26 +101,23 @@ interface MetadataService {
         fun get(
             fileId: String,
             params: MetadataGetParams = MetadataGetParams.none(),
-        ): HttpResponseFor<MetadataGetResponse> = get(fileId, params, RequestOptions.none())
+        ): HttpResponseFor<Metadata> = get(fileId, params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
         fun get(
             params: MetadataGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MetadataGetResponse>
+        ): HttpResponseFor<Metadata>
 
         /** @see get */
         @MustBeClosed
-        fun get(params: MetadataGetParams): HttpResponseFor<MetadataGetResponse> =
+        fun get(params: MetadataGetParams): HttpResponseFor<Metadata> =
             get(params, RequestOptions.none())
 
         /** @see get */
         @MustBeClosed
-        fun get(
-            fileId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<MetadataGetResponse> =
+        fun get(fileId: String, requestOptions: RequestOptions): HttpResponseFor<Metadata> =
             get(fileId, MetadataGetParams.none(), requestOptions)
 
         /**
@@ -132,15 +125,14 @@ interface MetadataService {
          * [MetadataService.getFromUrl].
          */
         @MustBeClosed
-        fun getFromUrl(
-            params: MetadataGetFromUrlParams
-        ): HttpResponseFor<MetadataGetFromUrlResponse> = getFromUrl(params, RequestOptions.none())
+        fun getFromUrl(params: MetadataGetFromUrlParams): HttpResponseFor<Metadata> =
+            getFromUrl(params, RequestOptions.none())
 
         /** @see getFromUrl */
         @MustBeClosed
         fun getFromUrl(
             params: MetadataGetFromUrlParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<MetadataGetFromUrlResponse>
+        ): HttpResponseFor<Metadata>
     }
 }

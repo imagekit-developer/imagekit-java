@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package com.imagekit.api.models.files.metadata
+package com.imagekit.api.models.files
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
@@ -19,7 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /** JSON object containing metadata. */
-class MetadataGetFromUrlResponse
+class Metadata
 private constructor(
     private val audioCodec: JsonField<String>,
     private val bitRate: JsonField<Long>,
@@ -306,13 +306,11 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [MetadataGetFromUrlResponse].
-         */
+        /** Returns a mutable builder for constructing an instance of [Metadata]. */
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [MetadataGetFromUrlResponse]. */
+    /** A builder for [Metadata]. */
     class Builder internal constructor() {
 
         private var audioCodec: JsonField<String> = JsonMissing.of()
@@ -332,22 +330,22 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(metadataGetFromUrlResponse: MetadataGetFromUrlResponse) = apply {
-            audioCodec = metadataGetFromUrlResponse.audioCodec
-            bitRate = metadataGetFromUrlResponse.bitRate
-            density = metadataGetFromUrlResponse.density
-            duration = metadataGetFromUrlResponse.duration
-            exif = metadataGetFromUrlResponse.exif
-            format = metadataGetFromUrlResponse.format
-            hasColorProfile = metadataGetFromUrlResponse.hasColorProfile
-            hasTransparency = metadataGetFromUrlResponse.hasTransparency
-            height = metadataGetFromUrlResponse.height
-            pHash = metadataGetFromUrlResponse.pHash
-            quality = metadataGetFromUrlResponse.quality
-            size = metadataGetFromUrlResponse.size
-            videoCodec = metadataGetFromUrlResponse.videoCodec
-            width = metadataGetFromUrlResponse.width
-            additionalProperties = metadataGetFromUrlResponse.additionalProperties.toMutableMap()
+        internal fun from(metadata: Metadata) = apply {
+            audioCodec = metadata.audioCodec
+            bitRate = metadata.bitRate
+            density = metadata.density
+            duration = metadata.duration
+            exif = metadata.exif
+            format = metadata.format
+            hasColorProfile = metadata.hasColorProfile
+            hasTransparency = metadata.hasTransparency
+            height = metadata.height
+            pHash = metadata.pHash
+            quality = metadata.quality
+            size = metadata.size
+            videoCodec = metadata.videoCodec
+            width = metadata.width
+            additionalProperties = metadata.additionalProperties.toMutableMap()
         }
 
         /** The audio codec used in the video (only for video). */
@@ -533,12 +531,12 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [MetadataGetFromUrlResponse].
+         * Returns an immutable instance of [Metadata].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          */
-        fun build(): MetadataGetFromUrlResponse =
-            MetadataGetFromUrlResponse(
+        fun build(): Metadata =
+            Metadata(
                 audioCodec,
                 bitRate,
                 density,
@@ -559,7 +557,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): MetadataGetFromUrlResponse = apply {
+    fun validate(): Metadata = apply {
         if (validated) {
             return@apply
         }
@@ -3531,7 +3529,7 @@ private constructor(
             return true
         }
 
-        return other is MetadataGetFromUrlResponse &&
+        return other is Metadata &&
             audioCodec == other.audioCodec &&
             bitRate == other.bitRate &&
             density == other.density &&
@@ -3572,5 +3570,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "MetadataGetFromUrlResponse{audioCodec=$audioCodec, bitRate=$bitRate, density=$density, duration=$duration, exif=$exif, format=$format, hasColorProfile=$hasColorProfile, hasTransparency=$hasTransparency, height=$height, pHash=$pHash, quality=$quality, size=$size, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
+        "Metadata{audioCodec=$audioCodec, bitRate=$bitRate, density=$density, duration=$duration, exif=$exif, format=$format, hasColorProfile=$hasColorProfile, hasTransparency=$hasTransparency, height=$height, pHash=$pHash, quality=$quality, size=$size, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
 }

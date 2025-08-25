@@ -40,12 +40,12 @@ internal class MetadataServiceAsyncTest {
                 .build()
         val metadataServiceAsync = client.files().metadata()
 
-        val responseFuture =
+        val metadataFuture =
             metadataServiceAsync.getFromUrl(
                 MetadataGetFromUrlParams.builder().url("https://example.com").build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val metadata = metadataFuture.get()
+        metadata.validate()
     }
 }

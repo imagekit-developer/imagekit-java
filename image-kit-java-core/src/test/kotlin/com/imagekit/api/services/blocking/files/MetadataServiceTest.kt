@@ -39,11 +39,11 @@ internal class MetadataServiceTest {
                 .build()
         val metadataService = client.files().metadata()
 
-        val response =
+        val metadata =
             metadataService.getFromUrl(
                 MetadataGetFromUrlParams.builder().url("https://example.com").build()
             )
 
-        response.validate()
+        metadata.validate()
     }
 }

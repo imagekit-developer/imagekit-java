@@ -5,6 +5,7 @@ package com.imagekit.api.models.beta.v2.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.files.Metadata
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -52,15 +53,15 @@ internal class FileUploadResponseTest {
                 .isPrivateFile(true)
                 .isPublished(true)
                 .metadata(
-                    FileUploadResponse.Metadata.builder()
+                    Metadata.builder()
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .density(0L)
                         .duration(0L)
                         .exif(
-                            FileUploadResponse.Metadata.Exif.builder()
+                            Metadata.Exif.builder()
                                 .exif(
-                                    FileUploadResponse.Metadata.Exif.InnerExif.builder()
+                                    Metadata.Exif.InnerExif.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -89,13 +90,9 @@ internal class FileUploadResponseTest {
                                         .whiteBalance(0L)
                                         .build()
                                 )
-                                .gps(
-                                    FileUploadResponse.Metadata.Exif.Gps.builder()
-                                        .addGpsVersionId(0L)
-                                        .build()
-                                )
+                                .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                                 .image(
-                                    FileUploadResponse.Metadata.Exif.Image.builder()
+                                    Metadata.Exif.Image.builder()
                                         .exifOffset(0L)
                                         .gpsInfo(0L)
                                         .make("Make")
@@ -110,18 +107,18 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .interoperability(
-                                    FileUploadResponse.Metadata.Exif.Interoperability.builder()
+                                    Metadata.Exif.Interoperability.builder()
                                         .interopIndex("InteropIndex")
                                         .interopVersion("InteropVersion")
                                         .build()
                                 )
                                 .makernote(
-                                    FileUploadResponse.Metadata.Exif.Makernote.builder()
+                                    Metadata.Exif.Makernote.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
                                 .thumbnail(
-                                    FileUploadResponse.Metadata.Exif.Thumbnail.builder()
+                                    Metadata.Exif.Thumbnail.builder()
                                         .compression(0L)
                                         .resolutionUnit(0L)
                                         .thumbnailLength(0L)
@@ -193,15 +190,15 @@ internal class FileUploadResponseTest {
         assertThat(fileUploadResponse.isPublished()).contains(true)
         assertThat(fileUploadResponse.metadata())
             .contains(
-                FileUploadResponse.Metadata.builder()
+                Metadata.builder()
                     .audioCodec("audioCodec")
                     .bitRate(0L)
                     .density(0L)
                     .duration(0L)
                     .exif(
-                        FileUploadResponse.Metadata.Exif.builder()
+                        Metadata.Exif.builder()
                             .exif(
-                                FileUploadResponse.Metadata.Exif.InnerExif.builder()
+                                Metadata.Exif.InnerExif.builder()
                                     .apertureValue(0.0)
                                     .colorSpace(0L)
                                     .createDate("CreateDate")
@@ -230,13 +227,9 @@ internal class FileUploadResponseTest {
                                     .whiteBalance(0L)
                                     .build()
                             )
-                            .gps(
-                                FileUploadResponse.Metadata.Exif.Gps.builder()
-                                    .addGpsVersionId(0L)
-                                    .build()
-                            )
+                            .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                             .image(
-                                FileUploadResponse.Metadata.Exif.Image.builder()
+                                Metadata.Exif.Image.builder()
                                     .exifOffset(0L)
                                     .gpsInfo(0L)
                                     .make("Make")
@@ -251,18 +244,18 @@ internal class FileUploadResponseTest {
                                     .build()
                             )
                             .interoperability(
-                                FileUploadResponse.Metadata.Exif.Interoperability.builder()
+                                Metadata.Exif.Interoperability.builder()
                                     .interopIndex("InteropIndex")
                                     .interopVersion("InteropVersion")
                                     .build()
                             )
                             .makernote(
-                                FileUploadResponse.Metadata.Exif.Makernote.builder()
+                                Metadata.Exif.Makernote.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
                             .thumbnail(
-                                FileUploadResponse.Metadata.Exif.Thumbnail.builder()
+                                Metadata.Exif.Thumbnail.builder()
                                     .compression(0L)
                                     .resolutionUnit(0L)
                                     .thumbnailLength(0L)
@@ -337,15 +330,15 @@ internal class FileUploadResponseTest {
                 .isPrivateFile(true)
                 .isPublished(true)
                 .metadata(
-                    FileUploadResponse.Metadata.builder()
+                    Metadata.builder()
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .density(0L)
                         .duration(0L)
                         .exif(
-                            FileUploadResponse.Metadata.Exif.builder()
+                            Metadata.Exif.builder()
                                 .exif(
-                                    FileUploadResponse.Metadata.Exif.InnerExif.builder()
+                                    Metadata.Exif.InnerExif.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -374,13 +367,9 @@ internal class FileUploadResponseTest {
                                         .whiteBalance(0L)
                                         .build()
                                 )
-                                .gps(
-                                    FileUploadResponse.Metadata.Exif.Gps.builder()
-                                        .addGpsVersionId(0L)
-                                        .build()
-                                )
+                                .gps(Metadata.Exif.Gps.builder().addGpsVersionId(0L).build())
                                 .image(
-                                    FileUploadResponse.Metadata.Exif.Image.builder()
+                                    Metadata.Exif.Image.builder()
                                         .exifOffset(0L)
                                         .gpsInfo(0L)
                                         .make("Make")
@@ -395,18 +384,18 @@ internal class FileUploadResponseTest {
                                         .build()
                                 )
                                 .interoperability(
-                                    FileUploadResponse.Metadata.Exif.Interoperability.builder()
+                                    Metadata.Exif.Interoperability.builder()
                                         .interopIndex("InteropIndex")
                                         .interopVersion("InteropVersion")
                                         .build()
                                 )
                                 .makernote(
-                                    FileUploadResponse.Metadata.Exif.Makernote.builder()
+                                    Metadata.Exif.Makernote.builder()
                                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                                         .build()
                                 )
                                 .thumbnail(
-                                    FileUploadResponse.Metadata.Exif.Thumbnail.builder()
+                                    Metadata.Exif.Thumbnail.builder()
                                         .compression(0L)
                                         .resolutionUnit(0L)
                                         .thumbnailLength(0L)

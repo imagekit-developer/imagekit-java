@@ -15,10 +15,9 @@ import com.imagekit.api.core.http.HttpResponse.Handler
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepareAsync
+import com.imagekit.api.models.files.Metadata
 import com.imagekit.api.models.files.metadata.MetadataGetFromUrlParams
-import com.imagekit.api.models.files.metadata.MetadataGetFromUrlResponse
 import com.imagekit.api.models.files.metadata.MetadataGetParams
-import com.imagekit.api.models.files.metadata.MetadataGetResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
@@ -38,14 +37,14 @@ class MetadataServiceAsyncImpl internal constructor(private val clientOptions: C
     override fun get(
         params: MetadataGetParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MetadataGetResponse> =
+    ): CompletableFuture<Metadata> =
         // get /v1/files/{fileId}/metadata
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     override fun getFromUrl(
         params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<MetadataGetFromUrlResponse> =
+    ): CompletableFuture<Metadata> =
         // get /v1/files/metadata
         withRawResponse().getFromUrl(params, requestOptions).thenApply { it.parse() }
 
@@ -62,13 +61,12 @@ class MetadataServiceAsyncImpl internal constructor(private val clientOptions: C
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val getHandler: Handler<MetadataGetResponse> =
-            jsonHandler<MetadataGetResponse>(clientOptions.jsonMapper)
+        private val getHandler: Handler<Metadata> = jsonHandler<Metadata>(clientOptions.jsonMapper)
 
         override fun get(
             params: MetadataGetParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MetadataGetResponse>> {
+        ): CompletableFuture<HttpResponseFor<Metadata>> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("fileId", params.fileId().getOrNull())
@@ -95,13 +93,13 @@ class MetadataServiceAsyncImpl internal constructor(private val clientOptions: C
                 }
         }
 
-        private val getFromUrlHandler: Handler<MetadataGetFromUrlResponse> =
-            jsonHandler<MetadataGetFromUrlResponse>(clientOptions.jsonMapper)
+        private val getFromUrlHandler: Handler<Metadata> =
+            jsonHandler<Metadata>(clientOptions.jsonMapper)
 
         override fun getFromUrl(
             params: MetadataGetFromUrlParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<MetadataGetFromUrlResponse>> {
+        ): CompletableFuture<HttpResponseFor<Metadata>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
