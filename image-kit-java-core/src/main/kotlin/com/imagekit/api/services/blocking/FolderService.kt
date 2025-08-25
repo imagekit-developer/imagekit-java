@@ -7,13 +7,15 @@ import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.RequestOptions
 import com.imagekit.api.core.http.HttpResponseFor
 import com.imagekit.api.models.folders.FolderCopyParams
+import com.imagekit.api.models.folders.FolderCopyResponse
 import com.imagekit.api.models.folders.FolderCreateParams
 import com.imagekit.api.models.folders.FolderCreateResponse
 import com.imagekit.api.models.folders.FolderDeleteParams
 import com.imagekit.api.models.folders.FolderDeleteResponse
 import com.imagekit.api.models.folders.FolderMoveParams
+import com.imagekit.api.models.folders.FolderMoveResponse
 import com.imagekit.api.models.folders.FolderRenameParams
-import com.imagekit.api.models.folders.JobResponse
+import com.imagekit.api.models.folders.FolderRenameResponse
 import com.imagekit.api.services.blocking.folders.JobService
 import java.util.function.Consumer
 
@@ -65,13 +67,13 @@ interface FolderService {
      * any file at the destination has the same name as the source file, then the source file and
      * its versions will be appended to the destination file version history.
      */
-    fun copy(params: FolderCopyParams): JobResponse = copy(params, RequestOptions.none())
+    fun copy(params: FolderCopyParams): FolderCopyResponse = copy(params, RequestOptions.none())
 
     /** @see copy */
     fun copy(
         params: FolderCopyParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): JobResponse
+    ): FolderCopyResponse
 
     /**
      * This will move one folder into another. The selected folder, its nested folders, files, and
@@ -79,26 +81,27 @@ interface FolderService {
      * name as the source file, then the source file and its versions will be appended to the
      * destination file version history.
      */
-    fun move(params: FolderMoveParams): JobResponse = move(params, RequestOptions.none())
+    fun move(params: FolderMoveParams): FolderMoveResponse = move(params, RequestOptions.none())
 
     /** @see move */
     fun move(
         params: FolderMoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): JobResponse
+    ): FolderMoveResponse
 
     /**
      * This API allows you to rename an existing folder. The folder and all its nested assets and
      * sub-folders will remain unchanged, but their paths will be updated to reflect the new folder
      * name.
      */
-    fun rename(params: FolderRenameParams): JobResponse = rename(params, RequestOptions.none())
+    fun rename(params: FolderRenameParams): FolderRenameResponse =
+        rename(params, RequestOptions.none())
 
     /** @see rename */
     fun rename(
         params: FolderRenameParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): JobResponse
+    ): FolderRenameResponse
 
     /** A view of [FolderService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -147,7 +150,7 @@ interface FolderService {
          * as [FolderService.copy].
          */
         @MustBeClosed
-        fun copy(params: FolderCopyParams): HttpResponseFor<JobResponse> =
+        fun copy(params: FolderCopyParams): HttpResponseFor<FolderCopyResponse> =
             copy(params, RequestOptions.none())
 
         /** @see copy */
@@ -155,14 +158,14 @@ interface FolderService {
         fun copy(
             params: FolderCopyParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<JobResponse>
+        ): HttpResponseFor<FolderCopyResponse>
 
         /**
          * Returns a raw HTTP response for `post /v1/bulkJobs/moveFolder`, but is otherwise the same
          * as [FolderService.move].
          */
         @MustBeClosed
-        fun move(params: FolderMoveParams): HttpResponseFor<JobResponse> =
+        fun move(params: FolderMoveParams): HttpResponseFor<FolderMoveResponse> =
             move(params, RequestOptions.none())
 
         /** @see move */
@@ -170,14 +173,14 @@ interface FolderService {
         fun move(
             params: FolderMoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<JobResponse>
+        ): HttpResponseFor<FolderMoveResponse>
 
         /**
          * Returns a raw HTTP response for `post /v1/bulkJobs/renameFolder`, but is otherwise the
          * same as [FolderService.rename].
          */
         @MustBeClosed
-        fun rename(params: FolderRenameParams): HttpResponseFor<JobResponse> =
+        fun rename(params: FolderRenameParams): HttpResponseFor<FolderRenameResponse> =
             rename(params, RequestOptions.none())
 
         /** @see rename */
@@ -185,6 +188,6 @@ interface FolderService {
         fun rename(
             params: FolderRenameParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<JobResponse>
+        ): HttpResponseFor<FolderRenameResponse>
     }
 }

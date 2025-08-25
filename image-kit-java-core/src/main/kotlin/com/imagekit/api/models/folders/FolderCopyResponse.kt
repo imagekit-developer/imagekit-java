@@ -16,7 +16,7 @@ import java.util.Collections
 import java.util.Objects
 
 /** Job submitted successfully. A `jobId` will be returned. */
-class JobResponse
+class FolderCopyResponse
 private constructor(
     private val jobId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -57,7 +57,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [JobResponse].
+         * Returns a mutable builder for constructing an instance of [FolderCopyResponse].
          *
          * The following fields are required:
          * ```java
@@ -67,16 +67,16 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [JobResponse]. */
+    /** A builder for [FolderCopyResponse]. */
     class Builder internal constructor() {
 
         private var jobId: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(jobResponse: JobResponse) = apply {
-            jobId = jobResponse.jobId
-            additionalProperties = jobResponse.additionalProperties.toMutableMap()
+        internal fun from(folderCopyResponse: FolderCopyResponse) = apply {
+            jobId = folderCopyResponse.jobId
+            additionalProperties = folderCopyResponse.additionalProperties.toMutableMap()
         }
 
         /**
@@ -112,7 +112,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [JobResponse].
+         * Returns an immutable instance of [FolderCopyResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -123,13 +123,13 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): JobResponse =
-            JobResponse(checkRequired("jobId", jobId), additionalProperties.toMutableMap())
+        fun build(): FolderCopyResponse =
+            FolderCopyResponse(checkRequired("jobId", jobId), additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
 
-    fun validate(): JobResponse = apply {
+    fun validate(): FolderCopyResponse = apply {
         if (validated) {
             return@apply
         }
@@ -158,7 +158,7 @@ private constructor(
             return true
         }
 
-        return other is JobResponse &&
+        return other is FolderCopyResponse &&
             jobId == other.jobId &&
             additionalProperties == other.additionalProperties
     }
@@ -168,5 +168,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "JobResponse{jobId=$jobId, additionalProperties=$additionalProperties}"
+        "FolderCopyResponse{jobId=$jobId, additionalProperties=$additionalProperties}"
 }

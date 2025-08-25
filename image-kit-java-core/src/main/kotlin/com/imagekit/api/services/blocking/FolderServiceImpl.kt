@@ -16,13 +16,15 @@ import com.imagekit.api.core.http.json
 import com.imagekit.api.core.http.parseable
 import com.imagekit.api.core.prepare
 import com.imagekit.api.models.folders.FolderCopyParams
+import com.imagekit.api.models.folders.FolderCopyResponse
 import com.imagekit.api.models.folders.FolderCreateParams
 import com.imagekit.api.models.folders.FolderCreateResponse
 import com.imagekit.api.models.folders.FolderDeleteParams
 import com.imagekit.api.models.folders.FolderDeleteResponse
 import com.imagekit.api.models.folders.FolderMoveParams
+import com.imagekit.api.models.folders.FolderMoveResponse
 import com.imagekit.api.models.folders.FolderRenameParams
-import com.imagekit.api.models.folders.JobResponse
+import com.imagekit.api.models.folders.FolderRenameResponse
 import com.imagekit.api.services.blocking.folders.JobService
 import com.imagekit.api.services.blocking.folders.JobServiceImpl
 import java.util.function.Consumer
@@ -57,15 +59,24 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
         // delete /v1/folder
         withRawResponse().delete(params, requestOptions).parse()
 
-    override fun copy(params: FolderCopyParams, requestOptions: RequestOptions): JobResponse =
+    override fun copy(
+        params: FolderCopyParams,
+        requestOptions: RequestOptions,
+    ): FolderCopyResponse =
         // post /v1/bulkJobs/copyFolder
         withRawResponse().copy(params, requestOptions).parse()
 
-    override fun move(params: FolderMoveParams, requestOptions: RequestOptions): JobResponse =
+    override fun move(
+        params: FolderMoveParams,
+        requestOptions: RequestOptions,
+    ): FolderMoveResponse =
         // post /v1/bulkJobs/moveFolder
         withRawResponse().move(params, requestOptions).parse()
 
-    override fun rename(params: FolderRenameParams, requestOptions: RequestOptions): JobResponse =
+    override fun rename(
+        params: FolderRenameParams,
+        requestOptions: RequestOptions,
+    ): FolderRenameResponse =
         // post /v1/bulkJobs/renameFolder
         withRawResponse().rename(params, requestOptions).parse()
 
@@ -144,13 +155,13 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val copyHandler: Handler<JobResponse> =
-            jsonHandler<JobResponse>(clientOptions.jsonMapper)
+        private val copyHandler: Handler<FolderCopyResponse> =
+            jsonHandler<FolderCopyResponse>(clientOptions.jsonMapper)
 
         override fun copy(
             params: FolderCopyParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<JobResponse> {
+        ): HttpResponseFor<FolderCopyResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -172,13 +183,13 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val moveHandler: Handler<JobResponse> =
-            jsonHandler<JobResponse>(clientOptions.jsonMapper)
+        private val moveHandler: Handler<FolderMoveResponse> =
+            jsonHandler<FolderMoveResponse>(clientOptions.jsonMapper)
 
         override fun move(
             params: FolderMoveParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<JobResponse> {
+        ): HttpResponseFor<FolderMoveResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -200,13 +211,13 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val renameHandler: Handler<JobResponse> =
-            jsonHandler<JobResponse>(clientOptions.jsonMapper)
+        private val renameHandler: Handler<FolderRenameResponse> =
+            jsonHandler<FolderRenameResponse>(clientOptions.jsonMapper)
 
         override fun rename(
             params: FolderRenameParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<JobResponse> {
+        ): HttpResponseFor<FolderRenameResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
