@@ -22,19 +22,19 @@ import java.util.Optional
 @JsonSerialize(using = UnsafeUnwrapWebhookEvent.Serializer::class)
 class UnsafeUnwrapWebhookEvent
 private constructor(
-    private val videoTransformationAccepted: VideoTransformationAcceptedWebhookEvent? = null,
-    private val videoTransformationReady: VideoTransformationReadyWebhookEvent? = null,
-    private val videoTransformationError: VideoTransformationErrorWebhookEvent? = null,
+    private val videoTransformationAccepted: VideoTransformationAcceptedEvent? = null,
+    private val videoTransformationReady: VideoTransformationReadyEvent? = null,
+    private val videoTransformationError: VideoTransformationErrorEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun videoTransformationAccepted(): Optional<VideoTransformationAcceptedWebhookEvent> =
+    fun videoTransformationAccepted(): Optional<VideoTransformationAcceptedEvent> =
         Optional.ofNullable(videoTransformationAccepted)
 
-    fun videoTransformationReady(): Optional<VideoTransformationReadyWebhookEvent> =
+    fun videoTransformationReady(): Optional<VideoTransformationReadyEvent> =
         Optional.ofNullable(videoTransformationReady)
 
-    fun videoTransformationError(): Optional<VideoTransformationErrorWebhookEvent> =
+    fun videoTransformationError(): Optional<VideoTransformationErrorEvent> =
         Optional.ofNullable(videoTransformationError)
 
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
@@ -43,13 +43,13 @@ private constructor(
 
     fun isVideoTransformationError(): Boolean = videoTransformationError != null
 
-    fun asVideoTransformationAccepted(): VideoTransformationAcceptedWebhookEvent =
+    fun asVideoTransformationAccepted(): VideoTransformationAcceptedEvent =
         videoTransformationAccepted.getOrThrow("videoTransformationAccepted")
 
-    fun asVideoTransformationReady(): VideoTransformationReadyWebhookEvent =
+    fun asVideoTransformationReady(): VideoTransformationReadyEvent =
         videoTransformationReady.getOrThrow("videoTransformationReady")
 
-    fun asVideoTransformationError(): VideoTransformationErrorWebhookEvent =
+    fun asVideoTransformationError(): VideoTransformationErrorEvent =
         videoTransformationError.getOrThrow("videoTransformationError")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -75,19 +75,19 @@ private constructor(
         accept(
             object : Visitor<Unit> {
                 override fun visitVideoTransformationAccepted(
-                    videoTransformationAccepted: VideoTransformationAcceptedWebhookEvent
+                    videoTransformationAccepted: VideoTransformationAcceptedEvent
                 ) {
                     videoTransformationAccepted.validate()
                 }
 
                 override fun visitVideoTransformationReady(
-                    videoTransformationReady: VideoTransformationReadyWebhookEvent
+                    videoTransformationReady: VideoTransformationReadyEvent
                 ) {
                     videoTransformationReady.validate()
                 }
 
                 override fun visitVideoTransformationError(
-                    videoTransformationError: VideoTransformationErrorWebhookEvent
+                    videoTransformationError: VideoTransformationErrorEvent
                 ) {
                     videoTransformationError.validate()
                 }
@@ -114,15 +114,15 @@ private constructor(
         accept(
             object : Visitor<Int> {
                 override fun visitVideoTransformationAccepted(
-                    videoTransformationAccepted: VideoTransformationAcceptedWebhookEvent
+                    videoTransformationAccepted: VideoTransformationAcceptedEvent
                 ) = videoTransformationAccepted.validity()
 
                 override fun visitVideoTransformationReady(
-                    videoTransformationReady: VideoTransformationReadyWebhookEvent
+                    videoTransformationReady: VideoTransformationReadyEvent
                 ) = videoTransformationReady.validity()
 
                 override fun visitVideoTransformationError(
-                    videoTransformationError: VideoTransformationErrorWebhookEvent
+                    videoTransformationError: VideoTransformationErrorEvent
                 ) = videoTransformationError.validity()
 
                 override fun unknown(json: JsonValue?) = 0
@@ -163,18 +163,16 @@ private constructor(
 
         @JvmStatic
         fun ofVideoTransformationAccepted(
-            videoTransformationAccepted: VideoTransformationAcceptedWebhookEvent
+            videoTransformationAccepted: VideoTransformationAcceptedEvent
         ) = UnsafeUnwrapWebhookEvent(videoTransformationAccepted = videoTransformationAccepted)
 
         @JvmStatic
-        fun ofVideoTransformationReady(
-            videoTransformationReady: VideoTransformationReadyWebhookEvent
-        ) = UnsafeUnwrapWebhookEvent(videoTransformationReady = videoTransformationReady)
+        fun ofVideoTransformationReady(videoTransformationReady: VideoTransformationReadyEvent) =
+            UnsafeUnwrapWebhookEvent(videoTransformationReady = videoTransformationReady)
 
         @JvmStatic
-        fun ofVideoTransformationError(
-            videoTransformationError: VideoTransformationErrorWebhookEvent
-        ) = UnsafeUnwrapWebhookEvent(videoTransformationError = videoTransformationError)
+        fun ofVideoTransformationError(videoTransformationError: VideoTransformationErrorEvent) =
+            UnsafeUnwrapWebhookEvent(videoTransformationError = videoTransformationError)
     }
 
     /**
@@ -184,15 +182,15 @@ private constructor(
     interface Visitor<out T> {
 
         fun visitVideoTransformationAccepted(
-            videoTransformationAccepted: VideoTransformationAcceptedWebhookEvent
+            videoTransformationAccepted: VideoTransformationAcceptedEvent
         ): T
 
         fun visitVideoTransformationReady(
-            videoTransformationReady: VideoTransformationReadyWebhookEvent
+            videoTransformationReady: VideoTransformationReadyEvent
         ): T
 
         fun visitVideoTransformationError(
-            videoTransformationError: VideoTransformationErrorWebhookEvent
+            videoTransformationError: VideoTransformationErrorEvent
         ): T
 
         /**
@@ -218,30 +216,19 @@ private constructor(
 
             val bestMatches =
                 sequenceOf(
-                        tryDeserialize(
-                                node,
-                                jacksonTypeRef<VideoTransformationAcceptedWebhookEvent>(),
-                            )
+                        tryDeserialize(node, jacksonTypeRef<VideoTransformationAcceptedEvent>())
                             ?.let {
                                 UnsafeUnwrapWebhookEvent(
                                     videoTransformationAccepted = it,
                                     _json = json,
                                 )
                             },
-                        tryDeserialize(node, jacksonTypeRef<VideoTransformationReadyWebhookEvent>())
-                            ?.let {
-                                UnsafeUnwrapWebhookEvent(
-                                    videoTransformationReady = it,
-                                    _json = json,
-                                )
-                            },
-                        tryDeserialize(node, jacksonTypeRef<VideoTransformationErrorWebhookEvent>())
-                            ?.let {
-                                UnsafeUnwrapWebhookEvent(
-                                    videoTransformationError = it,
-                                    _json = json,
-                                )
-                            },
+                        tryDeserialize(node, jacksonTypeRef<VideoTransformationReadyEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(videoTransformationReady = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<VideoTransformationErrorEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(videoTransformationError = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
