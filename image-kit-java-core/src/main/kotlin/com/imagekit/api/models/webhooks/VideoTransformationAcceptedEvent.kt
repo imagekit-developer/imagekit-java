@@ -21,7 +21,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class VideoTransformationAcceptedWebhookEvent
+class VideoTransformationAcceptedEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -125,7 +125,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [VideoTransformationAcceptedWebhookEvent].
+         * [VideoTransformationAcceptedEvent].
          *
          * The following fields are required:
          * ```java
@@ -138,7 +138,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [VideoTransformationAcceptedWebhookEvent]. */
+    /** A builder for [VideoTransformationAcceptedEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -149,17 +149,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            videoTransformationAcceptedWebhookEvent: VideoTransformationAcceptedWebhookEvent
-        ) = apply {
-            id = videoTransformationAcceptedWebhookEvent.id
-            createdAt = videoTransformationAcceptedWebhookEvent.createdAt
-            data = videoTransformationAcceptedWebhookEvent.data
-            request = videoTransformationAcceptedWebhookEvent.request
-            type = videoTransformationAcceptedWebhookEvent.type
-            additionalProperties =
-                videoTransformationAcceptedWebhookEvent.additionalProperties.toMutableMap()
-        }
+        internal fun from(videoTransformationAcceptedEvent: VideoTransformationAcceptedEvent) =
+            apply {
+                id = videoTransformationAcceptedEvent.id
+                createdAt = videoTransformationAcceptedEvent.createdAt
+                data = videoTransformationAcceptedEvent.data
+                request = videoTransformationAcceptedEvent.request
+                type = videoTransformationAcceptedEvent.type
+                additionalProperties =
+                    videoTransformationAcceptedEvent.additionalProperties.toMutableMap()
+            }
 
         /** Unique identifier for the event. */
         fun id(id: String) = id(JsonField.of(id))
@@ -237,7 +236,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [VideoTransformationAcceptedWebhookEvent].
+         * Returns an immutable instance of [VideoTransformationAcceptedEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -251,8 +250,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): VideoTransformationAcceptedWebhookEvent =
-            VideoTransformationAcceptedWebhookEvent(
+        fun build(): VideoTransformationAcceptedEvent =
+            VideoTransformationAcceptedEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
@@ -264,7 +263,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): VideoTransformationAcceptedWebhookEvent = apply {
+    fun validate(): VideoTransformationAcceptedEvent = apply {
         if (validated) {
             return@apply
         }
@@ -2211,7 +2210,7 @@ private constructor(
             return true
         }
 
-        return other is VideoTransformationAcceptedWebhookEvent &&
+        return other is VideoTransformationAcceptedEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
@@ -2227,5 +2226,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "VideoTransformationAcceptedWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "VideoTransformationAcceptedEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
 }
