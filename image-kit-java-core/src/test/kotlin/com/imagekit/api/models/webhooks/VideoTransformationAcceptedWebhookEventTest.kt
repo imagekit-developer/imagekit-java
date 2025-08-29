@@ -8,53 +8,58 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class VideoTransformationAcceptedEventTest {
+internal class VideoTransformationAcceptedWebhookEventTest {
 
     @Test
     fun create() {
-        val videoTransformationAcceptedEvent =
-            VideoTransformationAcceptedEvent.builder()
+        val videoTransformationAcceptedWebhookEvent =
+            VideoTransformationAcceptedWebhookEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    VideoTransformationAcceptedEvent.Data.builder()
+                    VideoTransformationAcceptedWebhookEvent.Data.builder()
                         .asset(
-                            VideoTransformationAcceptedEvent.Data.Asset.builder()
+                            VideoTransformationAcceptedWebhookEvent.Data.Asset.builder()
                                 .url("https://example.com")
                                 .build()
                         )
                         .transformation(
-                            VideoTransformationAcceptedEvent.Data.Transformation.builder()
+                            VideoTransformationAcceptedWebhookEvent.Data.Transformation.builder()
                                 .type(
-                                    VideoTransformationAcceptedEvent.Data.Transformation.Type
+                                    VideoTransformationAcceptedWebhookEvent.Data.Transformation.Type
                                         .VIDEO_TRANSFORMATION
                                 )
                                 .options(
-                                    VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                    VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                        .Options
                                         .builder()
                                         .audioCodec(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .AudioCodec
                                                 .AAC
                                         )
                                         .autoRotate(true)
                                         .format(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .Format
                                                 .MP4
                                         )
                                         .quality(0L)
                                         .streamProtocol(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .StreamProtocol
                                                 .HLS
                                         )
                                         .addVariant("string")
                                         .videoCodec(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .VideoCodec
                                                 .H264
@@ -66,7 +71,7 @@ internal class VideoTransformationAcceptedEventTest {
                         .build()
                 )
                 .request(
-                    VideoTransformationAcceptedEvent.Request.builder()
+                    VideoTransformationAcceptedWebhookEvent.Request.builder()
                         .url("https://example.com")
                         .xRequestId("x_request_id")
                         .userAgent("user_agent")
@@ -74,46 +79,50 @@ internal class VideoTransformationAcceptedEventTest {
                 )
                 .build()
 
-        assertThat(videoTransformationAcceptedEvent.id()).isEqualTo("id")
-        assertThat(videoTransformationAcceptedEvent.createdAt())
+        assertThat(videoTransformationAcceptedWebhookEvent.id()).isEqualTo("id")
+        assertThat(videoTransformationAcceptedWebhookEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(videoTransformationAcceptedEvent.data())
+        assertThat(videoTransformationAcceptedWebhookEvent.data())
             .isEqualTo(
-                VideoTransformationAcceptedEvent.Data.builder()
+                VideoTransformationAcceptedWebhookEvent.Data.builder()
                     .asset(
-                        VideoTransformationAcceptedEvent.Data.Asset.builder()
+                        VideoTransformationAcceptedWebhookEvent.Data.Asset.builder()
                             .url("https://example.com")
                             .build()
                     )
                     .transformation(
-                        VideoTransformationAcceptedEvent.Data.Transformation.builder()
+                        VideoTransformationAcceptedWebhookEvent.Data.Transformation.builder()
                             .type(
-                                VideoTransformationAcceptedEvent.Data.Transformation.Type
+                                VideoTransformationAcceptedWebhookEvent.Data.Transformation.Type
                                     .VIDEO_TRANSFORMATION
                             )
                             .options(
-                                VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                VideoTransformationAcceptedWebhookEvent.Data.Transformation.Options
                                     .builder()
                                     .audioCodec(
-                                        VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                        VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                            .Options
                                             .AudioCodec
                                             .AAC
                                     )
                                     .autoRotate(true)
                                     .format(
-                                        VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                        VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                            .Options
                                             .Format
                                             .MP4
                                     )
                                     .quality(0L)
                                     .streamProtocol(
-                                        VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                        VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                            .Options
                                             .StreamProtocol
                                             .HLS
                                     )
                                     .addVariant("string")
                                     .videoCodec(
-                                        VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                        VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                            .Options
                                             .VideoCodec
                                             .H264
                                     )
@@ -123,9 +132,9 @@ internal class VideoTransformationAcceptedEventTest {
                     )
                     .build()
             )
-        assertThat(videoTransformationAcceptedEvent.request())
+        assertThat(videoTransformationAcceptedWebhookEvent.request())
             .isEqualTo(
-                VideoTransformationAcceptedEvent.Request.builder()
+                VideoTransformationAcceptedWebhookEvent.Request.builder()
                     .url("https://example.com")
                     .xRequestId("x_request_id")
                     .userAgent("user_agent")
@@ -136,49 +145,54 @@ internal class VideoTransformationAcceptedEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val videoTransformationAcceptedEvent =
-            VideoTransformationAcceptedEvent.builder()
+        val videoTransformationAcceptedWebhookEvent =
+            VideoTransformationAcceptedWebhookEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    VideoTransformationAcceptedEvent.Data.builder()
+                    VideoTransformationAcceptedWebhookEvent.Data.builder()
                         .asset(
-                            VideoTransformationAcceptedEvent.Data.Asset.builder()
+                            VideoTransformationAcceptedWebhookEvent.Data.Asset.builder()
                                 .url("https://example.com")
                                 .build()
                         )
                         .transformation(
-                            VideoTransformationAcceptedEvent.Data.Transformation.builder()
+                            VideoTransformationAcceptedWebhookEvent.Data.Transformation.builder()
                                 .type(
-                                    VideoTransformationAcceptedEvent.Data.Transformation.Type
+                                    VideoTransformationAcceptedWebhookEvent.Data.Transformation.Type
                                         .VIDEO_TRANSFORMATION
                                 )
                                 .options(
-                                    VideoTransformationAcceptedEvent.Data.Transformation.Options
+                                    VideoTransformationAcceptedWebhookEvent.Data.Transformation
+                                        .Options
                                         .builder()
                                         .audioCodec(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .AudioCodec
                                                 .AAC
                                         )
                                         .autoRotate(true)
                                         .format(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .Format
                                                 .MP4
                                         )
                                         .quality(0L)
                                         .streamProtocol(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .StreamProtocol
                                                 .HLS
                                         )
                                         .addVariant("string")
                                         .videoCodec(
-                                            VideoTransformationAcceptedEvent.Data.Transformation
+                                            VideoTransformationAcceptedWebhookEvent.Data
+                                                .Transformation
                                                 .Options
                                                 .VideoCodec
                                                 .H264
@@ -190,7 +204,7 @@ internal class VideoTransformationAcceptedEventTest {
                         .build()
                 )
                 .request(
-                    VideoTransformationAcceptedEvent.Request.builder()
+                    VideoTransformationAcceptedWebhookEvent.Request.builder()
                         .url("https://example.com")
                         .xRequestId("x_request_id")
                         .userAgent("user_agent")
@@ -198,13 +212,13 @@ internal class VideoTransformationAcceptedEventTest {
                 )
                 .build()
 
-        val roundtrippedVideoTransformationAcceptedEvent =
+        val roundtrippedVideoTransformationAcceptedWebhookEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(videoTransformationAcceptedEvent),
-                jacksonTypeRef<VideoTransformationAcceptedEvent>(),
+                jsonMapper.writeValueAsString(videoTransformationAcceptedWebhookEvent),
+                jacksonTypeRef<VideoTransformationAcceptedWebhookEvent>(),
             )
 
-        assertThat(roundtrippedVideoTransformationAcceptedEvent)
-            .isEqualTo(videoTransformationAcceptedEvent)
+        assertThat(roundtrippedVideoTransformationAcceptedWebhookEvent)
+            .isEqualTo(videoTransformationAcceptedWebhookEvent)
     }
 }

@@ -8,63 +8,64 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class VideoTransformationErrorEventTest {
+internal class VideoTransformationErrorWebhookEventTest {
 
     @Test
     fun create() {
-        val videoTransformationErrorEvent =
-            VideoTransformationErrorEvent.builder()
+        val videoTransformationErrorWebhookEvent =
+            VideoTransformationErrorWebhookEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    VideoTransformationErrorEvent.Data.builder()
+                    VideoTransformationErrorWebhookEvent.Data.builder()
                         .asset(
-                            VideoTransformationErrorEvent.Data.Asset.builder()
+                            VideoTransformationErrorWebhookEvent.Data.Asset.builder()
                                 .url("https://example.com")
                                 .build()
                         )
                         .transformation(
-                            VideoTransformationErrorEvent.Data.Transformation.builder()
+                            VideoTransformationErrorWebhookEvent.Data.Transformation.builder()
                                 .type(
-                                    VideoTransformationErrorEvent.Data.Transformation.Type
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Type
                                         .VIDEO_TRANSFORMATION
                                 )
                                 .error(
-                                    VideoTransformationErrorEvent.Data.Transformation.Error
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Error
                                         .builder()
                                         .reason(
-                                            VideoTransformationErrorEvent.Data.Transformation.Error
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
+                                                .Error
                                                 .Reason
                                                 .ENCODING_FAILED
                                         )
                                         .build()
                                 )
                                 .options(
-                                    VideoTransformationErrorEvent.Data.Transformation.Options
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Options
                                         .builder()
                                         .audioCodec(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .AudioCodec
                                                 .AAC
                                         )
                                         .autoRotate(true)
                                         .format(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .Format
                                                 .MP4
                                         )
                                         .quality(0L)
                                         .streamProtocol(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .StreamProtocol
                                                 .HLS
                                         )
                                         .addVariant("string")
                                         .videoCodec(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .VideoCodec
                                                 .H264
@@ -76,7 +77,7 @@ internal class VideoTransformationErrorEventTest {
                         .build()
                 )
                 .request(
-                    VideoTransformationErrorEvent.Request.builder()
+                    VideoTransformationErrorWebhookEvent.Request.builder()
                         .url("https://example.com")
                         .xRequestId("x_request_id")
                         .userAgent("user_agent")
@@ -84,54 +85,61 @@ internal class VideoTransformationErrorEventTest {
                 )
                 .build()
 
-        assertThat(videoTransformationErrorEvent.id()).isEqualTo("id")
-        assertThat(videoTransformationErrorEvent.createdAt())
+        assertThat(videoTransformationErrorWebhookEvent.id()).isEqualTo("id")
+        assertThat(videoTransformationErrorWebhookEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(videoTransformationErrorEvent.data())
+        assertThat(videoTransformationErrorWebhookEvent.data())
             .isEqualTo(
-                VideoTransformationErrorEvent.Data.builder()
+                VideoTransformationErrorWebhookEvent.Data.builder()
                     .asset(
-                        VideoTransformationErrorEvent.Data.Asset.builder()
+                        VideoTransformationErrorWebhookEvent.Data.Asset.builder()
                             .url("https://example.com")
                             .build()
                     )
                     .transformation(
-                        VideoTransformationErrorEvent.Data.Transformation.builder()
+                        VideoTransformationErrorWebhookEvent.Data.Transformation.builder()
                             .type(
-                                VideoTransformationErrorEvent.Data.Transformation.Type
+                                VideoTransformationErrorWebhookEvent.Data.Transformation.Type
                                     .VIDEO_TRANSFORMATION
                             )
                             .error(
-                                VideoTransformationErrorEvent.Data.Transformation.Error.builder()
+                                VideoTransformationErrorWebhookEvent.Data.Transformation.Error
+                                    .builder()
                                     .reason(
-                                        VideoTransformationErrorEvent.Data.Transformation.Error
+                                        VideoTransformationErrorWebhookEvent.Data.Transformation
+                                            .Error
                                             .Reason
                                             .ENCODING_FAILED
                                     )
                                     .build()
                             )
                             .options(
-                                VideoTransformationErrorEvent.Data.Transformation.Options.builder()
+                                VideoTransformationErrorWebhookEvent.Data.Transformation.Options
+                                    .builder()
                                     .audioCodec(
-                                        VideoTransformationErrorEvent.Data.Transformation.Options
+                                        VideoTransformationErrorWebhookEvent.Data.Transformation
+                                            .Options
                                             .AudioCodec
                                             .AAC
                                     )
                                     .autoRotate(true)
                                     .format(
-                                        VideoTransformationErrorEvent.Data.Transformation.Options
+                                        VideoTransformationErrorWebhookEvent.Data.Transformation
+                                            .Options
                                             .Format
                                             .MP4
                                     )
                                     .quality(0L)
                                     .streamProtocol(
-                                        VideoTransformationErrorEvent.Data.Transformation.Options
+                                        VideoTransformationErrorWebhookEvent.Data.Transformation
+                                            .Options
                                             .StreamProtocol
                                             .HLS
                                     )
                                     .addVariant("string")
                                     .videoCodec(
-                                        VideoTransformationErrorEvent.Data.Transformation.Options
+                                        VideoTransformationErrorWebhookEvent.Data.Transformation
+                                            .Options
                                             .VideoCodec
                                             .H264
                                     )
@@ -141,9 +149,9 @@ internal class VideoTransformationErrorEventTest {
                     )
                     .build()
             )
-        assertThat(videoTransformationErrorEvent.request())
+        assertThat(videoTransformationErrorWebhookEvent.request())
             .isEqualTo(
-                VideoTransformationErrorEvent.Request.builder()
+                VideoTransformationErrorWebhookEvent.Request.builder()
                     .url("https://example.com")
                     .xRequestId("x_request_id")
                     .userAgent("user_agent")
@@ -154,59 +162,60 @@ internal class VideoTransformationErrorEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val videoTransformationErrorEvent =
-            VideoTransformationErrorEvent.builder()
+        val videoTransformationErrorWebhookEvent =
+            VideoTransformationErrorWebhookEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    VideoTransformationErrorEvent.Data.builder()
+                    VideoTransformationErrorWebhookEvent.Data.builder()
                         .asset(
-                            VideoTransformationErrorEvent.Data.Asset.builder()
+                            VideoTransformationErrorWebhookEvent.Data.Asset.builder()
                                 .url("https://example.com")
                                 .build()
                         )
                         .transformation(
-                            VideoTransformationErrorEvent.Data.Transformation.builder()
+                            VideoTransformationErrorWebhookEvent.Data.Transformation.builder()
                                 .type(
-                                    VideoTransformationErrorEvent.Data.Transformation.Type
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Type
                                         .VIDEO_TRANSFORMATION
                                 )
                                 .error(
-                                    VideoTransformationErrorEvent.Data.Transformation.Error
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Error
                                         .builder()
                                         .reason(
-                                            VideoTransformationErrorEvent.Data.Transformation.Error
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
+                                                .Error
                                                 .Reason
                                                 .ENCODING_FAILED
                                         )
                                         .build()
                                 )
                                 .options(
-                                    VideoTransformationErrorEvent.Data.Transformation.Options
+                                    VideoTransformationErrorWebhookEvent.Data.Transformation.Options
                                         .builder()
                                         .audioCodec(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .AudioCodec
                                                 .AAC
                                         )
                                         .autoRotate(true)
                                         .format(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .Format
                                                 .MP4
                                         )
                                         .quality(0L)
                                         .streamProtocol(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .StreamProtocol
                                                 .HLS
                                         )
                                         .addVariant("string")
                                         .videoCodec(
-                                            VideoTransformationErrorEvent.Data.Transformation
+                                            VideoTransformationErrorWebhookEvent.Data.Transformation
                                                 .Options
                                                 .VideoCodec
                                                 .H264
@@ -218,7 +227,7 @@ internal class VideoTransformationErrorEventTest {
                         .build()
                 )
                 .request(
-                    VideoTransformationErrorEvent.Request.builder()
+                    VideoTransformationErrorWebhookEvent.Request.builder()
                         .url("https://example.com")
                         .xRequestId("x_request_id")
                         .userAgent("user_agent")
@@ -226,13 +235,13 @@ internal class VideoTransformationErrorEventTest {
                 )
                 .build()
 
-        val roundtrippedVideoTransformationErrorEvent =
+        val roundtrippedVideoTransformationErrorWebhookEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(videoTransformationErrorEvent),
-                jacksonTypeRef<VideoTransformationErrorEvent>(),
+                jsonMapper.writeValueAsString(videoTransformationErrorWebhookEvent),
+                jacksonTypeRef<VideoTransformationErrorWebhookEvent>(),
             )
 
-        assertThat(roundtrippedVideoTransformationErrorEvent)
-            .isEqualTo(videoTransformationErrorEvent)
+        assertThat(roundtrippedVideoTransformationErrorWebhookEvent)
+            .isEqualTo(videoTransformationErrorWebhookEvent)
     }
 }

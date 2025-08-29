@@ -21,13 +21,14 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class VideoTransformationErrorEvent
+class VideoTransformationReadyWebhookEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val data: JsonField<Data>,
     private val request: JsonField<Request>,
     private val type: JsonValue,
+    private val timings: JsonField<Timings>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -40,7 +41,8 @@ private constructor(
         @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
         @JsonProperty("request") @ExcludeMissing request: JsonField<Request> = JsonMissing.of(),
         @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, createdAt, data, request, type, mutableMapOf())
+        @JsonProperty("timings") @ExcludeMissing timings: JsonField<Timings> = JsonMissing.of(),
+    ) : this(id, createdAt, data, request, type, timings, mutableMapOf())
 
     /**
      * Unique identifier for the event.
@@ -71,13 +73,19 @@ private constructor(
     /**
      * Expected to always return the following:
      * ```java
-     * JsonValue.from("video.transformation.error")
+     * JsonValue.from("video.transformation.ready")
      * ```
      *
      * However, this method can be useful for debugging and logging (e.g. if the server responded
      * with an unexpected value).
      */
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun timings(): Optional<Timings> = timings.getOptional("timings")
 
     /**
      * Returns the raw JSON value of [id].
@@ -109,6 +117,13 @@ private constructor(
      */
     @JsonProperty("request") @ExcludeMissing fun _request(): JsonField<Request> = request
 
+    /**
+     * Returns the raw JSON value of [timings].
+     *
+     * Unlike [timings], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("timings") @ExcludeMissing fun _timings(): JsonField<Timings> = timings
+
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
         additionalProperties.put(key, value)
@@ -125,7 +140,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [VideoTransformationErrorEvent].
+         * [VideoTransformationReadyWebhookEvent].
          *
          * The following fields are required:
          * ```java
@@ -138,24 +153,29 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [VideoTransformationErrorEvent]. */
+    /** A builder for [VideoTransformationReadyWebhookEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var data: JsonField<Data>? = null
         private var request: JsonField<Request>? = null
-        private var type: JsonValue = JsonValue.from("video.transformation.error")
+        private var type: JsonValue = JsonValue.from("video.transformation.ready")
+        private var timings: JsonField<Timings> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(videoTransformationErrorEvent: VideoTransformationErrorEvent) = apply {
-            id = videoTransformationErrorEvent.id
-            createdAt = videoTransformationErrorEvent.createdAt
-            data = videoTransformationErrorEvent.data
-            request = videoTransformationErrorEvent.request
-            type = videoTransformationErrorEvent.type
-            additionalProperties = videoTransformationErrorEvent.additionalProperties.toMutableMap()
+        internal fun from(
+            videoTransformationReadyWebhookEvent: VideoTransformationReadyWebhookEvent
+        ) = apply {
+            id = videoTransformationReadyWebhookEvent.id
+            createdAt = videoTransformationReadyWebhookEvent.createdAt
+            data = videoTransformationReadyWebhookEvent.data
+            request = videoTransformationReadyWebhookEvent.request
+            type = videoTransformationReadyWebhookEvent.type
+            timings = videoTransformationReadyWebhookEvent.timings
+            additionalProperties =
+                videoTransformationReadyWebhookEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -206,13 +226,23 @@ private constructor(
          * It is usually unnecessary to call this method because the field defaults to the
          * following:
          * ```java
-         * JsonValue.from("video.transformation.error")
+         * JsonValue.from("video.transformation.ready")
          * ```
          *
          * This method is primarily for setting the field to an undocumented or not yet supported
          * value.
          */
         fun type(type: JsonValue) = apply { this.type = type }
+
+        fun timings(timings: Timings) = timings(JsonField.of(timings))
+
+        /**
+         * Sets [Builder.timings] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.timings] with a well-typed [Timings] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun timings(timings: JsonField<Timings>) = apply { this.timings = timings }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -234,7 +264,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [VideoTransformationErrorEvent].
+         * Returns an immutable instance of [VideoTransformationReadyWebhookEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -248,20 +278,21 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): VideoTransformationErrorEvent =
-            VideoTransformationErrorEvent(
+        fun build(): VideoTransformationReadyWebhookEvent =
+            VideoTransformationReadyWebhookEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
                 checkRequired("request", request),
                 type,
+                timings,
                 additionalProperties.toMutableMap(),
             )
     }
 
     private var validated: Boolean = false
 
-    fun validate(): VideoTransformationErrorEvent = apply {
+    fun validate(): VideoTransformationReadyWebhookEvent = apply {
         if (validated) {
             return@apply
         }
@@ -271,10 +302,11 @@ private constructor(
         data().validate()
         request().validate()
         _type().let {
-            if (it != JsonValue.from("video.transformation.error")) {
+            if (it != JsonValue.from("video.transformation.ready")) {
                 throw ImageKitInvalidDataException("'type' is invalid, received $it")
             }
         }
+        timings().ifPresent { it.validate() }
         validated = true
     }
 
@@ -297,7 +329,8 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (data.asKnown().getOrNull()?.validity() ?: 0) +
             (request.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("video.transformation.error")) 1 else 0 }
+            type.let { if (it == JsonValue.from("video.transformation.ready")) 1 else 0 } +
+            (timings.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
     private constructor(
@@ -640,19 +673,19 @@ private constructor(
         class Transformation
         private constructor(
             private val type: JsonField<Type>,
-            private val error: JsonField<Error>,
             private val options: JsonField<Options>,
+            private val output: JsonField<Output>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
             @JsonCreator
             private constructor(
                 @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
-                @JsonProperty("error") @ExcludeMissing error: JsonField<Error> = JsonMissing.of(),
                 @JsonProperty("options")
                 @ExcludeMissing
                 options: JsonField<Options> = JsonMissing.of(),
-            ) : this(type, error, options, mutableMapOf())
+                @JsonProperty("output") @ExcludeMissing output: JsonField<Output> = JsonMissing.of(),
+            ) : this(type, options, output, mutableMapOf())
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -665,13 +698,13 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun error(): Optional<Error> = error.getOptional("error")
+            fun options(): Optional<Options> = options.getOptional("options")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun options(): Optional<Options> = options.getOptional("options")
+            fun output(): Optional<Output> = output.getOptional("output")
 
             /**
              * Returns the raw JSON value of [type].
@@ -681,18 +714,18 @@ private constructor(
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
             /**
-             * Returns the raw JSON value of [error].
-             *
-             * Unlike [error], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("error") @ExcludeMissing fun _error(): JsonField<Error> = error
-
-            /**
              * Returns the raw JSON value of [options].
              *
              * Unlike [options], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("options") @ExcludeMissing fun _options(): JsonField<Options> = options
+
+            /**
+             * Returns the raw JSON value of [output].
+             *
+             * Unlike [output], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("output") @ExcludeMissing fun _output(): JsonField<Output> = output
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -723,15 +756,15 @@ private constructor(
             class Builder internal constructor() {
 
                 private var type: JsonField<Type>? = null
-                private var error: JsonField<Error> = JsonMissing.of()
                 private var options: JsonField<Options> = JsonMissing.of()
+                private var output: JsonField<Output> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(transformation: Transformation) = apply {
                     type = transformation.type
-                    error = transformation.error
                     options = transformation.options
+                    output = transformation.output
                     additionalProperties = transformation.additionalProperties.toMutableMap()
                 }
 
@@ -746,17 +779,6 @@ private constructor(
                  */
                 fun type(type: JsonField<Type>) = apply { this.type = type }
 
-                fun error(error: Error) = error(JsonField.of(error))
-
-                /**
-                 * Sets [Builder.error] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.error] with a well-typed [Error] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun error(error: JsonField<Error>) = apply { this.error = error }
-
                 fun options(options: Options) = options(JsonField.of(options))
 
                 /**
@@ -767,6 +789,17 @@ private constructor(
                  * yet supported value.
                  */
                 fun options(options: JsonField<Options>) = apply { this.options = options }
+
+                fun output(output: Output) = output(JsonField.of(output))
+
+                /**
+                 * Sets [Builder.output] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.output] with a well-typed [Output] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun output(output: JsonField<Output>) = apply { this.output = output }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -805,8 +838,8 @@ private constructor(
                 fun build(): Transformation =
                     Transformation(
                         checkRequired("type", type),
-                        error,
                         options,
+                        output,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -819,8 +852,8 @@ private constructor(
                 }
 
                 type().validate()
-                error().ifPresent { it.validate() }
                 options().ifPresent { it.validate() }
+                output().ifPresent { it.validate() }
                 validated = true
             }
 
@@ -841,8 +874,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (type.asKnown().getOrNull()?.validity() ?: 0) +
-                    (error.asKnown().getOrNull()?.validity() ?: 0) +
-                    (options.asKnown().getOrNull()?.validity() ?: 0)
+                    (options.asKnown().getOrNull()?.validity() ?: 0) +
+                    (output.asKnown().getOrNull()?.validity() ?: 0)
 
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
@@ -978,306 +1011,6 @@ private constructor(
                 override fun hashCode() = value.hashCode()
 
                 override fun toString() = value.toString()
-            }
-
-            class Error
-            private constructor(
-                private val reason: JsonField<Reason>,
-                private val additionalProperties: MutableMap<String, JsonValue>,
-            ) {
-
-                @JsonCreator
-                private constructor(
-                    @JsonProperty("reason")
-                    @ExcludeMissing
-                    reason: JsonField<Reason> = JsonMissing.of()
-                ) : this(reason, mutableMapOf())
-
-                /**
-                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
-                 *   is unexpectedly missing or null (e.g. if the server responded with an
-                 *   unexpected value).
-                 */
-                fun reason(): Reason = reason.getRequired("reason")
-
-                /**
-                 * Returns the raw JSON value of [reason].
-                 *
-                 * Unlike [reason], this method doesn't throw if the JSON field has an unexpected
-                 * type.
-                 */
-                @JsonProperty("reason") @ExcludeMissing fun _reason(): JsonField<Reason> = reason
-
-                @JsonAnySetter
-                private fun putAdditionalProperty(key: String, value: JsonValue) {
-                    additionalProperties.put(key, value)
-                }
-
-                @JsonAnyGetter
-                @ExcludeMissing
-                fun _additionalProperties(): Map<String, JsonValue> =
-                    Collections.unmodifiableMap(additionalProperties)
-
-                fun toBuilder() = Builder().from(this)
-
-                companion object {
-
-                    /**
-                     * Returns a mutable builder for constructing an instance of [Error].
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .reason()
-                     * ```
-                     */
-                    @JvmStatic fun builder() = Builder()
-                }
-
-                /** A builder for [Error]. */
-                class Builder internal constructor() {
-
-                    private var reason: JsonField<Reason>? = null
-                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                    @JvmSynthetic
-                    internal fun from(error: Error) = apply {
-                        reason = error.reason
-                        additionalProperties = error.additionalProperties.toMutableMap()
-                    }
-
-                    fun reason(reason: Reason) = reason(JsonField.of(reason))
-
-                    /**
-                     * Sets [Builder.reason] to an arbitrary JSON value.
-                     *
-                     * You should usually call [Builder.reason] with a well-typed [Reason] value
-                     * instead. This method is primarily for setting the field to an undocumented or
-                     * not yet supported value.
-                     */
-                    fun reason(reason: JsonField<Reason>) = apply { this.reason = reason }
-
-                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                        this.additionalProperties.clear()
-                        putAllAdditionalProperties(additionalProperties)
-                    }
-
-                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                        additionalProperties.put(key, value)
-                    }
-
-                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                        apply {
-                            this.additionalProperties.putAll(additionalProperties)
-                        }
-
-                    fun removeAdditionalProperty(key: String) = apply {
-                        additionalProperties.remove(key)
-                    }
-
-                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                        keys.forEach(::removeAdditionalProperty)
-                    }
-
-                    /**
-                     * Returns an immutable instance of [Error].
-                     *
-                     * Further updates to this [Builder] will not mutate the returned instance.
-                     *
-                     * The following fields are required:
-                     * ```java
-                     * .reason()
-                     * ```
-                     *
-                     * @throws IllegalStateException if any required field is unset.
-                     */
-                    fun build(): Error =
-                        Error(checkRequired("reason", reason), additionalProperties.toMutableMap())
-                }
-
-                private var validated: Boolean = false
-
-                fun validate(): Error = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    reason().validate()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: ImageKitInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic
-                internal fun validity(): Int = (reason.asKnown().getOrNull()?.validity() ?: 0)
-
-                class Reason
-                @JsonCreator
-                private constructor(private val value: JsonField<String>) : Enum {
-
-                    /**
-                     * Returns this class instance's raw value.
-                     *
-                     * This is usually only useful if this instance was deserialized from data that
-                     * doesn't match any known member, and you want to know that value. For example,
-                     * if the SDK is on an older version than the API, then the API may respond with
-                     * new members that the SDK is unaware of.
-                     */
-                    @com.fasterxml.jackson.annotation.JsonValue
-                    fun _value(): JsonField<String> = value
-
-                    companion object {
-
-                        @JvmField val ENCODING_FAILED = of("encoding_failed")
-
-                        @JvmField val DOWNLOAD_FAILED = of("download_failed")
-
-                        @JvmField val INTERNAL_SERVER_ERROR = of("internal_server_error")
-
-                        @JvmStatic fun of(value: String) = Reason(JsonField.of(value))
-                    }
-
-                    /** An enum containing [Reason]'s known values. */
-                    enum class Known {
-                        ENCODING_FAILED,
-                        DOWNLOAD_FAILED,
-                        INTERNAL_SERVER_ERROR,
-                    }
-
-                    /**
-                     * An enum containing [Reason]'s known values, as well as an [_UNKNOWN] member.
-                     *
-                     * An instance of [Reason] can contain an unknown value in a couple of cases:
-                     * - It was deserialized from data that doesn't match any known member. For
-                     *   example, if the SDK is on an older version than the API, then the API may
-                     *   respond with new members that the SDK is unaware of.
-                     * - It was constructed with an arbitrary value using the [of] method.
-                     */
-                    enum class Value {
-                        ENCODING_FAILED,
-                        DOWNLOAD_FAILED,
-                        INTERNAL_SERVER_ERROR,
-                        /**
-                         * An enum member indicating that [Reason] was instantiated with an unknown
-                         * value.
-                         */
-                        _UNKNOWN,
-                    }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value, or
-                     * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                     *
-                     * Use the [known] method instead if you're certain the value is always known or
-                     * if you want to throw for the unknown case.
-                     */
-                    fun value(): Value =
-                        when (this) {
-                            ENCODING_FAILED -> Value.ENCODING_FAILED
-                            DOWNLOAD_FAILED -> Value.DOWNLOAD_FAILED
-                            INTERNAL_SERVER_ERROR -> Value.INTERNAL_SERVER_ERROR
-                            else -> Value._UNKNOWN
-                        }
-
-                    /**
-                     * Returns an enum member corresponding to this class instance's value.
-                     *
-                     * Use the [value] method instead if you're uncertain the value is always known
-                     * and don't want to throw for the unknown case.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value is a not
-                     *   a known member.
-                     */
-                    fun known(): Known =
-                        when (this) {
-                            ENCODING_FAILED -> Known.ENCODING_FAILED
-                            DOWNLOAD_FAILED -> Known.DOWNLOAD_FAILED
-                            INTERNAL_SERVER_ERROR -> Known.INTERNAL_SERVER_ERROR
-                            else -> throw ImageKitInvalidDataException("Unknown Reason: $value")
-                        }
-
-                    /**
-                     * Returns this class instance's primitive wire representation.
-                     *
-                     * This differs from the [toString] method because that method is primarily for
-                     * debugging and generally doesn't throw.
-                     *
-                     * @throws ImageKitInvalidDataException if this class instance's value does not
-                     *   have the expected primitive type.
-                     */
-                    fun asString(): String =
-                        _value().asString().orElseThrow {
-                            ImageKitInvalidDataException("Value is not a String")
-                        }
-
-                    private var validated: Boolean = false
-
-                    fun validate(): Reason = apply {
-                        if (validated) {
-                            return@apply
-                        }
-
-                        known()
-                        validated = true
-                    }
-
-                    fun isValid(): Boolean =
-                        try {
-                            validate()
-                            true
-                        } catch (e: ImageKitInvalidDataException) {
-                            false
-                        }
-
-                    /**
-                     * Returns a score indicating how many valid values are contained in this object
-                     * recursively.
-                     *
-                     * Used for best match union deserialization.
-                     */
-                    @JvmSynthetic
-                    internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                    override fun equals(other: Any?): Boolean {
-                        if (this === other) {
-                            return true
-                        }
-
-                        return other is Reason && value == other.value
-                    }
-
-                    override fun hashCode() = value.hashCode()
-
-                    override fun toString() = value.toString()
-                }
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return other is Error &&
-                        reason == other.reason &&
-                        additionalProperties == other.additionalProperties
-                }
-
-                private val hashCode: Int by lazy { Objects.hash(reason, additionalProperties) }
-
-                override fun hashCode(): Int = hashCode
-
-                override fun toString() =
-                    "Error{reason=$reason, additionalProperties=$additionalProperties}"
             }
 
             class Options
@@ -2254,6 +1987,498 @@ private constructor(
                     "Options{audioCodec=$audioCodec, autoRotate=$autoRotate, format=$format, quality=$quality, streamProtocol=$streamProtocol, variants=$variants, videoCodec=$videoCodec, additionalProperties=$additionalProperties}"
             }
 
+            class Output
+            private constructor(
+                private val url: JsonField<String>,
+                private val videoMetadata: JsonField<VideoMetadata>,
+                private val additionalProperties: MutableMap<String, JsonValue>,
+            ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("video_metadata")
+                    @ExcludeMissing
+                    videoMetadata: JsonField<VideoMetadata> = JsonMissing.of(),
+                ) : this(url, videoMetadata, mutableMapOf())
+
+                /**
+                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
+                 *   is unexpectedly missing or null (e.g. if the server responded with an
+                 *   unexpected value).
+                 */
+                fun url(): String = url.getRequired("url")
+
+                /**
+                 * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                 *   (e.g. if the server responded with an unexpected value).
+                 */
+                fun videoMetadata(): Optional<VideoMetadata> =
+                    videoMetadata.getOptional("video_metadata")
+
+                /**
+                 * Returns the raw JSON value of [url].
+                 *
+                 * Unlike [url], this method doesn't throw if the JSON field has an unexpected type.
+                 */
+                @JsonProperty("url") @ExcludeMissing fun _url(): JsonField<String> = url
+
+                /**
+                 * Returns the raw JSON value of [videoMetadata].
+                 *
+                 * Unlike [videoMetadata], this method doesn't throw if the JSON field has an
+                 * unexpected type.
+                 */
+                @JsonProperty("video_metadata")
+                @ExcludeMissing
+                fun _videoMetadata(): JsonField<VideoMetadata> = videoMetadata
+
+                @JsonAnySetter
+                private fun putAdditionalProperty(key: String, value: JsonValue) {
+                    additionalProperties.put(key, value)
+                }
+
+                @JsonAnyGetter
+                @ExcludeMissing
+                fun _additionalProperties(): Map<String, JsonValue> =
+                    Collections.unmodifiableMap(additionalProperties)
+
+                fun toBuilder() = Builder().from(this)
+
+                companion object {
+
+                    /**
+                     * Returns a mutable builder for constructing an instance of [Output].
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .url()
+                     * ```
+                     */
+                    @JvmStatic fun builder() = Builder()
+                }
+
+                /** A builder for [Output]. */
+                class Builder internal constructor() {
+
+                    private var url: JsonField<String>? = null
+                    private var videoMetadata: JsonField<VideoMetadata> = JsonMissing.of()
+                    private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                    @JvmSynthetic
+                    internal fun from(output: Output) = apply {
+                        url = output.url
+                        videoMetadata = output.videoMetadata
+                        additionalProperties = output.additionalProperties.toMutableMap()
+                    }
+
+                    fun url(url: String) = url(JsonField.of(url))
+
+                    /**
+                     * Sets [Builder.url] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.url] with a well-typed [String] value
+                     * instead. This method is primarily for setting the field to an undocumented or
+                     * not yet supported value.
+                     */
+                    fun url(url: JsonField<String>) = apply { this.url = url }
+
+                    fun videoMetadata(videoMetadata: VideoMetadata) =
+                        videoMetadata(JsonField.of(videoMetadata))
+
+                    /**
+                     * Sets [Builder.videoMetadata] to an arbitrary JSON value.
+                     *
+                     * You should usually call [Builder.videoMetadata] with a well-typed
+                     * [VideoMetadata] value instead. This method is primarily for setting the field
+                     * to an undocumented or not yet supported value.
+                     */
+                    fun videoMetadata(videoMetadata: JsonField<VideoMetadata>) = apply {
+                        this.videoMetadata = videoMetadata
+                    }
+
+                    fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                        this.additionalProperties.clear()
+                        putAllAdditionalProperties(additionalProperties)
+                    }
+
+                    fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                        additionalProperties.put(key, value)
+                    }
+
+                    fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                        apply {
+                            this.additionalProperties.putAll(additionalProperties)
+                        }
+
+                    fun removeAdditionalProperty(key: String) = apply {
+                        additionalProperties.remove(key)
+                    }
+
+                    fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                        keys.forEach(::removeAdditionalProperty)
+                    }
+
+                    /**
+                     * Returns an immutable instance of [Output].
+                     *
+                     * Further updates to this [Builder] will not mutate the returned instance.
+                     *
+                     * The following fields are required:
+                     * ```java
+                     * .url()
+                     * ```
+                     *
+                     * @throws IllegalStateException if any required field is unset.
+                     */
+                    fun build(): Output =
+                        Output(
+                            checkRequired("url", url),
+                            videoMetadata,
+                            additionalProperties.toMutableMap(),
+                        )
+                }
+
+                private var validated: Boolean = false
+
+                fun validate(): Output = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    url()
+                    videoMetadata().ifPresent { it.validate() }
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: ImageKitInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (url.asKnown().isPresent) 1 else 0) +
+                        (videoMetadata.asKnown().getOrNull()?.validity() ?: 0)
+
+                class VideoMetadata
+                private constructor(
+                    private val bitrate: JsonField<Long>,
+                    private val duration: JsonField<Double>,
+                    private val height: JsonField<Long>,
+                    private val width: JsonField<Long>,
+                    private val additionalProperties: MutableMap<String, JsonValue>,
+                ) {
+
+                    @JsonCreator
+                    private constructor(
+                        @JsonProperty("bitrate")
+                        @ExcludeMissing
+                        bitrate: JsonField<Long> = JsonMissing.of(),
+                        @JsonProperty("duration")
+                        @ExcludeMissing
+                        duration: JsonField<Double> = JsonMissing.of(),
+                        @JsonProperty("height")
+                        @ExcludeMissing
+                        height: JsonField<Long> = JsonMissing.of(),
+                        @JsonProperty("width")
+                        @ExcludeMissing
+                        width: JsonField<Long> = JsonMissing.of(),
+                    ) : this(bitrate, duration, height, width, mutableMapOf())
+
+                    /**
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun bitrate(): Long = bitrate.getRequired("bitrate")
+
+                    /**
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun duration(): Double = duration.getRequired("duration")
+
+                    /**
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun height(): Long = height.getRequired("height")
+
+                    /**
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun width(): Long = width.getRequired("width")
+
+                    /**
+                     * Returns the raw JSON value of [bitrate].
+                     *
+                     * Unlike [bitrate], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("bitrate")
+                    @ExcludeMissing
+                    fun _bitrate(): JsonField<Long> = bitrate
+
+                    /**
+                     * Returns the raw JSON value of [duration].
+                     *
+                     * Unlike [duration], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("duration")
+                    @ExcludeMissing
+                    fun _duration(): JsonField<Double> = duration
+
+                    /**
+                     * Returns the raw JSON value of [height].
+                     *
+                     * Unlike [height], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("height") @ExcludeMissing fun _height(): JsonField<Long> = height
+
+                    /**
+                     * Returns the raw JSON value of [width].
+                     *
+                     * Unlike [width], this method doesn't throw if the JSON field has an unexpected
+                     * type.
+                     */
+                    @JsonProperty("width") @ExcludeMissing fun _width(): JsonField<Long> = width
+
+                    @JsonAnySetter
+                    private fun putAdditionalProperty(key: String, value: JsonValue) {
+                        additionalProperties.put(key, value)
+                    }
+
+                    @JsonAnyGetter
+                    @ExcludeMissing
+                    fun _additionalProperties(): Map<String, JsonValue> =
+                        Collections.unmodifiableMap(additionalProperties)
+
+                    fun toBuilder() = Builder().from(this)
+
+                    companion object {
+
+                        /**
+                         * Returns a mutable builder for constructing an instance of
+                         * [VideoMetadata].
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .bitrate()
+                         * .duration()
+                         * .height()
+                         * .width()
+                         * ```
+                         */
+                        @JvmStatic fun builder() = Builder()
+                    }
+
+                    /** A builder for [VideoMetadata]. */
+                    class Builder internal constructor() {
+
+                        private var bitrate: JsonField<Long>? = null
+                        private var duration: JsonField<Double>? = null
+                        private var height: JsonField<Long>? = null
+                        private var width: JsonField<Long>? = null
+                        private var additionalProperties: MutableMap<String, JsonValue> =
+                            mutableMapOf()
+
+                        @JvmSynthetic
+                        internal fun from(videoMetadata: VideoMetadata) = apply {
+                            bitrate = videoMetadata.bitrate
+                            duration = videoMetadata.duration
+                            height = videoMetadata.height
+                            width = videoMetadata.width
+                            additionalProperties = videoMetadata.additionalProperties.toMutableMap()
+                        }
+
+                        fun bitrate(bitrate: Long) = bitrate(JsonField.of(bitrate))
+
+                        /**
+                         * Sets [Builder.bitrate] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.bitrate] with a well-typed [Long] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun bitrate(bitrate: JsonField<Long>) = apply { this.bitrate = bitrate }
+
+                        fun duration(duration: Double) = duration(JsonField.of(duration))
+
+                        /**
+                         * Sets [Builder.duration] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.duration] with a well-typed [Double]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun duration(duration: JsonField<Double>) = apply {
+                            this.duration = duration
+                        }
+
+                        fun height(height: Long) = height(JsonField.of(height))
+
+                        /**
+                         * Sets [Builder.height] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.height] with a well-typed [Long] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun height(height: JsonField<Long>) = apply { this.height = height }
+
+                        fun width(width: Long) = width(JsonField.of(width))
+
+                        /**
+                         * Sets [Builder.width] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.width] with a well-typed [Long] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun width(width: JsonField<Long>) = apply { this.width = width }
+
+                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                            apply {
+                                this.additionalProperties.clear()
+                                putAllAdditionalProperties(additionalProperties)
+                            }
+
+                        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                            additionalProperties.put(key, value)
+                        }
+
+                        fun putAllAdditionalProperties(
+                            additionalProperties: Map<String, JsonValue>
+                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                        fun removeAdditionalProperty(key: String) = apply {
+                            additionalProperties.remove(key)
+                        }
+
+                        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
+
+                        /**
+                         * Returns an immutable instance of [VideoMetadata].
+                         *
+                         * Further updates to this [Builder] will not mutate the returned instance.
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .bitrate()
+                         * .duration()
+                         * .height()
+                         * .width()
+                         * ```
+                         *
+                         * @throws IllegalStateException if any required field is unset.
+                         */
+                        fun build(): VideoMetadata =
+                            VideoMetadata(
+                                checkRequired("bitrate", bitrate),
+                                checkRequired("duration", duration),
+                                checkRequired("height", height),
+                                checkRequired("width", width),
+                                additionalProperties.toMutableMap(),
+                            )
+                    }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): VideoMetadata = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        bitrate()
+                        duration()
+                        height()
+                        width()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: ImageKitInvalidDataException) {
+                            false
+                        }
+
+                    /**
+                     * Returns a score indicating how many valid values are contained in this object
+                     * recursively.
+                     *
+                     * Used for best match union deserialization.
+                     */
+                    @JvmSynthetic
+                    internal fun validity(): Int =
+                        (if (bitrate.asKnown().isPresent) 1 else 0) +
+                            (if (duration.asKnown().isPresent) 1 else 0) +
+                            (if (height.asKnown().isPresent) 1 else 0) +
+                            (if (width.asKnown().isPresent) 1 else 0)
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is VideoMetadata &&
+                            bitrate == other.bitrate &&
+                            duration == other.duration &&
+                            height == other.height &&
+                            width == other.width &&
+                            additionalProperties == other.additionalProperties
+                    }
+
+                    private val hashCode: Int by lazy {
+                        Objects.hash(bitrate, duration, height, width, additionalProperties)
+                    }
+
+                    override fun hashCode(): Int = hashCode
+
+                    override fun toString() =
+                        "VideoMetadata{bitrate=$bitrate, duration=$duration, height=$height, width=$width, additionalProperties=$additionalProperties}"
+                }
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Output &&
+                        url == other.url &&
+                        videoMetadata == other.videoMetadata &&
+                        additionalProperties == other.additionalProperties
+                }
+
+                private val hashCode: Int by lazy {
+                    Objects.hash(url, videoMetadata, additionalProperties)
+                }
+
+                override fun hashCode(): Int = hashCode
+
+                override fun toString() =
+                    "Output{url=$url, videoMetadata=$videoMetadata, additionalProperties=$additionalProperties}"
+            }
+
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -2261,19 +2486,19 @@ private constructor(
 
                 return other is Transformation &&
                     type == other.type &&
-                    error == other.error &&
                     options == other.options &&
+                    output == other.output &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(type, error, options, additionalProperties)
+                Objects.hash(type, options, output, additionalProperties)
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Transformation{type=$type, error=$error, options=$options, additionalProperties=$additionalProperties}"
+                "Transformation{type=$type, options=$options, output=$output, additionalProperties=$additionalProperties}"
         }
 
         override fun equals(other: Any?): Boolean {
@@ -2537,26 +2762,222 @@ private constructor(
             "Request{url=$url, xRequestId=$xRequestId, userAgent=$userAgent, additionalProperties=$additionalProperties}"
     }
 
+    class Timings
+    private constructor(
+        private val downloadDuration: JsonField<Long>,
+        private val encodingDuration: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("download_duration")
+            @ExcludeMissing
+            downloadDuration: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("encoding_duration")
+            @ExcludeMissing
+            encodingDuration: JsonField<Long> = JsonMissing.of(),
+        ) : this(downloadDuration, encodingDuration, mutableMapOf())
+
+        /**
+         * Milliseconds spent downloading the source.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun downloadDuration(): Optional<Long> = downloadDuration.getOptional("download_duration")
+
+        /**
+         * Milliseconds spent encoding.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun encodingDuration(): Optional<Long> = encodingDuration.getOptional("encoding_duration")
+
+        /**
+         * Returns the raw JSON value of [downloadDuration].
+         *
+         * Unlike [downloadDuration], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("download_duration")
+        @ExcludeMissing
+        fun _downloadDuration(): JsonField<Long> = downloadDuration
+
+        /**
+         * Returns the raw JSON value of [encodingDuration].
+         *
+         * Unlike [encodingDuration], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("encoding_duration")
+        @ExcludeMissing
+        fun _encodingDuration(): JsonField<Long> = encodingDuration
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [Timings]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [Timings]. */
+        class Builder internal constructor() {
+
+            private var downloadDuration: JsonField<Long> = JsonMissing.of()
+            private var encodingDuration: JsonField<Long> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(timings: Timings) = apply {
+                downloadDuration = timings.downloadDuration
+                encodingDuration = timings.encodingDuration
+                additionalProperties = timings.additionalProperties.toMutableMap()
+            }
+
+            /** Milliseconds spent downloading the source. */
+            fun downloadDuration(downloadDuration: Long) =
+                downloadDuration(JsonField.of(downloadDuration))
+
+            /**
+             * Sets [Builder.downloadDuration] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.downloadDuration] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun downloadDuration(downloadDuration: JsonField<Long>) = apply {
+                this.downloadDuration = downloadDuration
+            }
+
+            /** Milliseconds spent encoding. */
+            fun encodingDuration(encodingDuration: Long) =
+                encodingDuration(JsonField.of(encodingDuration))
+
+            /**
+             * Sets [Builder.encodingDuration] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.encodingDuration] with a well-typed [Long] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun encodingDuration(encodingDuration: JsonField<Long>) = apply {
+                this.encodingDuration = encodingDuration
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [Timings].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): Timings =
+                Timings(downloadDuration, encodingDuration, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): Timings = apply {
+            if (validated) {
+                return@apply
+            }
+
+            downloadDuration()
+            encodingDuration()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (downloadDuration.asKnown().isPresent) 1 else 0) +
+                (if (encodingDuration.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Timings &&
+                downloadDuration == other.downloadDuration &&
+                encodingDuration == other.encodingDuration &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy {
+            Objects.hash(downloadDuration, encodingDuration, additionalProperties)
+        }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "Timings{downloadDuration=$downloadDuration, encodingDuration=$encodingDuration, additionalProperties=$additionalProperties}"
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is VideoTransformationErrorEvent &&
+        return other is VideoTransformationReadyWebhookEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
             request == other.request &&
             type == other.type &&
+            timings == other.timings &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, data, request, type, additionalProperties)
+        Objects.hash(id, createdAt, data, request, type, timings, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "VideoTransformationErrorEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "VideoTransformationReadyWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, timings=$timings, additionalProperties=$additionalProperties}"
 }
