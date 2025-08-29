@@ -6,7 +6,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.assets.AssetListResponse
+import com.imagekit.api.models.Overlay
+import com.imagekit.api.models.OverlayPosition
+import com.imagekit.api.models.OverlayTiming
+import com.imagekit.api.models.StreamingResolution
+import com.imagekit.api.models.TextOverlay
+import com.imagekit.api.models.TextOverlayTransformation
 import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
@@ -106,48 +111,59 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun assetListResponseRoundtrip() {
+    fun overlayRoundtrip() {
         val jsonMapper = jsonMapper()
-        val assetListResponse =
-            AssetListResponse.ofFile(
-                File.builder()
-                    .addAiTag(
-                        File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                    )
-                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .customCoordinates("customCoordinates")
-                    .customMetadata(
-                        File.CustomMetadata.builder()
-                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+        val overlay =
+            Overlay.ofText(
+                TextOverlay.builder()
+                    .position(
+                        OverlayPosition.builder()
+                            .focus(OverlayPosition.Focus.CENTER)
+                            .x(0.0)
+                            .y(0.0)
                             .build()
                     )
-                    .description("description")
-                    .fileId("fileId")
-                    .filePath("filePath")
-                    .fileType("fileType")
-                    .hasAlpha(true)
-                    .height(0.0)
-                    .isPrivateFile(true)
-                    .isPublished(true)
-                    .mime("mime")
-                    .name("name")
-                    .size(0.0)
-                    .addTag("string")
-                    .thumbnail("https://example.com")
-                    .type(File.Type.FILE)
-                    .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .url("https://example.com")
-                    .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
-                    .width(0.0)
+                    .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
+                    .text("text")
+                    .type(TextOverlay.Type.TEXT)
+                    .encoding(TextOverlay.Encoding.AUTO)
+                    .addTransformation(
+                        TextOverlayTransformation.builder()
+                            .alpha(1.0)
+                            .background("background")
+                            .flip(TextOverlayTransformation.Flip.H)
+                            .fontColor("fontColor")
+                            .fontFamily("fontFamily")
+                            .fontSize(0.0)
+                            .innerAlignment(TextOverlayTransformation.InnerAlignment.LEFT)
+                            .lineHeight(0.0)
+                            .padding(0.0)
+                            .radius(0.0)
+                            .rotation(0.0)
+                            .typography(TextOverlayTransformation.Typography.B)
+                            .width(0.0)
+                            .build()
+                    )
                     .build()
             )
 
-        val roundtrippedAssetListResponse =
+        val roundtrippedOverlay =
+            jsonMapper.readValue(jsonMapper.writeValueAsString(overlay), jacksonTypeRef<Overlay>())
+
+        assertThat(roundtrippedOverlay).isEqualTo(overlay)
+    }
+
+    @Test
+    fun streamingResolutionRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val streamingResolution = StreamingResolution._240
+
+        val roundtrippedStreamingResolution =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(assetListResponse),
-                jacksonTypeRef<AssetListResponse>(),
+                jsonMapper.writeValueAsString(streamingResolution),
+                jacksonTypeRef<StreamingResolution>(),
             )
 
-        assertThat(roundtrippedAssetListResponse).isEqualTo(assetListResponse)
+        assertThat(roundtrippedStreamingResolution).isEqualTo(streamingResolution)
     }
 }
