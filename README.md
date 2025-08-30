@@ -3,11 +3,11 @@
 [![Maven Central](https://img.shields.io/maven-central/v/com.imagekit.api/image-kit-java)](https://central.sonatype.com/artifact/com.imagekit.api/image-kit-java/0.0.1)
 [![javadoc](https://javadoc.io/badge2/com.imagekit.api/image-kit-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1)
 
-The Image Kit Java SDK provides convenient access to the [Image Kit REST API](https://imagekit.io) from applications written in Java.
+The Image Kit Java SDK provides convenient access to the [Image Kit REST API](https://imagekit.io/docs) from applications written in Java.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [imagekit.io](https://imagekit.io). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
 
 ## Installation
 

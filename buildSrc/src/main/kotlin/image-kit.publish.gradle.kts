@@ -11,7 +11,7 @@ configure<PublishingExtension> {
             pom {
                 name.set("ImageKit API")
                 description.set("Checkout [API overview](/docs/api-overview) to learn about ImageKit's APIs,\nauthentication, rate limits, and error codes etc.")
-                url.set("https://imagekit.io")
+                url.set("https://imagekit.io/docs")
 
                 licenses {
                     license {
