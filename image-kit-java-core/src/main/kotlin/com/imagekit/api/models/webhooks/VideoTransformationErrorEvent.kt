@@ -1434,7 +1434,7 @@ private constructor(
                 fun variants(): Optional<List<String>> = variants.getOptional("variants")
 
                 /**
-                 * Video codec used for encoding (h264 or vp9).
+                 * Video codec used for encoding (h264, vp9, or av1).
                  *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
@@ -1642,7 +1642,7 @@ private constructor(
                             }
                     }
 
-                    /** Video codec used for encoding (h264 or vp9). */
+                    /** Video codec used for encoding (h264, vp9, or av1). */
                     fun videoCodec(videoCodec: VideoCodec) = videoCodec(JsonField.of(videoCodec))
 
                     /**
@@ -2165,7 +2165,7 @@ private constructor(
                     override fun toString() = value.toString()
                 }
 
-                /** Video codec used for encoding (h264 or vp9). */
+                /** Video codec used for encoding (h264, vp9, or av1). */
                 class VideoCodec
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -2187,6 +2187,8 @@ private constructor(
 
                         @JvmField val VP9 = of("vp9")
 
+                        @JvmField val AV1 = of("av1")
+
                         @JvmStatic fun of(value: String) = VideoCodec(JsonField.of(value))
                     }
 
@@ -2194,6 +2196,7 @@ private constructor(
                     enum class Known {
                         H264,
                         VP9,
+                        AV1,
                     }
 
                     /**
@@ -2210,6 +2213,7 @@ private constructor(
                     enum class Value {
                         H264,
                         VP9,
+                        AV1,
                         /**
                          * An enum member indicating that [VideoCodec] was instantiated with an
                          * unknown value.
@@ -2228,6 +2232,7 @@ private constructor(
                         when (this) {
                             H264 -> Value.H264
                             VP9 -> Value.VP9
+                            AV1 -> Value.AV1
                             else -> Value._UNKNOWN
                         }
 
@@ -2244,6 +2249,7 @@ private constructor(
                         when (this) {
                             H264 -> Known.H264
                             VP9 -> Known.VP9
+                            AV1 -> Known.AV1
                             else -> throw ImageKitInvalidDataException("Unknown VideoCodec: $value")
                         }
 
