@@ -21,6 +21,11 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Triggered when an error occurs during video encoding. Listen to this webhook to log error reasons
+ * and debug issues. Check your origin and URL endpoint settings if the reason is related to
+ * download failure. For other errors, contact ImageKit support.
+ */
 class VideoTransformationErrorEvent
 private constructor(
     private val id: JsonField<String>,
@@ -51,6 +56,8 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
+     * Timestamp when the event was created in ISO8601 format.
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -63,6 +70,8 @@ private constructor(
     fun data(): Data = data.getRequired("data")
 
     /**
+     * Information about the original request that triggered the video transformation.
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
@@ -169,6 +178,7 @@ private constructor(
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
 
+        /** Timestamp when the event was created in ISO8601 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
 
         /**
@@ -190,6 +200,7 @@ private constructor(
          */
         fun data(data: JsonField<Data>) = apply { this.data = data }
 
+        /** Information about the original request that triggered the video transformation. */
         fun request(request: Request) = request(JsonField.of(request))
 
         /**
@@ -315,6 +326,8 @@ private constructor(
         ) : this(asset, transformation, mutableMapOf())
 
         /**
+         * Information about the source video asset being transformed.
+         *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
@@ -383,6 +396,7 @@ private constructor(
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
+            /** Information about the source video asset being transformed. */
             fun asset(asset: Asset) = asset(JsonField.of(asset))
 
             /**
@@ -479,6 +493,7 @@ private constructor(
             (asset.asKnown().getOrNull()?.validity() ?: 0) +
                 (transformation.asKnown().getOrNull()?.validity() ?: 0)
 
+        /** Information about the source video asset being transformed. */
         class Asset
         private constructor(
             private val url: JsonField<String>,
@@ -491,7 +506,7 @@ private constructor(
             ) : this(url, mutableMapOf())
 
             /**
-             * Source asset URL.
+             * URL to download or access the source video file.
              *
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
@@ -543,7 +558,7 @@ private constructor(
                     additionalProperties = asset.additionalProperties.toMutableMap()
                 }
 
-                /** Source asset URL. */
+                /** URL to download or access the source video file. */
                 fun url(url: String) = url(JsonField.of(url))
 
                 /**
@@ -655,6 +670,11 @@ private constructor(
             ) : this(type, error, options, mutableMapOf())
 
             /**
+             * Type of video transformation:
+             * - `video-transformation`: Standard video processing (resize, format conversion, etc.)
+             * - `gif-to-video`: Convert animated GIF to video format
+             * - `video-thumbnail`: Generate thumbnail image from video
+             *
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
@@ -662,12 +682,16 @@ private constructor(
             fun type(): Type = type.getRequired("type")
 
             /**
+             * Details about the transformation error.
+             *
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
             fun error(): Optional<Error> = error.getOptional("error")
 
             /**
+             * Configuration options for video transformations.
+             *
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
@@ -735,6 +759,13 @@ private constructor(
                     additionalProperties = transformation.additionalProperties.toMutableMap()
                 }
 
+                /**
+                 * Type of video transformation:
+                 * - `video-transformation`: Standard video processing (resize, format conversion,
+                 *   etc.)
+                 * - `gif-to-video`: Convert animated GIF to video format
+                 * - `video-thumbnail`: Generate thumbnail image from video
+                 */
                 fun type(type: Type) = type(JsonField.of(type))
 
                 /**
@@ -746,6 +777,7 @@ private constructor(
                  */
                 fun type(type: JsonField<Type>) = apply { this.type = type }
 
+                /** Details about the transformation error. */
                 fun error(error: Error) = error(JsonField.of(error))
 
                 /**
@@ -757,6 +789,7 @@ private constructor(
                  */
                 fun error(error: JsonField<Error>) = apply { this.error = error }
 
+                /** Configuration options for video transformations. */
                 fun options(options: Options) = options(JsonField.of(options))
 
                 /**
@@ -844,6 +877,12 @@ private constructor(
                     (error.asKnown().getOrNull()?.validity() ?: 0) +
                     (options.asKnown().getOrNull()?.validity() ?: 0)
 
+            /**
+             * Type of video transformation:
+             * - `video-transformation`: Standard video processing (resize, format conversion, etc.)
+             * - `gif-to-video`: Convert animated GIF to video format
+             * - `video-thumbnail`: Generate thumbnail image from video
+             */
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
 
@@ -980,6 +1019,7 @@ private constructor(
                 override fun toString() = value.toString()
             }
 
+            /** Details about the transformation error. */
             class Error
             private constructor(
                 private val reason: JsonField<Reason>,
@@ -994,6 +1034,11 @@ private constructor(
                 ) : this(reason, mutableMapOf())
 
                 /**
+                 * Specific reason for the transformation failure:
+                 * - `encoding_failed`: Error during video encoding process
+                 * - `download_failed`: Could not download source video
+                 * - `internal_server_error`: Unexpected server error
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or
                  *   is unexpectedly missing or null (e.g. if the server responded with an
                  *   unexpected value).
@@ -1045,6 +1090,12 @@ private constructor(
                         additionalProperties = error.additionalProperties.toMutableMap()
                     }
 
+                    /**
+                     * Specific reason for the transformation failure:
+                     * - `encoding_failed`: Error during video encoding process
+                     * - `download_failed`: Could not download source video
+                     * - `internal_server_error`: Unexpected server error
+                     */
                     fun reason(reason: Reason) = reason(JsonField.of(reason))
 
                     /**
@@ -1122,6 +1173,12 @@ private constructor(
                 @JvmSynthetic
                 internal fun validity(): Int = (reason.asKnown().getOrNull()?.validity() ?: 0)
 
+                /**
+                 * Specific reason for the transformation failure:
+                 * - `encoding_failed`: Error during video encoding process
+                 * - `download_failed`: Could not download source video
+                 * - `internal_server_error`: Unexpected server error
+                 */
                 class Reason
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -1280,6 +1337,7 @@ private constructor(
                     "Error{reason=$reason, additionalProperties=$additionalProperties}"
             }
 
+            /** Configuration options for video transformations. */
             class Options
             private constructor(
                 private val audioCodec: JsonField<AudioCodec>,
@@ -1327,30 +1385,40 @@ private constructor(
                 )
 
                 /**
+                 * Audio codec used for encoding (aac or opus).
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun audioCodec(): Optional<AudioCodec> = audioCodec.getOptional("audio_codec")
 
                 /**
+                 * Whether to automatically rotate the video based on metadata.
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun autoRotate(): Optional<Boolean> = autoRotate.getOptional("auto_rotate")
 
                 /**
+                 * Output format for the transformed video or thumbnail.
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun format(): Optional<Format> = format.getOptional("format")
 
                 /**
+                 * Quality setting for the output video.
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun quality(): Optional<Long> = quality.getOptional("quality")
 
                 /**
+                 * Streaming protocol for adaptive bitrate streaming.
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
@@ -1358,12 +1426,16 @@ private constructor(
                     streamProtocol.getOptional("stream_protocol")
 
                 /**
+                 * Array of quality representations for adaptive bitrate streaming.
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun variants(): Optional<List<String>> = variants.getOptional("variants")
 
                 /**
+                 * Video codec used for encoding (h264 or vp9).
+                 *
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
@@ -1477,6 +1549,7 @@ private constructor(
                         additionalProperties = options.additionalProperties.toMutableMap()
                     }
 
+                    /** Audio codec used for encoding (aac or opus). */
                     fun audioCodec(audioCodec: AudioCodec) = audioCodec(JsonField.of(audioCodec))
 
                     /**
@@ -1490,6 +1563,7 @@ private constructor(
                         this.audioCodec = audioCodec
                     }
 
+                    /** Whether to automatically rotate the video based on metadata. */
                     fun autoRotate(autoRotate: Boolean) = autoRotate(JsonField.of(autoRotate))
 
                     /**
@@ -1503,6 +1577,7 @@ private constructor(
                         this.autoRotate = autoRotate
                     }
 
+                    /** Output format for the transformed video or thumbnail. */
                     fun format(format: Format) = format(JsonField.of(format))
 
                     /**
@@ -1514,6 +1589,7 @@ private constructor(
                      */
                     fun format(format: JsonField<Format>) = apply { this.format = format }
 
+                    /** Quality setting for the output video. */
                     fun quality(quality: Long) = quality(JsonField.of(quality))
 
                     /**
@@ -1525,6 +1601,7 @@ private constructor(
                      */
                     fun quality(quality: JsonField<Long>) = apply { this.quality = quality }
 
+                    /** Streaming protocol for adaptive bitrate streaming. */
                     fun streamProtocol(streamProtocol: StreamProtocol) =
                         streamProtocol(JsonField.of(streamProtocol))
 
@@ -1539,6 +1616,7 @@ private constructor(
                         this.streamProtocol = streamProtocol
                     }
 
+                    /** Array of quality representations for adaptive bitrate streaming. */
                     fun variants(variants: List<String>) = variants(JsonField.of(variants))
 
                     /**
@@ -1564,6 +1642,7 @@ private constructor(
                             }
                     }
 
+                    /** Video codec used for encoding (h264 or vp9). */
                     fun videoCodec(videoCodec: VideoCodec) = videoCodec(JsonField.of(videoCodec))
 
                     /**
@@ -1658,6 +1737,7 @@ private constructor(
                         (variants.asKnown().getOrNull()?.size ?: 0) +
                         (videoCodec.asKnown().getOrNull()?.validity() ?: 0)
 
+                /** Audio codec used for encoding (aac or opus). */
                 class AudioCodec
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -1794,6 +1874,7 @@ private constructor(
                     override fun toString() = value.toString()
                 }
 
+                /** Output format for the transformed video or thumbnail. */
                 class Format
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -1946,6 +2027,7 @@ private constructor(
                     override fun toString() = value.toString()
                 }
 
+                /** Streaming protocol for adaptive bitrate streaming. */
                 class StreamProtocol
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -2083,6 +2165,7 @@ private constructor(
                     override fun toString() = value.toString()
                 }
 
+                /** Video codec used for encoding (h264 or vp9). */
                 class VideoCodec
                 @JsonCreator
                 private constructor(private val value: JsonField<String>) : Enum {
@@ -2297,6 +2380,7 @@ private constructor(
             "Data{asset=$asset, transformation=$transformation, additionalProperties=$additionalProperties}"
     }
 
+    /** Information about the original request that triggered the video transformation. */
     class Request
     private constructor(
         private val url: JsonField<String>,
@@ -2317,7 +2401,7 @@ private constructor(
         ) : this(url, xRequestId, userAgent, mutableMapOf())
 
         /**
-         * URL of the submitted request.
+         * Full URL of the transformation request that was submitted.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -2325,7 +2409,7 @@ private constructor(
         fun url(): String = url.getRequired("url")
 
         /**
-         * Unique ID for the originating request.
+         * Unique identifier for the originating transformation request.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -2333,7 +2417,7 @@ private constructor(
         fun xRequestId(): String = xRequestId.getRequired("x_request_id")
 
         /**
-         * User-Agent header of the originating request.
+         * User-Agent header from the original request that triggered the transformation.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -2405,7 +2489,7 @@ private constructor(
                 additionalProperties = request.additionalProperties.toMutableMap()
             }
 
-            /** URL of the submitted request. */
+            /** Full URL of the transformation request that was submitted. */
             fun url(url: String) = url(JsonField.of(url))
 
             /**
@@ -2417,7 +2501,7 @@ private constructor(
              */
             fun url(url: JsonField<String>) = apply { this.url = url }
 
-            /** Unique ID for the originating request. */
+            /** Unique identifier for the originating transformation request. */
             fun xRequestId(xRequestId: String) = xRequestId(JsonField.of(xRequestId))
 
             /**
@@ -2429,7 +2513,7 @@ private constructor(
              */
             fun xRequestId(xRequestId: JsonField<String>) = apply { this.xRequestId = xRequestId }
 
-            /** User-Agent header of the originating request. */
+            /** User-Agent header from the original request that triggered the transformation. */
             fun userAgent(userAgent: String) = userAgent(JsonField.of(userAgent))
 
             /**

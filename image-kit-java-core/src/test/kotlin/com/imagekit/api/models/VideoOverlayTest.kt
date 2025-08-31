@@ -23,7 +23,6 @@ internal class VideoOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(VideoOverlay.Type.VIDEO)
                 .encoding(VideoOverlay.Encoding.AUTO)
                 .transformation(listOf())
                 .build()
@@ -35,7 +34,6 @@ internal class VideoOverlayTest {
         assertThat(videoOverlay.timing())
             .contains(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
         assertThat(videoOverlay.input()).isEqualTo("input")
-        assertThat(videoOverlay.type()).isEqualTo(VideoOverlay.Type.VIDEO)
         assertThat(videoOverlay.encoding()).contains(VideoOverlay.Encoding.AUTO)
         assertThat(videoOverlay.transformation().getOrNull()).containsExactly()
     }
@@ -54,7 +52,6 @@ internal class VideoOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(VideoOverlay.Type.VIDEO)
                 .encoding(VideoOverlay.Encoding.AUTO)
                 .transformation(listOf())
                 .build()

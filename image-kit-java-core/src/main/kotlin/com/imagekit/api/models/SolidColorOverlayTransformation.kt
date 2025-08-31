@@ -15,7 +15,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.BaseDeserializer
 import com.imagekit.api.core.BaseSerializer
-import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
@@ -52,7 +51,8 @@ private constructor(
     ) : this(alpha, background, gradient, height, radius, width, mutableMapOf())
 
     /**
-     * Alpha transparency level
+     * Specifies the transparency level of the solid color overlay. Accepts integers from `1` to
+     * `9`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -60,7 +60,8 @@ private constructor(
     fun alpha(): Optional<Double> = alpha.getOptional("alpha")
 
     /**
-     * Background color
+     * Specifies the background color of the solid color overlay. Accepts an RGB hex code (e.g.,
+     * `FF0000`), an RGBA code (e.g., `FFAABB50`), or a color name.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -68,7 +69,9 @@ private constructor(
     fun background(): Optional<String> = background.getOptional("background")
 
     /**
-     * Gradient effect for the overlay
+     * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a
+     * string for a custom gradient. Only works if the base asset is an image. See
+     * [gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -76,7 +79,9 @@ private constructor(
     fun gradient(): Optional<Gradient> = gradient.getOptional("gradient")
 
     /**
-     * Height of the solid color overlay
+     * Controls the height of the solid color overlay. Accepts a numeric value or an arithmetic
+     * expression. Learn about
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -84,7 +89,8 @@ private constructor(
     fun height(): Optional<Height> = height.getOptional("height")
 
     /**
-     * Corner radius of the solid color overlay
+     * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
+     * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -92,7 +98,9 @@ private constructor(
     fun radius(): Optional<Radius> = radius.getOptional("radius")
 
     /**
-     * Width of the solid color overlay
+     * Controls the width of the solid color overlay. Accepts a numeric value or an arithmetic
+     * expression (e.g., `bw_mul_0.2` or `bh_div_2`). Learn about
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -186,7 +194,10 @@ private constructor(
                     solidColorOverlayTransformation.additionalProperties.toMutableMap()
             }
 
-        /** Alpha transparency level */
+        /**
+         * Specifies the transparency level of the solid color overlay. Accepts integers from `1` to
+         * `9`.
+         */
         fun alpha(alpha: Double) = alpha(JsonField.of(alpha))
 
         /**
@@ -197,7 +208,10 @@ private constructor(
          */
         fun alpha(alpha: JsonField<Double>) = apply { this.alpha = alpha }
 
-        /** Background color */
+        /**
+         * Specifies the background color of the solid color overlay. Accepts an RGB hex code (e.g.,
+         * `FF0000`), an RGBA code (e.g., `FFAABB50`), or a color name.
+         */
         fun background(background: String) = background(JsonField.of(background))
 
         /**
@@ -209,7 +223,11 @@ private constructor(
          */
         fun background(background: JsonField<String>) = apply { this.background = background }
 
-        /** Gradient effect for the overlay */
+        /**
+         * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide
+         * a string for a custom gradient. Only works if the base asset is an image. See
+         * [gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
+         */
         fun gradient(gradient: Gradient) = gradient(JsonField.of(gradient))
 
         /**
@@ -221,14 +239,17 @@ private constructor(
          */
         fun gradient(gradient: JsonField<Gradient>) = apply { this.gradient = gradient }
 
-        /** Alias for calling [gradient] with `Gradient.ofUnionMember0(unionMember0)`. */
-        fun gradient(unionMember0: Gradient.UnionMember0) =
-            gradient(Gradient.ofUnionMember0(unionMember0))
+        /** Alias for calling [gradient] with `Gradient.ofTrue()`. */
+        fun gradientTrue() = gradient(Gradient.ofTrue())
 
         /** Alias for calling [gradient] with `Gradient.ofString(string)`. */
         fun gradient(string: String) = gradient(Gradient.ofString(string))
 
-        /** Height of the solid color overlay */
+        /**
+         * Controls the height of the solid color overlay. Accepts a numeric value or an arithmetic
+         * expression. Learn about
+         * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+         */
         fun height(height: Height) = height(JsonField.of(height))
 
         /**
@@ -245,7 +266,10 @@ private constructor(
         /** Alias for calling [height] with `Height.ofString(string)`. */
         fun height(string: String) = height(Height.ofString(string))
 
-        /** Corner radius of the solid color overlay */
+        /**
+         * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
+         * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+         */
         fun radius(radius: Radius) = radius(JsonField.of(radius))
 
         /**
@@ -259,10 +283,14 @@ private constructor(
         /** Alias for calling [radius] with `Radius.ofNumber(number)`. */
         fun radius(number: Double) = radius(Radius.ofNumber(number))
 
-        /** Alias for calling [radius] with `Radius.ofUnionMember1(unionMember1)`. */
-        fun radius(unionMember1: Radius.UnionMember1) = radius(Radius.ofUnionMember1(unionMember1))
+        /** Alias for calling [radius] with `Radius.ofMax()`. */
+        fun radiusMax() = radius(Radius.ofMax())
 
-        /** Width of the solid color overlay */
+        /**
+         * Controls the width of the solid color overlay. Accepts a numeric value or an arithmetic
+         * expression (e.g., `bw_mul_0.2` or `bh_div_2`). Learn about
+         * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+         */
         fun width(width: Width) = width(JsonField.of(width))
 
         /**
@@ -353,25 +381,29 @@ private constructor(
             (radius.asKnown().getOrNull()?.validity() ?: 0) +
             (width.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Gradient effect for the overlay */
+    /**
+     * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a
+     * string for a custom gradient. Only works if the base asset is an image. See
+     * [gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
+     */
     @JsonDeserialize(using = Gradient.Deserializer::class)
     @JsonSerialize(using = Gradient.Serializer::class)
     class Gradient
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -379,7 +411,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -393,8 +425,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitString(string: String) {}
@@ -421,8 +459,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -435,14 +473,14 @@ private constructor(
                 return true
             }
 
-            return other is Gradient && unionMember0 == other.unionMember0 && string == other.string
+            return other is Gradient && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Gradient{unionMember0=$unionMember0}"
+                true_ != null -> "Gradient{true_=$true_}"
                 string != null -> "Gradient{string=$string}"
                 _json != null -> "Gradient{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Gradient")
@@ -450,8 +488,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Gradient(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = Gradient(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Gradient(string = string)
         }
@@ -461,7 +498,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -487,9 +524,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Gradient(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Gradient(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Gradient(string = it, _json = json)
                             },
@@ -518,138 +555,20 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Gradient")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
-    /** Height of the solid color overlay */
+    /**
+     * Controls the height of the solid color overlay. Accepts a numeric value or an arithmetic
+     * expression. Learn about
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+     */
     @JsonDeserialize(using = Height.Deserializer::class)
     @JsonSerialize(using = Height.Serializer::class)
     class Height
@@ -817,34 +736,37 @@ private constructor(
         }
     }
 
-    /** Corner radius of the solid color overlay */
+    /**
+     * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
+     * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+     */
     @JsonDeserialize(using = Radius.Deserializer::class)
     @JsonSerialize(using = Radius.Serializer::class)
     class Radius
     private constructor(
         private val number: Double? = null,
-        private val unionMember1: UnionMember1? = null,
+        private val max: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun unionMember1(): Optional<UnionMember1> = Optional.ofNullable(unionMember1)
+        fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
         fun isNumber(): Boolean = number != null
 
-        fun isUnionMember1(): Boolean = unionMember1 != null
+        fun isMax(): Boolean = max != null
 
         fun asNumber(): Double = number.getOrThrow("number")
 
-        fun asUnionMember1(): UnionMember1 = unionMember1.getOrThrow("unionMember1")
+        fun asMax(): JsonValue = max.getOrThrow("max")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
-                unionMember1 != null -> visitor.visitUnionMember1(unionMember1)
+                max != null -> visitor.visitMax(max)
                 else -> visitor.unknown(_json)
             }
 
@@ -859,8 +781,12 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitNumber(number: Double) {}
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) {
-                        unionMember1.validate()
+                    override fun visitMax(max: JsonValue) {
+                        max.let {
+                            if (it != JsonValue.from("max")) {
+                                throw ImageKitInvalidDataException("'max' is invalid, received $it")
+                            }
+                        }
                     }
                 }
             )
@@ -887,8 +813,8 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) =
-                        unionMember1.validity()
+                    override fun visitMax(max: JsonValue) =
+                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -899,15 +825,15 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && unionMember1 == other.unionMember1
+            return other is Radius && number == other.number && max == other.max
         }
 
-        override fun hashCode(): Int = Objects.hash(number, unionMember1)
+        override fun hashCode(): Int = Objects.hash(number, max)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
-                unionMember1 != null -> "Radius{unionMember1=$unionMember1}"
+                max != null -> "Radius{max=$max}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -916,8 +842,7 @@ private constructor(
 
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
-            @JvmStatic
-            fun ofUnionMember1(unionMember1: UnionMember1) = Radius(unionMember1 = unionMember1)
+            @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -925,7 +850,7 @@ private constructor(
 
             fun visitNumber(number: Double): T
 
-            fun visitUnionMember1(unionMember1: UnionMember1): T
+            fun visitMax(max: JsonValue): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -949,9 +874,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember1>())?.let {
-                                Radius(unionMember1 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Radius(max = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
@@ -981,140 +906,19 @@ private constructor(
             ) {
                 when {
                     value.number != null -> generator.writeObject(value.number)
-                    value.unionMember1 != null -> generator.writeObject(value.unionMember1)
+                    value.max != null -> generator.writeObject(value.max)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }
             }
         }
-
-        class UnionMember1 @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val MAX = of("max")
-
-                @JvmStatic fun of(value: String) = UnionMember1(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember1]'s known values. */
-            enum class Known {
-                MAX
-            }
-
-            /**
-             * An enum containing [UnionMember1]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember1] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                MAX,
-                /**
-                 * An enum member indicating that [UnionMember1] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    MAX -> Value.MAX
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    MAX -> Known.MAX
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember1: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember1 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember1 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
-    /** Width of the solid color overlay */
+    /**
+     * Controls the width of the solid color overlay. Accepts a numeric value or an arithmetic
+     * expression (e.g., `bw_mul_0.2` or `bh_div_2`). Learn about
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+     */
     @JsonDeserialize(using = Width.Deserializer::class)
     @JsonSerialize(using = Width.Serializer::class)
     class Width

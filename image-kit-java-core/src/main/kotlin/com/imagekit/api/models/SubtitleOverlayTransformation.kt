@@ -6,28 +6,22 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.ObjectCodec
-import com.fasterxml.jackson.databind.JsonNode
-import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.imagekit.api.core.BaseDeserializer
-import com.imagekit.api.core.BaseSerializer
 import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.core.allMaxBy
-import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Subtitle styling options.
+ * [Learn more](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+ * from the docs.
+ */
 class SubtitleOverlayTransformation
 private constructor(
     private val background: JsonField<String>,
@@ -35,7 +29,7 @@ private constructor(
     private val fontFamily: JsonField<String>,
     private val fontOutline: JsonField<String>,
     private val fontShadow: JsonField<String>,
-    private val fontSize: JsonField<FontSize>,
+    private val fontSize: JsonField<Double>,
     private val typography: JsonField<Typography>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -55,7 +49,7 @@ private constructor(
         @JsonProperty("fontShadow")
         @ExcludeMissing
         fontShadow: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("fontSize") @ExcludeMissing fontSize: JsonField<FontSize> = JsonMissing.of(),
+        @JsonProperty("fontSize") @ExcludeMissing fontSize: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("typography")
         @ExcludeMissing
         typography: JsonField<Typography> = JsonMissing.of(),
@@ -71,7 +65,11 @@ private constructor(
     )
 
     /**
-     * Background color for subtitles
+     * Specifies the subtitle background color using a standard color name, an RGB color code (e.g.,
+     * FF0000), or an RGBA color code (e.g., FFAABB50).
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -79,7 +77,11 @@ private constructor(
     fun background(): Optional<String> = background.getOptional("background")
 
     /**
-     * Text color for subtitles
+     * Sets the font color of the subtitle text using a standard color name, an RGB color code
+     * (e.g., FF0000), or an RGBA color code (e.g., FFAABB50).
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -87,7 +89,8 @@ private constructor(
     fun color(): Optional<String> = color.getOptional("color")
 
     /**
-     * Font family for subtitles
+     * Font family for subtitles. Refer to the
+     * [supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -95,7 +98,14 @@ private constructor(
     fun fontFamily(): Optional<String> = fontFamily.getOptional("fontFamily")
 
     /**
-     * Font outline for subtitles
+     * Sets the font outline of the subtitle text. Requires the outline width (an integer) and the
+     * outline color (as an RGB color code, RGBA color code, or standard web color name) separated
+     * by an underscore. Example: `fol-2_blue` (outline width of 2px and outline color blue),
+     * `fol-2_A1CCDD` (outline width of 2px and outline color `#A1CCDD`) and `fol-2_A1CCDD50`
+     * (outline width of 2px and outline color `#A1CCDD` at 50% opacity).
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -103,7 +113,14 @@ private constructor(
     fun fontOutline(): Optional<String> = fontOutline.getOptional("fontOutline")
 
     /**
-     * Font shadow for subtitles
+     * Sets the font shadow for the subtitle text. Requires the shadow color (as an RGB color code,
+     * RGBA color code, or standard web color name) and shadow indent (an integer) separated by an
+     * underscore. Example: `fsh-blue_2` (shadow color blue, indent of 2px), `fsh-A1CCDD_3` (shadow
+     * color `#A1CCDD`, indent of 3px), `fsh-A1CCDD50_3` (shadow color `#A1CCDD` at 50% opacity,
+     * indent of 3px).
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -111,15 +128,22 @@ private constructor(
     fun fontShadow(): Optional<String> = fontShadow.getOptional("fontShadow")
 
     /**
-     * Font size for subtitles
+     * Sets the font size of subtitle text.
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun fontSize(): Optional<FontSize> = fontSize.getOptional("fontSize")
+    fun fontSize(): Optional<Double> = fontSize.getOptional("fontSize")
 
     /**
-     * Typography style for subtitles
+     * Sets the typography style of the subtitle text. Supports values are `b` for bold, `i` for
+     * italics, and `b_i` for bold with italics.
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -166,7 +190,7 @@ private constructor(
      *
      * Unlike [fontSize], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("fontSize") @ExcludeMissing fun _fontSize(): JsonField<FontSize> = fontSize
+    @JsonProperty("fontSize") @ExcludeMissing fun _fontSize(): JsonField<Double> = fontSize
 
     /**
      * Returns the raw JSON value of [typography].
@@ -206,7 +230,7 @@ private constructor(
         private var fontFamily: JsonField<String> = JsonMissing.of()
         private var fontOutline: JsonField<String> = JsonMissing.of()
         private var fontShadow: JsonField<String> = JsonMissing.of()
-        private var fontSize: JsonField<FontSize> = JsonMissing.of()
+        private var fontSize: JsonField<Double> = JsonMissing.of()
         private var typography: JsonField<Typography> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -222,7 +246,13 @@ private constructor(
             additionalProperties = subtitleOverlayTransformation.additionalProperties.toMutableMap()
         }
 
-        /** Background color for subtitles */
+        /**
+         * Specifies the subtitle background color using a standard color name, an RGB color code
+         * (e.g., FF0000), or an RGBA color code (e.g., FFAABB50).
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
         fun background(background: String) = background(JsonField.of(background))
 
         /**
@@ -234,7 +264,13 @@ private constructor(
          */
         fun background(background: JsonField<String>) = apply { this.background = background }
 
-        /** Text color for subtitles */
+        /**
+         * Sets the font color of the subtitle text using a standard color name, an RGB color code
+         * (e.g., FF0000), or an RGBA color code (e.g., FFAABB50).
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
         fun color(color: String) = color(JsonField.of(color))
 
         /**
@@ -245,7 +281,10 @@ private constructor(
          */
         fun color(color: JsonField<String>) = apply { this.color = color }
 
-        /** Font family for subtitles */
+        /**
+         * Font family for subtitles. Refer to the
+         * [supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list).
+         */
         fun fontFamily(fontFamily: String) = fontFamily(JsonField.of(fontFamily))
 
         /**
@@ -257,7 +296,16 @@ private constructor(
          */
         fun fontFamily(fontFamily: JsonField<String>) = apply { this.fontFamily = fontFamily }
 
-        /** Font outline for subtitles */
+        /**
+         * Sets the font outline of the subtitle text. Requires the outline width (an integer) and
+         * the outline color (as an RGB color code, RGBA color code, or standard web color name)
+         * separated by an underscore. Example: `fol-2_blue` (outline width of 2px and outline color
+         * blue), `fol-2_A1CCDD` (outline width of 2px and outline color `#A1CCDD`) and
+         * `fol-2_A1CCDD50` (outline width of 2px and outline color `#A1CCDD` at 50% opacity).
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
         fun fontOutline(fontOutline: String) = fontOutline(JsonField.of(fontOutline))
 
         /**
@@ -269,7 +317,16 @@ private constructor(
          */
         fun fontOutline(fontOutline: JsonField<String>) = apply { this.fontOutline = fontOutline }
 
-        /** Font shadow for subtitles */
+        /**
+         * Sets the font shadow for the subtitle text. Requires the shadow color (as an RGB color
+         * code, RGBA color code, or standard web color name) and shadow indent (an integer)
+         * separated by an underscore. Example: `fsh-blue_2` (shadow color blue, indent of 2px),
+         * `fsh-A1CCDD_3` (shadow color `#A1CCDD`, indent of 3px), `fsh-A1CCDD50_3` (shadow color
+         * `#A1CCDD` at 50% opacity, indent of 3px).
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
         fun fontShadow(fontShadow: String) = fontShadow(JsonField.of(fontShadow))
 
         /**
@@ -281,25 +338,29 @@ private constructor(
          */
         fun fontShadow(fontShadow: JsonField<String>) = apply { this.fontShadow = fontShadow }
 
-        /** Font size for subtitles */
-        fun fontSize(fontSize: FontSize) = fontSize(JsonField.of(fontSize))
+        /**
+         * Sets the font size of subtitle text.
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
+        fun fontSize(fontSize: Double) = fontSize(JsonField.of(fontSize))
 
         /**
          * Sets [Builder.fontSize] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.fontSize] with a well-typed [FontSize] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.fontSize] with a well-typed [Double] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun fontSize(fontSize: JsonField<FontSize>) = apply { this.fontSize = fontSize }
+        fun fontSize(fontSize: JsonField<Double>) = apply { this.fontSize = fontSize }
 
-        /** Alias for calling [fontSize] with `FontSize.ofNumber(number)`. */
-        fun fontSize(number: Double) = fontSize(FontSize.ofNumber(number))
-
-        /** Alias for calling [fontSize] with `FontSize.ofString(string)`. */
-        fun fontSize(string: String) = fontSize(FontSize.ofString(string))
-
-        /** Typography style for subtitles */
+        /**
+         * Sets the typography style of the subtitle text. Supports values are `b` for bold, `i` for
+         * italics, and `b_i` for bold with italics.
+         *
+         * [Subtitle styling
+         * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+         */
         fun typography(typography: Typography) = typography(JsonField.of(typography))
 
         /**
@@ -360,7 +421,7 @@ private constructor(
         fontFamily()
         fontOutline()
         fontShadow()
-        fontSize().ifPresent { it.validate() }
+        fontSize()
         typography().ifPresent { it.validate() }
         validated = true
     }
@@ -385,180 +446,16 @@ private constructor(
             (if (fontFamily.asKnown().isPresent) 1 else 0) +
             (if (fontOutline.asKnown().isPresent) 1 else 0) +
             (if (fontShadow.asKnown().isPresent) 1 else 0) +
-            (fontSize.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (fontSize.asKnown().isPresent) 1 else 0) +
             (typography.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Font size for subtitles */
-    @JsonDeserialize(using = FontSize.Deserializer::class)
-    @JsonSerialize(using = FontSize.Serializer::class)
-    class FontSize
-    private constructor(
-        private val number: Double? = null,
-        private val string: String? = null,
-        private val _json: JsonValue? = null,
-    ) {
-
-        fun number(): Optional<Double> = Optional.ofNullable(number)
-
-        fun string(): Optional<String> = Optional.ofNullable(string)
-
-        fun isNumber(): Boolean = number != null
-
-        fun isString(): Boolean = string != null
-
-        fun asNumber(): Double = number.getOrThrow("number")
-
-        fun asString(): String = string.getOrThrow("string")
-
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
-
-        fun <T> accept(visitor: Visitor<T>): T =
-            when {
-                number != null -> visitor.visitNumber(number)
-                string != null -> visitor.visitString(string)
-                else -> visitor.unknown(_json)
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): FontSize = apply {
-            if (validated) {
-                return@apply
-            }
-
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitNumber(number: Double) {}
-
-                    override fun visitString(string: String) {}
-                }
-            )
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitNumber(number: Double) = 1
-
-                    override fun visitString(string: String) = 1
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is FontSize && number == other.number && string == other.string
-        }
-
-        override fun hashCode(): Int = Objects.hash(number, string)
-
-        override fun toString(): String =
-            when {
-                number != null -> "FontSize{number=$number}"
-                string != null -> "FontSize{string=$string}"
-                _json != null -> "FontSize{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid FontSize")
-            }
-
-        companion object {
-
-            @JvmStatic fun ofNumber(number: Double) = FontSize(number = number)
-
-            @JvmStatic fun ofString(string: String) = FontSize(string = string)
-        }
-
-        /**
-         * An interface that defines how to map each variant of [FontSize] to a value of type [T].
-         */
-        interface Visitor<out T> {
-
-            fun visitNumber(number: Double): T
-
-            fun visitString(string: String): T
-
-            /**
-             * Maps an unknown variant of [FontSize] to a value of type [T].
-             *
-             * An instance of [FontSize] can contain an unknown variant if it was deserialized from
-             * data that doesn't match any known variant. For example, if the SDK is on an older
-             * version than the API, then the API may respond with new variants that the SDK is
-             * unaware of.
-             *
-             * @throws ImageKitInvalidDataException in the default implementation.
-             */
-            fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown FontSize: $json")
-            }
-        }
-
-        internal class Deserializer : BaseDeserializer<FontSize>(FontSize::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): FontSize {
-                val json = JsonValue.fromJsonNode(node)
-
-                val bestMatches =
-                    sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                FontSize(number = it, _json = json)
-                            },
-                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                FontSize(string = it, _json = json)
-                            },
-                        )
-                        .filterNotNull()
-                        .allMaxBy { it.validity() }
-                        .toList()
-                return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from object).
-                    0 -> FontSize(_json = json)
-                    1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
-                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-                }
-            }
-        }
-
-        internal class Serializer : BaseSerializer<FontSize>(FontSize::class) {
-
-            override fun serialize(
-                value: FontSize,
-                generator: JsonGenerator,
-                provider: SerializerProvider,
-            ) {
-                when {
-                    value.number != null -> generator.writeObject(value.number)
-                    value.string != null -> generator.writeObject(value.string)
-                    value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid FontSize")
-                }
-            }
-        }
-    }
-
-    /** Typography style for subtitles */
+    /**
+     * Sets the typography style of the subtitle text. Supports values are `b` for bold, `i` for
+     * italics, and `b_i` for bold with italics.
+     *
+     * [Subtitle styling
+     * options](https://imagekit.io/docs/add-overlays-on-videos#styling-controls-for-subtitles-layer)
+     */
     class Typography @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**

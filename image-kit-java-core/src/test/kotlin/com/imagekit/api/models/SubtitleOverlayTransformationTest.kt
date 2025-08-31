@@ -27,8 +27,7 @@ internal class SubtitleOverlayTransformationTest {
         assertThat(subtitleOverlayTransformation.fontFamily()).contains("fontFamily")
         assertThat(subtitleOverlayTransformation.fontOutline()).contains("fontOutline")
         assertThat(subtitleOverlayTransformation.fontShadow()).contains("fontShadow")
-        assertThat(subtitleOverlayTransformation.fontSize())
-            .contains(SubtitleOverlayTransformation.FontSize.ofNumber(0.0))
+        assertThat(subtitleOverlayTransformation.fontSize()).contains(0.0)
         assertThat(subtitleOverlayTransformation.typography())
             .contains(SubtitleOverlayTransformation.Typography.B)
     }

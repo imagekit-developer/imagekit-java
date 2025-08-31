@@ -7,7 +7,10 @@ import com.imagekit.api.core.Enum
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.errors.ImageKitInvalidDataException
 
-/** Available streaming resolutions for adaptive bitrate streaming */
+/**
+ * Available streaming resolutions for
+ * [adaptive bitrate streaming](https://imagekit.io/docs/adaptive-bitrate-streaming)
+ */
 class StreamingResolution @JsonCreator private constructor(private val value: JsonField<String>) :
     Enum {
 

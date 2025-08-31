@@ -125,7 +125,6 @@ internal class ProGuardCompatibilityTest {
                     )
                     .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                     .text("text")
-                    .type(TextOverlay.Type.TEXT)
                     .encoding(TextOverlay.Encoding.AUTO)
                     .addTransformation(
                         TextOverlayTransformation.builder()
@@ -140,7 +139,7 @@ internal class ProGuardCompatibilityTest {
                             .padding(0.0)
                             .radius(0.0)
                             .rotation(0.0)
-                            .typography(TextOverlayTransformation.Typography.B)
+                            .typography("typography")
                             .width(0.0)
                             .build()
                     )

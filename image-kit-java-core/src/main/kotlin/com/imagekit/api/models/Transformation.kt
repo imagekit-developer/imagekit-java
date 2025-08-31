@@ -34,12 +34,14 @@ import kotlin.jvm.optionals.getOrNull
  * The SDK provides easy-to-use names for transformations. These names are converted to the
  * corresponding transformation string before being added to the URL. SDKs are updated regularly to
  * support new transformations. If you want to use a transformation that is not supported by the
- * SDK, You can use the `raw` parameter to pass the transformation string directly.
+ * SDK, You can use the `raw` parameter to pass the transformation string directly. See the
+ * [Transformations documentation](https://imagekit.io/docs/transformations).
  */
 class Transformation
 private constructor(
     private val aiChangeBackground: JsonField<String>,
     private val aiDropShadow: JsonField<AiDropShadow>,
+    private val aiEdit: JsonField<String>,
     private val aiRemoveBackground: JsonField<AiRemoveBackground>,
     private val aiRemoveBackgroundExternal: JsonField<AiRemoveBackgroundExternal>,
     private val aiRetouch: JsonField<AiRetouch>,
@@ -100,6 +102,7 @@ private constructor(
         @JsonProperty("aiDropShadow")
         @ExcludeMissing
         aiDropShadow: JsonField<AiDropShadow> = JsonMissing.of(),
+        @JsonProperty("aiEdit") @ExcludeMissing aiEdit: JsonField<String> = JsonMissing.of(),
         @JsonProperty("aiRemoveBackground")
         @ExcludeMissing
         aiRemoveBackground: JsonField<AiRemoveBackground> = JsonMissing.of(),
@@ -188,6 +191,7 @@ private constructor(
     ) : this(
         aiChangeBackground,
         aiDropShadow,
+        aiEdit,
         aiRemoveBackground,
         aiRemoveBackgroundExternal,
         aiRetouch,
@@ -243,7 +247,8 @@ private constructor(
     /**
      * Uses AI to change the background. Provide a text prompt or a base64-encoded prompt, e.g.,
      * `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`. Not supported inside
-     * overlay.
+     * overlay. See
+     * [AI Change Background](https://imagekit.io/docs/ai-transformations#change-background-e-changebg).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -255,7 +260,8 @@ private constructor(
      * Adds an AI-based drop shadow around a foreground object on a transparent or removed
      * background. Optionally, control the direction, elevation, and saturation of the light source
      * (e.g., `az-45` to change light direction). Pass `true` for the default drop shadow, or
-     * provide a string for a custom drop shadow. Supported inside overlay.
+     * provide a string for a custom drop shadow. Supported inside overlay. See
+     * [AI Drop Shadow](https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -263,7 +269,18 @@ private constructor(
     fun aiDropShadow(): Optional<AiDropShadow> = aiDropShadow.getOptional("aiDropShadow")
 
     /**
-     * Applies ImageKit's in-house background removal. Supported inside overlay.
+     * Uses AI to edit images based on a text prompt. Provide a text prompt or a base64-encoded
+     * prompt, e.g., `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`. Not supported
+     * inside overlay. See [AI Edit](https://imagekit.io/docs/ai-transformations#edit-image-e-edit).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun aiEdit(): Optional<String> = aiEdit.getOptional("aiEdit")
+
+    /**
+     * Applies ImageKit's in-house background removal. Supported inside overlay. See
+     * [AI Background Removal](https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -273,7 +290,8 @@ private constructor(
 
     /**
      * Uses third-party background removal. Note: It is recommended to use aiRemoveBackground,
-     * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay.
+     * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay. See
+     * [External Background Removal](https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -283,6 +301,7 @@ private constructor(
 
     /**
      * Performs AI-based retouching to improve faces or product shots. Not supported inside overlay.
+     * See [AI Retouch](https://imagekit.io/docs/ai-transformations#retouch-e-retouch).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -290,7 +309,8 @@ private constructor(
     fun aiRetouch(): Optional<AiRetouch> = aiRetouch.getOptional("aiRetouch")
 
     /**
-     * Upscales images beyond their original dimensions using AI. Not supported inside overlay.
+     * Upscales images beyond their original dimensions using AI. Not supported inside overlay. See
+     * [AI Upscale](https://imagekit.io/docs/ai-transformations#upscale-e-upscale).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -300,7 +320,8 @@ private constructor(
     /**
      * Generates a variation of an image using AI. This produces a new image with slight variations
      * from the original, such as changes in color, texture, and other visual elements, while
-     * preserving the structure and essence of the original image. Not supported inside overlay.
+     * preserving the structure and essence of the original image. Not supported inside overlay. See
+     * [AI Generate Variations](https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -310,7 +331,8 @@ private constructor(
     /**
      * Specifies the aspect ratio for the output, e.g., "ar-4-3". Typically used with either width
      * or height (but not both). For example: aspectRatio = `4:3`, `4_3`, or an expression like
-     * `iar_div_2`.
+     * `iar_div_2`. See
+     * [Image resize and crop – Aspect ratio](https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -318,7 +340,8 @@ private constructor(
     fun aspectRatio(): Optional<AspectRatio> = aspectRatio.getOptional("aspectRatio")
 
     /**
-     * Specifies the audio codec, e.g., `aac`, `opus`, or `none`.
+     * Specifies the audio codec, e.g., `aac`, `opus`, or `none`. See
+     * [Audio codec](https://imagekit.io/docs/video-optimization#audio-codec---ac).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -328,11 +351,14 @@ private constructor(
     /**
      * Specifies the background to be used in conjunction with certain cropping strategies when
      * resizing an image.
-     * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`.
-     * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc.
+     * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`. See
+     *   [Solid color background](https://imagekit.io/docs/effects-and-enhancements#solid-color-background).
+     * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc. See
+     *   [Blurred background](https://imagekit.io/docs/effects-and-enhancements#blurred-background).
      * - Expand the image boundaries using generative fill: `genfill`. Not supported inside overlay.
      *   Optionally, control the background scene by passing a text prompt:
-     *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
+     *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`. See
+     *   [Generative fill background](https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -341,7 +367,8 @@ private constructor(
 
     /**
      * Specifies the Gaussian blur level. Accepts an integer value between 1 and 100, or an
-     * expression like `bl-10`.
+     * expression like `bl-10`. See
+     * [Blur](https://imagekit.io/docs/effects-and-enhancements#blur---bl).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -350,7 +377,8 @@ private constructor(
 
     /**
      * Adds a border to the output media. Accepts a string in the format `<border-width>_<hex-code>`
-     * (e.g., `5_FFF000` for a 5px yellow border), or an expression like `ih_div_20_FF00FF`.
+     * (e.g., `5_FFF000` for a 5px yellow border), or an expression like `ih_div_20_FF00FF`. See
+     * [Border](https://imagekit.io/docs/effects-and-enhancements#border---b).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -358,7 +386,8 @@ private constructor(
     fun border(): Optional<String> = border.getOptional("border")
 
     /**
-     * Indicates whether the output image should retain the original color profile.
+     * Indicates whether the output image should retain the original color profile. See
+     * [Color profile](https://imagekit.io/docs/image-optimization#color-profile---cp).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -366,7 +395,8 @@ private constructor(
     fun colorProfile(): Optional<Boolean> = colorProfile.getOptional("colorProfile")
 
     /**
-     * Automatically enhances the contrast of an image (contrast stretch).
+     * Automatically enhances the contrast of an image (contrast stretch). See
+     * [Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -375,7 +405,8 @@ private constructor(
         contrastStretch.getOptional("contrastStretch")
 
     /**
-     * Crop modes for image resizing
+     * Crop modes for image resizing. See
+     * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -383,7 +414,8 @@ private constructor(
     fun crop(): Optional<Crop> = crop.getOptional("crop")
 
     /**
-     * Additional crop modes for image resizing
+     * Additional crop modes for image resizing. See
+     * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -391,7 +423,8 @@ private constructor(
     fun cropMode(): Optional<CropMode> = cropMode.getOptional("cropMode")
 
     /**
-     * Specifies a fallback image if the resource is not found, e.g., a URL or file path.
+     * Specifies a fallback image if the resource is not found, e.g., a URL or file path. See
+     * [Default image](https://imagekit.io/docs/image-transformation#default-image---di).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -400,7 +433,7 @@ private constructor(
 
     /**
      * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR)
-     * calculation.
+     * calculation. See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -410,7 +443,7 @@ private constructor(
     /**
      * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically used
      * with startOffset to indicate the length from the start offset. Arithmetic expressions are
-     * supported.
+     * supported. See [Trim videos – Duration](https://imagekit.io/docs/trim-videos#duration---du).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -419,7 +452,8 @@ private constructor(
 
     /**
      * Specifies the end offset (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically
-     * used with startOffset to define a time window. Arithmetic expressions are supported.
+     * used with startOffset to define a time window. Arithmetic expressions are supported. See
+     * [Trim videos – End offset](https://imagekit.io/docs/trim-videos#end-offset---eo).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -428,7 +462,8 @@ private constructor(
 
     /**
      * Flips or mirrors an image either horizontally, vertically, or both. Acceptable values: `h`
-     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`. See
+     * [Flip](https://imagekit.io/docs/effects-and-enhancements#flip---fl).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -436,8 +471,13 @@ private constructor(
     fun flip(): Optional<Flip> = flip.getOptional("flip")
 
     /**
-     * This parameter can be used with pad resize, maintain ratio, or extract crop to modify the
-     * padding or cropping behavior.
+     * Refines padding and cropping behavior for pad resize, maintain ratio, and extract crop modes.
+     * Supports manual positions and coordinate-based focus. With AI-based cropping, you can
+     * automatically keep key subjects in frame—such as faces or detected objects (e.g., `fo-face`,
+     * `fo-person`, `fo-car`)— while resizing.
+     * - See [Focus](https://imagekit.io/docs/image-resize-and-crop#focus---fo).
+     * - [Object aware
+     *   cropping](https://imagekit.io/docs/image-resize-and-crop#object-aware-cropping---fo-object-name)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -448,7 +488,9 @@ private constructor(
      * Specifies the output format for images or videos, e.g., `jpg`, `png`, `webp`, `mp4`, or
      * `auto`. You can also pass `orig` for images to return the original format. ImageKit
      * automatically delivers images and videos in the optimal format based on device support unless
-     * overridden by the dashboard settings or the format parameter.
+     * overridden by the dashboard settings or the format parameter. See
+     * [Image format](https://imagekit.io/docs/image-optimization#format---f) and
+     * [Video format](https://imagekit.io/docs/video-optimization#format---f).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -457,7 +499,8 @@ private constructor(
 
     /**
      * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a
-     * string for a custom gradient.
+     * string for a custom gradient. See
+     * [Gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -465,7 +508,8 @@ private constructor(
     fun gradient(): Optional<Gradient> = gradient.getOptional("gradient")
 
     /**
-     * Enables a grayscale effect for images.
+     * Enables a grayscale effect for images. See
+     * [Grayscale](https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -475,7 +519,9 @@ private constructor(
     /**
      * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated as
      * a percentage (e.g., `0.5` represents 50% of the original height). You can also supply
-     * arithmetic expressions (e.g., `ih_mul_0.5`).
+     * arithmetic expressions (e.g., `ih_mul_0.5`). Height transformation –
+     * [Images](https://imagekit.io/docs/image-resize-and-crop#height---h) ·
+     * [Videos](https://imagekit.io/docs/video-resize-and-crop#height---h)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -483,7 +529,8 @@ private constructor(
     fun height(): Optional<Height> = height.getOptional("height")
 
     /**
-     * Specifies whether the output image (in JPEG or PNG) should be compressed losslessly.
+     * Specifies whether the output image (in JPEG or PNG) should be compressed losslessly. See
+     * [Lossless compression](https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -492,7 +539,8 @@ private constructor(
 
     /**
      * By default, ImageKit removes all metadata during automatic image compression. Set this to
-     * true to preserve metadata.
+     * true to preserve metadata. See
+     * [Image metadata](https://imagekit.io/docs/image-optimization#image-metadata---md).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -500,7 +548,8 @@ private constructor(
     fun metadata(): Optional<Boolean> = metadata.getOptional("metadata")
 
     /**
-     * Named transformation reference
+     * Named transformation reference. See
+     * [Named transformations](https://imagekit.io/docs/transformations#named-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -508,7 +557,8 @@ private constructor(
     fun named(): Optional<String> = named.getOptional("named")
 
     /**
-     * Specifies the opacity level of the output image.
+     * Specifies the opacity level of the output image. See
+     * [Opacity](https://imagekit.io/docs/effects-and-enhancements#opacity---o).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -516,7 +566,8 @@ private constructor(
     fun opacity(): Optional<Double> = opacity.getOptional("opacity")
 
     /**
-     * If set to true, serves the original file without applying any transformations.
+     * If set to true, serves the original file without applying any transformations. See
+     * [Deliver original file as-is](https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -525,7 +576,8 @@ private constructor(
 
     /**
      * Specifies an overlay to be applied on the parent image or video. ImageKit supports overlays
-     * including images, text, videos, subtitles, and solid colors.
+     * including images, text, videos, subtitles, and solid colors. See
+     * [Overlay using layers](https://imagekit.io/docs/transformations#overlay-using-layers).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -535,7 +587,8 @@ private constructor(
     /**
      * Extracts a specific page or frame from multi-page or layered files (PDF, PSD, AI). For
      * example, specify by number (e.g., `2`), a range (e.g., `3-4` for the 2nd and 3rd layers), or
-     * by name (e.g., `name-layer-4` for a PSD layer).
+     * by name (e.g., `name-layer-4` for a PSD layer). See
+     * [Thumbnail extraction](https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -545,7 +598,8 @@ private constructor(
     /**
      * Specifies whether the output JPEG image should be rendered progressively. Progressive loading
      * begins with a low-quality, pixelated version of the full image, which gradually improves to
-     * provide a faster perceived load time.
+     * provide a faster perceived load time. See
+     * [Progressive images](https://imagekit.io/docs/image-optimization#progressive-image---pr).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -555,7 +609,8 @@ private constructor(
     /**
      * Specifies the quality of the output image for lossy formats such as JPEG, WebP, and AVIF. A
      * higher quality value results in a larger file size with better quality, while a lower value
-     * produces a smaller file size with reduced quality.
+     * produces a smaller file size with reduced quality. See
+     * [Quality](https://imagekit.io/docs/image-optimization#quality---q).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -563,7 +618,8 @@ private constructor(
     fun quality(): Optional<Double> = quality.getOptional("quality")
 
     /**
-     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular/oval shapes.
+     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
+     * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -583,7 +639,8 @@ private constructor(
      * Specifies the rotation angle in degrees. Positive values rotate the image clockwise; you can
      * also use, for example, `N40` for counterclockwise rotation or `auto` to use the orientation
      * specified in the image's EXIF data. For videos, only the following values are supported: 0,
-     * 90, 180, 270, or 360.
+     * 90, 180, 270, or 360. See
+     * [Rotate](https://imagekit.io/docs/effects-and-enhancements#rotate---rt).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -593,7 +650,8 @@ private constructor(
     /**
      * Adds a shadow beneath solid objects in an image with a transparent background. For AI-based
      * drop shadows, refer to aiDropShadow. Pass `true` for a default shadow, or provide a string
-     * for a custom shadow.
+     * for a custom shadow. See
+     * [Shadow](https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -602,7 +660,8 @@ private constructor(
 
     /**
      * Sharpens the input image, highlighting edges and finer details. Pass `true` for default
-     * sharpening, or provide a numeric value for custom sharpening.
+     * sharpening, or provide a numeric value for custom sharpening. See
+     * [Sharpen](https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -611,7 +670,8 @@ private constructor(
 
     /**
      * Specifies the start offset (in seconds) for trimming videos, e.g., `5` or `10.5`. Arithmetic
-     * expressions are also supported.
+     * expressions are also supported. See
+     * [Trim videos – Start offset](https://imagekit.io/docs/trim-videos#start-offset---so).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -620,7 +680,8 @@ private constructor(
 
     /**
      * An array of resolutions for adaptive bitrate streaming, e.g.,
-     * [`240`, `360`, `480`, `720`, `1080`].
+     * [`240`, `360`, `480`, `720`, `1080`]. See
+     * [Adaptive Bitrate Streaming](https://imagekit.io/docs/adaptive-bitrate-streaming).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -630,7 +691,8 @@ private constructor(
 
     /**
      * Useful for images with a solid or nearly solid background and a central object. This
-     * parameter trims the background, leaving only the central object in the output image.
+     * parameter trims the background, leaving only the central object in the output image. See
+     * [Trim edges](https://imagekit.io/docs/effects-and-enhancements#trim-edges---t).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -639,7 +701,8 @@ private constructor(
 
     /**
      * Applies Unsharp Masking (USM), an image sharpening technique. Pass `true` for a default
-     * unsharp mask, or provide a string for a custom unsharp mask.
+     * unsharp mask, or provide a string for a custom unsharp mask. See
+     * [Unsharp Mask](https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -647,7 +710,8 @@ private constructor(
     fun unsharpMask(): Optional<UnsharpMask> = unsharpMask.getOptional("unsharpMask")
 
     /**
-     * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`.
+     * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. See
+     * [Video codec](https://imagekit.io/docs/video-optimization#video-codec---vc).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -657,7 +721,9 @@ private constructor(
     /**
      * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated as a
      * percentage (e.g., `0.4` represents 40% of the original width). You can also supply arithmetic
-     * expressions (e.g., `iw_div_2`).
+     * expressions (e.g., `iw_div_2`). Width transformation –
+     * [Images](https://imagekit.io/docs/image-resize-and-crop#width---w) ·
+     * [Videos](https://imagekit.io/docs/video-resize-and-crop#width---w)
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -665,7 +731,8 @@ private constructor(
     fun width(): Optional<Width> = width.getOptional("width")
 
     /**
-     * Focus using cropped image coordinates - X coordinate
+     * Focus using cropped image coordinates - X coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -673,7 +740,8 @@ private constructor(
     fun x(): Optional<X> = x.getOptional("x")
 
     /**
-     * Focus using cropped image coordinates - X center coordinate
+     * Focus using cropped image coordinates - X center coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -681,7 +749,8 @@ private constructor(
     fun xCenter(): Optional<XCenter> = xCenter.getOptional("xCenter")
 
     /**
-     * Focus using cropped image coordinates - Y coordinate
+     * Focus using cropped image coordinates - Y coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -689,7 +758,8 @@ private constructor(
     fun y(): Optional<Y> = y.getOptional("y")
 
     /**
-     * Focus using cropped image coordinates - Y center coordinate
+     * Focus using cropped image coordinates - Y center coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -698,7 +768,8 @@ private constructor(
 
     /**
      * Accepts a numeric value that determines how much to zoom in or out of the cropped area. It
-     * should be used in conjunction with fo-face or fo-<object_name>.
+     * should be used in conjunction with fo-face or fo-<object_name>. See
+     * [Zoom](https://imagekit.io/docs/image-resize-and-crop#zoom---z).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -723,6 +794,13 @@ private constructor(
     @JsonProperty("aiDropShadow")
     @ExcludeMissing
     fun _aiDropShadow(): JsonField<AiDropShadow> = aiDropShadow
+
+    /**
+     * Returns the raw JSON value of [aiEdit].
+     *
+     * Unlike [aiEdit], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("aiEdit") @ExcludeMissing fun _aiEdit(): JsonField<String> = aiEdit
 
     /**
      * Returns the raw JSON value of [aiRemoveBackground].
@@ -1120,6 +1198,7 @@ private constructor(
 
         private var aiChangeBackground: JsonField<String> = JsonMissing.of()
         private var aiDropShadow: JsonField<AiDropShadow> = JsonMissing.of()
+        private var aiEdit: JsonField<String> = JsonMissing.of()
         private var aiRemoveBackground: JsonField<AiRemoveBackground> = JsonMissing.of()
         private var aiRemoveBackgroundExternal: JsonField<AiRemoveBackgroundExternal> =
             JsonMissing.of()
@@ -1176,6 +1255,7 @@ private constructor(
         internal fun from(transformation: Transformation) = apply {
             aiChangeBackground = transformation.aiChangeBackground
             aiDropShadow = transformation.aiDropShadow
+            aiEdit = transformation.aiEdit
             aiRemoveBackground = transformation.aiRemoveBackground
             aiRemoveBackgroundExternal = transformation.aiRemoveBackgroundExternal
             aiRetouch = transformation.aiRetouch
@@ -1231,7 +1311,8 @@ private constructor(
         /**
          * Uses AI to change the background. Provide a text prompt or a base64-encoded prompt, e.g.,
          * `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`. Not supported inside
-         * overlay.
+         * overlay. See
+         * [AI Change Background](https://imagekit.io/docs/ai-transformations#change-background-e-changebg).
          */
         fun aiChangeBackground(aiChangeBackground: String) =
             aiChangeBackground(JsonField.of(aiChangeBackground))
@@ -1251,7 +1332,8 @@ private constructor(
          * Adds an AI-based drop shadow around a foreground object on a transparent or removed
          * background. Optionally, control the direction, elevation, and saturation of the light
          * source (e.g., `az-45` to change light direction). Pass `true` for the default drop
-         * shadow, or provide a string for a custom drop shadow. Supported inside overlay.
+         * shadow, or provide a string for a custom drop shadow. Supported inside overlay. See
+         * [AI Drop Shadow](https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow).
          */
         fun aiDropShadow(aiDropShadow: AiDropShadow) = aiDropShadow(JsonField.of(aiDropShadow))
 
@@ -1266,14 +1348,32 @@ private constructor(
             this.aiDropShadow = aiDropShadow
         }
 
-        /** Alias for calling [aiDropShadow] with `AiDropShadow.ofUnionMember0(unionMember0)`. */
-        fun aiDropShadow(unionMember0: AiDropShadow.UnionMember0) =
-            aiDropShadow(AiDropShadow.ofUnionMember0(unionMember0))
+        /** Alias for calling [aiDropShadow] with `AiDropShadow.ofTrue()`. */
+        fun aiDropShadowTrue() = aiDropShadow(AiDropShadow.ofTrue())
 
         /** Alias for calling [aiDropShadow] with `AiDropShadow.ofString(string)`. */
         fun aiDropShadow(string: String) = aiDropShadow(AiDropShadow.ofString(string))
 
-        /** Applies ImageKit's in-house background removal. Supported inside overlay. */
+        /**
+         * Uses AI to edit images based on a text prompt. Provide a text prompt or a base64-encoded
+         * prompt, e.g., `prompt-snow road` or `prompte-[urlencoded_base64_encoded_text]`. Not
+         * supported inside overlay. See
+         * [AI Edit](https://imagekit.io/docs/ai-transformations#edit-image-e-edit).
+         */
+        fun aiEdit(aiEdit: String) = aiEdit(JsonField.of(aiEdit))
+
+        /**
+         * Sets [Builder.aiEdit] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.aiEdit] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun aiEdit(aiEdit: JsonField<String>) = apply { this.aiEdit = aiEdit }
+
+        /**
+         * Applies ImageKit's in-house background removal. Supported inside overlay. See
+         * [AI Background Removal](https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove).
+         */
         fun aiRemoveBackground(aiRemoveBackground: AiRemoveBackground) =
             aiRemoveBackground(JsonField.of(aiRemoveBackground))
 
@@ -1290,7 +1390,8 @@ private constructor(
 
         /**
          * Uses third-party background removal. Note: It is recommended to use aiRemoveBackground,
-         * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay.
+         * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay. See
+         * [External Background Removal](https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg).
          */
         fun aiRemoveBackgroundExternal(aiRemoveBackgroundExternal: AiRemoveBackgroundExternal) =
             aiRemoveBackgroundExternal(JsonField.of(aiRemoveBackgroundExternal))
@@ -1308,7 +1409,7 @@ private constructor(
 
         /**
          * Performs AI-based retouching to improve faces or product shots. Not supported inside
-         * overlay.
+         * overlay. See [AI Retouch](https://imagekit.io/docs/ai-transformations#retouch-e-retouch).
          */
         fun aiRetouch(aiRetouch: AiRetouch) = aiRetouch(JsonField.of(aiRetouch))
 
@@ -1323,6 +1424,7 @@ private constructor(
 
         /**
          * Upscales images beyond their original dimensions using AI. Not supported inside overlay.
+         * See [AI Upscale](https://imagekit.io/docs/ai-transformations#upscale-e-upscale).
          */
         fun aiUpscale(aiUpscale: AiUpscale) = aiUpscale(JsonField.of(aiUpscale))
 
@@ -1339,7 +1441,8 @@ private constructor(
          * Generates a variation of an image using AI. This produces a new image with slight
          * variations from the original, such as changes in color, texture, and other visual
          * elements, while preserving the structure and essence of the original image. Not supported
-         * inside overlay.
+         * inside overlay. See
+         * [AI Generate Variations](https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar).
          */
         fun aiVariation(aiVariation: AiVariation) = aiVariation(JsonField.of(aiVariation))
 
@@ -1357,7 +1460,8 @@ private constructor(
         /**
          * Specifies the aspect ratio for the output, e.g., "ar-4-3". Typically used with either
          * width or height (but not both). For example: aspectRatio = `4:3`, `4_3`, or an expression
-         * like `iar_div_2`.
+         * like `iar_div_2`. See
+         * [Image resize and crop – Aspect ratio](https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar).
          */
         fun aspectRatio(aspectRatio: AspectRatio) = aspectRatio(JsonField.of(aspectRatio))
 
@@ -1378,7 +1482,10 @@ private constructor(
         /** Alias for calling [aspectRatio] with `AspectRatio.ofString(string)`. */
         fun aspectRatio(string: String) = aspectRatio(AspectRatio.ofString(string))
 
-        /** Specifies the audio codec, e.g., `aac`, `opus`, or `none`. */
+        /**
+         * Specifies the audio codec, e.g., `aac`, `opus`, or `none`. See
+         * [Audio codec](https://imagekit.io/docs/video-optimization#audio-codec---ac).
+         */
         fun audioCodec(audioCodec: AudioCodec) = audioCodec(JsonField.of(audioCodec))
 
         /**
@@ -1393,11 +1500,15 @@ private constructor(
         /**
          * Specifies the background to be used in conjunction with certain cropping strategies when
          * resizing an image.
-         * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`.
-         * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc.
+         * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`. See
+         *   [Solid color background](https://imagekit.io/docs/effects-and-enhancements#solid-color-background).
+         * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc. See
+         *   [Blurred background](https://imagekit.io/docs/effects-and-enhancements#blurred-background).
          * - Expand the image boundaries using generative fill: `genfill`. Not supported inside
          *   overlay. Optionally, control the background scene by passing a text prompt:
          *   `genfill[:-prompt-${text}]` or `genfill[:-prompte-${urlencoded_base64_encoded_text}]`.
+         *   See
+         *   [Generative fill background](https://imagekit.io/docs/ai-transformations#generative-fill-bg-genfill).
          */
         fun background(background: String) = background(JsonField.of(background))
 
@@ -1412,7 +1523,8 @@ private constructor(
 
         /**
          * Specifies the Gaussian blur level. Accepts an integer value between 1 and 100, or an
-         * expression like `bl-10`.
+         * expression like `bl-10`. See
+         * [Blur](https://imagekit.io/docs/effects-and-enhancements#blur---bl).
          */
         fun blur(blur: Double) = blur(JsonField.of(blur))
 
@@ -1427,7 +1539,8 @@ private constructor(
         /**
          * Adds a border to the output media. Accepts a string in the format
          * `<border-width>_<hex-code>` (e.g., `5_FFF000` for a 5px yellow border), or an expression
-         * like `ih_div_20_FF00FF`.
+         * like `ih_div_20_FF00FF`. See
+         * [Border](https://imagekit.io/docs/effects-and-enhancements#border---b).
          */
         fun border(border: String) = border(JsonField.of(border))
 
@@ -1439,7 +1552,10 @@ private constructor(
          */
         fun border(border: JsonField<String>) = apply { this.border = border }
 
-        /** Indicates whether the output image should retain the original color profile. */
+        /**
+         * Indicates whether the output image should retain the original color profile. See
+         * [Color profile](https://imagekit.io/docs/image-optimization#color-profile---cp).
+         */
         fun colorProfile(colorProfile: Boolean) = colorProfile(JsonField.of(colorProfile))
 
         /**
@@ -1453,7 +1569,10 @@ private constructor(
             this.colorProfile = colorProfile
         }
 
-        /** Automatically enhances the contrast of an image (contrast stretch). */
+        /**
+         * Automatically enhances the contrast of an image (contrast stretch). See
+         * [Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast).
+         */
         fun contrastStretch(contrastStretch: ContrastStretch) =
             contrastStretch(JsonField.of(contrastStretch))
 
@@ -1468,7 +1587,10 @@ private constructor(
             this.contrastStretch = contrastStretch
         }
 
-        /** Crop modes for image resizing */
+        /**
+         * Crop modes for image resizing. See
+         * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
+         */
         fun crop(crop: Crop) = crop(JsonField.of(crop))
 
         /**
@@ -1479,7 +1601,10 @@ private constructor(
          */
         fun crop(crop: JsonField<Crop>) = apply { this.crop = crop }
 
-        /** Additional crop modes for image resizing */
+        /**
+         * Additional crop modes for image resizing. See
+         * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
+         */
         fun cropMode(cropMode: CropMode) = cropMode(JsonField.of(cropMode))
 
         /**
@@ -1491,7 +1616,10 @@ private constructor(
          */
         fun cropMode(cropMode: JsonField<CropMode>) = apply { this.cropMode = cropMode }
 
-        /** Specifies a fallback image if the resource is not found, e.g., a URL or file path. */
+        /**
+         * Specifies a fallback image if the resource is not found, e.g., a URL or file path. See
+         * [Default image](https://imagekit.io/docs/image-transformation#default-image---di).
+         */
         fun defaultImage(defaultImage: String) = defaultImage(JsonField.of(defaultImage))
 
         /**
@@ -1507,7 +1635,7 @@ private constructor(
 
         /**
          * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR)
-         * calculation.
+         * calculation. See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
          */
         fun dpr(dpr: Double) = dpr(JsonField.of(dpr))
 
@@ -1522,7 +1650,8 @@ private constructor(
         /**
          * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically
          * used with startOffset to indicate the length from the start offset. Arithmetic
-         * expressions are supported.
+         * expressions are supported. See
+         * [Trim videos – Duration](https://imagekit.io/docs/trim-videos#duration---du).
          */
         fun duration(duration: Duration) = duration(JsonField.of(duration))
 
@@ -1543,7 +1672,8 @@ private constructor(
 
         /**
          * Specifies the end offset (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically
-         * used with startOffset to define a time window. Arithmetic expressions are supported.
+         * used with startOffset to define a time window. Arithmetic expressions are supported. See
+         * [Trim videos – End offset](https://imagekit.io/docs/trim-videos#end-offset---eo).
          */
         fun endOffset(endOffset: EndOffset) = endOffset(JsonField.of(endOffset))
 
@@ -1564,7 +1694,8 @@ private constructor(
 
         /**
          * Flips or mirrors an image either horizontally, vertically, or both. Acceptable values:
-         * `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+         * `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`. See
+         * [Flip](https://imagekit.io/docs/effects-and-enhancements#flip---fl).
          */
         fun flip(flip: Flip) = flip(JsonField.of(flip))
 
@@ -1577,8 +1708,13 @@ private constructor(
         fun flip(flip: JsonField<Flip>) = apply { this.flip = flip }
 
         /**
-         * This parameter can be used with pad resize, maintain ratio, or extract crop to modify the
-         * padding or cropping behavior.
+         * Refines padding and cropping behavior for pad resize, maintain ratio, and extract crop
+         * modes. Supports manual positions and coordinate-based focus. With AI-based cropping, you
+         * can automatically keep key subjects in frame—such as faces or detected objects (e.g.,
+         * `fo-face`, `fo-person`, `fo-car`)— while resizing.
+         * - See [Focus](https://imagekit.io/docs/image-resize-and-crop#focus---fo).
+         * - [Object aware
+         *   cropping](https://imagekit.io/docs/image-resize-and-crop#object-aware-cropping---fo-object-name)
          */
         fun focus(focus: String) = focus(JsonField.of(focus))
 
@@ -1594,7 +1730,9 @@ private constructor(
          * Specifies the output format for images or videos, e.g., `jpg`, `png`, `webp`, `mp4`, or
          * `auto`. You can also pass `orig` for images to return the original format. ImageKit
          * automatically delivers images and videos in the optimal format based on device support
-         * unless overridden by the dashboard settings or the format parameter.
+         * unless overridden by the dashboard settings or the format parameter. See
+         * [Image format](https://imagekit.io/docs/image-optimization#format---f) and
+         * [Video format](https://imagekit.io/docs/video-optimization#format---f).
          */
         fun format(format: Format) = format(JsonField.of(format))
 
@@ -1608,7 +1746,8 @@ private constructor(
 
         /**
          * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide
-         * a string for a custom gradient.
+         * a string for a custom gradient. See
+         * [Gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
          */
         fun gradient(gradient: Gradient) = gradient(JsonField.of(gradient))
 
@@ -1621,14 +1760,16 @@ private constructor(
          */
         fun gradient(gradient: JsonField<Gradient>) = apply { this.gradient = gradient }
 
-        /** Alias for calling [gradient] with `Gradient.ofUnionMember0(unionMember0)`. */
-        fun gradient(unionMember0: Gradient.UnionMember0) =
-            gradient(Gradient.ofUnionMember0(unionMember0))
+        /** Alias for calling [gradient] with `Gradient.ofTrue()`. */
+        fun gradientTrue() = gradient(Gradient.ofTrue())
 
         /** Alias for calling [gradient] with `Gradient.ofString(string)`. */
         fun gradient(string: String) = gradient(Gradient.ofString(string))
 
-        /** Enables a grayscale effect for images. */
+        /**
+         * Enables a grayscale effect for images. See
+         * [Grayscale](https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale).
+         */
         fun grayscale(grayscale: Grayscale) = grayscale(JsonField.of(grayscale))
 
         /**
@@ -1643,7 +1784,9 @@ private constructor(
         /**
          * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated
          * as a percentage (e.g., `0.5` represents 50% of the original height). You can also supply
-         * arithmetic expressions (e.g., `ih_mul_0.5`).
+         * arithmetic expressions (e.g., `ih_mul_0.5`). Height transformation –
+         * [Images](https://imagekit.io/docs/image-resize-and-crop#height---h) ·
+         * [Videos](https://imagekit.io/docs/video-resize-and-crop#height---h)
          */
         fun height(height: Height) = height(JsonField.of(height))
 
@@ -1661,7 +1804,10 @@ private constructor(
         /** Alias for calling [height] with `Height.ofString(string)`. */
         fun height(string: String) = height(Height.ofString(string))
 
-        /** Specifies whether the output image (in JPEG or PNG) should be compressed losslessly. */
+        /**
+         * Specifies whether the output image (in JPEG or PNG) should be compressed losslessly. See
+         * [Lossless compression](https://imagekit.io/docs/image-optimization#lossless-webp-and-png---lo).
+         */
         fun lossless(lossless: Boolean) = lossless(JsonField.of(lossless))
 
         /**
@@ -1675,7 +1821,8 @@ private constructor(
 
         /**
          * By default, ImageKit removes all metadata during automatic image compression. Set this to
-         * true to preserve metadata.
+         * true to preserve metadata. See
+         * [Image metadata](https://imagekit.io/docs/image-optimization#image-metadata---md).
          */
         fun metadata(metadata: Boolean) = metadata(JsonField.of(metadata))
 
@@ -1688,7 +1835,10 @@ private constructor(
          */
         fun metadata(metadata: JsonField<Boolean>) = apply { this.metadata = metadata }
 
-        /** Named transformation reference */
+        /**
+         * Named transformation reference. See
+         * [Named transformations](https://imagekit.io/docs/transformations#named-transformations).
+         */
         fun named(named: String) = named(JsonField.of(named))
 
         /**
@@ -1699,7 +1849,10 @@ private constructor(
          */
         fun named(named: JsonField<String>) = apply { this.named = named }
 
-        /** Specifies the opacity level of the output image. */
+        /**
+         * Specifies the opacity level of the output image. See
+         * [Opacity](https://imagekit.io/docs/effects-and-enhancements#opacity---o).
+         */
         fun opacity(opacity: Double) = opacity(JsonField.of(opacity))
 
         /**
@@ -1710,7 +1863,10 @@ private constructor(
          */
         fun opacity(opacity: JsonField<Double>) = apply { this.opacity = opacity }
 
-        /** If set to true, serves the original file without applying any transformations. */
+        /**
+         * If set to true, serves the original file without applying any transformations. See
+         * [Deliver original file as-is](https://imagekit.io/docs/core-delivery-features#deliver-original-file-as-is---orig-true).
+         */
         fun original(original: Boolean) = original(JsonField.of(original))
 
         /**
@@ -1724,7 +1880,8 @@ private constructor(
 
         /**
          * Specifies an overlay to be applied on the parent image or video. ImageKit supports
-         * overlays including images, text, videos, subtitles, and solid colors.
+         * overlays including images, text, videos, subtitles, and solid colors. See
+         * [Overlay using layers](https://imagekit.io/docs/transformations#overlay-using-layers).
          */
         fun overlay(overlay: Overlay) = overlay(JsonField.of(overlay))
 
@@ -1743,13 +1900,11 @@ private constructor(
          * Alias for calling [overlay] with the following:
          * ```java
          * TextOverlay.builder()
-         *     .type(TextOverlay.Type.TEXT)
          *     .text(text)
          *     .build()
          * ```
          */
-        fun textOverlay(text: String) =
-            overlay(TextOverlay.builder().type(TextOverlay.Type.TEXT).text(text).build())
+        fun textOverlay(text: String) = overlay(TextOverlay.builder().text(text).build())
 
         /** Alias for calling [overlay] with `Overlay.ofImage(image)`. */
         fun overlay(image: ImageOverlay) = overlay(Overlay.ofImage(image))
@@ -1758,13 +1913,11 @@ private constructor(
          * Alias for calling [overlay] with the following:
          * ```java
          * ImageOverlay.builder()
-         *     .type(ImageOverlay.Type.IMAGE)
          *     .input(input)
          *     .build()
          * ```
          */
-        fun imageOverlay(input: String) =
-            overlay(ImageOverlay.builder().type(ImageOverlay.Type.IMAGE).input(input).build())
+        fun imageOverlay(input: String) = overlay(ImageOverlay.builder().input(input).build())
 
         /** Alias for calling [overlay] with `Overlay.ofVideo(video)`. */
         fun overlay(video: VideoOverlay) = overlay(Overlay.ofVideo(video))
@@ -1773,13 +1926,11 @@ private constructor(
          * Alias for calling [overlay] with the following:
          * ```java
          * VideoOverlay.builder()
-         *     .type(VideoOverlay.Type.VIDEO)
          *     .input(input)
          *     .build()
          * ```
          */
-        fun videoOverlay(input: String) =
-            overlay(VideoOverlay.builder().type(VideoOverlay.Type.VIDEO).input(input).build())
+        fun videoOverlay(input: String) = overlay(VideoOverlay.builder().input(input).build())
 
         /** Alias for calling [overlay] with `Overlay.ofSubtitle(subtitle)`. */
         fun overlay(subtitle: SubtitleOverlay) = overlay(Overlay.ofSubtitle(subtitle))
@@ -1788,15 +1939,11 @@ private constructor(
          * Alias for calling [overlay] with the following:
          * ```java
          * SubtitleOverlay.builder()
-         *     .type(SubtitleOverlay.Type.SUBTITLE)
          *     .input(input)
          *     .build()
          * ```
          */
-        fun subtitleOverlay(input: String) =
-            overlay(
-                SubtitleOverlay.builder().type(SubtitleOverlay.Type.SUBTITLE).input(input).build()
-            )
+        fun subtitleOverlay(input: String) = overlay(SubtitleOverlay.builder().input(input).build())
 
         /** Alias for calling [overlay] with `Overlay.ofSolidColor(solidColor)`. */
         fun overlay(solidColor: SolidColorOverlay) = overlay(Overlay.ofSolidColor(solidColor))
@@ -1805,23 +1952,18 @@ private constructor(
          * Alias for calling [overlay] with the following:
          * ```java
          * SolidColorOverlay.builder()
-         *     .type(SolidColorOverlay.Type.SOLID_COLOR)
          *     .color(color)
          *     .build()
          * ```
          */
         fun solidColorOverlay(color: String) =
-            overlay(
-                SolidColorOverlay.builder()
-                    .type(SolidColorOverlay.Type.SOLID_COLOR)
-                    .color(color)
-                    .build()
-            )
+            overlay(SolidColorOverlay.builder().color(color).build())
 
         /**
          * Extracts a specific page or frame from multi-page or layered files (PDF, PSD, AI). For
          * example, specify by number (e.g., `2`), a range (e.g., `3-4` for the 2nd and 3rd layers),
-         * or by name (e.g., `name-layer-4` for a PSD layer).
+         * or by name (e.g., `name-layer-4` for a PSD layer). See
+         * [Thumbnail extraction](https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files).
          */
         fun page(page: Page) = page(JsonField.of(page))
 
@@ -1842,7 +1984,8 @@ private constructor(
         /**
          * Specifies whether the output JPEG image should be rendered progressively. Progressive
          * loading begins with a low-quality, pixelated version of the full image, which gradually
-         * improves to provide a faster perceived load time.
+         * improves to provide a faster perceived load time. See
+         * [Progressive images](https://imagekit.io/docs/image-optimization#progressive-image---pr).
          */
         fun progressive(progressive: Boolean) = progressive(JsonField.of(progressive))
 
@@ -1858,7 +2001,8 @@ private constructor(
         /**
          * Specifies the quality of the output image for lossy formats such as JPEG, WebP, and AVIF.
          * A higher quality value results in a larger file size with better quality, while a lower
-         * value produces a smaller file size with reduced quality.
+         * value produces a smaller file size with reduced quality. See
+         * [Quality](https://imagekit.io/docs/image-optimization#quality---q).
          */
         fun quality(quality: Double) = quality(JsonField.of(quality))
 
@@ -1871,8 +2015,8 @@ private constructor(
         fun quality(quality: JsonField<Double>) = apply { this.quality = quality }
 
         /**
-         * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular/oval
-         * shapes.
+         * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
+         * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
          */
         fun radius(radius: Radius) = radius(JsonField.of(radius))
 
@@ -1887,8 +2031,8 @@ private constructor(
         /** Alias for calling [radius] with `Radius.ofNumber(number)`. */
         fun radius(number: Double) = radius(Radius.ofNumber(number))
 
-        /** Alias for calling [radius] with `Radius.ofUnionMember1(unionMember1)`. */
-        fun radius(unionMember1: Radius.UnionMember1) = radius(Radius.ofUnionMember1(unionMember1))
+        /** Alias for calling [radius] with `Radius.ofMax()`. */
+        fun radiusMax() = radius(Radius.ofMax())
 
         /**
          * Pass any transformation not directly supported by the SDK. This transformation string is
@@ -1908,7 +2052,8 @@ private constructor(
          * Specifies the rotation angle in degrees. Positive values rotate the image clockwise; you
          * can also use, for example, `N40` for counterclockwise rotation or `auto` to use the
          * orientation specified in the image's EXIF data. For videos, only the following values are
-         * supported: 0, 90, 180, 270, or 360.
+         * supported: 0, 90, 180, 270, or 360. See
+         * [Rotate](https://imagekit.io/docs/effects-and-enhancements#rotate---rt).
          */
         fun rotation(rotation: Rotation) = rotation(JsonField.of(rotation))
 
@@ -1930,7 +2075,8 @@ private constructor(
         /**
          * Adds a shadow beneath solid objects in an image with a transparent background. For
          * AI-based drop shadows, refer to aiDropShadow. Pass `true` for a default shadow, or
-         * provide a string for a custom shadow.
+         * provide a string for a custom shadow. See
+         * [Shadow](https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow).
          */
         fun shadow(shadow: Shadow) = shadow(JsonField.of(shadow))
 
@@ -1942,15 +2088,16 @@ private constructor(
          */
         fun shadow(shadow: JsonField<Shadow>) = apply { this.shadow = shadow }
 
-        /** Alias for calling [shadow] with `Shadow.ofUnionMember0(unionMember0)`. */
-        fun shadow(unionMember0: Shadow.UnionMember0) = shadow(Shadow.ofUnionMember0(unionMember0))
+        /** Alias for calling [shadow] with `Shadow.ofTrue()`. */
+        fun shadowTrue() = shadow(Shadow.ofTrue())
 
         /** Alias for calling [shadow] with `Shadow.ofString(string)`. */
         fun shadow(string: String) = shadow(Shadow.ofString(string))
 
         /**
          * Sharpens the input image, highlighting edges and finer details. Pass `true` for default
-         * sharpening, or provide a numeric value for custom sharpening.
+         * sharpening, or provide a numeric value for custom sharpening. See
+         * [Sharpen](https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen).
          */
         fun sharpen(sharpen: Sharpen) = sharpen(JsonField.of(sharpen))
 
@@ -1962,16 +2109,16 @@ private constructor(
          */
         fun sharpen(sharpen: JsonField<Sharpen>) = apply { this.sharpen = sharpen }
 
-        /** Alias for calling [sharpen] with `Sharpen.ofUnionMember0(unionMember0)`. */
-        fun sharpen(unionMember0: Sharpen.UnionMember0) =
-            sharpen(Sharpen.ofUnionMember0(unionMember0))
+        /** Alias for calling [sharpen] with `Sharpen.ofTrue()`. */
+        fun sharpenTrue() = sharpen(Sharpen.ofTrue())
 
         /** Alias for calling [sharpen] with `Sharpen.ofNumber(number)`. */
         fun sharpen(number: Double) = sharpen(Sharpen.ofNumber(number))
 
         /**
          * Specifies the start offset (in seconds) for trimming videos, e.g., `5` or `10.5`.
-         * Arithmetic expressions are also supported.
+         * Arithmetic expressions are also supported. See
+         * [Trim videos – Start offset](https://imagekit.io/docs/trim-videos#start-offset---so).
          */
         fun startOffset(startOffset: StartOffset) = startOffset(JsonField.of(startOffset))
 
@@ -1994,7 +2141,8 @@ private constructor(
 
         /**
          * An array of resolutions for adaptive bitrate streaming, e.g.,
-         * [`240`, `360`, `480`, `720`, `1080`].
+         * [`240`, `360`, `480`, `720`, `1080`]. See
+         * [Adaptive Bitrate Streaming](https://imagekit.io/docs/adaptive-bitrate-streaming).
          */
         fun streamingResolutions(streamingResolutions: List<StreamingResolution>) =
             streamingResolutions(JsonField.of(streamingResolutions))
@@ -2025,7 +2173,8 @@ private constructor(
 
         /**
          * Useful for images with a solid or nearly solid background and a central object. This
-         * parameter trims the background, leaving only the central object in the output image.
+         * parameter trims the background, leaving only the central object in the output image. See
+         * [Trim edges](https://imagekit.io/docs/effects-and-enhancements#trim-edges---t).
          */
         fun trim(trim: Trim) = trim(JsonField.of(trim))
 
@@ -2037,15 +2186,16 @@ private constructor(
          */
         fun trim(trim: JsonField<Trim>) = apply { this.trim = trim }
 
-        /** Alias for calling [trim] with `Trim.ofUnionMember0(unionMember0)`. */
-        fun trim(unionMember0: Trim.UnionMember0) = trim(Trim.ofUnionMember0(unionMember0))
+        /** Alias for calling [trim] with `Trim.ofTrue()`. */
+        fun trimTrue() = trim(Trim.ofTrue())
 
         /** Alias for calling [trim] with `Trim.ofNumber(number)`. */
         fun trim(number: Double) = trim(Trim.ofNumber(number))
 
         /**
          * Applies Unsharp Masking (USM), an image sharpening technique. Pass `true` for a default
-         * unsharp mask, or provide a string for a custom unsharp mask.
+         * unsharp mask, or provide a string for a custom unsharp mask. See
+         * [Unsharp Mask](https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm).
          */
         fun unsharpMask(unsharpMask: UnsharpMask) = unsharpMask(JsonField.of(unsharpMask))
 
@@ -2060,14 +2210,16 @@ private constructor(
             this.unsharpMask = unsharpMask
         }
 
-        /** Alias for calling [unsharpMask] with `UnsharpMask.ofUnionMember0(unionMember0)`. */
-        fun unsharpMask(unionMember0: UnsharpMask.UnionMember0) =
-            unsharpMask(UnsharpMask.ofUnionMember0(unionMember0))
+        /** Alias for calling [unsharpMask] with `UnsharpMask.ofTrue()`. */
+        fun unsharpMaskTrue() = unsharpMask(UnsharpMask.ofTrue())
 
         /** Alias for calling [unsharpMask] with `UnsharpMask.ofString(string)`. */
         fun unsharpMask(string: String) = unsharpMask(UnsharpMask.ofString(string))
 
-        /** Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. */
+        /**
+         * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. See
+         * [Video codec](https://imagekit.io/docs/video-optimization#video-codec---vc).
+         */
         fun videoCodec(videoCodec: VideoCodec) = videoCodec(JsonField.of(videoCodec))
 
         /**
@@ -2082,7 +2234,9 @@ private constructor(
         /**
          * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated
          * as a percentage (e.g., `0.4` represents 40% of the original width). You can also supply
-         * arithmetic expressions (e.g., `iw_div_2`).
+         * arithmetic expressions (e.g., `iw_div_2`). Width transformation –
+         * [Images](https://imagekit.io/docs/image-resize-and-crop#width---w) ·
+         * [Videos](https://imagekit.io/docs/video-resize-and-crop#width---w)
          */
         fun width(width: Width) = width(JsonField.of(width))
 
@@ -2100,7 +2254,10 @@ private constructor(
         /** Alias for calling [width] with `Width.ofString(string)`. */
         fun width(string: String) = width(Width.ofString(string))
 
-        /** Focus using cropped image coordinates - X coordinate */
+        /**
+         * Focus using cropped image coordinates - X coordinate. See
+         * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+         */
         fun x(x: X) = x(JsonField.of(x))
 
         /**
@@ -2117,7 +2274,10 @@ private constructor(
         /** Alias for calling [x] with `X.ofString(string)`. */
         fun x(string: String) = x(X.ofString(string))
 
-        /** Focus using cropped image coordinates - X center coordinate */
+        /**
+         * Focus using cropped image coordinates - X center coordinate. See
+         * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+         */
         fun xCenter(xCenter: XCenter) = xCenter(JsonField.of(xCenter))
 
         /**
@@ -2134,7 +2294,10 @@ private constructor(
         /** Alias for calling [xCenter] with `XCenter.ofString(string)`. */
         fun xCenter(string: String) = xCenter(XCenter.ofString(string))
 
-        /** Focus using cropped image coordinates - Y coordinate */
+        /**
+         * Focus using cropped image coordinates - Y coordinate. See
+         * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+         */
         fun y(y: Y) = y(JsonField.of(y))
 
         /**
@@ -2151,7 +2314,10 @@ private constructor(
         /** Alias for calling [y] with `Y.ofString(string)`. */
         fun y(string: String) = y(Y.ofString(string))
 
-        /** Focus using cropped image coordinates - Y center coordinate */
+        /**
+         * Focus using cropped image coordinates - Y center coordinate. See
+         * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+         */
         fun yCenter(yCenter: YCenter) = yCenter(JsonField.of(yCenter))
 
         /**
@@ -2170,7 +2336,8 @@ private constructor(
 
         /**
          * Accepts a numeric value that determines how much to zoom in or out of the cropped area.
-         * It should be used in conjunction with fo-face or fo-<object_name>.
+         * It should be used in conjunction with fo-face or fo-<object_name>. See
+         * [Zoom](https://imagekit.io/docs/image-resize-and-crop#zoom---z).
          */
         fun zoom(zoom: Double) = zoom(JsonField.of(zoom))
 
@@ -2210,6 +2377,7 @@ private constructor(
             Transformation(
                 aiChangeBackground,
                 aiDropShadow,
+                aiEdit,
                 aiRemoveBackground,
                 aiRemoveBackgroundExternal,
                 aiRetouch,
@@ -2272,6 +2440,7 @@ private constructor(
 
         aiChangeBackground()
         aiDropShadow().ifPresent { it.validate() }
+        aiEdit()
         aiRemoveBackground().ifPresent { it.validate() }
         aiRemoveBackgroundExternal().ifPresent { it.validate() }
         aiRetouch().ifPresent { it.validate() }
@@ -2341,6 +2510,7 @@ private constructor(
     internal fun validity(): Int =
         (if (aiChangeBackground.asKnown().isPresent) 1 else 0) +
             (aiDropShadow.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (aiEdit.asKnown().isPresent) 1 else 0) +
             (aiRemoveBackground.asKnown().getOrNull()?.validity() ?: 0) +
             (aiRemoveBackgroundExternal.asKnown().getOrNull()?.validity() ?: 0) +
             (aiRetouch.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2395,26 +2565,27 @@ private constructor(
      * Adds an AI-based drop shadow around a foreground object on a transparent or removed
      * background. Optionally, control the direction, elevation, and saturation of the light source
      * (e.g., `az-45` to change light direction). Pass `true` for the default drop shadow, or
-     * provide a string for a custom drop shadow. Supported inside overlay.
+     * provide a string for a custom drop shadow. Supported inside overlay. See
+     * [AI Drop Shadow](https://imagekit.io/docs/ai-transformations#ai-drop-shadow-e-dropshadow).
      */
     @JsonDeserialize(using = AiDropShadow.Deserializer::class)
     @JsonSerialize(using = AiDropShadow.Serializer::class)
     class AiDropShadow
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -2422,7 +2593,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -2436,8 +2607,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitString(string: String) {}
@@ -2464,8 +2641,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -2478,16 +2655,14 @@ private constructor(
                 return true
             }
 
-            return other is AiDropShadow &&
-                unionMember0 == other.unionMember0 &&
-                string == other.string
+            return other is AiDropShadow && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "AiDropShadow{unionMember0=$unionMember0}"
+                true_ != null -> "AiDropShadow{true_=$true_}"
                 string != null -> "AiDropShadow{string=$string}"
                 _json != null -> "AiDropShadow{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid AiDropShadow")
@@ -2495,9 +2670,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) =
-                AiDropShadow(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = AiDropShadow(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = AiDropShadow(string = string)
         }
@@ -2508,7 +2681,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -2534,9 +2707,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                AiDropShadow(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { AiDropShadow(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 AiDropShadow(string = it, _json = json)
                             },
@@ -2565,138 +2738,19 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid AiDropShadow")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
-    /** Applies ImageKit's in-house background removal. Supported inside overlay. */
+    /**
+     * Applies ImageKit's in-house background removal. Supported inside overlay. See
+     * [AI Background Removal](https://imagekit.io/docs/ai-transformations#imagekit-background-removal-e-bgremove).
+     */
     class AiRemoveBackground
     @JsonCreator
     private constructor(private val value: JsonField<Boolean>) : Enum {
@@ -2822,7 +2876,8 @@ private constructor(
 
     /**
      * Uses third-party background removal. Note: It is recommended to use aiRemoveBackground,
-     * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay.
+     * ImageKit's in-house solution, which is more cost-effective. Supported inside overlay. See
+     * [External Background Removal](https://imagekit.io/docs/ai-transformations#background-removal-e-removedotbg).
      */
     class AiRemoveBackgroundExternal
     @JsonCreator
@@ -2952,6 +3007,7 @@ private constructor(
 
     /**
      * Performs AI-based retouching to improve faces or product shots. Not supported inside overlay.
+     * See [AI Retouch](https://imagekit.io/docs/ai-transformations#retouch-e-retouch).
      */
     class AiRetouch @JsonCreator private constructor(private val value: JsonField<Boolean>) : Enum {
 
@@ -3073,7 +3129,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Upscales images beyond their original dimensions using AI. Not supported inside overlay. */
+    /**
+     * Upscales images beyond their original dimensions using AI. Not supported inside overlay. See
+     * [AI Upscale](https://imagekit.io/docs/ai-transformations#upscale-e-upscale).
+     */
     class AiUpscale @JsonCreator private constructor(private val value: JsonField<Boolean>) : Enum {
 
         /**
@@ -3197,7 +3256,8 @@ private constructor(
     /**
      * Generates a variation of an image using AI. This produces a new image with slight variations
      * from the original, such as changes in color, texture, and other visual elements, while
-     * preserving the structure and essence of the original image. Not supported inside overlay.
+     * preserving the structure and essence of the original image. Not supported inside overlay. See
+     * [AI Generate Variations](https://imagekit.io/docs/ai-transformations#generate-variations-of-an-image-e-genvar).
      */
     class AiVariation @JsonCreator private constructor(private val value: JsonField<Boolean>) :
         Enum {
@@ -3323,7 +3383,8 @@ private constructor(
     /**
      * Specifies the aspect ratio for the output, e.g., "ar-4-3". Typically used with either width
      * or height (but not both). For example: aspectRatio = `4:3`, `4_3`, or an expression like
-     * `iar_div_2`.
+     * `iar_div_2`. See
+     * [Image resize and crop – Aspect ratio](https://imagekit.io/docs/image-resize-and-crop#aspect-ratio---ar).
      */
     @JsonDeserialize(using = AspectRatio.Deserializer::class)
     @JsonSerialize(using = AspectRatio.Serializer::class)
@@ -3495,7 +3556,10 @@ private constructor(
         }
     }
 
-    /** Specifies the audio codec, e.g., `aac`, `opus`, or `none`. */
+    /**
+     * Specifies the audio codec, e.g., `aac`, `opus`, or `none`. See
+     * [Audio codec](https://imagekit.io/docs/video-optimization#audio-codec---ac).
+     */
     class AudioCodec @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -3631,7 +3695,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Automatically enhances the contrast of an image (contrast stretch). */
+    /**
+     * Automatically enhances the contrast of an image (contrast stretch). See
+     * [Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast).
+     */
     class ContrastStretch @JsonCreator private constructor(private val value: JsonField<Boolean>) :
         Enum {
 
@@ -3754,7 +3821,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Crop modes for image resizing */
+    /**
+     * Crop modes for image resizing. See
+     * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
+     */
     class Crop @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -3900,7 +3970,10 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Additional crop modes for image resizing */
+    /**
+     * Additional crop modes for image resizing. See
+     * [Crop modes & focus](https://imagekit.io/docs/image-resize-and-crop#crop-crop-modes--focus).
+     */
     class CropMode @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -4037,7 +4110,7 @@ private constructor(
     /**
      * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically used
      * with startOffset to indicate the length from the start offset. Arithmetic expressions are
-     * supported.
+     * supported. See [Trim videos – Duration](https://imagekit.io/docs/trim-videos#duration---du).
      */
     @JsonDeserialize(using = Duration.Deserializer::class)
     @JsonSerialize(using = Duration.Serializer::class)
@@ -4210,7 +4283,8 @@ private constructor(
 
     /**
      * Specifies the end offset (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically
-     * used with startOffset to define a time window. Arithmetic expressions are supported.
+     * used with startOffset to define a time window. Arithmetic expressions are supported. See
+     * [Trim videos – End offset](https://imagekit.io/docs/trim-videos#end-offset---eo).
      */
     @JsonDeserialize(using = EndOffset.Deserializer::class)
     @JsonSerialize(using = EndOffset.Serializer::class)
@@ -4383,7 +4457,8 @@ private constructor(
 
     /**
      * Flips or mirrors an image either horizontally, vertically, or both. Acceptable values: `h`
-     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`. See
+     * [Flip](https://imagekit.io/docs/effects-and-enhancements#flip---fl).
      */
     class Flip @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -4528,7 +4603,9 @@ private constructor(
      * Specifies the output format for images or videos, e.g., `jpg`, `png`, `webp`, `mp4`, or
      * `auto`. You can also pass `orig` for images to return the original format. ImageKit
      * automatically delivers images and videos in the optimal format based on device support unless
-     * overridden by the dashboard settings or the format parameter.
+     * overridden by the dashboard settings or the format parameter. See
+     * [Image format](https://imagekit.io/docs/image-optimization#format---f) and
+     * [Video format](https://imagekit.io/docs/video-optimization#format---f).
      */
     class Format @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -4713,26 +4790,27 @@ private constructor(
 
     /**
      * Creates a linear gradient with two colors. Pass `true` for a default gradient, or provide a
-     * string for a custom gradient.
+     * string for a custom gradient. See
+     * [Gradient](https://imagekit.io/docs/effects-and-enhancements#gradient---e-gradient).
      */
     @JsonDeserialize(using = Gradient.Deserializer::class)
     @JsonSerialize(using = Gradient.Serializer::class)
     class Gradient
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -4740,7 +4818,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -4754,8 +4832,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitString(string: String) {}
@@ -4782,8 +4866,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -4796,14 +4880,14 @@ private constructor(
                 return true
             }
 
-            return other is Gradient && unionMember0 == other.unionMember0 && string == other.string
+            return other is Gradient && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Gradient{unionMember0=$unionMember0}"
+                true_ != null -> "Gradient{true_=$true_}"
                 string != null -> "Gradient{string=$string}"
                 _json != null -> "Gradient{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Gradient")
@@ -4811,8 +4895,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Gradient(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = Gradient(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Gradient(string = string)
         }
@@ -4822,7 +4905,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -4848,9 +4931,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Gradient(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Gradient(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Gradient(string = it, _json = json)
                             },
@@ -4879,138 +4962,19 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Gradient")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
-    /** Enables a grayscale effect for images. */
+    /**
+     * Enables a grayscale effect for images. See
+     * [Grayscale](https://imagekit.io/docs/effects-and-enhancements#grayscale---e-grayscale).
+     */
     class Grayscale @JsonCreator private constructor(private val value: JsonField<Boolean>) : Enum {
 
         /**
@@ -5134,7 +5098,9 @@ private constructor(
     /**
      * Specifies the height of the output. If a value between 0 and 1 is provided, it is treated as
      * a percentage (e.g., `0.5` represents 50% of the original height). You can also supply
-     * arithmetic expressions (e.g., `ih_mul_0.5`).
+     * arithmetic expressions (e.g., `ih_mul_0.5`). Height transformation –
+     * [Images](https://imagekit.io/docs/image-resize-and-crop#height---h) ·
+     * [Videos](https://imagekit.io/docs/video-resize-and-crop#height---h)
      */
     @JsonDeserialize(using = Height.Deserializer::class)
     @JsonSerialize(using = Height.Serializer::class)
@@ -5306,7 +5272,8 @@ private constructor(
     /**
      * Extracts a specific page or frame from multi-page or layered files (PDF, PSD, AI). For
      * example, specify by number (e.g., `2`), a range (e.g., `3-4` for the 2nd and 3rd layers), or
-     * by name (e.g., `name-layer-4` for a PSD layer).
+     * by name (e.g., `name-layer-4` for a PSD layer). See
+     * [Thumbnail extraction](https://imagekit.io/docs/vector-and-animated-images#get-thumbnail-from-psd-pdf-ai-eps-and-animated-files).
      */
     @JsonDeserialize(using = Page.Deserializer::class)
     @JsonSerialize(using = Page.Serializer::class)
@@ -5475,35 +5442,36 @@ private constructor(
     }
 
     /**
-     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular/oval shapes.
+     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
+     * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      */
     @JsonDeserialize(using = Radius.Deserializer::class)
     @JsonSerialize(using = Radius.Serializer::class)
     class Radius
     private constructor(
         private val number: Double? = null,
-        private val unionMember1: UnionMember1? = null,
+        private val max: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun unionMember1(): Optional<UnionMember1> = Optional.ofNullable(unionMember1)
+        fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
         fun isNumber(): Boolean = number != null
 
-        fun isUnionMember1(): Boolean = unionMember1 != null
+        fun isMax(): Boolean = max != null
 
         fun asNumber(): Double = number.getOrThrow("number")
 
-        fun asUnionMember1(): UnionMember1 = unionMember1.getOrThrow("unionMember1")
+        fun asMax(): JsonValue = max.getOrThrow("max")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
-                unionMember1 != null -> visitor.visitUnionMember1(unionMember1)
+                max != null -> visitor.visitMax(max)
                 else -> visitor.unknown(_json)
             }
 
@@ -5518,8 +5486,12 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitNumber(number: Double) {}
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) {
-                        unionMember1.validate()
+                    override fun visitMax(max: JsonValue) {
+                        max.let {
+                            if (it != JsonValue.from("max")) {
+                                throw ImageKitInvalidDataException("'max' is invalid, received $it")
+                            }
+                        }
                     }
                 }
             )
@@ -5546,8 +5518,8 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) =
-                        unionMember1.validity()
+                    override fun visitMax(max: JsonValue) =
+                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -5558,15 +5530,15 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && unionMember1 == other.unionMember1
+            return other is Radius && number == other.number && max == other.max
         }
 
-        override fun hashCode(): Int = Objects.hash(number, unionMember1)
+        override fun hashCode(): Int = Objects.hash(number, max)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
-                unionMember1 != null -> "Radius{unionMember1=$unionMember1}"
+                max != null -> "Radius{max=$max}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -5575,8 +5547,7 @@ private constructor(
 
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
-            @JvmStatic
-            fun ofUnionMember1(unionMember1: UnionMember1) = Radius(unionMember1 = unionMember1)
+            @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -5584,7 +5555,7 @@ private constructor(
 
             fun visitNumber(number: Double): T
 
-            fun visitUnionMember1(unionMember1: UnionMember1): T
+            fun visitMax(max: JsonValue): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -5608,9 +5579,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember1>())?.let {
-                                Radius(unionMember1 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Radius(max = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
@@ -5640,136 +5611,11 @@ private constructor(
             ) {
                 when {
                     value.number != null -> generator.writeObject(value.number)
-                    value.unionMember1 != null -> generator.writeObject(value.unionMember1)
+                    value.max != null -> generator.writeObject(value.max)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }
             }
-        }
-
-        class UnionMember1 @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val MAX = of("max")
-
-                @JvmStatic fun of(value: String) = UnionMember1(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember1]'s known values. */
-            enum class Known {
-                MAX
-            }
-
-            /**
-             * An enum containing [UnionMember1]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember1] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                MAX,
-                /**
-                 * An enum member indicating that [UnionMember1] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    MAX -> Value.MAX
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    MAX -> Known.MAX
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember1: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember1 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember1 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
         }
     }
 
@@ -5777,7 +5623,8 @@ private constructor(
      * Specifies the rotation angle in degrees. Positive values rotate the image clockwise; you can
      * also use, for example, `N40` for counterclockwise rotation or `auto` to use the orientation
      * specified in the image's EXIF data. For videos, only the following values are supported: 0,
-     * 90, 180, 270, or 360.
+     * 90, 180, 270, or 360. See
+     * [Rotate](https://imagekit.io/docs/effects-and-enhancements#rotate---rt).
      */
     @JsonDeserialize(using = Rotation.Deserializer::class)
     @JsonSerialize(using = Rotation.Serializer::class)
@@ -5951,26 +5798,27 @@ private constructor(
     /**
      * Adds a shadow beneath solid objects in an image with a transparent background. For AI-based
      * drop shadows, refer to aiDropShadow. Pass `true` for a default shadow, or provide a string
-     * for a custom shadow.
+     * for a custom shadow. See
+     * [Shadow](https://imagekit.io/docs/effects-and-enhancements#shadow---e-shadow).
      */
     @JsonDeserialize(using = Shadow.Deserializer::class)
     @JsonSerialize(using = Shadow.Serializer::class)
     class Shadow
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -5978,7 +5826,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -5992,8 +5840,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitString(string: String) {}
@@ -6020,8 +5874,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -6034,14 +5888,14 @@ private constructor(
                 return true
             }
 
-            return other is Shadow && unionMember0 == other.unionMember0 && string == other.string
+            return other is Shadow && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Shadow{unionMember0=$unionMember0}"
+                true_ != null -> "Shadow{true_=$true_}"
                 string != null -> "Shadow{string=$string}"
                 _json != null -> "Shadow{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Shadow")
@@ -6049,8 +5903,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Shadow(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = Shadow(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Shadow(string = string)
         }
@@ -6058,7 +5911,7 @@ private constructor(
         /** An interface that defines how to map each variant of [Shadow] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -6084,9 +5937,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Shadow(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Shadow(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Shadow(string = it, _json = json)
                             },
@@ -6115,159 +5968,38 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Shadow")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
     /**
      * Sharpens the input image, highlighting edges and finer details. Pass `true` for default
-     * sharpening, or provide a numeric value for custom sharpening.
+     * sharpening, or provide a numeric value for custom sharpening. See
+     * [Sharpen](https://imagekit.io/docs/effects-and-enhancements#sharpen---e-sharpen).
      */
     @JsonDeserialize(using = Sharpen.Deserializer::class)
     @JsonSerialize(using = Sharpen.Serializer::class)
     class Sharpen
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val number: Double? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isNumber(): Boolean = number != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asNumber(): Double = number.getOrThrow("number")
 
@@ -6275,7 +6007,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 number != null -> visitor.visitNumber(number)
                 else -> visitor.unknown(_json)
             }
@@ -6289,8 +6021,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitNumber(number: Double) {}
@@ -6317,8 +6055,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -6331,14 +6069,14 @@ private constructor(
                 return true
             }
 
-            return other is Sharpen && unionMember0 == other.unionMember0 && number == other.number
+            return other is Sharpen && true_ == other.true_ && number == other.number
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, number)
+        override fun hashCode(): Int = Objects.hash(true_, number)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Sharpen{unionMember0=$unionMember0}"
+                true_ != null -> "Sharpen{true_=$true_}"
                 number != null -> "Sharpen{number=$number}"
                 _json != null -> "Sharpen{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Sharpen")
@@ -6346,8 +6084,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Sharpen(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = Sharpen(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofNumber(number: Double) = Sharpen(number = number)
         }
@@ -6357,7 +6094,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitNumber(number: Double): T
 
@@ -6383,9 +6120,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Sharpen(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Sharpen(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Sharpen(number = it, _json = json)
                             },
@@ -6414,140 +6151,19 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.number != null -> generator.writeObject(value.number)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Sharpen")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
     /**
      * Specifies the start offset (in seconds) for trimming videos, e.g., `5` or `10.5`. Arithmetic
-     * expressions are also supported.
+     * expressions are also supported. See
+     * [Trim videos – Start offset](https://imagekit.io/docs/trim-videos#start-offset---so).
      */
     @JsonDeserialize(using = StartOffset.Deserializer::class)
     @JsonSerialize(using = StartOffset.Serializer::class)
@@ -6721,26 +6337,27 @@ private constructor(
 
     /**
      * Useful for images with a solid or nearly solid background and a central object. This
-     * parameter trims the background, leaving only the central object in the output image.
+     * parameter trims the background, leaving only the central object in the output image. See
+     * [Trim edges](https://imagekit.io/docs/effects-and-enhancements#trim-edges---t).
      */
     @JsonDeserialize(using = Trim.Deserializer::class)
     @JsonSerialize(using = Trim.Serializer::class)
     class Trim
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val number: Double? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isNumber(): Boolean = number != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asNumber(): Double = number.getOrThrow("number")
 
@@ -6748,7 +6365,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 number != null -> visitor.visitNumber(number)
                 else -> visitor.unknown(_json)
             }
@@ -6762,8 +6379,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitNumber(number: Double) {}
@@ -6790,8 +6413,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -6804,14 +6427,14 @@ private constructor(
                 return true
             }
 
-            return other is Trim && unionMember0 == other.unionMember0 && number == other.number
+            return other is Trim && true_ == other.true_ && number == other.number
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, number)
+        override fun hashCode(): Int = Objects.hash(true_, number)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "Trim{unionMember0=$unionMember0}"
+                true_ != null -> "Trim{true_=$true_}"
                 number != null -> "Trim{number=$number}"
                 _json != null -> "Trim{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Trim")
@@ -6819,8 +6442,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) = Trim(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = Trim(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofNumber(number: Double) = Trim(number = number)
         }
@@ -6828,7 +6450,7 @@ private constructor(
         /** An interface that defines how to map each variant of [Trim] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitNumber(number: Double): T
 
@@ -6853,9 +6475,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                Trim(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Trim(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Trim(number = it, _json = json)
                             },
@@ -6884,159 +6506,38 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.number != null -> generator.writeObject(value.number)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Trim")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
     /**
      * Applies Unsharp Masking (USM), an image sharpening technique. Pass `true` for a default
-     * unsharp mask, or provide a string for a custom unsharp mask.
+     * unsharp mask, or provide a string for a custom unsharp mask. See
+     * [Unsharp Mask](https://imagekit.io/docs/effects-and-enhancements#unsharp-mask---e-usm).
      */
     @JsonDeserialize(using = UnsharpMask.Deserializer::class)
     @JsonSerialize(using = UnsharpMask.Serializer::class)
     class UnsharpMask
     private constructor(
-        private val unionMember0: UnionMember0? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun unionMember0(): Optional<UnionMember0> = Optional.ofNullable(unionMember0)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isUnionMember0(): Boolean = unionMember0 != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asUnionMember0(): UnionMember0 = unionMember0.getOrThrow("unionMember0")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -7044,7 +6545,7 @@ private constructor(
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                unionMember0 != null -> visitor.visitUnionMember0(unionMember0)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -7058,8 +6559,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) {
-                        unionMember0.validate()
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
+                            if (it != JsonValue.from(true)) {
+                                throw ImageKitInvalidDataException(
+                                    "'true_' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitString(string: String) {}
@@ -7086,8 +6593,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitUnionMember0(unionMember0: UnionMember0) =
-                        unionMember0.validity()
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -7100,16 +6607,14 @@ private constructor(
                 return true
             }
 
-            return other is UnsharpMask &&
-                unionMember0 == other.unionMember0 &&
-                string == other.string
+            return other is UnsharpMask && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(unionMember0, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                unionMember0 != null -> "UnsharpMask{unionMember0=$unionMember0}"
+                true_ != null -> "UnsharpMask{true_=$true_}"
                 string != null -> "UnsharpMask{string=$string}"
                 _json != null -> "UnsharpMask{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid UnsharpMask")
@@ -7117,9 +6622,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic
-            fun ofUnionMember0(unionMember0: UnionMember0) =
-                UnsharpMask(unionMember0 = unionMember0)
+            @JvmStatic fun ofTrue() = UnsharpMask(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = UnsharpMask(string = string)
         }
@@ -7130,7 +6633,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitUnionMember0(unionMember0: UnionMember0): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -7156,9 +6659,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember0>())?.let {
-                                UnsharpMask(unionMember0 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { UnsharpMask(true_ = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 UnsharpMask(string = it, _json = json)
                             },
@@ -7187,138 +6690,19 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.unionMember0 != null -> generator.writeObject(value.unionMember0)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid UnsharpMask")
                 }
             }
         }
-
-        class UnionMember0 @JsonCreator private constructor(private val value: JsonField<Boolean>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<Boolean> = value
-
-            companion object {
-
-                @JvmField val TRUE = of(true)
-
-                @JvmStatic fun of(value: Boolean) = UnionMember0(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember0]'s known values. */
-            enum class Known {
-                TRUE
-            }
-
-            /**
-             * An enum containing [UnionMember0]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember0] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TRUE,
-                /**
-                 * An enum member indicating that [UnionMember0] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TRUE -> Value.TRUE
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TRUE -> Known.TRUE
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember0: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asBoolean(): Boolean =
-                _value().asBoolean().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a Boolean")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember0 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember0 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
     }
 
-    /** Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. */
+    /**
+     * Specifies the video codec, e.g., `h264`, `vp9`, `av1`, or `none`. See
+     * [Video codec](https://imagekit.io/docs/video-optimization#video-codec---vc).
+     */
     class VideoCodec @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -7463,7 +6847,9 @@ private constructor(
     /**
      * Specifies the width of the output. If a value between 0 and 1 is provided, it is treated as a
      * percentage (e.g., `0.4` represents 40% of the original width). You can also supply arithmetic
-     * expressions (e.g., `iw_div_2`).
+     * expressions (e.g., `iw_div_2`). Width transformation –
+     * [Images](https://imagekit.io/docs/image-resize-and-crop#width---w) ·
+     * [Videos](https://imagekit.io/docs/video-resize-and-crop#width---w)
      */
     @JsonDeserialize(using = Width.Deserializer::class)
     @JsonSerialize(using = Width.Serializer::class)
@@ -7632,7 +7018,10 @@ private constructor(
         }
     }
 
-    /** Focus using cropped image coordinates - X coordinate */
+    /**
+     * Focus using cropped image coordinates - X coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+     */
     @JsonDeserialize(using = X.Deserializer::class)
     @JsonSerialize(using = X.Serializer::class)
     class X
@@ -7799,7 +7188,10 @@ private constructor(
         }
     }
 
-    /** Focus using cropped image coordinates - X center coordinate */
+    /**
+     * Focus using cropped image coordinates - X center coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+     */
     @JsonDeserialize(using = XCenter.Deserializer::class)
     @JsonSerialize(using = XCenter.Serializer::class)
     class XCenter
@@ -7969,7 +7361,10 @@ private constructor(
         }
     }
 
-    /** Focus using cropped image coordinates - Y coordinate */
+    /**
+     * Focus using cropped image coordinates - Y coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+     */
     @JsonDeserialize(using = Y.Deserializer::class)
     @JsonSerialize(using = Y.Serializer::class)
     class Y
@@ -8136,7 +7531,10 @@ private constructor(
         }
     }
 
-    /** Focus using cropped image coordinates - Y center coordinate */
+    /**
+     * Focus using cropped image coordinates - Y center coordinate. See
+     * [Focus using cropped coordinates](https://imagekit.io/docs/image-resize-and-crop#example---focus-using-cropped-image-coordinates).
+     */
     @JsonDeserialize(using = YCenter.Deserializer::class)
     @JsonSerialize(using = YCenter.Serializer::class)
     class YCenter
@@ -8314,6 +7712,7 @@ private constructor(
         return other is Transformation &&
             aiChangeBackground == other.aiChangeBackground &&
             aiDropShadow == other.aiDropShadow &&
+            aiEdit == other.aiEdit &&
             aiRemoveBackground == other.aiRemoveBackground &&
             aiRemoveBackgroundExternal == other.aiRemoveBackgroundExternal &&
             aiRetouch == other.aiRetouch &&
@@ -8370,6 +7769,7 @@ private constructor(
         Objects.hash(
             aiChangeBackground,
             aiDropShadow,
+            aiEdit,
             aiRemoveBackground,
             aiRemoveBackgroundExternal,
             aiRetouch,
@@ -8426,5 +7826,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorProfile=$colorProfile, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
+        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorProfile=$colorProfile, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
 }

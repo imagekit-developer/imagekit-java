@@ -23,7 +23,6 @@ internal class SubtitleOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(SubtitleOverlay.Type.SUBTITLE)
                 .encoding(SubtitleOverlay.Encoding.AUTO)
                 .addTransformation(
                     SubtitleOverlayTransformation.builder()
@@ -45,7 +44,6 @@ internal class SubtitleOverlayTest {
         assertThat(subtitleOverlay.timing())
             .contains(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
         assertThat(subtitleOverlay.input()).isEqualTo("input")
-        assertThat(subtitleOverlay.type()).isEqualTo(SubtitleOverlay.Type.SUBTITLE)
         assertThat(subtitleOverlay.encoding()).contains(SubtitleOverlay.Encoding.AUTO)
         assertThat(subtitleOverlay.transformation().getOrNull())
             .containsExactly(
@@ -75,7 +73,6 @@ internal class SubtitleOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(SubtitleOverlay.Type.SUBTITLE)
                 .encoding(SubtitleOverlay.Encoding.AUTO)
                 .addTransformation(
                     SubtitleOverlayTransformation.builder()

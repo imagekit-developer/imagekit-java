@@ -24,7 +24,7 @@ internal class TextOverlayTransformationTest {
                 .padding(0.0)
                 .radius(0.0)
                 .rotation(0.0)
-                .typography(TextOverlayTransformation.Typography.B)
+                .typography("typography")
                 .width(0.0)
                 .build()
 
@@ -45,8 +45,7 @@ internal class TextOverlayTransformationTest {
             .contains(TextOverlayTransformation.Radius.ofNumber(0.0))
         assertThat(textOverlayTransformation.rotation())
             .contains(TextOverlayTransformation.Rotation.ofNumber(0.0))
-        assertThat(textOverlayTransformation.typography())
-            .contains(TextOverlayTransformation.Typography.B)
+        assertThat(textOverlayTransformation.typography()).contains("typography")
         assertThat(textOverlayTransformation.width())
             .contains(TextOverlayTransformation.Width.ofNumber(0.0))
     }
@@ -67,7 +66,7 @@ internal class TextOverlayTransformationTest {
                 .padding(0.0)
                 .radius(0.0)
                 .rotation(0.0)
-                .typography(TextOverlayTransformation.Typography.B)
+                .typography("typography")
                 .width(0.0)
                 .build()
 

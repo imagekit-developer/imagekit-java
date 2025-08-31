@@ -55,7 +55,8 @@ private constructor(
     /**
      * Specifies the x-coordinate of the top-left corner of the base asset where the overlay's
      * top-left corner will be positioned. It also accepts arithmetic expressions such as
-     * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL.
+     * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -65,7 +66,8 @@ private constructor(
     /**
      * Specifies the y-coordinate of the top-left corner of the base asset where the overlay's
      * top-left corner will be positioned. It also accepts arithmetic expressions such as
-     * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL.
+     * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -144,7 +146,8 @@ private constructor(
         /**
          * Specifies the x-coordinate of the top-left corner of the base asset where the overlay's
          * top-left corner will be positioned. It also accepts arithmetic expressions such as
-         * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL.
+         * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL. Learn about
+         * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
          */
         fun x(x: X) = x(JsonField.of(x))
 
@@ -165,7 +168,8 @@ private constructor(
         /**
          * Specifies the y-coordinate of the top-left corner of the base asset where the overlay's
          * top-left corner will be positioned. It also accepts arithmetic expressions such as
-         * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL.
+         * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL. Learn about
+         * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
          */
         fun y(y: Y) = y(JsonField.of(y))
 
@@ -419,7 +423,8 @@ private constructor(
     /**
      * Specifies the x-coordinate of the top-left corner of the base asset where the overlay's
      * top-left corner will be positioned. It also accepts arithmetic expressions such as
-     * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL.
+     * `bw_mul_0.4` or `bw_sub_cw`. Maps to `lx` in the URL. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      */
     @JsonDeserialize(using = X.Deserializer::class)
     @JsonSerialize(using = X.Serializer::class)
@@ -590,7 +595,8 @@ private constructor(
     /**
      * Specifies the y-coordinate of the top-left corner of the base asset where the overlay's
      * top-left corner will be positioned. It also accepts arithmetic expressions such as
-     * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL.
+     * `bh_mul_0.4` or `bh_sub_ch`. Maps to `ly` in the URL. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      */
     @JsonDeserialize(using = Y.Deserializer::class)
     @JsonSerialize(using = Y.Serializer::class)

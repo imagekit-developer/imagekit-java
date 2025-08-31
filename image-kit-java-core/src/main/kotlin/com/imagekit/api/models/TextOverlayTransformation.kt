@@ -41,7 +41,7 @@ private constructor(
     private val padding: JsonField<Padding>,
     private val radius: JsonField<Radius>,
     private val rotation: JsonField<Rotation>,
-    private val typography: JsonField<Typography>,
+    private val typography: JsonField<String>,
     private val width: JsonField<Width>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -69,7 +69,7 @@ private constructor(
         @JsonProperty("rotation") @ExcludeMissing rotation: JsonField<Rotation> = JsonMissing.of(),
         @JsonProperty("typography")
         @ExcludeMissing
-        typography: JsonField<Typography> = JsonMissing.of(),
+        typography: JsonField<String> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Width> = JsonMissing.of(),
     ) : this(
         alpha,
@@ -124,7 +124,10 @@ private constructor(
 
     /**
      * Specifies the font family of the overlaid text. Choose from the supported fonts list or use a
-     * custom font.
+     * custom font. See
+     * [Supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list)
+     * and
+     * [Custom font](https://imagekit.io/docs/add-overlays-on-images#change-font-family-in-text-overlay).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -149,7 +152,10 @@ private constructor(
     fun innerAlignment(): Optional<InnerAlignment> = innerAlignment.getOptional("innerAlignment")
 
     /**
-     * Specifies the line height of the text overlay.
+     * Specifies the line height of the text overlay. Accepts integer values representing line
+     * height in points. It can also accept
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     * such as `bw_mul_0.2`, or `bh_div_20`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -185,18 +191,20 @@ private constructor(
     fun rotation(): Optional<Rotation> = rotation.getOptional("rotation")
 
     /**
-     * Specifies the typography style of the text. Supported values: `b` for bold, `i` for italics,
-     * and `b_i` for bold with italics.
+     * Specifies the typography style of the text. Supported values:
+     * - Single styles: `b` (bold), `i` (italic), `strikethrough`.
+     * - Combinations: Any combination separated by underscores, e.g., `b_i`, `b_i_strikethrough`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun typography(): Optional<Typography> = typography.getOptional("typography")
+    fun typography(): Optional<String> = typography.getOptional("typography")
 
     /**
      * Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically,
      * and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported. Useful when used
-     * in conjunction with the `background`.
+     * in conjunction with the `background`. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -289,9 +297,7 @@ private constructor(
      *
      * Unlike [typography], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("typography")
-    @ExcludeMissing
-    fun _typography(): JsonField<Typography> = typography
+    @JsonProperty("typography") @ExcludeMissing fun _typography(): JsonField<String> = typography
 
     /**
      * Returns the raw JSON value of [width].
@@ -334,7 +340,7 @@ private constructor(
         private var padding: JsonField<Padding> = JsonMissing.of()
         private var radius: JsonField<Radius> = JsonMissing.of()
         private var rotation: JsonField<Rotation> = JsonMissing.of()
-        private var typography: JsonField<Typography> = JsonMissing.of()
+        private var typography: JsonField<String> = JsonMissing.of()
         private var width: JsonField<Width> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -412,7 +418,10 @@ private constructor(
 
         /**
          * Specifies the font family of the overlaid text. Choose from the supported fonts list or
-         * use a custom font.
+         * use a custom font. See
+         * [Supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list)
+         * and
+         * [Custom font](https://imagekit.io/docs/add-overlays-on-images#change-font-family-in-text-overlay).
          */
         fun fontFamily(fontFamily: String) = fontFamily(JsonField.of(fontFamily))
 
@@ -461,7 +470,12 @@ private constructor(
             this.innerAlignment = innerAlignment
         }
 
-        /** Specifies the line height of the text overlay. */
+        /**
+         * Specifies the line height of the text overlay. Accepts integer values representing line
+         * height in points. It can also accept
+         * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+         * such as `bw_mul_0.2`, or `bh_div_20`.
+         */
         fun lineHeight(lineHeight: LineHeight) = lineHeight(JsonField.of(lineHeight))
 
         /**
@@ -517,8 +531,8 @@ private constructor(
         /** Alias for calling [radius] with `Radius.ofNumber(number)`. */
         fun radius(number: Double) = radius(Radius.ofNumber(number))
 
-        /** Alias for calling [radius] with `Radius.ofUnionMember1(unionMember1)`. */
-        fun radius(unionMember1: Radius.UnionMember1) = radius(Radius.ofUnionMember1(unionMember1))
+        /** Alias for calling [radius] with `Radius.ofMax()`. */
+        fun radiusMax() = radius(Radius.ofMax())
 
         /**
          * Specifies the rotation angle of the text overlay. Accepts a numeric value for clockwise
@@ -542,24 +556,27 @@ private constructor(
         fun rotation(string: String) = rotation(Rotation.ofString(string))
 
         /**
-         * Specifies the typography style of the text. Supported values: `b` for bold, `i` for
-         * italics, and `b_i` for bold with italics.
+         * Specifies the typography style of the text. Supported values:
+         * - Single styles: `b` (bold), `i` (italic), `strikethrough`.
+         * - Combinations: Any combination separated by underscores, e.g., `b_i`,
+         *   `b_i_strikethrough`.
          */
-        fun typography(typography: Typography) = typography(JsonField.of(typography))
+        fun typography(typography: String) = typography(JsonField.of(typography))
 
         /**
          * Sets [Builder.typography] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.typography] with a well-typed [Typography] value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.typography] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun typography(typography: JsonField<Typography>) = apply { this.typography = typography }
+        fun typography(typography: JsonField<String>) = apply { this.typography = typography }
 
         /**
          * Specifies the maximum width (in pixels) of the overlaid text. The text wraps
          * automatically, and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are
-         * supported. Useful when used in conjunction with the `background`.
+         * supported. Useful when used in conjunction with the `background`. Learn about
+         * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
          */
         fun width(width: Width) = width(JsonField.of(width))
 
@@ -638,7 +655,7 @@ private constructor(
         padding().ifPresent { it.validate() }
         radius().ifPresent { it.validate() }
         rotation().ifPresent { it.validate() }
-        typography().ifPresent { it.validate() }
+        typography()
         width().ifPresent { it.validate() }
         validated = true
     }
@@ -669,7 +686,7 @@ private constructor(
             (padding.asKnown().getOrNull()?.validity() ?: 0) +
             (radius.asKnown().getOrNull()?.validity() ?: 0) +
             (rotation.asKnown().getOrNull()?.validity() ?: 0) +
-            (typography.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (typography.asKnown().isPresent) 1 else 0) +
             (width.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Flip the text overlay horizontally, vertically, or both. */
@@ -1123,7 +1140,12 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Specifies the line height of the text overlay. */
+    /**
+     * Specifies the line height of the text overlay. Accepts integer values representing line
+     * height in points. It can also accept
+     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
+     * such as `bw_mul_0.2`, or `bh_div_20`.
+     */
     @JsonDeserialize(using = LineHeight.Deserializer::class)
     @JsonSerialize(using = LineHeight.Serializer::class)
     class LineHeight
@@ -1476,28 +1498,28 @@ private constructor(
     class Radius
     private constructor(
         private val number: Double? = null,
-        private val unionMember1: UnionMember1? = null,
+        private val max: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun unionMember1(): Optional<UnionMember1> = Optional.ofNullable(unionMember1)
+        fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
         fun isNumber(): Boolean = number != null
 
-        fun isUnionMember1(): Boolean = unionMember1 != null
+        fun isMax(): Boolean = max != null
 
         fun asNumber(): Double = number.getOrThrow("number")
 
-        fun asUnionMember1(): UnionMember1 = unionMember1.getOrThrow("unionMember1")
+        fun asMax(): JsonValue = max.getOrThrow("max")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
-                unionMember1 != null -> visitor.visitUnionMember1(unionMember1)
+                max != null -> visitor.visitMax(max)
                 else -> visitor.unknown(_json)
             }
 
@@ -1512,8 +1534,12 @@ private constructor(
                 object : Visitor<Unit> {
                     override fun visitNumber(number: Double) {}
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) {
-                        unionMember1.validate()
+                    override fun visitMax(max: JsonValue) {
+                        max.let {
+                            if (it != JsonValue.from("max")) {
+                                throw ImageKitInvalidDataException("'max' is invalid, received $it")
+                            }
+                        }
                     }
                 }
             )
@@ -1540,8 +1566,8 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitUnionMember1(unionMember1: UnionMember1) =
-                        unionMember1.validity()
+                    override fun visitMax(max: JsonValue) =
+                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
                     override fun unknown(json: JsonValue?) = 0
                 }
@@ -1552,15 +1578,15 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && unionMember1 == other.unionMember1
+            return other is Radius && number == other.number && max == other.max
         }
 
-        override fun hashCode(): Int = Objects.hash(number, unionMember1)
+        override fun hashCode(): Int = Objects.hash(number, max)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
-                unionMember1 != null -> "Radius{unionMember1=$unionMember1}"
+                max != null -> "Radius{max=$max}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -1569,8 +1595,7 @@ private constructor(
 
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
-            @JvmStatic
-            fun ofUnionMember1(unionMember1: UnionMember1) = Radius(unionMember1 = unionMember1)
+            @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -1578,7 +1603,7 @@ private constructor(
 
             fun visitNumber(number: Double): T
 
-            fun visitUnionMember1(unionMember1: UnionMember1): T
+            fun visitMax(max: JsonValue): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -1602,9 +1627,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<UnionMember1>())?.let {
-                                Radius(unionMember1 = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Radius(max = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
@@ -1634,136 +1659,11 @@ private constructor(
             ) {
                 when {
                     value.number != null -> generator.writeObject(value.number)
-                    value.unionMember1 != null -> generator.writeObject(value.unionMember1)
+                    value.max != null -> generator.writeObject(value.max)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }
             }
-        }
-
-        class UnionMember1 @JsonCreator private constructor(private val value: JsonField<String>) :
-            Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val MAX = of("max")
-
-                @JvmStatic fun of(value: String) = UnionMember1(JsonField.of(value))
-            }
-
-            /** An enum containing [UnionMember1]'s known values. */
-            enum class Known {
-                MAX
-            }
-
-            /**
-             * An enum containing [UnionMember1]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [UnionMember1] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                MAX,
-                /**
-                 * An enum member indicating that [UnionMember1] was instantiated with an unknown
-                 * value.
-                 */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    MAX -> Value.MAX
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    MAX -> Known.MAX
-                    else -> throw ImageKitInvalidDataException("Unknown UnionMember1: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            fun validate(): UnionMember1 = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is UnionMember1 && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
         }
     }
 
@@ -1941,148 +1841,10 @@ private constructor(
     }
 
     /**
-     * Specifies the typography style of the text. Supported values: `b` for bold, `i` for italics,
-     * and `b_i` for bold with italics.
-     */
-    class Typography @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val B = of("b")
-
-            @JvmField val I = of("i")
-
-            @JvmField val B_I = of("b_i")
-
-            @JvmStatic fun of(value: String) = Typography(JsonField.of(value))
-        }
-
-        /** An enum containing [Typography]'s known values. */
-        enum class Known {
-            B,
-            I,
-            B_I,
-        }
-
-        /**
-         * An enum containing [Typography]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Typography] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            B,
-            I,
-            B_I,
-            /**
-             * An enum member indicating that [Typography] was instantiated with an unknown value.
-             */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                B -> Value.B
-                I -> Value.I
-                B_I -> Value.B_I
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                B -> Known.B
-                I -> Known.I
-                B_I -> Known.B_I
-                else -> throw ImageKitInvalidDataException("Unknown Typography: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                ImageKitInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Typography = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Typography && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
-
-    /**
      * Specifies the maximum width (in pixels) of the overlaid text. The text wraps automatically,
      * and arithmetic expressions (e.g., `bw_mul_0.2` or `bh_div_2`) are supported. Useful when used
-     * in conjunction with the `background`.
+     * in conjunction with the `background`. Learn about
+     * [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
      */
     @JsonDeserialize(using = Width.Deserializer::class)
     @JsonSerialize(using = Width.Serializer::class)

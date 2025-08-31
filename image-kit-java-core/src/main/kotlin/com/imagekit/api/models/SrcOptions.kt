@@ -19,7 +19,10 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Options for generating ImageKit URLs with transformations */
+/**
+ * Options for generating ImageKit URLs with transformations. See the
+ * [Transformations guide](https://imagekit.io/docs/transformations).
+ */
 class SrcOptions
 private constructor(
     private val src: JsonField<String>,
@@ -86,7 +89,8 @@ private constructor(
     /**
      * An array of objects specifying the transformations to be applied in the URL. If more than one
      * transformation is specified, they are applied in the order they are specified as chained
-     * transformations.
+     * transformations. See
+     * [Chained transformations](https://imagekit.io/docs/transformations#chained-transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -97,7 +101,8 @@ private constructor(
     /**
      * By default, the transformation string is added as a query parameter in the URL, e.g.,
      * `?tr=w-100,h-100`. If you want to add the transformation string in the path of the URL, set
-     * this to `path`.
+     * this to `path`. Learn more in the
+     * [Transformations guide](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -245,7 +250,8 @@ private constructor(
         /**
          * An array of objects specifying the transformations to be applied in the URL. If more than
          * one transformation is specified, they are applied in the order they are specified as
-         * chained transformations.
+         * chained transformations. See
+         * [Chained transformations](https://imagekit.io/docs/transformations#chained-transformations).
          */
         fun transformation(transformation: List<Transformation>) =
             transformation(JsonField.of(transformation))
@@ -276,7 +282,8 @@ private constructor(
         /**
          * By default, the transformation string is added as a query parameter in the URL, e.g.,
          * `?tr=w-100,h-100`. If you want to add the transformation string in the path of the URL,
-         * set this to `path`.
+         * set this to `path`. Learn more in the
+         * [Transformations guide](https://imagekit.io/docs/transformations).
          */
         fun transformationPosition(transformationPosition: TransformationPosition) =
             transformationPosition(JsonField.of(transformationPosition))

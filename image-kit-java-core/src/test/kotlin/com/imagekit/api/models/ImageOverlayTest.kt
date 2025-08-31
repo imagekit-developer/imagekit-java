@@ -23,7 +23,6 @@ internal class ImageOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(ImageOverlay.Type.IMAGE)
                 .encoding(ImageOverlay.Encoding.AUTO)
                 .transformation(listOf())
                 .build()
@@ -35,7 +34,6 @@ internal class ImageOverlayTest {
         assertThat(imageOverlay.timing())
             .contains(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
         assertThat(imageOverlay.input()).isEqualTo("input")
-        assertThat(imageOverlay.type()).isEqualTo(ImageOverlay.Type.IMAGE)
         assertThat(imageOverlay.encoding()).contains(ImageOverlay.Encoding.AUTO)
         assertThat(imageOverlay.transformation().getOrNull()).containsExactly()
     }
@@ -54,7 +52,6 @@ internal class ImageOverlayTest {
                 )
                 .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
                 .input("input")
-                .type(ImageOverlay.Type.IMAGE)
                 .encoding(ImageOverlay.Encoding.AUTO)
                 .transformation(listOf())
                 .build()

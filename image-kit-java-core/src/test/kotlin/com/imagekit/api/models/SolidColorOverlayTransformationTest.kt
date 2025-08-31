@@ -15,7 +15,7 @@ internal class SolidColorOverlayTransformationTest {
             SolidColorOverlayTransformation.builder()
                 .alpha(1.0)
                 .background("background")
-                .gradient(SolidColorOverlayTransformation.Gradient.UnionMember0.TRUE)
+                .gradientTrue()
                 .height(0.0)
                 .radius(0.0)
                 .width(0.0)
@@ -24,11 +24,7 @@ internal class SolidColorOverlayTransformationTest {
         assertThat(solidColorOverlayTransformation.alpha()).contains(1.0)
         assertThat(solidColorOverlayTransformation.background()).contains("background")
         assertThat(solidColorOverlayTransformation.gradient())
-            .contains(
-                SolidColorOverlayTransformation.Gradient.ofUnionMember0(
-                    SolidColorOverlayTransformation.Gradient.UnionMember0.TRUE
-                )
-            )
+            .contains(SolidColorOverlayTransformation.Gradient.ofTrue())
         assertThat(solidColorOverlayTransformation.height())
             .contains(SolidColorOverlayTransformation.Height.ofNumber(0.0))
         assertThat(solidColorOverlayTransformation.radius())
@@ -44,7 +40,7 @@ internal class SolidColorOverlayTransformationTest {
             SolidColorOverlayTransformation.builder()
                 .alpha(1.0)
                 .background("background")
-                .gradient(SolidColorOverlayTransformation.Gradient.UnionMember0.TRUE)
+                .gradientTrue()
                 .height(0.0)
                 .radius(0.0)
                 .width(0.0)

@@ -20,7 +20,8 @@ import java.util.Optional
 
 /**
  * Specifies an overlay to be applied on the parent image or video. ImageKit supports overlays
- * including images, text, videos, subtitles, and solid colors.
+ * including images, text, videos, subtitles, and solid colors. See
+ * [Overlay using layers](https://imagekit.io/docs/transformations#overlay-using-layers).
  */
 @JsonDeserialize(using = Overlay.Deserializer::class)
 @JsonSerialize(using = Overlay.Serializer::class)

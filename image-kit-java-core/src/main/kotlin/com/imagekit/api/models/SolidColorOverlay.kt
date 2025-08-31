@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
@@ -25,7 +24,7 @@ private constructor(
     private val position: JsonField<OverlayPosition>,
     private val timing: JsonField<OverlayTiming>,
     private val color: JsonField<String>,
-    private val type: JsonField<Type>,
+    private val type: JsonValue,
     private val transformation: JsonField<List<SolidColorOverlayTransformation>>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -37,7 +36,7 @@ private constructor(
         position: JsonField<OverlayPosition> = JsonMissing.of(),
         @JsonProperty("timing") @ExcludeMissing timing: JsonField<OverlayTiming> = JsonMissing.of(),
         @JsonProperty("color") @ExcludeMissing color: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
         @JsonProperty("transformation")
         @ExcludeMissing
         transformation: JsonField<List<SolidColorOverlayTransformation>> = JsonMissing.of(),
@@ -69,14 +68,22 @@ private constructor(
     fun color(): String = color.getRequired("color")
 
     /**
-     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("solidColor")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
      */
-    fun type(): Type = type.getRequired("type")
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
      * Control width and height of the solid color overlay. Supported transformations depend on the
-     * base/parent asset.
+     * base/parent asset. See overlays on
+     * [Images](https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay)
+     * and
+     * [Videos](https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -104,13 +111,6 @@ private constructor(
      * Unlike [color], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("color") @ExcludeMissing fun _color(): JsonField<String> = color
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
     /**
      * Returns the raw JSON value of [transformation].
@@ -141,7 +141,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .color()
-         * .type()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -153,7 +152,7 @@ private constructor(
         private var position: JsonField<OverlayPosition> = JsonMissing.of()
         private var timing: JsonField<OverlayTiming> = JsonMissing.of()
         private var color: JsonField<String>? = null
-        private var type: JsonField<Type>? = null
+        private var type: JsonValue = JsonValue.from("solidColor")
         private var transformation: JsonField<MutableList<SolidColorOverlayTransformation>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -205,19 +204,26 @@ private constructor(
          */
         fun color(color: JsonField<String>) = apply { this.color = color }
 
-        fun type(type: Type) = type(JsonField.of(type))
-
         /**
-         * Sets [Builder.type] to an arbitrary JSON value.
+         * Sets the field to an arbitrary JSON value.
          *
-         * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("solidColor")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun type(type: JsonField<Type>) = apply { this.type = type }
+        fun type(type: JsonValue) = apply { this.type = type }
 
         /**
          * Control width and height of the solid color overlay. Supported transformations depend on
-         * the base/parent asset.
+         * the base/parent asset. See overlays on
+         * [Images](https://imagekit.io/docs/add-overlays-on-images#apply-transformation-on-solid-color-overlay)
+         * and
+         * [Videos](https://imagekit.io/docs/add-overlays-on-videos#apply-transformations-on-solid-color-block-overlay).
          */
         fun transformation(transformation: List<SolidColorOverlayTransformation>) =
             transformation(JsonField.of(transformation))
@@ -273,7 +279,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .color()
-         * .type()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -283,7 +288,7 @@ private constructor(
                 position,
                 timing,
                 checkRequired("color", color),
-                checkRequired("type", type),
+                type,
                 (transformation ?: JsonMissing.of()).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
             )
@@ -299,7 +304,11 @@ private constructor(
         position().ifPresent { it.validate() }
         timing().ifPresent { it.validate() }
         color()
-        type().validate()
+        _type().let {
+            if (it != JsonValue.from("solidColor")) {
+                throw ImageKitInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         transformation().ifPresent { it.forEach { it.validate() } }
         validated = true
     }
@@ -322,129 +331,8 @@ private constructor(
         (position.asKnown().getOrNull()?.validity() ?: 0) +
             (timing.asKnown().getOrNull()?.validity() ?: 0) +
             (if (color.asKnown().isPresent) 1 else 0) +
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("solidColor")) 1 else 0 } +
             (transformation.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
-
-    class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-        /**
-         * Returns this class instance's raw value.
-         *
-         * This is usually only useful if this instance was deserialized from data that doesn't
-         * match any known member, and you want to know that value. For example, if the SDK is on an
-         * older version than the API, then the API may respond with new members that the SDK is
-         * unaware of.
-         */
-        @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-        companion object {
-
-            @JvmField val SOLID_COLOR = of("solidColor")
-
-            @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-        }
-
-        /** An enum containing [Type]'s known values. */
-        enum class Known {
-            SOLID_COLOR
-        }
-
-        /**
-         * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-         *
-         * An instance of [Type] can contain an unknown value in a couple of cases:
-         * - It was deserialized from data that doesn't match any known member. For example, if the
-         *   SDK is on an older version than the API, then the API may respond with new members that
-         *   the SDK is unaware of.
-         * - It was constructed with an arbitrary value using the [of] method.
-         */
-        enum class Value {
-            SOLID_COLOR,
-            /** An enum member indicating that [Type] was instantiated with an unknown value. */
-            _UNKNOWN,
-        }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value, or [Value._UNKNOWN]
-         * if the class was instantiated with an unknown value.
-         *
-         * Use the [known] method instead if you're certain the value is always known or if you want
-         * to throw for the unknown case.
-         */
-        fun value(): Value =
-            when (this) {
-                SOLID_COLOR -> Value.SOLID_COLOR
-                else -> Value._UNKNOWN
-            }
-
-        /**
-         * Returns an enum member corresponding to this class instance's value.
-         *
-         * Use the [value] method instead if you're uncertain the value is always known and don't
-         * want to throw for the unknown case.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-         *   member.
-         */
-        fun known(): Known =
-            when (this) {
-                SOLID_COLOR -> Known.SOLID_COLOR
-                else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-            }
-
-        /**
-         * Returns this class instance's primitive wire representation.
-         *
-         * This differs from the [toString] method because that method is primarily for debugging
-         * and generally doesn't throw.
-         *
-         * @throws ImageKitInvalidDataException if this class instance's value does not have the
-         *   expected primitive type.
-         */
-        fun asString(): String =
-            _value().asString().orElseThrow {
-                ImageKitInvalidDataException("Value is not a String")
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Type = apply {
-            if (validated) {
-                return@apply
-            }
-
-            known()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Type && value == other.value
-        }
-
-        override fun hashCode() = value.hashCode()
-
-        override fun toString() = value.toString()
-    }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
