@@ -1,10 +1,7 @@
-.idea
-out/production
+.prism.log
 .gradle
-build
-config.properties
-.DS_Store
-.project
-.settings
-bin
-.classpath
+.idea
+.kotlin
+build/
+codegen.log
+kls_database.db
