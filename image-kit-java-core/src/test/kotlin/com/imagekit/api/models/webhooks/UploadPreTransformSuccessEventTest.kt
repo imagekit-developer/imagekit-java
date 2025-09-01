@@ -44,6 +44,11 @@ internal class UploadPreTransformSuccessEventTest {
                         )
                         .extensionStatus(
                             UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
+                                .aiAutoDescription(
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
+                                        .AiAutoDescription
+                                        .SUCCESS
+                                )
                                 .awsAutoTagging(
                                     UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
@@ -209,6 +214,11 @@ internal class UploadPreTransformSuccessEventTest {
                     )
                     .extensionStatus(
                         UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
+                            .aiAutoDescription(
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus
+                                    .AiAutoDescription
+                                    .SUCCESS
+                            )
                             .awsAutoTagging(
                                 UploadPreTransformSuccessEvent.Data.ExtensionStatus.AwsAutoTagging
                                     .SUCCESS
@@ -374,6 +384,11 @@ internal class UploadPreTransformSuccessEventTest {
                         )
                         .extensionStatus(
                             UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
+                                .aiAutoDescription(
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
+                                        .AiAutoDescription
+                                        .SUCCESS
+                                )
                                 .awsAutoTagging(
                                     UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging

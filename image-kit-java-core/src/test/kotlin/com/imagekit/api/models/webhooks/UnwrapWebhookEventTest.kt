@@ -571,6 +571,11 @@ internal class UnwrapWebhookEventTest {
                         )
                         .extensionStatus(
                             UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
+                                .aiAutoDescription(
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
+                                        .AiAutoDescription
+                                        .SUCCESS
+                                )
                                 .awsAutoTagging(
                                     UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
@@ -753,6 +758,11 @@ internal class UnwrapWebhookEventTest {
                             )
                             .extensionStatus(
                                 UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
+                                    .aiAutoDescription(
+                                        UploadPreTransformSuccessEvent.Data.ExtensionStatus
+                                            .AiAutoDescription
+                                            .SUCCESS
+                                    )
                                     .awsAutoTagging(
                                         UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                             .AwsAutoTagging

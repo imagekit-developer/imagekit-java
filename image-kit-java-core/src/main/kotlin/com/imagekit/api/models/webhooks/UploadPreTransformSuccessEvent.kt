@@ -1895,6 +1895,7 @@ private constructor(
          */
         class ExtensionStatus
         private constructor(
+            private val aiAutoDescription: JsonField<AiAutoDescription>,
             private val awsAutoTagging: JsonField<AwsAutoTagging>,
             private val googleAutoTagging: JsonField<GoogleAutoTagging>,
             private val removeBg: JsonField<RemoveBg>,
@@ -1903,6 +1904,9 @@ private constructor(
 
             @JsonCreator
             private constructor(
+                @JsonProperty("ai-auto-description")
+                @ExcludeMissing
+                aiAutoDescription: JsonField<AiAutoDescription> = JsonMissing.of(),
                 @JsonProperty("aws-auto-tagging")
                 @ExcludeMissing
                 awsAutoTagging: JsonField<AwsAutoTagging> = JsonMissing.of(),
@@ -1912,7 +1916,14 @@ private constructor(
                 @JsonProperty("remove-bg")
                 @ExcludeMissing
                 removeBg: JsonField<RemoveBg> = JsonMissing.of(),
-            ) : this(awsAutoTagging, googleAutoTagging, removeBg, mutableMapOf())
+            ) : this(aiAutoDescription, awsAutoTagging, googleAutoTagging, removeBg, mutableMapOf())
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun aiAutoDescription(): Optional<AiAutoDescription> =
+                aiAutoDescription.getOptional("ai-auto-description")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1933,6 +1944,16 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun removeBg(): Optional<RemoveBg> = removeBg.getOptional("remove-bg")
+
+            /**
+             * Returns the raw JSON value of [aiAutoDescription].
+             *
+             * Unlike [aiAutoDescription], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("ai-auto-description")
+            @ExcludeMissing
+            fun _aiAutoDescription(): JsonField<AiAutoDescription> = aiAutoDescription
 
             /**
              * Returns the raw JSON value of [awsAutoTagging].
@@ -1985,6 +2006,7 @@ private constructor(
             /** A builder for [ExtensionStatus]. */
             class Builder internal constructor() {
 
+                private var aiAutoDescription: JsonField<AiAutoDescription> = JsonMissing.of()
                 private var awsAutoTagging: JsonField<AwsAutoTagging> = JsonMissing.of()
                 private var googleAutoTagging: JsonField<GoogleAutoTagging> = JsonMissing.of()
                 private var removeBg: JsonField<RemoveBg> = JsonMissing.of()
@@ -1992,10 +2014,25 @@ private constructor(
 
                 @JvmSynthetic
                 internal fun from(extensionStatus: ExtensionStatus) = apply {
+                    aiAutoDescription = extensionStatus.aiAutoDescription
                     awsAutoTagging = extensionStatus.awsAutoTagging
                     googleAutoTagging = extensionStatus.googleAutoTagging
                     removeBg = extensionStatus.removeBg
                     additionalProperties = extensionStatus.additionalProperties.toMutableMap()
+                }
+
+                fun aiAutoDescription(aiAutoDescription: AiAutoDescription) =
+                    aiAutoDescription(JsonField.of(aiAutoDescription))
+
+                /**
+                 * Sets [Builder.aiAutoDescription] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.aiAutoDescription] with a well-typed
+                 * [AiAutoDescription] value instead. This method is primarily for setting the field
+                 * to an undocumented or not yet supported value.
+                 */
+                fun aiAutoDescription(aiAutoDescription: JsonField<AiAutoDescription>) = apply {
+                    this.aiAutoDescription = aiAutoDescription
                 }
 
                 fun awsAutoTagging(awsAutoTagging: AwsAutoTagging) =
@@ -2066,6 +2103,7 @@ private constructor(
                  */
                 fun build(): ExtensionStatus =
                     ExtensionStatus(
+                        aiAutoDescription,
                         awsAutoTagging,
                         googleAutoTagging,
                         removeBg,
@@ -2080,6 +2118,7 @@ private constructor(
                     return@apply
                 }
 
+                aiAutoDescription().ifPresent { it.validate() }
                 awsAutoTagging().ifPresent { it.validate() }
                 googleAutoTagging().ifPresent { it.validate() }
                 removeBg().ifPresent { it.validate() }
@@ -2102,9 +2141,151 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                (awsAutoTagging.asKnown().getOrNull()?.validity() ?: 0) +
+                (aiAutoDescription.asKnown().getOrNull()?.validity() ?: 0) +
+                    (awsAutoTagging.asKnown().getOrNull()?.validity() ?: 0) +
                     (googleAutoTagging.asKnown().getOrNull()?.validity() ?: 0) +
                     (removeBg.asKnown().getOrNull()?.validity() ?: 0)
+
+            class AiAutoDescription
+            @JsonCreator
+            private constructor(private val value: JsonField<String>) : Enum {
+
+                /**
+                 * Returns this class instance's raw value.
+                 *
+                 * This is usually only useful if this instance was deserialized from data that
+                 * doesn't match any known member, and you want to know that value. For example, if
+                 * the SDK is on an older version than the API, then the API may respond with new
+                 * members that the SDK is unaware of.
+                 */
+                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+                companion object {
+
+                    @JvmField val SUCCESS = of("success")
+
+                    @JvmField val PENDING = of("pending")
+
+                    @JvmField val FAILED = of("failed")
+
+                    @JvmStatic fun of(value: String) = AiAutoDescription(JsonField.of(value))
+                }
+
+                /** An enum containing [AiAutoDescription]'s known values. */
+                enum class Known {
+                    SUCCESS,
+                    PENDING,
+                    FAILED,
+                }
+
+                /**
+                 * An enum containing [AiAutoDescription]'s known values, as well as an [_UNKNOWN]
+                 * member.
+                 *
+                 * An instance of [AiAutoDescription] can contain an unknown value in a couple of
+                 * cases:
+                 * - It was deserialized from data that doesn't match any known member. For example,
+                 *   if the SDK is on an older version than the API, then the API may respond with
+                 *   new members that the SDK is unaware of.
+                 * - It was constructed with an arbitrary value using the [of] method.
+                 */
+                enum class Value {
+                    SUCCESS,
+                    PENDING,
+                    FAILED,
+                    /**
+                     * An enum member indicating that [AiAutoDescription] was instantiated with an
+                     * unknown value.
+                     */
+                    _UNKNOWN,
+                }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value, or
+                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+                 *
+                 * Use the [known] method instead if you're certain the value is always known or if
+                 * you want to throw for the unknown case.
+                 */
+                fun value(): Value =
+                    when (this) {
+                        SUCCESS -> Value.SUCCESS
+                        PENDING -> Value.PENDING
+                        FAILED -> Value.FAILED
+                        else -> Value._UNKNOWN
+                    }
+
+                /**
+                 * Returns an enum member corresponding to this class instance's value.
+                 *
+                 * Use the [value] method instead if you're uncertain the value is always known and
+                 * don't want to throw for the unknown case.
+                 *
+                 * @throws ImageKitInvalidDataException if this class instance's value is a not a
+                 *   known member.
+                 */
+                fun known(): Known =
+                    when (this) {
+                        SUCCESS -> Known.SUCCESS
+                        PENDING -> Known.PENDING
+                        FAILED -> Known.FAILED
+                        else ->
+                            throw ImageKitInvalidDataException("Unknown AiAutoDescription: $value")
+                    }
+
+                /**
+                 * Returns this class instance's primitive wire representation.
+                 *
+                 * This differs from the [toString] method because that method is primarily for
+                 * debugging and generally doesn't throw.
+                 *
+                 * @throws ImageKitInvalidDataException if this class instance's value does not have
+                 *   the expected primitive type.
+                 */
+                fun asString(): String =
+                    _value().asString().orElseThrow {
+                        ImageKitInvalidDataException("Value is not a String")
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): AiAutoDescription = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: ImageKitInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is AiAutoDescription && value == other.value
+                }
+
+                override fun hashCode() = value.hashCode()
+
+                override fun toString() = value.toString()
+            }
 
             class AwsAutoTagging
             @JsonCreator
@@ -2530,6 +2711,7 @@ private constructor(
                 }
 
                 return other is ExtensionStatus &&
+                    aiAutoDescription == other.aiAutoDescription &&
                     awsAutoTagging == other.awsAutoTagging &&
                     googleAutoTagging == other.googleAutoTagging &&
                     removeBg == other.removeBg &&
@@ -2537,13 +2719,19 @@ private constructor(
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(awsAutoTagging, googleAutoTagging, removeBg, additionalProperties)
+                Objects.hash(
+                    aiAutoDescription,
+                    awsAutoTagging,
+                    googleAutoTagging,
+                    removeBg,
+                    additionalProperties,
+                )
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "ExtensionStatus{awsAutoTagging=$awsAutoTagging, googleAutoTagging=$googleAutoTagging, removeBg=$removeBg, additionalProperties=$additionalProperties}"
+                "ExtensionStatus{aiAutoDescription=$aiAutoDescription, awsAutoTagging=$awsAutoTagging, googleAutoTagging=$googleAutoTagging, removeBg=$removeBg, additionalProperties=$additionalProperties}"
         }
 
         /** An object containing the file or file version's `id` (versionId) and `name`. */
