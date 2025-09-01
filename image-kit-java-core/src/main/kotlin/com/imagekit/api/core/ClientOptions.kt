@@ -90,6 +90,7 @@ private constructor(
      */
     @get:JvmName("privateApiKey") val privateApiKey: String,
     private val password: String?,
+    private val webhookSecret: String?,
 ) {
 
     init {
@@ -114,6 +115,15 @@ private constructor(
      * Defaults to `"do_not_set"`.
      */
     fun password(): Optional<String> = Optional.ofNullable(password)
+
+    /**
+     * Your ImageKit webhook secret. This is used by the SDK to verify webhook signatures. It starts
+     * with a `whsec_` prefix. You can view and manage your webhook secret in the
+     * [dashboard](https://imagekit.io/dashboard/developer/webhooks). Treat the secret like a
+     * password, keep it private and do not expose it publicly. Learn more about
+     * [webhook verification](https://imagekit.io/docs/webhooks#verify-webhook-signature).
+     */
+    fun webhookSecret(): Optional<String> = Optional.ofNullable(webhookSecret)
 
     fun toBuilder() = Builder().from(this)
 
@@ -155,6 +165,7 @@ private constructor(
         private var maxRetries: Int = 2
         private var privateApiKey: String? = null
         private var password: String? = "do_not_set"
+        private var webhookSecret: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -170,6 +181,7 @@ private constructor(
             maxRetries = clientOptions.maxRetries
             privateApiKey = clientOptions.privateApiKey
             password = clientOptions.password
+            webhookSecret = clientOptions.webhookSecret
         }
 
         /**
@@ -282,6 +294,19 @@ private constructor(
         /** Alias for calling [Builder.password] with `password.orElse(null)`. */
         fun password(password: Optional<String>) = password(password.getOrNull())
 
+        /**
+         * Your ImageKit webhook secret. This is used by the SDK to verify webhook signatures. It
+         * starts with a `whsec_` prefix. You can view and manage your webhook secret in the
+         * [dashboard](https://imagekit.io/dashboard/developer/webhooks). Treat the secret like a
+         * password, keep it private and do not expose it publicly. Learn more about
+         * [webhook verification](https://imagekit.io/docs/webhooks#verify-webhook-signature).
+         */
+        fun webhookSecret(webhookSecret: String?) = apply { this.webhookSecret = webhookSecret }
+
+        /** Alias for calling [Builder.webhookSecret] with `webhookSecret.orElse(null)`. */
+        fun webhookSecret(webhookSecret: Optional<String>) =
+            webhookSecret(webhookSecret.getOrNull())
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -373,6 +398,7 @@ private constructor(
          * |---------------|--------------------------------------|--------------------------------|--------|---------------------------|
          * |`privateApiKey`|`imagekit.imagekitPrivateApiKey`      |`IMAGEKIT_PRIVATE_API_KEY`      |true    |-                          |
          * |`password`     |`imagekit.optionalImagekitIgnoresThis`|`OPTIONAL_IMAGEKIT_IGNORES_THIS`|false   |`"do_not_set"`             |
+         * |`webhookSecret`|`imagekit.imagekitWebhookSecret`      |`IMAGEKIT_WEBHOOK_SECRET`       |false   |-                          |
          * |`baseUrl`      |`imagekit.baseUrl`                    |`IMAGE_KIT_BASE_URL`            |true    |`"https://api.imagekit.io"`|
          *
          * System properties take precedence over environment variables.
@@ -387,6 +413,9 @@ private constructor(
             (System.getProperty("imagekit.optionalImagekitIgnoresThis")
                     ?: System.getenv("OPTIONAL_IMAGEKIT_IGNORES_THIS"))
                 ?.let { password(it) }
+            (System.getProperty("imagekit.imagekitWebhookSecret")
+                    ?: System.getenv("IMAGEKIT_WEBHOOK_SECRET"))
+                ?.let { webhookSecret(it) }
         }
 
         /**
@@ -446,6 +475,7 @@ private constructor(
                 maxRetries,
                 privateApiKey,
                 password,
+                webhookSecret,
             )
         }
     }

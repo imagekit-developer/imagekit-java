@@ -202,6 +202,21 @@ class ImageKitOkHttpClientAsync private constructor() {
         /** Alias for calling [Builder.password] with `password.orElse(null)`. */
         fun password(password: Optional<String>) = password(password.getOrNull())
 
+        /**
+         * Your ImageKit webhook secret. This is used by the SDK to verify webhook signatures. It
+         * starts with a `whsec_` prefix. You can view and manage your webhook secret in the
+         * [dashboard](https://imagekit.io/dashboard/developer/webhooks). Treat the secret like a
+         * password, keep it private and do not expose it publicly. Learn more about
+         * [webhook verification](https://imagekit.io/docs/webhooks#verify-webhook-signature).
+         */
+        fun webhookSecret(webhookSecret: String?) = apply {
+            clientOptions.webhookSecret(webhookSecret)
+        }
+
+        /** Alias for calling [Builder.webhookSecret] with `webhookSecret.orElse(null)`. */
+        fun webhookSecret(webhookSecret: Optional<String>) =
+            webhookSecret(webhookSecret.getOrNull())
+
         fun headers(headers: Headers) = apply { clientOptions.headers(headers) }
 
         fun headers(headers: Map<String, Iterable<String>>) = apply {
