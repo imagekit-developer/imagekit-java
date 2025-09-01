@@ -27,7 +27,9 @@ class SrcOptions
 private constructor(
     private val src: JsonField<String>,
     private val urlEndpoint: JsonField<String>,
+    private val expiresIn: JsonField<Double>,
     private val queryParameters: JsonField<QueryParameters>,
+    private val signed: JsonField<Boolean>,
     private val transformation: JsonField<List<Transformation>>,
     private val transformationPosition: JsonField<TransformationPosition>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -39,9 +41,11 @@ private constructor(
         @JsonProperty("urlEndpoint")
         @ExcludeMissing
         urlEndpoint: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expiresIn") @ExcludeMissing expiresIn: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("queryParameters")
         @ExcludeMissing
         queryParameters: JsonField<QueryParameters> = JsonMissing.of(),
+        @JsonProperty("signed") @ExcludeMissing signed: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("transformation")
         @ExcludeMissing
         transformation: JsonField<List<Transformation>> = JsonMissing.of(),
@@ -51,7 +55,9 @@ private constructor(
     ) : this(
         src,
         urlEndpoint,
+        expiresIn,
         queryParameters,
+        signed,
         transformation,
         transformationPosition,
         mutableMapOf(),
@@ -76,6 +82,23 @@ private constructor(
     fun urlEndpoint(): String = urlEndpoint.getRequired("urlEndpoint")
 
     /**
+     * When you want the signed URL to expire, specified in seconds. If `expiresIn` is anything
+     * above 0, the URL will always be signed even if `signed` is set to false. If not specified and
+     * `signed` is `true`, the signed URL will not expire (valid indefinitely).
+     *
+     * Example: Setting `expiresIn: 3600` will make the URL expire 1 hour from generation time.
+     * After the expiry time, the signed URL will no longer be valid and ImageKit will return a 401
+     * Unauthorized status code.
+     *
+     * [Learn
+     * more](https://imagekit.io/docs/media-delivery-basic-security#how-to-generate-signed-urls).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun expiresIn(): Optional<Double> = expiresIn.getOptional("expiresIn")
+
+    /**
      * These are additional query parameters that you want to add to the final URL. They can be any
      * query parameters and not necessarily related to ImageKit. This is especially useful if you
      * want to add a versioning parameter to your URLs.
@@ -85,6 +108,18 @@ private constructor(
      */
     fun queryParameters(): Optional<QueryParameters> =
         queryParameters.getOptional("queryParameters")
+
+    /**
+     * Whether to sign the URL or not. Set this to `true` if you want to generate a signed URL. If
+     * `signed` is `true` and `expiresIn` is not specified, the signed URL will not expire (valid
+     * indefinitely). Note: If `expiresIn` is set to any value above 0, the URL will always be
+     * signed regardless of this setting.
+     * [Learn more](https://imagekit.io/docs/media-delivery-basic-security#how-to-generate-signed-urls).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun signed(): Optional<Boolean> = signed.getOptional("signed")
 
     /**
      * An array of objects specifying the transformations to be applied in the URL. If more than one
@@ -125,6 +160,13 @@ private constructor(
     @JsonProperty("urlEndpoint") @ExcludeMissing fun _urlEndpoint(): JsonField<String> = urlEndpoint
 
     /**
+     * Returns the raw JSON value of [expiresIn].
+     *
+     * Unlike [expiresIn], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("expiresIn") @ExcludeMissing fun _expiresIn(): JsonField<Double> = expiresIn
+
+    /**
      * Returns the raw JSON value of [queryParameters].
      *
      * Unlike [queryParameters], this method doesn't throw if the JSON field has an unexpected type.
@@ -132,6 +174,13 @@ private constructor(
     @JsonProperty("queryParameters")
     @ExcludeMissing
     fun _queryParameters(): JsonField<QueryParameters> = queryParameters
+
+    /**
+     * Returns the raw JSON value of [signed].
+     *
+     * Unlike [signed], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("signed") @ExcludeMissing fun _signed(): JsonField<Boolean> = signed
 
     /**
      * Returns the raw JSON value of [transformation].
@@ -183,7 +232,9 @@ private constructor(
 
         private var src: JsonField<String>? = null
         private var urlEndpoint: JsonField<String>? = null
+        private var expiresIn: JsonField<Double> = JsonMissing.of()
         private var queryParameters: JsonField<QueryParameters> = JsonMissing.of()
+        private var signed: JsonField<Boolean> = JsonMissing.of()
         private var transformation: JsonField<MutableList<Transformation>>? = null
         private var transformationPosition: JsonField<TransformationPosition> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -192,7 +243,9 @@ private constructor(
         internal fun from(srcOptions: SrcOptions) = apply {
             src = srcOptions.src
             urlEndpoint = srcOptions.urlEndpoint
+            expiresIn = srcOptions.expiresIn
             queryParameters = srcOptions.queryParameters
+            signed = srcOptions.signed
             transformation = srcOptions.transformation.map { it.toMutableList() }
             transformationPosition = srcOptions.transformationPosition
             additionalProperties = srcOptions.additionalProperties.toMutableMap()
@@ -229,6 +282,29 @@ private constructor(
         fun urlEndpoint(urlEndpoint: JsonField<String>) = apply { this.urlEndpoint = urlEndpoint }
 
         /**
+         * When you want the signed URL to expire, specified in seconds. If `expiresIn` is anything
+         * above 0, the URL will always be signed even if `signed` is set to false. If not specified
+         * and `signed` is `true`, the signed URL will not expire (valid indefinitely).
+         *
+         * Example: Setting `expiresIn: 3600` will make the URL expire 1 hour from generation time.
+         * After the expiry time, the signed URL will no longer be valid and ImageKit will return a
+         * 401 Unauthorized status code.
+         *
+         * [Learn
+         * more](https://imagekit.io/docs/media-delivery-basic-security#how-to-generate-signed-urls).
+         */
+        fun expiresIn(expiresIn: Double) = expiresIn(JsonField.of(expiresIn))
+
+        /**
+         * Sets [Builder.expiresIn] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.expiresIn] with a well-typed [Double] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun expiresIn(expiresIn: JsonField<Double>) = apply { this.expiresIn = expiresIn }
+
+        /**
          * These are additional query parameters that you want to add to the final URL. They can be
          * any query parameters and not necessarily related to ImageKit. This is especially useful
          * if you want to add a versioning parameter to your URLs.
@@ -246,6 +322,23 @@ private constructor(
         fun queryParameters(queryParameters: JsonField<QueryParameters>) = apply {
             this.queryParameters = queryParameters
         }
+
+        /**
+         * Whether to sign the URL or not. Set this to `true` if you want to generate a signed URL.
+         * If `signed` is `true` and `expiresIn` is not specified, the signed URL will not expire
+         * (valid indefinitely). Note: If `expiresIn` is set to any value above 0, the URL will
+         * always be signed regardless of this setting.
+         * [Learn more](https://imagekit.io/docs/media-delivery-basic-security#how-to-generate-signed-urls).
+         */
+        fun signed(signed: Boolean) = signed(JsonField.of(signed))
+
+        /**
+         * Sets [Builder.signed] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.signed] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun signed(signed: JsonField<Boolean>) = apply { this.signed = signed }
 
         /**
          * An array of objects specifying the transformations to be applied in the URL. If more than
@@ -336,7 +429,9 @@ private constructor(
             SrcOptions(
                 checkRequired("src", src),
                 checkRequired("urlEndpoint", urlEndpoint),
+                expiresIn,
                 queryParameters,
+                signed,
                 (transformation ?: JsonMissing.of()).map { it.toImmutable() },
                 transformationPosition,
                 additionalProperties.toMutableMap(),
@@ -352,7 +447,9 @@ private constructor(
 
         src()
         urlEndpoint()
+        expiresIn()
         queryParameters().ifPresent { it.validate() }
+        signed()
         transformation().ifPresent { it.forEach { it.validate() } }
         transformationPosition().ifPresent { it.validate() }
         validated = true
@@ -375,7 +472,9 @@ private constructor(
     internal fun validity(): Int =
         (if (src.asKnown().isPresent) 1 else 0) +
             (if (urlEndpoint.asKnown().isPresent) 1 else 0) +
+            (if (expiresIn.asKnown().isPresent) 1 else 0) +
             (queryParameters.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (signed.asKnown().isPresent) 1 else 0) +
             (transformation.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
             (transformationPosition.asKnown().getOrNull()?.validity() ?: 0)
 
@@ -491,7 +590,9 @@ private constructor(
         return other is SrcOptions &&
             src == other.src &&
             urlEndpoint == other.urlEndpoint &&
+            expiresIn == other.expiresIn &&
             queryParameters == other.queryParameters &&
+            signed == other.signed &&
             transformation == other.transformation &&
             transformationPosition == other.transformationPosition &&
             additionalProperties == other.additionalProperties
@@ -501,7 +602,9 @@ private constructor(
         Objects.hash(
             src,
             urlEndpoint,
+            expiresIn,
             queryParameters,
+            signed,
             transformation,
             transformationPosition,
             additionalProperties,
@@ -511,5 +614,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "SrcOptions{src=$src, urlEndpoint=$urlEndpoint, queryParameters=$queryParameters, transformation=$transformation, transformationPosition=$transformationPosition, additionalProperties=$additionalProperties}"
+        "SrcOptions{src=$src, urlEndpoint=$urlEndpoint, expiresIn=$expiresIn, queryParameters=$queryParameters, signed=$signed, transformation=$transformation, transformationPosition=$transformationPosition, additionalProperties=$additionalProperties}"
 }

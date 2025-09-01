@@ -17,11 +17,13 @@ internal class SrcOptionsTest {
             SrcOptions.builder()
                 .src("/my-image.jpg")
                 .urlEndpoint("https://ik.imagekit.io/demo")
+                .expiresIn(0.0)
                 .queryParameters(
                     SrcOptions.QueryParameters.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .signed(true)
                 .addTransformation(
                     Transformation.builder()
                         .aiChangeBackground("aiChangeBackground")
@@ -82,12 +84,14 @@ internal class SrcOptionsTest {
 
         assertThat(srcOptions.src()).isEqualTo("/my-image.jpg")
         assertThat(srcOptions.urlEndpoint()).isEqualTo("https://ik.imagekit.io/demo")
+        assertThat(srcOptions.expiresIn()).contains(0.0)
         assertThat(srcOptions.queryParameters())
             .contains(
                 SrcOptions.QueryParameters.builder()
                     .putAdditionalProperty("foo", JsonValue.from("string"))
                     .build()
             )
+        assertThat(srcOptions.signed()).contains(true)
         assertThat(srcOptions.transformation().getOrNull())
             .containsExactly(
                 Transformation.builder()
@@ -154,11 +158,13 @@ internal class SrcOptionsTest {
             SrcOptions.builder()
                 .src("/my-image.jpg")
                 .urlEndpoint("https://ik.imagekit.io/demo")
+                .expiresIn(0.0)
                 .queryParameters(
                     SrcOptions.QueryParameters.builder()
                         .putAdditionalProperty("foo", JsonValue.from("string"))
                         .build()
                 )
+                .signed(true)
                 .addTransformation(
                     Transformation.builder()
                         .aiChangeBackground("aiChangeBackground")
