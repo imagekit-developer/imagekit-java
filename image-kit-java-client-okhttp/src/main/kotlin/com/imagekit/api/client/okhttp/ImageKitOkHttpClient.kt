@@ -183,15 +183,19 @@ class ImageKitOkHttpClient private constructor() {
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
 
-        /** Your ImageKit private key starts with `private_`. */
+        /**
+         * Your ImageKit private API key (it starts with `private_`). You can view and manage API
+         * keys in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
+         */
         fun privateApiKey(privateApiKey: String) = apply {
             clientOptions.privateApiKey(privateApiKey)
         }
 
         /**
-         * Do not set this, its value is ignored
+         * ImageKit Basic Auth only uses the username field and ignores the password. This field is
+         * unused.
          *
-         * Defaults to `"does_not_matter"`.
+         * Defaults to `"do_not_set"`.
          */
         fun password(password: String?) = apply { clientOptions.password(password) }
 

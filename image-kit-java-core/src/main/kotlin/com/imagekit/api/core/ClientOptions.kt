@@ -84,7 +84,10 @@ private constructor(
      * Defaults to 2.
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
-    /** Your ImageKit private key starts with `private_`. */
+    /**
+     * Your ImageKit private API key (it starts with `private_`). You can view and manage API keys
+     * in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
+     */
     @get:JvmName("privateApiKey") val privateApiKey: String,
     private val password: String?,
 ) {
@@ -105,9 +108,10 @@ private constructor(
     fun baseUrlOverridden(): Boolean = baseUrl != null
 
     /**
-     * Do not set this, its value is ignored
+     * ImageKit Basic Auth only uses the username field and ignores the password. This field is
+     * unused.
      *
-     * Defaults to `"does_not_matter"`.
+     * Defaults to `"do_not_set"`.
      */
     fun password(): Optional<String> = Optional.ofNullable(password)
 
@@ -150,7 +154,7 @@ private constructor(
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
         private var privateApiKey: String? = null
-        private var password: String? = "does_not_matter"
+        private var password: String? = "do_not_set"
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -261,13 +265,17 @@ private constructor(
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
-        /** Your ImageKit private key starts with `private_`. */
+        /**
+         * Your ImageKit private API key (it starts with `private_`). You can view and manage API
+         * keys in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
+         */
         fun privateApiKey(privateApiKey: String) = apply { this.privateApiKey = privateApiKey }
 
         /**
-         * Do not set this, its value is ignored
+         * ImageKit Basic Auth only uses the username field and ignores the password. This field is
+         * unused.
          *
-         * Defaults to `"does_not_matter"`.
+         * Defaults to `"do_not_set"`.
          */
         fun password(password: String?) = apply { this.password = password }
 
@@ -361,11 +369,11 @@ private constructor(
          *
          * See this table for the available options:
          *
-         * |Setter         |System property                 |Environment variable      |Required|Default value              |
-         * |---------------|--------------------------------|--------------------------|--------|---------------------------|
-         * |`privateApiKey`|`imagekit.imagekitPrivateApiKey`|`IMAGEKIT_PRIVATE_API_KEY`|true    |-                          |
-         * |`password`     |`imagekit.orgMyPasswordToken`   |`ORG_MY_PASSWORD_TOKEN`   |false   |`"does_not_matter"`        |
-         * |`baseUrl`      |`imagekit.baseUrl`              |`IMAGE_KIT_BASE_URL`      |true    |`"https://api.imagekit.io"`|
+         * |Setter         |System property                       |Environment variable            |Required|Default value              |
+         * |---------------|--------------------------------------|--------------------------------|--------|---------------------------|
+         * |`privateApiKey`|`imagekit.imagekitPrivateApiKey`      |`IMAGEKIT_PRIVATE_API_KEY`      |true    |-                          |
+         * |`password`     |`imagekit.optionalImagekitIgnoresThis`|`OPTIONAL_IMAGEKIT_IGNORES_THIS`|false   |`"do_not_set"`             |
+         * |`baseUrl`      |`imagekit.baseUrl`                    |`IMAGE_KIT_BASE_URL`            |true    |`"https://api.imagekit.io"`|
          *
          * System properties take precedence over environment variables.
          */
@@ -376,8 +384,8 @@ private constructor(
             (System.getProperty("imagekit.imagekitPrivateApiKey")
                     ?: System.getenv("IMAGEKIT_PRIVATE_API_KEY"))
                 ?.let { privateApiKey(it) }
-            (System.getProperty("imagekit.orgMyPasswordToken")
-                    ?: System.getenv("ORG_MY_PASSWORD_TOKEN"))
+            (System.getProperty("imagekit.optionalImagekitIgnoresThis")
+                    ?: System.getenv("OPTIONAL_IMAGEKIT_IGNORES_THIS"))
                 ?.let { password(it) }
         }
 
