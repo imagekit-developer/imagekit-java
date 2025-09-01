@@ -24,7 +24,7 @@ import kotlin.jvm.optionals.getOrNull
  * is now ready and can be accessed via the provided URL. Note that each post-transformation
  * generates a separate webhook event.
  */
-class UploadPostTransformSuccessWebhookEvent
+class UploadPostTransformSuccessEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -130,7 +130,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [UploadPostTransformSuccessWebhookEvent].
+         * [UploadPostTransformSuccessEvent].
          *
          * The following fields are required:
          * ```java
@@ -143,7 +143,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UploadPostTransformSuccessWebhookEvent]. */
+    /** A builder for [UploadPostTransformSuccessEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -154,17 +154,16 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            uploadPostTransformSuccessWebhookEvent: UploadPostTransformSuccessWebhookEvent
-        ) = apply {
-            id = uploadPostTransformSuccessWebhookEvent.id
-            createdAt = uploadPostTransformSuccessWebhookEvent.createdAt
-            data = uploadPostTransformSuccessWebhookEvent.data
-            request = uploadPostTransformSuccessWebhookEvent.request
-            type = uploadPostTransformSuccessWebhookEvent.type
-            additionalProperties =
-                uploadPostTransformSuccessWebhookEvent.additionalProperties.toMutableMap()
-        }
+        internal fun from(uploadPostTransformSuccessEvent: UploadPostTransformSuccessEvent) =
+            apply {
+                id = uploadPostTransformSuccessEvent.id
+                createdAt = uploadPostTransformSuccessEvent.createdAt
+                data = uploadPostTransformSuccessEvent.data
+                request = uploadPostTransformSuccessEvent.request
+                type = uploadPostTransformSuccessEvent.type
+                additionalProperties =
+                    uploadPostTransformSuccessEvent.additionalProperties.toMutableMap()
+            }
 
         /** Unique identifier for the event. */
         fun id(id: String) = id(JsonField.of(id))
@@ -243,7 +242,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UploadPostTransformSuccessWebhookEvent].
+         * Returns an immutable instance of [UploadPostTransformSuccessEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -257,8 +256,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UploadPostTransformSuccessWebhookEvent =
-            UploadPostTransformSuccessWebhookEvent(
+        fun build(): UploadPostTransformSuccessEvent =
+            UploadPostTransformSuccessEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
@@ -270,7 +269,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UploadPostTransformSuccessWebhookEvent = apply {
+    fun validate(): UploadPostTransformSuccessEvent = apply {
         if (validated) {
             return@apply
         }
@@ -1271,7 +1270,7 @@ private constructor(
             return true
         }
 
-        return other is UploadPostTransformSuccessWebhookEvent &&
+        return other is UploadPostTransformSuccessEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
@@ -1287,5 +1286,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UploadPostTransformSuccessWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "UploadPostTransformSuccessEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
 }

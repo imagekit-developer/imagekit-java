@@ -544,13 +544,13 @@ internal class UnsafeUnwrapWebhookEventTest {
     @Test
     fun ofUploadPreTransformSuccess() {
         val uploadPreTransformSuccess =
-            UploadPreTransformSuccessWebhookEvent.builder()
+            UploadPreTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformSuccessWebhookEvent.Data.builder()
+                    UploadPreTransformSuccessEvent.Data.builder()
                         .addAiTag(
-                            UploadPreTransformSuccessWebhookEvent.Data.AiTag.builder()
+                            UploadPreTransformSuccessEvent.Data.AiTag.builder()
                                 .confidence(0.0)
                                 .name("name")
                                 .source("source")
@@ -560,32 +560,31 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .bitRate(0L)
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.CustomMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.EmbeddedMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .extensionStatus(
-                            UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.builder()
+                            UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
                                 .awsAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
                                         .SUCCESS
                                 )
                                 .googleAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .GoogleAutoTagging
                                         .SUCCESS
                                 )
                                 .removeBg(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
-                                        .RemoveBg
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus.RemoveBg
                                         .SUCCESS
                                 )
                                 .build()
@@ -692,7 +691,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .thumbnailUrl("thumbnailUrl")
                         .url("url")
                         .versionInfo(
-                            UploadPreTransformSuccessWebhookEvent.Data.VersionInfo.builder()
+                            UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
                                 .id("id")
                                 .name("name")
                                 .build()
@@ -702,7 +701,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformSuccessWebhookEvent.Request.builder()
+                    UploadPreTransformSuccessEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
@@ -727,13 +726,13 @@ internal class UnsafeUnwrapWebhookEventTest {
         val jsonMapper = jsonMapper()
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofUploadPreTransformSuccess(
-                UploadPreTransformSuccessWebhookEvent.builder()
+                UploadPreTransformSuccessEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
-                        UploadPreTransformSuccessWebhookEvent.Data.builder()
+                        UploadPreTransformSuccessEvent.Data.builder()
                             .addAiTag(
-                                UploadPreTransformSuccessWebhookEvent.Data.AiTag.builder()
+                                UploadPreTransformSuccessEvent.Data.AiTag.builder()
                                     .confidence(0.0)
                                     .name("name")
                                     .source("source")
@@ -743,33 +742,31 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .bitRate(0L)
                             .customCoordinates("customCoordinates")
                             .customMetadata(
-                                UploadPreTransformSuccessWebhookEvent.Data.CustomMetadata.builder()
+                                UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
                             .description("description")
                             .duration(0L)
                             .embeddedMetadata(
-                                UploadPreTransformSuccessWebhookEvent.Data.EmbeddedMetadata
-                                    .builder()
+                                UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
                             .extensionStatus(
-                                UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.builder()
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
                                     .awsAutoTagging(
-                                        UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                        UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                             .AwsAutoTagging
                                             .SUCCESS
                                     )
                                     .googleAutoTagging(
-                                        UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                        UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                             .GoogleAutoTagging
                                             .SUCCESS
                                     )
                                     .removeBg(
-                                        UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
-                                            .RemoveBg
+                                        UploadPreTransformSuccessEvent.Data.ExtensionStatus.RemoveBg
                                             .SUCCESS
                                     )
                                     .build()
@@ -881,7 +878,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .thumbnailUrl("thumbnailUrl")
                             .url("url")
                             .versionInfo(
-                                UploadPreTransformSuccessWebhookEvent.Data.VersionInfo.builder()
+                                UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
                                     .id("id")
                                     .name("name")
                                     .build()
@@ -891,7 +888,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .build()
                     )
                     .request(
-                        UploadPreTransformSuccessWebhookEvent.Request.builder()
+                        UploadPreTransformSuccessEvent.Request.builder()
                             .transformation("transformation")
                             .xRequestId("x_request_id")
                             .build()
@@ -911,18 +908,17 @@ internal class UnsafeUnwrapWebhookEventTest {
     @Test
     fun ofUploadPreTransformError() {
         val uploadPreTransformError =
-            UploadPreTransformErrorWebhookEvent.builder()
+            UploadPreTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformErrorWebhookEvent.Data.builder()
+                    UploadPreTransformErrorEvent.Data.builder()
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPreTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPreTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPreTransformErrorWebhookEvent.Data.Transformation.Error
-                                        .builder()
+                                    UploadPreTransformErrorEvent.Data.Transformation.Error.builder()
                                         .reason("encoding_failed")
                                         .build()
                                 )
@@ -931,7 +927,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformErrorWebhookEvent.Request.builder()
+                    UploadPreTransformErrorEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
@@ -956,18 +952,17 @@ internal class UnsafeUnwrapWebhookEventTest {
         val jsonMapper = jsonMapper()
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofUploadPreTransformError(
-                UploadPreTransformErrorWebhookEvent.builder()
+                UploadPreTransformErrorEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
-                        UploadPreTransformErrorWebhookEvent.Data.builder()
+                        UploadPreTransformErrorEvent.Data.builder()
                             .name("name")
                             .path("path")
                             .transformation(
-                                UploadPreTransformErrorWebhookEvent.Data.Transformation.builder()
+                                UploadPreTransformErrorEvent.Data.Transformation.builder()
                                     .error(
-                                        UploadPreTransformErrorWebhookEvent.Data.Transformation
-                                            .Error
+                                        UploadPreTransformErrorEvent.Data.Transformation.Error
                                             .builder()
                                             .reason("encoding_failed")
                                             .build()
@@ -977,7 +972,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .build()
                     )
                     .request(
-                        UploadPreTransformErrorWebhookEvent.Request.builder()
+                        UploadPreTransformErrorEvent.Request.builder()
                             .transformation("transformation")
                             .xRequestId("x_request_id")
                             .build()
@@ -997,28 +992,26 @@ internal class UnsafeUnwrapWebhookEventTest {
     @Test
     fun ofUploadPostTransformSuccess() {
         val uploadPostTransformSuccess =
-            UploadPostTransformSuccessWebhookEvent.builder()
+            UploadPostTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformSuccessWebhookEvent.Data.builder()
+                    UploadPostTransformSuccessEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .url("https://example.com")
                         .build()
                 )
                 .request(
-                    UploadPostTransformSuccessWebhookEvent.Request.builder()
+                    UploadPostTransformSuccessEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformSuccessWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformSuccessEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Type
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -1047,30 +1040,26 @@ internal class UnsafeUnwrapWebhookEventTest {
         val jsonMapper = jsonMapper()
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofUploadPostTransformSuccess(
-                UploadPostTransformSuccessWebhookEvent.builder()
+                UploadPostTransformSuccessEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
-                        UploadPostTransformSuccessWebhookEvent.Data.builder()
+                        UploadPostTransformSuccessEvent.Data.builder()
                             .fileId("fileId")
                             .name("name")
                             .url("https://example.com")
                             .build()
                     )
                     .request(
-                        UploadPostTransformSuccessWebhookEvent.Request.builder()
+                        UploadPostTransformSuccessEvent.Request.builder()
                             .transformation(
-                                UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                    .builder()
+                                UploadPostTransformSuccessEvent.Request.Transformation.builder()
                                     .type(
-                                        UploadPostTransformSuccessWebhookEvent.Request
-                                            .Transformation
-                                            .Type
+                                        UploadPostTransformSuccessEvent.Request.Transformation.Type
                                             .TRANSFORMATION
                                     )
                                     .protocol(
-                                        UploadPostTransformSuccessWebhookEvent.Request
-                                            .Transformation
+                                        UploadPostTransformSuccessEvent.Request.Transformation
                                             .Protocol
                                             .HLS
                                     )
@@ -1095,18 +1084,18 @@ internal class UnsafeUnwrapWebhookEventTest {
     @Test
     fun ofUploadPostTransformError() {
         val uploadPostTransformError =
-            UploadPostTransformErrorWebhookEvent.builder()
+            UploadPostTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformErrorWebhookEvent.Data.builder()
+                    UploadPostTransformErrorEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPostTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPostTransformErrorWebhookEvent.Data.Transformation.Error
+                                    UploadPostTransformErrorEvent.Data.Transformation.Error
                                         .builder()
                                         .reason("encoding_failed")
                                         .build()
@@ -1117,16 +1106,15 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPostTransformErrorWebhookEvent.Request.builder()
+                    UploadPostTransformErrorEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformErrorEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation.Type
+                                    UploadPostTransformErrorEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformErrorEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -1155,19 +1143,18 @@ internal class UnsafeUnwrapWebhookEventTest {
         val jsonMapper = jsonMapper()
         val unsafeUnwrapWebhookEvent =
             UnsafeUnwrapWebhookEvent.ofUploadPostTransformError(
-                UploadPostTransformErrorWebhookEvent.builder()
+                UploadPostTransformErrorEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
-                        UploadPostTransformErrorWebhookEvent.Data.builder()
+                        UploadPostTransformErrorEvent.Data.builder()
                             .fileId("fileId")
                             .name("name")
                             .path("path")
                             .transformation(
-                                UploadPostTransformErrorWebhookEvent.Data.Transformation.builder()
+                                UploadPostTransformErrorEvent.Data.Transformation.builder()
                                     .error(
-                                        UploadPostTransformErrorWebhookEvent.Data.Transformation
-                                            .Error
+                                        UploadPostTransformErrorEvent.Data.Transformation.Error
                                             .builder()
                                             .reason("encoding_failed")
                                             .build()
@@ -1178,17 +1165,15 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .build()
                     )
                     .request(
-                        UploadPostTransformErrorWebhookEvent.Request.builder()
+                        UploadPostTransformErrorEvent.Request.builder()
                             .transformation(
-                                UploadPostTransformErrorWebhookEvent.Request.Transformation
-                                    .builder()
+                                UploadPostTransformErrorEvent.Request.Transformation.builder()
                                     .type(
-                                        UploadPostTransformErrorWebhookEvent.Request.Transformation
-                                            .Type
+                                        UploadPostTransformErrorEvent.Request.Transformation.Type
                                             .TRANSFORMATION
                                     )
                                     .protocol(
-                                        UploadPostTransformErrorWebhookEvent.Request.Transformation
+                                        UploadPostTransformErrorEvent.Request.Transformation
                                             .Protocol
                                             .HLS
                                     )

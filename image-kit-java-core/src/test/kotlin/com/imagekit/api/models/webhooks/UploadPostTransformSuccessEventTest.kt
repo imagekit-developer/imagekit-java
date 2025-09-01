@@ -8,33 +8,31 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UploadPostTransformSuccessWebhookEventTest {
+internal class UploadPostTransformSuccessEventTest {
 
     @Test
     fun create() {
-        val uploadPostTransformSuccessWebhookEvent =
-            UploadPostTransformSuccessWebhookEvent.builder()
+        val uploadPostTransformSuccessEvent =
+            UploadPostTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformSuccessWebhookEvent.Data.builder()
+                    UploadPostTransformSuccessEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .url("https://example.com")
                         .build()
                 )
                 .request(
-                    UploadPostTransformSuccessWebhookEvent.Request.builder()
+                    UploadPostTransformSuccessEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformSuccessWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformSuccessEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Type
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -45,30 +43,28 @@ internal class UploadPostTransformSuccessWebhookEventTest {
                 )
                 .build()
 
-        assertThat(uploadPostTransformSuccessWebhookEvent.id()).isEqualTo("id")
-        assertThat(uploadPostTransformSuccessWebhookEvent.createdAt())
+        assertThat(uploadPostTransformSuccessEvent.id()).isEqualTo("id")
+        assertThat(uploadPostTransformSuccessEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(uploadPostTransformSuccessWebhookEvent.data())
+        assertThat(uploadPostTransformSuccessEvent.data())
             .isEqualTo(
-                UploadPostTransformSuccessWebhookEvent.Data.builder()
+                UploadPostTransformSuccessEvent.Data.builder()
                     .fileId("fileId")
                     .name("name")
                     .url("https://example.com")
                     .build()
             )
-        assertThat(uploadPostTransformSuccessWebhookEvent.request())
+        assertThat(uploadPostTransformSuccessEvent.request())
             .isEqualTo(
-                UploadPostTransformSuccessWebhookEvent.Request.builder()
+                UploadPostTransformSuccessEvent.Request.builder()
                     .transformation(
-                        UploadPostTransformSuccessWebhookEvent.Request.Transformation.builder()
+                        UploadPostTransformSuccessEvent.Request.Transformation.builder()
                             .type(
-                                UploadPostTransformSuccessWebhookEvent.Request.Transformation.Type
+                                UploadPostTransformSuccessEvent.Request.Transformation.Type
                                     .TRANSFORMATION
                             )
                             .protocol(
-                                UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                    .Protocol
-                                    .HLS
+                                UploadPostTransformSuccessEvent.Request.Transformation.Protocol.HLS
                             )
                             .value("value")
                             .build()
@@ -81,29 +77,27 @@ internal class UploadPostTransformSuccessWebhookEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val uploadPostTransformSuccessWebhookEvent =
-            UploadPostTransformSuccessWebhookEvent.builder()
+        val uploadPostTransformSuccessEvent =
+            UploadPostTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformSuccessWebhookEvent.Data.builder()
+                    UploadPostTransformSuccessEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .url("https://example.com")
                         .build()
                 )
                 .request(
-                    UploadPostTransformSuccessWebhookEvent.Request.builder()
+                    UploadPostTransformSuccessEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformSuccessWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformSuccessEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Type
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformSuccessWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformSuccessEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -114,13 +108,13 @@ internal class UploadPostTransformSuccessWebhookEventTest {
                 )
                 .build()
 
-        val roundtrippedUploadPostTransformSuccessWebhookEvent =
+        val roundtrippedUploadPostTransformSuccessEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(uploadPostTransformSuccessWebhookEvent),
-                jacksonTypeRef<UploadPostTransformSuccessWebhookEvent>(),
+                jsonMapper.writeValueAsString(uploadPostTransformSuccessEvent),
+                jacksonTypeRef<UploadPostTransformSuccessEvent>(),
             )
 
-        assertThat(roundtrippedUploadPostTransformSuccessWebhookEvent)
-            .isEqualTo(uploadPostTransformSuccessWebhookEvent)
+        assertThat(roundtrippedUploadPostTransformSuccessEvent)
+            .isEqualTo(uploadPostTransformSuccessEvent)
     }
 }

@@ -21,7 +21,7 @@ import kotlin.jvm.optionals.getOrNull
  * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
  * requested transformation could not be applied.
  */
-class UploadPreTransformErrorWebhookEvent
+class UploadPreTransformErrorEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -126,8 +126,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [UploadPreTransformErrorWebhookEvent].
+         * Returns a mutable builder for constructing an instance of [UploadPreTransformErrorEvent].
          *
          * The following fields are required:
          * ```java
@@ -140,7 +139,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UploadPreTransformErrorWebhookEvent]. */
+    /** A builder for [UploadPreTransformErrorEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -151,16 +150,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            uploadPreTransformErrorWebhookEvent: UploadPreTransformErrorWebhookEvent
-        ) = apply {
-            id = uploadPreTransformErrorWebhookEvent.id
-            createdAt = uploadPreTransformErrorWebhookEvent.createdAt
-            data = uploadPreTransformErrorWebhookEvent.data
-            request = uploadPreTransformErrorWebhookEvent.request
-            type = uploadPreTransformErrorWebhookEvent.type
-            additionalProperties =
-                uploadPreTransformErrorWebhookEvent.additionalProperties.toMutableMap()
+        internal fun from(uploadPreTransformErrorEvent: UploadPreTransformErrorEvent) = apply {
+            id = uploadPreTransformErrorEvent.id
+            createdAt = uploadPreTransformErrorEvent.createdAt
+            data = uploadPreTransformErrorEvent.data
+            request = uploadPreTransformErrorEvent.request
+            type = uploadPreTransformErrorEvent.type
+            additionalProperties = uploadPreTransformErrorEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -240,7 +236,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UploadPreTransformErrorWebhookEvent].
+         * Returns an immutable instance of [UploadPreTransformErrorEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -254,8 +250,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UploadPreTransformErrorWebhookEvent =
-            UploadPreTransformErrorWebhookEvent(
+        fun build(): UploadPreTransformErrorEvent =
+            UploadPreTransformErrorEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
@@ -267,7 +263,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UploadPreTransformErrorWebhookEvent = apply {
+    fun validate(): UploadPreTransformErrorEvent = apply {
         if (validated) {
             return@apply
         }
@@ -1085,7 +1081,7 @@ private constructor(
             return true
         }
 
-        return other is UploadPreTransformErrorWebhookEvent &&
+        return other is UploadPreTransformErrorEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
@@ -1101,5 +1097,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UploadPreTransformErrorWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "UploadPreTransformErrorEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
 }

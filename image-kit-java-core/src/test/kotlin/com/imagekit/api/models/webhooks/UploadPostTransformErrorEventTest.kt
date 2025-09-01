@@ -8,23 +8,23 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UploadPostTransformErrorWebhookEventTest {
+internal class UploadPostTransformErrorEventTest {
 
     @Test
     fun create() {
-        val uploadPostTransformErrorWebhookEvent =
-            UploadPostTransformErrorWebhookEvent.builder()
+        val uploadPostTransformErrorEvent =
+            UploadPostTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformErrorWebhookEvent.Data.builder()
+                    UploadPostTransformErrorEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPostTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPostTransformErrorWebhookEvent.Data.Transformation.Error
+                                    UploadPostTransformErrorEvent.Data.Transformation.Error
                                         .builder()
                                         .reason("encoding_failed")
                                         .build()
@@ -35,16 +35,15 @@ internal class UploadPostTransformErrorWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPostTransformErrorWebhookEvent.Request.builder()
+                    UploadPostTransformErrorEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformErrorEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation.Type
+                                    UploadPostTransformErrorEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformErrorEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -55,20 +54,19 @@ internal class UploadPostTransformErrorWebhookEventTest {
                 )
                 .build()
 
-        assertThat(uploadPostTransformErrorWebhookEvent.id()).isEqualTo("id")
-        assertThat(uploadPostTransformErrorWebhookEvent.createdAt())
+        assertThat(uploadPostTransformErrorEvent.id()).isEqualTo("id")
+        assertThat(uploadPostTransformErrorEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(uploadPostTransformErrorWebhookEvent.data())
+        assertThat(uploadPostTransformErrorEvent.data())
             .isEqualTo(
-                UploadPostTransformErrorWebhookEvent.Data.builder()
+                UploadPostTransformErrorEvent.Data.builder()
                     .fileId("fileId")
                     .name("name")
                     .path("path")
                     .transformation(
-                        UploadPostTransformErrorWebhookEvent.Data.Transformation.builder()
+                        UploadPostTransformErrorEvent.Data.Transformation.builder()
                             .error(
-                                UploadPostTransformErrorWebhookEvent.Data.Transformation.Error
-                                    .builder()
+                                UploadPostTransformErrorEvent.Data.Transformation.Error.builder()
                                     .reason("encoding_failed")
                                     .build()
                             )
@@ -77,18 +75,17 @@ internal class UploadPostTransformErrorWebhookEventTest {
                     .url("https://example.com")
                     .build()
             )
-        assertThat(uploadPostTransformErrorWebhookEvent.request())
+        assertThat(uploadPostTransformErrorEvent.request())
             .isEqualTo(
-                UploadPostTransformErrorWebhookEvent.Request.builder()
+                UploadPostTransformErrorEvent.Request.builder()
                     .transformation(
-                        UploadPostTransformErrorWebhookEvent.Request.Transformation.builder()
+                        UploadPostTransformErrorEvent.Request.Transformation.builder()
                             .type(
-                                UploadPostTransformErrorWebhookEvent.Request.Transformation.Type
+                                UploadPostTransformErrorEvent.Request.Transformation.Type
                                     .TRANSFORMATION
                             )
                             .protocol(
-                                UploadPostTransformErrorWebhookEvent.Request.Transformation.Protocol
-                                    .HLS
+                                UploadPostTransformErrorEvent.Request.Transformation.Protocol.HLS
                             )
                             .value("value")
                             .build()
@@ -101,19 +98,19 @@ internal class UploadPostTransformErrorWebhookEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val uploadPostTransformErrorWebhookEvent =
-            UploadPostTransformErrorWebhookEvent.builder()
+        val uploadPostTransformErrorEvent =
+            UploadPostTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPostTransformErrorWebhookEvent.Data.builder()
+                    UploadPostTransformErrorEvent.Data.builder()
                         .fileId("fileId")
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPostTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPostTransformErrorWebhookEvent.Data.Transformation.Error
+                                    UploadPostTransformErrorEvent.Data.Transformation.Error
                                         .builder()
                                         .reason("encoding_failed")
                                         .build()
@@ -124,16 +121,15 @@ internal class UploadPostTransformErrorWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPostTransformErrorWebhookEvent.Request.builder()
+                    UploadPostTransformErrorEvent.Request.builder()
                         .transformation(
-                            UploadPostTransformErrorWebhookEvent.Request.Transformation.builder()
+                            UploadPostTransformErrorEvent.Request.Transformation.builder()
                                 .type(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation.Type
+                                    UploadPostTransformErrorEvent.Request.Transformation.Type
                                         .TRANSFORMATION
                                 )
                                 .protocol(
-                                    UploadPostTransformErrorWebhookEvent.Request.Transformation
-                                        .Protocol
+                                    UploadPostTransformErrorEvent.Request.Transformation.Protocol
                                         .HLS
                                 )
                                 .value("value")
@@ -144,13 +140,13 @@ internal class UploadPostTransformErrorWebhookEventTest {
                 )
                 .build()
 
-        val roundtrippedUploadPostTransformErrorWebhookEvent =
+        val roundtrippedUploadPostTransformErrorEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(uploadPostTransformErrorWebhookEvent),
-                jacksonTypeRef<UploadPostTransformErrorWebhookEvent>(),
+                jsonMapper.writeValueAsString(uploadPostTransformErrorEvent),
+                jacksonTypeRef<UploadPostTransformErrorEvent>(),
             )
 
-        assertThat(roundtrippedUploadPostTransformErrorWebhookEvent)
-            .isEqualTo(uploadPostTransformErrorWebhookEvent)
+        assertThat(roundtrippedUploadPostTransformErrorEvent)
+            .isEqualTo(uploadPostTransformErrorEvent)
     }
 }

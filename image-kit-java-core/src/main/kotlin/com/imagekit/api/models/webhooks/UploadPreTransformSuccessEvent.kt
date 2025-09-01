@@ -26,7 +26,7 @@ import kotlin.jvm.optionals.getOrNull
  * Triggered when a pre-transformation completes successfully. The file has been processed with the
  * requested transformation and is now available in the Media Library.
  */
-class UploadPreTransformSuccessWebhookEvent
+class UploadPreTransformSuccessEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -134,7 +134,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [UploadPreTransformSuccessWebhookEvent].
+         * [UploadPreTransformSuccessEvent].
          *
          * The following fields are required:
          * ```java
@@ -147,7 +147,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UploadPreTransformSuccessWebhookEvent]. */
+    /** A builder for [UploadPreTransformSuccessEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -158,16 +158,14 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            uploadPreTransformSuccessWebhookEvent: UploadPreTransformSuccessWebhookEvent
-        ) = apply {
-            id = uploadPreTransformSuccessWebhookEvent.id
-            createdAt = uploadPreTransformSuccessWebhookEvent.createdAt
-            data = uploadPreTransformSuccessWebhookEvent.data
-            request = uploadPreTransformSuccessWebhookEvent.request
-            type = uploadPreTransformSuccessWebhookEvent.type
+        internal fun from(uploadPreTransformSuccessEvent: UploadPreTransformSuccessEvent) = apply {
+            id = uploadPreTransformSuccessEvent.id
+            createdAt = uploadPreTransformSuccessEvent.createdAt
+            data = uploadPreTransformSuccessEvent.data
+            request = uploadPreTransformSuccessEvent.request
+            type = uploadPreTransformSuccessEvent.type
             additionalProperties =
-                uploadPreTransformSuccessWebhookEvent.additionalProperties.toMutableMap()
+                uploadPreTransformSuccessEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -248,7 +246,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UploadPreTransformSuccessWebhookEvent].
+         * Returns an immutable instance of [UploadPreTransformSuccessEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -262,8 +260,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UploadPreTransformSuccessWebhookEvent =
-            UploadPreTransformSuccessWebhookEvent(
+        fun build(): UploadPreTransformSuccessEvent =
+            UploadPreTransformSuccessEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
@@ -275,7 +273,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UploadPreTransformSuccessWebhookEvent = apply {
+    fun validate(): UploadPreTransformSuccessEvent = apply {
         if (validated) {
             return@apply
         }
@@ -3013,7 +3011,7 @@ private constructor(
             return true
         }
 
-        return other is UploadPreTransformSuccessWebhookEvent &&
+        return other is UploadPreTransformSuccessEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
@@ -3029,5 +3027,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UploadPreTransformSuccessWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "UploadPreTransformSuccessEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
 }

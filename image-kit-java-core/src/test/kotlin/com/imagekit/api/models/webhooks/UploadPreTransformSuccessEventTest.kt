@@ -10,18 +10,18 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UploadPreTransformSuccessWebhookEventTest {
+internal class UploadPreTransformSuccessEventTest {
 
     @Test
     fun create() {
-        val uploadPreTransformSuccessWebhookEvent =
-            UploadPreTransformSuccessWebhookEvent.builder()
+        val uploadPreTransformSuccessEvent =
+            UploadPreTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformSuccessWebhookEvent.Data.builder()
+                    UploadPreTransformSuccessEvent.Data.builder()
                         .addAiTag(
-                            UploadPreTransformSuccessWebhookEvent.Data.AiTag.builder()
+                            UploadPreTransformSuccessEvent.Data.AiTag.builder()
                                 .confidence(0.0)
                                 .name("name")
                                 .source("source")
@@ -31,32 +31,31 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .bitRate(0L)
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.CustomMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.EmbeddedMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .extensionStatus(
-                            UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.builder()
+                            UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
                                 .awsAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
                                         .SUCCESS
                                 )
                                 .googleAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .GoogleAutoTagging
                                         .SUCCESS
                                 )
                                 .removeBg(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
-                                        .RemoveBg
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus.RemoveBg
                                         .SUCCESS
                                 )
                                 .build()
@@ -163,7 +162,7 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .thumbnailUrl("thumbnailUrl")
                         .url("url")
                         .versionInfo(
-                            UploadPreTransformSuccessWebhookEvent.Data.VersionInfo.builder()
+                            UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
                                 .id("id")
                                 .name("name")
                                 .build()
@@ -173,21 +172,21 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformSuccessWebhookEvent.Request.builder()
+                    UploadPreTransformSuccessEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
                 )
                 .build()
 
-        assertThat(uploadPreTransformSuccessWebhookEvent.id()).isEqualTo("id")
-        assertThat(uploadPreTransformSuccessWebhookEvent.createdAt())
+        assertThat(uploadPreTransformSuccessEvent.id()).isEqualTo("id")
+        assertThat(uploadPreTransformSuccessEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(uploadPreTransformSuccessWebhookEvent.data())
+        assertThat(uploadPreTransformSuccessEvent.data())
             .isEqualTo(
-                UploadPreTransformSuccessWebhookEvent.Data.builder()
+                UploadPreTransformSuccessEvent.Data.builder()
                     .addAiTag(
-                        UploadPreTransformSuccessWebhookEvent.Data.AiTag.builder()
+                        UploadPreTransformSuccessEvent.Data.AiTag.builder()
                             .confidence(0.0)
                             .name("name")
                             .source("source")
@@ -197,32 +196,30 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                     .bitRate(0L)
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        UploadPreTransformSuccessWebhookEvent.Data.CustomMetadata.builder()
+                        UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .description("description")
                     .duration(0L)
                     .embeddedMetadata(
-                        UploadPreTransformSuccessWebhookEvent.Data.EmbeddedMetadata.builder()
+                        UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .extensionStatus(
-                        UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.builder()
+                        UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
                             .awsAutoTagging(
-                                UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
-                                    .AwsAutoTagging
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus.AwsAutoTagging
                                     .SUCCESS
                             )
                             .googleAutoTagging(
-                                UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                     .GoogleAutoTagging
                                     .SUCCESS
                             )
                             .removeBg(
-                                UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.RemoveBg
-                                    .SUCCESS
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus.RemoveBg.SUCCESS
                             )
                             .build()
                     )
@@ -326,7 +323,7 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                     .thumbnailUrl("thumbnailUrl")
                     .url("url")
                     .versionInfo(
-                        UploadPreTransformSuccessWebhookEvent.Data.VersionInfo.builder()
+                        UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
                             .id("id")
                             .name("name")
                             .build()
@@ -335,9 +332,9 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                     .width(0.0)
                     .build()
             )
-        assertThat(uploadPreTransformSuccessWebhookEvent.request())
+        assertThat(uploadPreTransformSuccessEvent.request())
             .isEqualTo(
-                UploadPreTransformSuccessWebhookEvent.Request.builder()
+                UploadPreTransformSuccessEvent.Request.builder()
                     .transformation("transformation")
                     .xRequestId("x_request_id")
                     .build()
@@ -347,14 +344,14 @@ internal class UploadPreTransformSuccessWebhookEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val uploadPreTransformSuccessWebhookEvent =
-            UploadPreTransformSuccessWebhookEvent.builder()
+        val uploadPreTransformSuccessEvent =
+            UploadPreTransformSuccessEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformSuccessWebhookEvent.Data.builder()
+                    UploadPreTransformSuccessEvent.Data.builder()
                         .addAiTag(
-                            UploadPreTransformSuccessWebhookEvent.Data.AiTag.builder()
+                            UploadPreTransformSuccessEvent.Data.AiTag.builder()
                                 .confidence(0.0)
                                 .name("name")
                                 .source("source")
@@ -364,32 +361,31 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .bitRate(0L)
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.CustomMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            UploadPreTransformSuccessWebhookEvent.Data.EmbeddedMetadata.builder()
+                            UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .extensionStatus(
-                            UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus.builder()
+                            UploadPreTransformSuccessEvent.Data.ExtensionStatus.builder()
                                 .awsAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
                                         .SUCCESS
                                 )
                                 .googleAutoTagging(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .GoogleAutoTagging
                                         .SUCCESS
                                 )
                                 .removeBg(
-                                    UploadPreTransformSuccessWebhookEvent.Data.ExtensionStatus
-                                        .RemoveBg
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus.RemoveBg
                                         .SUCCESS
                                 )
                                 .build()
@@ -496,7 +492,7 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .thumbnailUrl("thumbnailUrl")
                         .url("url")
                         .versionInfo(
-                            UploadPreTransformSuccessWebhookEvent.Data.VersionInfo.builder()
+                            UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
                                 .id("id")
                                 .name("name")
                                 .build()
@@ -506,20 +502,20 @@ internal class UploadPreTransformSuccessWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformSuccessWebhookEvent.Request.builder()
+                    UploadPreTransformSuccessEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
                 )
                 .build()
 
-        val roundtrippedUploadPreTransformSuccessWebhookEvent =
+        val roundtrippedUploadPreTransformSuccessEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(uploadPreTransformSuccessWebhookEvent),
-                jacksonTypeRef<UploadPreTransformSuccessWebhookEvent>(),
+                jsonMapper.writeValueAsString(uploadPreTransformSuccessEvent),
+                jacksonTypeRef<UploadPreTransformSuccessEvent>(),
             )
 
-        assertThat(roundtrippedUploadPreTransformSuccessWebhookEvent)
-            .isEqualTo(uploadPreTransformSuccessWebhookEvent)
+        assertThat(roundtrippedUploadPreTransformSuccessEvent)
+            .isEqualTo(uploadPreTransformSuccessEvent)
     }
 }

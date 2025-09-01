@@ -8,23 +8,22 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class UploadPreTransformErrorWebhookEventTest {
+internal class UploadPreTransformErrorEventTest {
 
     @Test
     fun create() {
-        val uploadPreTransformErrorWebhookEvent =
-            UploadPreTransformErrorWebhookEvent.builder()
+        val uploadPreTransformErrorEvent =
+            UploadPreTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformErrorWebhookEvent.Data.builder()
+                    UploadPreTransformErrorEvent.Data.builder()
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPreTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPreTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPreTransformErrorWebhookEvent.Data.Transformation.Error
-                                        .builder()
+                                    UploadPreTransformErrorEvent.Data.Transformation.Error.builder()
                                         .reason("encoding_failed")
                                         .build()
                                 )
@@ -33,26 +32,25 @@ internal class UploadPreTransformErrorWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformErrorWebhookEvent.Request.builder()
+                    UploadPreTransformErrorEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
                 )
                 .build()
 
-        assertThat(uploadPreTransformErrorWebhookEvent.id()).isEqualTo("id")
-        assertThat(uploadPreTransformErrorWebhookEvent.createdAt())
+        assertThat(uploadPreTransformErrorEvent.id()).isEqualTo("id")
+        assertThat(uploadPreTransformErrorEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(uploadPreTransformErrorWebhookEvent.data())
+        assertThat(uploadPreTransformErrorEvent.data())
             .isEqualTo(
-                UploadPreTransformErrorWebhookEvent.Data.builder()
+                UploadPreTransformErrorEvent.Data.builder()
                     .name("name")
                     .path("path")
                     .transformation(
-                        UploadPreTransformErrorWebhookEvent.Data.Transformation.builder()
+                        UploadPreTransformErrorEvent.Data.Transformation.builder()
                             .error(
-                                UploadPreTransformErrorWebhookEvent.Data.Transformation.Error
-                                    .builder()
+                                UploadPreTransformErrorEvent.Data.Transformation.Error.builder()
                                     .reason("encoding_failed")
                                     .build()
                             )
@@ -60,9 +58,9 @@ internal class UploadPreTransformErrorWebhookEventTest {
                     )
                     .build()
             )
-        assertThat(uploadPreTransformErrorWebhookEvent.request())
+        assertThat(uploadPreTransformErrorEvent.request())
             .isEqualTo(
-                UploadPreTransformErrorWebhookEvent.Request.builder()
+                UploadPreTransformErrorEvent.Request.builder()
                     .transformation("transformation")
                     .xRequestId("x_request_id")
                     .build()
@@ -72,19 +70,18 @@ internal class UploadPreTransformErrorWebhookEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val uploadPreTransformErrorWebhookEvent =
-            UploadPreTransformErrorWebhookEvent.builder()
+        val uploadPreTransformErrorEvent =
+            UploadPreTransformErrorEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    UploadPreTransformErrorWebhookEvent.Data.builder()
+                    UploadPreTransformErrorEvent.Data.builder()
                         .name("name")
                         .path("path")
                         .transformation(
-                            UploadPreTransformErrorWebhookEvent.Data.Transformation.builder()
+                            UploadPreTransformErrorEvent.Data.Transformation.builder()
                                 .error(
-                                    UploadPreTransformErrorWebhookEvent.Data.Transformation.Error
-                                        .builder()
+                                    UploadPreTransformErrorEvent.Data.Transformation.Error.builder()
                                         .reason("encoding_failed")
                                         .build()
                                 )
@@ -93,20 +90,19 @@ internal class UploadPreTransformErrorWebhookEventTest {
                         .build()
                 )
                 .request(
-                    UploadPreTransformErrorWebhookEvent.Request.builder()
+                    UploadPreTransformErrorEvent.Request.builder()
                         .transformation("transformation")
                         .xRequestId("x_request_id")
                         .build()
                 )
                 .build()
 
-        val roundtrippedUploadPreTransformErrorWebhookEvent =
+        val roundtrippedUploadPreTransformErrorEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(uploadPreTransformErrorWebhookEvent),
-                jacksonTypeRef<UploadPreTransformErrorWebhookEvent>(),
+                jsonMapper.writeValueAsString(uploadPreTransformErrorEvent),
+                jacksonTypeRef<UploadPreTransformErrorEvent>(),
             )
 
-        assertThat(roundtrippedUploadPreTransformErrorWebhookEvent)
-            .isEqualTo(uploadPreTransformErrorWebhookEvent)
+        assertThat(roundtrippedUploadPreTransformErrorEvent).isEqualTo(uploadPreTransformErrorEvent)
     }
 }

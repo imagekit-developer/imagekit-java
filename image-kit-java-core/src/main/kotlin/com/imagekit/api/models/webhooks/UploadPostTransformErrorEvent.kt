@@ -23,7 +23,7 @@ import kotlin.jvm.optionals.getOrNull
  * Triggered when a post-transformation fails. The original file remains available, but the
  * requested transformation could not be generated.
  */
-class UploadPostTransformErrorWebhookEvent
+class UploadPostTransformErrorEvent
 private constructor(
     private val id: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -129,7 +129,7 @@ private constructor(
 
         /**
          * Returns a mutable builder for constructing an instance of
-         * [UploadPostTransformErrorWebhookEvent].
+         * [UploadPostTransformErrorEvent].
          *
          * The following fields are required:
          * ```java
@@ -142,7 +142,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [UploadPostTransformErrorWebhookEvent]. */
+    /** A builder for [UploadPostTransformErrorEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -153,16 +153,13 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(
-            uploadPostTransformErrorWebhookEvent: UploadPostTransformErrorWebhookEvent
-        ) = apply {
-            id = uploadPostTransformErrorWebhookEvent.id
-            createdAt = uploadPostTransformErrorWebhookEvent.createdAt
-            data = uploadPostTransformErrorWebhookEvent.data
-            request = uploadPostTransformErrorWebhookEvent.request
-            type = uploadPostTransformErrorWebhookEvent.type
-            additionalProperties =
-                uploadPostTransformErrorWebhookEvent.additionalProperties.toMutableMap()
+        internal fun from(uploadPostTransformErrorEvent: UploadPostTransformErrorEvent) = apply {
+            id = uploadPostTransformErrorEvent.id
+            createdAt = uploadPostTransformErrorEvent.createdAt
+            data = uploadPostTransformErrorEvent.data
+            request = uploadPostTransformErrorEvent.request
+            type = uploadPostTransformErrorEvent.type
+            additionalProperties = uploadPostTransformErrorEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -242,7 +239,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [UploadPostTransformErrorWebhookEvent].
+         * Returns an immutable instance of [UploadPostTransformErrorEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -256,8 +253,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): UploadPostTransformErrorWebhookEvent =
-            UploadPostTransformErrorWebhookEvent(
+        fun build(): UploadPostTransformErrorEvent =
+            UploadPostTransformErrorEvent(
                 checkRequired("id", id),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
@@ -269,7 +266,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UploadPostTransformErrorWebhookEvent = apply {
+    fun validate(): UploadPostTransformErrorEvent = apply {
         if (validated) {
             return@apply
         }
@@ -1674,7 +1671,7 @@ private constructor(
             return true
         }
 
-        return other is UploadPostTransformErrorWebhookEvent &&
+        return other is UploadPostTransformErrorEvent &&
             id == other.id &&
             createdAt == other.createdAt &&
             data == other.data &&
@@ -1690,5 +1687,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UploadPostTransformErrorWebhookEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "UploadPostTransformErrorEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
 }

@@ -30,10 +30,10 @@ private constructor(
     private val videoTransformationAccepted: VideoTransformationAcceptedEvent? = null,
     private val videoTransformationReady: VideoTransformationReadyEvent? = null,
     private val videoTransformationError: VideoTransformationErrorEvent? = null,
-    private val uploadPreTransformSuccess: UploadPreTransformSuccessWebhookEvent? = null,
-    private val uploadPreTransformError: UploadPreTransformErrorWebhookEvent? = null,
-    private val uploadPostTransformSuccess: UploadPostTransformSuccessWebhookEvent? = null,
-    private val uploadPostTransformError: UploadPostTransformErrorWebhookEvent? = null,
+    private val uploadPreTransformSuccess: UploadPreTransformSuccessEvent? = null,
+    private val uploadPreTransformError: UploadPreTransformErrorEvent? = null,
+    private val uploadPostTransformSuccess: UploadPostTransformSuccessEvent? = null,
+    private val uploadPostTransformError: UploadPostTransformErrorEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -65,14 +65,14 @@ private constructor(
      * Triggered when a pre-transformation completes successfully. The file has been processed with
      * the requested transformation and is now available in the Media Library.
      */
-    fun uploadPreTransformSuccess(): Optional<UploadPreTransformSuccessWebhookEvent> =
+    fun uploadPreTransformSuccess(): Optional<UploadPreTransformSuccessEvent> =
         Optional.ofNullable(uploadPreTransformSuccess)
 
     /**
      * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
      * requested transformation could not be applied.
      */
-    fun uploadPreTransformError(): Optional<UploadPreTransformErrorWebhookEvent> =
+    fun uploadPreTransformError(): Optional<UploadPreTransformErrorEvent> =
         Optional.ofNullable(uploadPreTransformError)
 
     /**
@@ -80,14 +80,14 @@ private constructor(
      * file is now ready and can be accessed via the provided URL. Note that each
      * post-transformation generates a separate webhook event.
      */
-    fun uploadPostTransformSuccess(): Optional<UploadPostTransformSuccessWebhookEvent> =
+    fun uploadPostTransformSuccess(): Optional<UploadPostTransformSuccessEvent> =
         Optional.ofNullable(uploadPostTransformSuccess)
 
     /**
      * Triggered when a post-transformation fails. The original file remains available, but the
      * requested transformation could not be generated.
      */
-    fun uploadPostTransformError(): Optional<UploadPostTransformErrorWebhookEvent> =
+    fun uploadPostTransformError(): Optional<UploadPostTransformErrorEvent> =
         Optional.ofNullable(uploadPostTransformError)
 
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
@@ -132,14 +132,14 @@ private constructor(
      * Triggered when a pre-transformation completes successfully. The file has been processed with
      * the requested transformation and is now available in the Media Library.
      */
-    fun asUploadPreTransformSuccess(): UploadPreTransformSuccessWebhookEvent =
+    fun asUploadPreTransformSuccess(): UploadPreTransformSuccessEvent =
         uploadPreTransformSuccess.getOrThrow("uploadPreTransformSuccess")
 
     /**
      * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
      * requested transformation could not be applied.
      */
-    fun asUploadPreTransformError(): UploadPreTransformErrorWebhookEvent =
+    fun asUploadPreTransformError(): UploadPreTransformErrorEvent =
         uploadPreTransformError.getOrThrow("uploadPreTransformError")
 
     /**
@@ -147,14 +147,14 @@ private constructor(
      * file is now ready and can be accessed via the provided URL. Note that each
      * post-transformation generates a separate webhook event.
      */
-    fun asUploadPostTransformSuccess(): UploadPostTransformSuccessWebhookEvent =
+    fun asUploadPostTransformSuccess(): UploadPostTransformSuccessEvent =
         uploadPostTransformSuccess.getOrThrow("uploadPostTransformSuccess")
 
     /**
      * Triggered when a post-transformation fails. The original file remains available, but the
      * requested transformation could not be generated.
      */
-    fun asUploadPostTransformError(): UploadPostTransformErrorWebhookEvent =
+    fun asUploadPostTransformError(): UploadPostTransformErrorEvent =
         uploadPostTransformError.getOrThrow("uploadPostTransformError")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -206,25 +206,25 @@ private constructor(
                 }
 
                 override fun visitUploadPreTransformSuccess(
-                    uploadPreTransformSuccess: UploadPreTransformSuccessWebhookEvent
+                    uploadPreTransformSuccess: UploadPreTransformSuccessEvent
                 ) {
                     uploadPreTransformSuccess.validate()
                 }
 
                 override fun visitUploadPreTransformError(
-                    uploadPreTransformError: UploadPreTransformErrorWebhookEvent
+                    uploadPreTransformError: UploadPreTransformErrorEvent
                 ) {
                     uploadPreTransformError.validate()
                 }
 
                 override fun visitUploadPostTransformSuccess(
-                    uploadPostTransformSuccess: UploadPostTransformSuccessWebhookEvent
+                    uploadPostTransformSuccess: UploadPostTransformSuccessEvent
                 ) {
                     uploadPostTransformSuccess.validate()
                 }
 
                 override fun visitUploadPostTransformError(
-                    uploadPostTransformError: UploadPostTransformErrorWebhookEvent
+                    uploadPostTransformError: UploadPostTransformErrorEvent
                 ) {
                     uploadPostTransformError.validate()
                 }
@@ -263,19 +263,19 @@ private constructor(
                 ) = videoTransformationError.validity()
 
                 override fun visitUploadPreTransformSuccess(
-                    uploadPreTransformSuccess: UploadPreTransformSuccessWebhookEvent
+                    uploadPreTransformSuccess: UploadPreTransformSuccessEvent
                 ) = uploadPreTransformSuccess.validity()
 
                 override fun visitUploadPreTransformError(
-                    uploadPreTransformError: UploadPreTransformErrorWebhookEvent
+                    uploadPreTransformError: UploadPreTransformErrorEvent
                 ) = uploadPreTransformError.validity()
 
                 override fun visitUploadPostTransformSuccess(
-                    uploadPostTransformSuccess: UploadPostTransformSuccessWebhookEvent
+                    uploadPostTransformSuccess: UploadPostTransformSuccessEvent
                 ) = uploadPostTransformSuccess.validity()
 
                 override fun visitUploadPostTransformError(
-                    uploadPostTransformError: UploadPostTransformErrorWebhookEvent
+                    uploadPostTransformError: UploadPostTransformErrorEvent
                 ) = uploadPostTransformError.validity()
 
                 override fun unknown(json: JsonValue?) = 0
@@ -363,18 +363,16 @@ private constructor(
          * with the requested transformation and is now available in the Media Library.
          */
         @JvmStatic
-        fun ofUploadPreTransformSuccess(
-            uploadPreTransformSuccess: UploadPreTransformSuccessWebhookEvent
-        ) = UnwrapWebhookEvent(uploadPreTransformSuccess = uploadPreTransformSuccess)
+        fun ofUploadPreTransformSuccess(uploadPreTransformSuccess: UploadPreTransformSuccessEvent) =
+            UnwrapWebhookEvent(uploadPreTransformSuccess = uploadPreTransformSuccess)
 
         /**
          * Triggered when a pre-transformation fails. The file upload may have been accepted, but
          * the requested transformation could not be applied.
          */
         @JvmStatic
-        fun ofUploadPreTransformError(
-            uploadPreTransformError: UploadPreTransformErrorWebhookEvent
-        ) = UnwrapWebhookEvent(uploadPreTransformError = uploadPreTransformError)
+        fun ofUploadPreTransformError(uploadPreTransformError: UploadPreTransformErrorEvent) =
+            UnwrapWebhookEvent(uploadPreTransformError = uploadPreTransformError)
 
         /**
          * Triggered when a post-transformation completes successfully. The transformed version of
@@ -383,7 +381,7 @@ private constructor(
          */
         @JvmStatic
         fun ofUploadPostTransformSuccess(
-            uploadPostTransformSuccess: UploadPostTransformSuccessWebhookEvent
+            uploadPostTransformSuccess: UploadPostTransformSuccessEvent
         ) = UnwrapWebhookEvent(uploadPostTransformSuccess = uploadPostTransformSuccess)
 
         /**
@@ -391,9 +389,8 @@ private constructor(
          * requested transformation could not be generated.
          */
         @JvmStatic
-        fun ofUploadPostTransformError(
-            uploadPostTransformError: UploadPostTransformErrorWebhookEvent
-        ) = UnwrapWebhookEvent(uploadPostTransformError = uploadPostTransformError)
+        fun ofUploadPostTransformError(uploadPostTransformError: UploadPostTransformErrorEvent) =
+            UnwrapWebhookEvent(uploadPostTransformError = uploadPostTransformError)
     }
 
     /**
@@ -434,16 +431,14 @@ private constructor(
          * with the requested transformation and is now available in the Media Library.
          */
         fun visitUploadPreTransformSuccess(
-            uploadPreTransformSuccess: UploadPreTransformSuccessWebhookEvent
+            uploadPreTransformSuccess: UploadPreTransformSuccessEvent
         ): T
 
         /**
          * Triggered when a pre-transformation fails. The file upload may have been accepted, but
          * the requested transformation could not be applied.
          */
-        fun visitUploadPreTransformError(
-            uploadPreTransformError: UploadPreTransformErrorWebhookEvent
-        ): T
+        fun visitUploadPreTransformError(uploadPreTransformError: UploadPreTransformErrorEvent): T
 
         /**
          * Triggered when a post-transformation completes successfully. The transformed version of
@@ -451,7 +446,7 @@ private constructor(
          * post-transformation generates a separate webhook event.
          */
         fun visitUploadPostTransformSuccess(
-            uploadPostTransformSuccess: UploadPostTransformSuccessWebhookEvent
+            uploadPostTransformSuccess: UploadPostTransformSuccessEvent
         ): T
 
         /**
@@ -459,7 +454,7 @@ private constructor(
          * requested transformation could not be generated.
          */
         fun visitUploadPostTransformError(
-            uploadPostTransformError: UploadPostTransformErrorWebhookEvent
+            uploadPostTransformError: UploadPostTransformErrorEvent
         ): T
 
         /**
@@ -494,28 +489,20 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<VideoTransformationErrorEvent>())?.let {
                             UnwrapWebhookEvent(videoTransformationError = it, _json = json)
                         },
-                        tryDeserialize(
-                                node,
-                                jacksonTypeRef<UploadPreTransformSuccessWebhookEvent>(),
-                            )
+                        tryDeserialize(node, jacksonTypeRef<UploadPreTransformSuccessEvent>())
                             ?.let {
                                 UnwrapWebhookEvent(uploadPreTransformSuccess = it, _json = json)
                             },
-                        tryDeserialize(node, jacksonTypeRef<UploadPreTransformErrorWebhookEvent>())
-                            ?.let {
-                                UnwrapWebhookEvent(uploadPreTransformError = it, _json = json)
-                            },
-                        tryDeserialize(
-                                node,
-                                jacksonTypeRef<UploadPostTransformSuccessWebhookEvent>(),
-                            )
+                        tryDeserialize(node, jacksonTypeRef<UploadPreTransformErrorEvent>())?.let {
+                            UnwrapWebhookEvent(uploadPreTransformError = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<UploadPostTransformSuccessEvent>())
                             ?.let {
                                 UnwrapWebhookEvent(uploadPostTransformSuccess = it, _json = json)
                             },
-                        tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorWebhookEvent>())
-                            ?.let {
-                                UnwrapWebhookEvent(uploadPostTransformError = it, _json = json)
-                            },
+                        tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorEvent>())?.let {
+                            UnwrapWebhookEvent(uploadPostTransformError = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
