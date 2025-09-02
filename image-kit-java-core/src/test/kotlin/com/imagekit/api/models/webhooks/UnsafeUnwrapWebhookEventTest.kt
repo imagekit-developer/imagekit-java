@@ -21,6 +21,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val videoTransformationAccepted =
             VideoTransformationAcceptedEvent.builder()
                 .id("id")
+                .type("video.transformation.accepted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationAcceptedEvent.Data.builder()
@@ -100,6 +101,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofVideoTransformationAccepted(
                 VideoTransformationAcceptedEvent.builder()
                     .id("id")
+                    .type("video.transformation.accepted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationAcceptedEvent.Data.builder()
@@ -174,6 +176,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val videoTransformationReady =
             VideoTransformationReadyEvent.builder()
                 .id("id")
+                .type("video.transformation.ready")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationReadyEvent.Data.builder()
@@ -275,6 +278,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofVideoTransformationReady(
                 VideoTransformationReadyEvent.builder()
                     .id("id")
+                    .type("video.transformation.ready")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationReadyEvent.Data.builder()
@@ -372,6 +376,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val videoTransformationError =
             VideoTransformationErrorEvent.builder()
                 .id("id")
+                .type("video.transformation.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationErrorEvent.Data.builder()
@@ -461,6 +466,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofVideoTransformationError(
                 VideoTransformationErrorEvent.builder()
                     .id("id")
+                    .type("video.transformation.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationErrorEvent.Data.builder()
@@ -546,6 +552,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val uploadPreTransformSuccess =
             UploadPreTransformSuccessEvent.builder()
                 .id("id")
+                .type("upload.pre-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
@@ -733,6 +740,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofUploadPreTransformSuccess(
                 UploadPreTransformSuccessEvent.builder()
                     .id("id")
+                    .type("upload.pre-transform.success")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPreTransformSuccessEvent.Data.builder()
@@ -920,6 +928,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val uploadPreTransformError =
             UploadPreTransformErrorEvent.builder()
                 .id("id")
+                .type("upload.pre-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformErrorEvent.Data.builder()
@@ -964,6 +973,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofUploadPreTransformError(
                 UploadPreTransformErrorEvent.builder()
                     .id("id")
+                    .type("upload.pre-transform.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPreTransformErrorEvent.Data.builder()
@@ -1004,6 +1014,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val uploadPostTransformSuccess =
             UploadPostTransformSuccessEvent.builder()
                 .id("id")
+                .type("upload.post-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPostTransformSuccessEvent.Data.builder()
@@ -1052,6 +1063,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofUploadPostTransformSuccess(
                 UploadPostTransformSuccessEvent.builder()
                     .id("id")
+                    .type("upload.post-transform.success")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPostTransformSuccessEvent.Data.builder()
@@ -1096,6 +1108,7 @@ internal class UnsafeUnwrapWebhookEventTest {
         val uploadPostTransformError =
             UploadPostTransformErrorEvent.builder()
                 .id("id")
+                .type("upload.post-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPostTransformErrorEvent.Data.builder()
@@ -1155,6 +1168,7 @@ internal class UnsafeUnwrapWebhookEventTest {
             UnsafeUnwrapWebhookEvent.ofUploadPostTransformError(
                 UploadPostTransformErrorEvent.builder()
                     .id("id")
+                    .type("upload.post-transform.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPostTransformErrorEvent.Data.builder()

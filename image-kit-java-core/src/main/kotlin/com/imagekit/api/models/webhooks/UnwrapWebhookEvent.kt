@@ -18,6 +18,11 @@ import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Objects
 import java.util.Optional
 
+/**
+ * Triggered when a new video transformation request is accepted for processing. This event confirms
+ * that ImageKit has received and queued your transformation request. Use this for debugging and
+ * tracking transformation lifecycle.
+ */
 @JsonDeserialize(using = UnwrapWebhookEvent.Deserializer::class)
 @JsonSerialize(using = UnwrapWebhookEvent.Serializer::class)
 class UnwrapWebhookEvent
@@ -32,24 +37,56 @@ private constructor(
     private val _json: JsonValue? = null,
 ) {
 
+    /**
+     * Triggered when a new video transformation request is accepted for processing. This event
+     * confirms that ImageKit has received and queued your transformation request. Use this for
+     * debugging and tracking transformation lifecycle.
+     */
     fun videoTransformationAccepted(): Optional<VideoTransformationAcceptedEvent> =
         Optional.ofNullable(videoTransformationAccepted)
 
+    /**
+     * Triggered when video encoding is finished and the transformed resource is ready to be served.
+     * This is the key event to listen for - update your database or CMS flags when you receive this
+     * so your application can start showing the transformed video to users.
+     */
     fun videoTransformationReady(): Optional<VideoTransformationReadyEvent> =
         Optional.ofNullable(videoTransformationReady)
 
+    /**
+     * Triggered when an error occurs during video encoding. Listen to this webhook to log error
+     * reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+     * related to download failure. For other errors, contact ImageKit support.
+     */
     fun videoTransformationError(): Optional<VideoTransformationErrorEvent> =
         Optional.ofNullable(videoTransformationError)
 
+    /**
+     * Triggered when a pre-transformation completes successfully. The file has been processed with
+     * the requested transformation and is now available in the Media Library.
+     */
     fun uploadPreTransformSuccess(): Optional<UploadPreTransformSuccessEvent> =
         Optional.ofNullable(uploadPreTransformSuccess)
 
+    /**
+     * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
+     * requested transformation could not be applied.
+     */
     fun uploadPreTransformError(): Optional<UploadPreTransformErrorEvent> =
         Optional.ofNullable(uploadPreTransformError)
 
+    /**
+     * Triggered when a post-transformation completes successfully. The transformed version of the
+     * file is now ready and can be accessed via the provided URL. Note that each
+     * post-transformation generates a separate webhook event.
+     */
     fun uploadPostTransformSuccess(): Optional<UploadPostTransformSuccessEvent> =
         Optional.ofNullable(uploadPostTransformSuccess)
 
+    /**
+     * Triggered when a post-transformation fails. The original file remains available, but the
+     * requested transformation could not be generated.
+     */
     fun uploadPostTransformError(): Optional<UploadPostTransformErrorEvent> =
         Optional.ofNullable(uploadPostTransformError)
 
@@ -67,24 +104,56 @@ private constructor(
 
     fun isUploadPostTransformError(): Boolean = uploadPostTransformError != null
 
+    /**
+     * Triggered when a new video transformation request is accepted for processing. This event
+     * confirms that ImageKit has received and queued your transformation request. Use this for
+     * debugging and tracking transformation lifecycle.
+     */
     fun asVideoTransformationAccepted(): VideoTransformationAcceptedEvent =
         videoTransformationAccepted.getOrThrow("videoTransformationAccepted")
 
+    /**
+     * Triggered when video encoding is finished and the transformed resource is ready to be served.
+     * This is the key event to listen for - update your database or CMS flags when you receive this
+     * so your application can start showing the transformed video to users.
+     */
     fun asVideoTransformationReady(): VideoTransformationReadyEvent =
         videoTransformationReady.getOrThrow("videoTransformationReady")
 
+    /**
+     * Triggered when an error occurs during video encoding. Listen to this webhook to log error
+     * reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+     * related to download failure. For other errors, contact ImageKit support.
+     */
     fun asVideoTransformationError(): VideoTransformationErrorEvent =
         videoTransformationError.getOrThrow("videoTransformationError")
 
+    /**
+     * Triggered when a pre-transformation completes successfully. The file has been processed with
+     * the requested transformation and is now available in the Media Library.
+     */
     fun asUploadPreTransformSuccess(): UploadPreTransformSuccessEvent =
         uploadPreTransformSuccess.getOrThrow("uploadPreTransformSuccess")
 
+    /**
+     * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
+     * requested transformation could not be applied.
+     */
     fun asUploadPreTransformError(): UploadPreTransformErrorEvent =
         uploadPreTransformError.getOrThrow("uploadPreTransformError")
 
+    /**
+     * Triggered when a post-transformation completes successfully. The transformed version of the
+     * file is now ready and can be accessed via the provided URL. Note that each
+     * post-transformation generates a separate webhook event.
+     */
     fun asUploadPostTransformSuccess(): UploadPostTransformSuccessEvent =
         uploadPostTransformSuccess.getOrThrow("uploadPostTransformSuccess")
 
+    /**
+     * Triggered when a post-transformation fails. The original file remains available, but the
+     * requested transformation could not be generated.
+     */
     fun asUploadPostTransformError(): UploadPostTransformErrorEvent =
         uploadPostTransformError.getOrThrow("uploadPostTransformError")
 
@@ -261,32 +330,64 @@ private constructor(
 
     companion object {
 
+        /**
+         * Triggered when a new video transformation request is accepted for processing. This event
+         * confirms that ImageKit has received and queued your transformation request. Use this for
+         * debugging and tracking transformation lifecycle.
+         */
         @JvmStatic
         fun ofVideoTransformationAccepted(
             videoTransformationAccepted: VideoTransformationAcceptedEvent
         ) = UnwrapWebhookEvent(videoTransformationAccepted = videoTransformationAccepted)
 
+        /**
+         * Triggered when video encoding is finished and the transformed resource is ready to be
+         * served. This is the key event to listen for - update your database or CMS flags when you
+         * receive this so your application can start showing the transformed video to users.
+         */
         @JvmStatic
         fun ofVideoTransformationReady(videoTransformationReady: VideoTransformationReadyEvent) =
             UnwrapWebhookEvent(videoTransformationReady = videoTransformationReady)
 
+        /**
+         * Triggered when an error occurs during video encoding. Listen to this webhook to log error
+         * reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+         * related to download failure. For other errors, contact ImageKit support.
+         */
         @JvmStatic
         fun ofVideoTransformationError(videoTransformationError: VideoTransformationErrorEvent) =
             UnwrapWebhookEvent(videoTransformationError = videoTransformationError)
 
+        /**
+         * Triggered when a pre-transformation completes successfully. The file has been processed
+         * with the requested transformation and is now available in the Media Library.
+         */
         @JvmStatic
         fun ofUploadPreTransformSuccess(uploadPreTransformSuccess: UploadPreTransformSuccessEvent) =
             UnwrapWebhookEvent(uploadPreTransformSuccess = uploadPreTransformSuccess)
 
+        /**
+         * Triggered when a pre-transformation fails. The file upload may have been accepted, but
+         * the requested transformation could not be applied.
+         */
         @JvmStatic
         fun ofUploadPreTransformError(uploadPreTransformError: UploadPreTransformErrorEvent) =
             UnwrapWebhookEvent(uploadPreTransformError = uploadPreTransformError)
 
+        /**
+         * Triggered when a post-transformation completes successfully. The transformed version of
+         * the file is now ready and can be accessed via the provided URL. Note that each
+         * post-transformation generates a separate webhook event.
+         */
         @JvmStatic
         fun ofUploadPostTransformSuccess(
             uploadPostTransformSuccess: UploadPostTransformSuccessEvent
         ) = UnwrapWebhookEvent(uploadPostTransformSuccess = uploadPostTransformSuccess)
 
+        /**
+         * Triggered when a post-transformation fails. The original file remains available, but the
+         * requested transformation could not be generated.
+         */
         @JvmStatic
         fun ofUploadPostTransformError(uploadPostTransformError: UploadPostTransformErrorEvent) =
             UnwrapWebhookEvent(uploadPostTransformError = uploadPostTransformError)
@@ -298,28 +399,60 @@ private constructor(
      */
     interface Visitor<out T> {
 
+        /**
+         * Triggered when a new video transformation request is accepted for processing. This event
+         * confirms that ImageKit has received and queued your transformation request. Use this for
+         * debugging and tracking transformation lifecycle.
+         */
         fun visitVideoTransformationAccepted(
             videoTransformationAccepted: VideoTransformationAcceptedEvent
         ): T
 
+        /**
+         * Triggered when video encoding is finished and the transformed resource is ready to be
+         * served. This is the key event to listen for - update your database or CMS flags when you
+         * receive this so your application can start showing the transformed video to users.
+         */
         fun visitVideoTransformationReady(
             videoTransformationReady: VideoTransformationReadyEvent
         ): T
 
+        /**
+         * Triggered when an error occurs during video encoding. Listen to this webhook to log error
+         * reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+         * related to download failure. For other errors, contact ImageKit support.
+         */
         fun visitVideoTransformationError(
             videoTransformationError: VideoTransformationErrorEvent
         ): T
 
+        /**
+         * Triggered when a pre-transformation completes successfully. The file has been processed
+         * with the requested transformation and is now available in the Media Library.
+         */
         fun visitUploadPreTransformSuccess(
             uploadPreTransformSuccess: UploadPreTransformSuccessEvent
         ): T
 
+        /**
+         * Triggered when a pre-transformation fails. The file upload may have been accepted, but
+         * the requested transformation could not be applied.
+         */
         fun visitUploadPreTransformError(uploadPreTransformError: UploadPreTransformErrorEvent): T
 
+        /**
+         * Triggered when a post-transformation completes successfully. The transformed version of
+         * the file is now ready and can be accessed via the provided URL. Note that each
+         * post-transformation generates a separate webhook event.
+         */
         fun visitUploadPostTransformSuccess(
             uploadPostTransformSuccess: UploadPostTransformSuccessEvent
         ): T
 
+        /**
+         * Triggered when a post-transformation fails. The original file remains available, but the
+         * requested transformation could not be generated.
+         */
         fun visitUploadPostTransformError(
             uploadPostTransformError: UploadPostTransformErrorEvent
         ): T

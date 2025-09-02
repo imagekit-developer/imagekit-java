@@ -17,26 +17,33 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
+/**
+ * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
+ * requested transformation could not be applied.
+ */
 class UploadPreTransformErrorEvent
 private constructor(
     private val id: JsonField<String>,
+    private val type: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val data: JsonField<Data>,
     private val request: JsonField<Request>,
-    private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
         @JsonProperty("request") @ExcludeMissing request: JsonField<Request> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-    ) : this(id, createdAt, data, request, type, mutableMapOf())
+    ) : this(id, type, createdAt, data, request, mutableMapOf())
+
+    fun toBaseWebhookEvent(): BaseWebhookEvent =
+        BaseWebhookEvent.builder().id(id).type(type).build()
 
     /**
      * Unique identifier for the event.
@@ -45,6 +52,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
+
+    /**
+     * The type of webhook event.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun type(): String = type.getRequired("type")
 
     /**
      * Timestamp of when the event occurred in ISO8601 format.
@@ -67,22 +82,18 @@ private constructor(
     fun request(): Request = request.getRequired("request")
 
     /**
-     * Expected to always return the following:
-     * ```java
-     * JsonValue.from("upload.pre-transform.error")
-     * ```
-     *
-     * However, this method can be useful for debugging and logging (e.g. if the server responded
-     * with an unexpected value).
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
-
-    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+    /**
+     * Returns the raw JSON value of [type].
+     *
+     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -127,6 +138,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .type()
          * .createdAt()
          * .data()
          * .request()
@@ -139,19 +151,19 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
+        private var type: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var data: JsonField<Data>? = null
         private var request: JsonField<Request>? = null
-        private var type: JsonValue = JsonValue.from("upload.pre-transform.error")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(uploadPreTransformErrorEvent: UploadPreTransformErrorEvent) = apply {
             id = uploadPreTransformErrorEvent.id
+            type = uploadPreTransformErrorEvent.type
             createdAt = uploadPreTransformErrorEvent.createdAt
             data = uploadPreTransformErrorEvent.data
             request = uploadPreTransformErrorEvent.request
-            type = uploadPreTransformErrorEvent.type
             additionalProperties = uploadPreTransformErrorEvent.additionalProperties.toMutableMap()
         }
 
@@ -165,6 +177,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
+
+        /** The type of webhook event. */
+        fun type(type: String) = type(JsonField.of(type))
+
+        /**
+         * Sets [Builder.type] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.type] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun type(type: JsonField<String>) = apply { this.type = type }
 
         /** Timestamp of when the event occurred in ISO8601 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -198,20 +221,6 @@ private constructor(
          */
         fun request(request: JsonField<Request>) = apply { this.request = request }
 
-        /**
-         * Sets the field to an arbitrary JSON value.
-         *
-         * It is usually unnecessary to call this method because the field defaults to the
-         * following:
-         * ```java
-         * JsonValue.from("upload.pre-transform.error")
-         * ```
-         *
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
-         */
-        fun type(type: JsonValue) = apply { this.type = type }
-
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -239,6 +248,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
+         * .type()
          * .createdAt()
          * .data()
          * .request()
@@ -249,10 +259,10 @@ private constructor(
         fun build(): UploadPreTransformErrorEvent =
             UploadPreTransformErrorEvent(
                 checkRequired("id", id),
+                checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
                 checkRequired("request", request),
-                type,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -265,14 +275,10 @@ private constructor(
         }
 
         id()
+        type()
         createdAt()
         data().validate()
         request().validate()
-        _type().let {
-            if (it != JsonValue.from("upload.pre-transform.error")) {
-                throw ImageKitInvalidDataException("'type' is invalid, received $it")
-            }
-        }
         validated = true
     }
 
@@ -292,10 +298,10 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
+            (if (type.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (data.asKnown().getOrNull()?.validity() ?: 0) +
-            (request.asKnown().getOrNull()?.validity() ?: 0) +
-            type.let { if (it == JsonValue.from("upload.pre-transform.error")) 1 else 0 }
+            (request.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
     private constructor(
@@ -1079,19 +1085,19 @@ private constructor(
 
         return other is UploadPreTransformErrorEvent &&
             id == other.id &&
+            type == other.type &&
             createdAt == other.createdAt &&
             data == other.data &&
             request == other.request &&
-            type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, createdAt, data, request, type, additionalProperties)
+        Objects.hash(id, type, createdAt, data, request, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "UploadPreTransformErrorEvent{id=$id, createdAt=$createdAt, data=$data, request=$request, type=$type, additionalProperties=$additionalProperties}"
+        "UploadPreTransformErrorEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, request=$request, additionalProperties=$additionalProperties}"
 }
