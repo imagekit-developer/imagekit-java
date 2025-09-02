@@ -17,6 +17,7 @@ internal class UploadPreTransformSuccessEventTest {
         val uploadPreTransformSuccessEvent =
             UploadPreTransformSuccessEvent.builder()
                 .id("id")
+                .type("upload.pre-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
@@ -185,6 +186,7 @@ internal class UploadPreTransformSuccessEventTest {
                 .build()
 
         assertThat(uploadPreTransformSuccessEvent.id()).isEqualTo("id")
+        assertThat(uploadPreTransformSuccessEvent.type()).isEqualTo("upload.pre-transform.success")
         assertThat(uploadPreTransformSuccessEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(uploadPreTransformSuccessEvent.data())
@@ -357,6 +359,7 @@ internal class UploadPreTransformSuccessEventTest {
         val uploadPreTransformSuccessEvent =
             UploadPreTransformSuccessEvent.builder()
                 .id("id")
+                .type("upload.pre-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
