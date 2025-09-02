@@ -50,13 +50,14 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
 // Or configures using the `IMAGEKIT_PRIVATE_API_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file("https://www.example.com/public-url.jpg")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 FileUploadResponse response = client.files().upload(params);
@@ -154,6 +155,7 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
@@ -161,7 +163,7 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file("https://www.example.com/public-url.jpg")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
@@ -174,6 +176,7 @@ import com.imagekit.api.client.ImageKitClientAsync;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
 // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
@@ -181,7 +184,7 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file("https://www.example.com/public-url.jpg")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.files().upload(params);
@@ -196,50 +199,50 @@ The SDK defines methods that accept files.
 To upload a file, pass a [`Path`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html):
 
 ```java
-import com.imagekit.api.models.beta.v2.files.FileUploadParams;
-import com.imagekit.api.models.beta.v2.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.nio.file.Paths;
 
 FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
     .file(Paths.get("/path/to/file"))
     .build();
-FileUploadResponse response = client.beta().v2().files().upload(params);
+FileUploadResponse response = client.files().upload(params);
 ```
 
 Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html):
 
 ```java
-import com.imagekit.api.models.beta.v2.files.FileUploadParams;
-import com.imagekit.api.models.beta.v2.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.net.URL;
 
 FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
     .file(new URL("https://example.com//path/to/file").openStream())
     .build();
-FileUploadResponse response = client.beta().v2().files().upload(params);
+FileUploadResponse response = client.files().upload(params);
 ```
 
 Or a `byte[]` array:
 
 ```java
-import com.imagekit.api.models.beta.v2.files.FileUploadParams;
-import com.imagekit.api.models.beta.v2.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
     .file("content".getBytes())
     .build();
-FileUploadResponse response = client.beta().v2().files().upload(params);
+FileUploadResponse response = client.files().upload(params);
 ```
 
 Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt):
 
 ```java
 import com.imagekit.api.core.MultipartField;
-import com.imagekit.api.models.beta.v2.files.FileUploadParams;
-import com.imagekit.api.models.beta.v2.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -250,7 +253,7 @@ FileUploadParams params = FileUploadParams.builder()
         .filename("/path/to/file")
         .build())
     .build();
-FileUploadResponse response = client.beta().v2().files().upload(params);
+FileUploadResponse response = client.files().upload(params);
 ```
 
 ## Raw responses
@@ -264,9 +267,10 @@ import com.imagekit.api.core.http.Headers;
 import com.imagekit.api.core.http.HttpResponseFor;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file("https://www.example.com/public-url.jpg")
+    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
@@ -610,9 +614,10 @@ To access a property's raw JSON value, which may be undocumented, call its `_` p
 
 ```java
 import com.imagekit.api.core.JsonField;
+import java.io.InputStream;
 import java.util.Optional;
 
-JsonField<String> file = client.files().upload(params)._file();
+JsonField<InputStream> file = client.files().upload(params)._file();
 
 if (file.isMissing()) {
   // The property is absent from the JSON response
