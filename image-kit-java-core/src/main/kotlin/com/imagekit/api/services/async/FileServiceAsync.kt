@@ -220,22 +220,14 @@ interface FileServiceAsync {
      *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
      * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
      */
-    fun upload(): CompletableFuture<FileUploadResponse> = upload(FileUploadParams.none())
+    fun upload(params: FileUploadParams): CompletableFuture<FileUploadResponse> =
+        upload(params, RequestOptions.none())
 
     /** @see upload */
     fun upload(
-        params: FileUploadParams = FileUploadParams.none(),
+        params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<FileUploadResponse>
-
-    /** @see upload */
-    fun upload(
-        params: FileUploadParams = FileUploadParams.none()
-    ): CompletableFuture<FileUploadResponse> = upload(params, RequestOptions.none())
-
-    /** @see upload */
-    fun upload(requestOptions: RequestOptions): CompletableFuture<FileUploadResponse> =
-        upload(FileUploadParams.none(), requestOptions)
 
     /** A view of [FileServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -414,25 +406,15 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `post /api/v1/files/upload`, but is otherwise the same as
          * [FileServiceAsync.upload].
          */
-        fun upload(): CompletableFuture<HttpResponseFor<FileUploadResponse>> =
-            upload(FileUploadParams.none())
-
-        /** @see upload */
         fun upload(
-            params: FileUploadParams = FileUploadParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileUploadResponse>>
-
-        /** @see upload */
-        fun upload(
-            params: FileUploadParams = FileUploadParams.none()
+            params: FileUploadParams
         ): CompletableFuture<HttpResponseFor<FileUploadResponse>> =
             upload(params, RequestOptions.none())
 
         /** @see upload */
         fun upload(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<FileUploadResponse>> =
-            upload(FileUploadParams.none(), requestOptions)
+            params: FileUploadParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<FileUploadResponse>>
     }
 }
