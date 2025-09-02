@@ -21,11 +21,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when an error occurs during video encoding. Listen to this webhook to log error reasons
- * and debug issues. Check your origin and URL endpoint settings if the reason is related to
- * download failure. For other errors, contact ImageKit support.
- */
 class VideoTransformationErrorEvent
 private constructor(
     private val id: JsonField<String>,

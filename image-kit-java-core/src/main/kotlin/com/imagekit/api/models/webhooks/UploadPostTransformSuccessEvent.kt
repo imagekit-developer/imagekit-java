@@ -19,11 +19,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when a post-transformation completes successfully. The transformed version of the file
- * is now ready and can be accessed via the provided URL. Note that each post-transformation
- * generates a separate webhook event.
- */
 class UploadPostTransformSuccessEvent
 private constructor(
     private val id: JsonField<String>,
