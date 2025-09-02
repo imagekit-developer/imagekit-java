@@ -13,7 +13,7 @@ internal class FileUploadParamsTest {
     @Test
     fun create() {
         FileUploadParams.builder()
-            .file("some content".byteInputStream())
+            .file("https://www.example.com/path/to-image.jpg")
             .fileName("fileName")
             .token("token")
             .checks("\"request.folder\" : \"marketing/\"\n")
@@ -95,7 +95,7 @@ internal class FileUploadParamsTest {
     fun body() {
         val params =
             FileUploadParams.builder()
-                .file("some content".byteInputStream())
+                .file("https://www.example.com/path/to-image.jpg")
                 .fileName("fileName")
                 .token("token")
                 .checks("\"request.folder\" : \"marketing/\"\n")
@@ -184,7 +184,7 @@ internal class FileUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "file" to MultipartField.of("some content".byteInputStream()),
+                        "file" to MultipartField.of("https://www.example.com/path/to-image.jpg"),
                         "fileName" to MultipartField.of("fileName"),
                         "token" to MultipartField.of("token"),
                         "checks" to MultipartField.of("\"request.folder\" : \"marketing/\"\n"),
@@ -278,7 +278,7 @@ internal class FileUploadParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             FileUploadParams.builder()
-                .file("some content".byteInputStream())
+                .file("https://www.example.com/path/to-image.jpg")
                 .fileName("fileName")
                 .build()
 
@@ -294,7 +294,7 @@ internal class FileUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "file" to MultipartField.of("some content".byteInputStream()),
+                        "file" to MultipartField.of("https://www.example.com/path/to-image.jpg"),
                         "fileName" to MultipartField.of("fileName"),
                     )
                     .mapValues { (_, field) ->

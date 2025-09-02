@@ -220,7 +220,7 @@ internal class FileServiceTest {
         val response =
             fileService.upload(
                 FileUploadParams.builder()
-                    .file("some content".byteInputStream())
+                    .file("https://www.example.com/path/to-image.jpg")
                     .fileName("fileName")
                     .token("token")
                     .checks("\"request.folder\" : \"marketing/\"\n")
