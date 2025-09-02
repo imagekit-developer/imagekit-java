@@ -17,10 +17,6 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when a pre-transformation fails. The file upload may have been accepted, but the
- * requested transformation could not be applied.
- */
 class UploadPreTransformErrorEvent
 private constructor(
     private val id: JsonField<String>,

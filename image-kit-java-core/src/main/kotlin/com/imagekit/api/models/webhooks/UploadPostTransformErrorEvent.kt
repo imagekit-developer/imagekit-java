@@ -19,10 +19,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when a post-transformation fails. The original file remains available, but the
- * requested transformation could not be generated.
- */
 class UploadPostTransformErrorEvent
 private constructor(
     private val id: JsonField<String>,

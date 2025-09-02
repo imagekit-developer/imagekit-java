@@ -22,10 +22,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when a pre-transformation completes successfully. The file has been processed with the
- * requested transformation and is now available in the Media Library.
- */
 class UploadPreTransformSuccessEvent
 private constructor(
     private val id: JsonField<String>,

@@ -21,11 +21,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/**
- * Triggered when a new video transformation request is accepted for processing. This event confirms
- * that ImageKit has received and queued your transformation request. Use this for debugging and
- * tracking transformation lifecycle.
- */
 class VideoTransformationAcceptedEvent
 private constructor(
     private val id: JsonField<String>,
