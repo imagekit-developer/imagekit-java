@@ -28,9 +28,13 @@ import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import java.io.InputStream
+import java.nio.file.Path
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.io.path.inputStream
+import kotlin.io.path.name
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -74,7 +78,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun file(): String = body.file()
+    fun file(): InputStream = body.file()
 
     /**
      * The name with which the file has to be uploaded. The file name can contain:
@@ -323,7 +327,7 @@ private constructor(
      *
      * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _file(): MultipartField<String> = body._file()
+    fun _file(): MultipartField<InputStream> = body._file()
 
     /**
      * Returns the raw multipart value of [fileName].
@@ -552,15 +556,38 @@ private constructor(
          * When supplying a URL, the server must receive the response headers within 8 seconds;
          * otherwise the request fails with 400 Bad Request.
          */
-        fun file(file: String) = apply { body.file(file) }
+        fun file(file: InputStream) = apply { body.file(file) }
 
         /**
          * Sets [Builder.file] to an arbitrary multipart value.
          *
-         * You should usually call [Builder.file] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.file] with a well-typed [InputStream] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun file(file: MultipartField<String>) = apply { body.file(file) }
+        fun file(file: MultipartField<InputStream>) = apply { body.file(file) }
+
+        /**
+         * The API accepts any of the following:
+         * - **Binary data** – send the raw bytes as `multipart/form-data`.
+         * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
+         * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
+         *
+         * When supplying a URL, the server must receive the response headers within 8 seconds;
+         * otherwise the request fails with 400 Bad Request.
+         */
+        fun file(file: ByteArray) = apply { body.file(file) }
+
+        /**
+         * The API accepts any of the following:
+         * - **Binary data** – send the raw bytes as `multipart/form-data`.
+         * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
+         * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
+         *
+         * When supplying a URL, the server must receive the response headers within 8 seconds;
+         * otherwise the request fails with 400 Bad Request.
+         */
+        fun file(path: Path) = apply { body.file(path) }
 
         /**
          * The name with which the file has to be uploaded. The file name can contain:
@@ -1170,7 +1197,7 @@ private constructor(
 
     class Body
     private constructor(
-        private val file: MultipartField<String>,
+        private val file: MultipartField<InputStream>,
         private val fileName: MultipartField<String>,
         private val token: MultipartField<String>,
         private val checks: MultipartField<String>,
@@ -1208,7 +1235,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun file(): String = file.value.getRequired("file")
+        fun file(): InputStream = file.value.getRequired("file")
 
         /**
          * The name with which the file has to be uploaded. The file name can contain:
@@ -1465,7 +1492,7 @@ private constructor(
          *
          * Unlike [file], this method doesn't throw if the multipart field has an unexpected type.
          */
-        @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<String> = file
+        @JsonProperty("file") @ExcludeMissing fun _file(): MultipartField<InputStream> = file
 
         /**
          * Returns the raw multipart value of [fileName].
@@ -1699,7 +1726,7 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var file: MultipartField<String>? = null
+            private var file: MultipartField<InputStream>? = null
             private var fileName: MultipartField<String>? = null
             private var token: MultipartField<String> = MultipartField.of(null)
             private var checks: MultipartField<String> = MultipartField.of(null)
@@ -1761,16 +1788,44 @@ private constructor(
              * When supplying a URL, the server must receive the response headers within 8 seconds;
              * otherwise the request fails with 400 Bad Request.
              */
-            fun file(file: String) = file(MultipartField.of(file))
+            fun file(file: InputStream) = file(MultipartField.of(file))
 
             /**
              * Sets [Builder.file] to an arbitrary multipart value.
              *
-             * You should usually call [Builder.file] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.file] with a well-typed [InputStream] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun file(file: MultipartField<String>) = apply { this.file = file }
+            fun file(file: MultipartField<InputStream>) = apply { this.file = file }
+
+            /**
+             * The API accepts any of the following:
+             * - **Binary data** – send the raw bytes as `multipart/form-data`.
+             * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
+             * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
+             *
+             * When supplying a URL, the server must receive the response headers within 8 seconds;
+             * otherwise the request fails with 400 Bad Request.
+             */
+            fun file(file: ByteArray) = file(file.inputStream())
+
+            /**
+             * The API accepts any of the following:
+             * - **Binary data** – send the raw bytes as `multipart/form-data`.
+             * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
+             * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
+             *
+             * When supplying a URL, the server must receive the response headers within 8 seconds;
+             * otherwise the request fails with 400 Bad Request.
+             */
+            fun file(path: Path) =
+                file(
+                    MultipartField.builder<InputStream>()
+                        .value(path.inputStream())
+                        .filename(path.name)
+                        .build()
+                )
 
             /**
              * The name with which the file has to be uploaded. The file name can contain:

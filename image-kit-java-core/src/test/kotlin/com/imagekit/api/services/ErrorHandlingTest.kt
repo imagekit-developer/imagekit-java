@@ -73,7 +73,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -173,7 +173,7 @@ internal class ErrorHandlingTest {
             assertThrows<BadRequestException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -273,7 +273,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -373,7 +373,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnauthorizedException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -473,7 +473,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -573,7 +573,7 @@ internal class ErrorHandlingTest {
             assertThrows<PermissionDeniedException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -673,7 +673,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -773,7 +773,7 @@ internal class ErrorHandlingTest {
             assertThrows<NotFoundException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -873,7 +873,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -973,7 +973,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnprocessableEntityException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1073,7 +1073,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1173,7 +1173,7 @@ internal class ErrorHandlingTest {
             assertThrows<RateLimitException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1273,7 +1273,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1373,7 +1373,7 @@ internal class ErrorHandlingTest {
             assertThrows<InternalServerException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1473,7 +1473,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1573,7 +1573,7 @@ internal class ErrorHandlingTest {
             assertThrows<UnexpectedStatusCodeException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")
@@ -1671,7 +1671,7 @@ internal class ErrorHandlingTest {
             assertThrows<ImageKitException> {
                 fileService.upload(
                     FileUploadParams.builder()
-                        .file("file")
+                        .file("some content".byteInputStream())
                         .fileName("fileName")
                         .token("token")
                         .checks("\"request.folder\" : \"marketing/\"\n")

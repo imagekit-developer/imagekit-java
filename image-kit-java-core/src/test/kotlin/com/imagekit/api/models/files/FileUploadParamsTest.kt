@@ -13,7 +13,7 @@ internal class FileUploadParamsTest {
     @Test
     fun create() {
         FileUploadParams.builder()
-            .file("file")
+            .file("some content".byteInputStream())
             .fileName("fileName")
             .token("token")
             .checks("\"request.folder\" : \"marketing/\"\n")
@@ -95,7 +95,7 @@ internal class FileUploadParamsTest {
     fun body() {
         val params =
             FileUploadParams.builder()
-                .file("file")
+                .file("some content".byteInputStream())
                 .fileName("fileName")
                 .token("token")
                 .checks("\"request.folder\" : \"marketing/\"\n")
@@ -184,7 +184,7 @@ internal class FileUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "file" to MultipartField.of("file"),
+                        "file" to MultipartField.of("some content".byteInputStream()),
                         "fileName" to MultipartField.of("fileName"),
                         "token" to MultipartField.of("token"),
                         "checks" to MultipartField.of("\"request.folder\" : \"marketing/\"\n"),
@@ -276,7 +276,11 @@ internal class FileUploadParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = FileUploadParams.builder().file("file").fileName("fileName").build()
+        val params =
+            FileUploadParams.builder()
+                .file("some content".byteInputStream())
+                .fileName("fileName")
+                .build()
 
         val body = params._body()
 
@@ -290,7 +294,7 @@ internal class FileUploadParamsTest {
             )
             .isEqualTo(
                 mapOf(
-                        "file" to MultipartField.of("file"),
+                        "file" to MultipartField.of("some content".byteInputStream()),
                         "fileName" to MultipartField.of("fileName"),
                     )
                     .mapValues { (_, field) ->
