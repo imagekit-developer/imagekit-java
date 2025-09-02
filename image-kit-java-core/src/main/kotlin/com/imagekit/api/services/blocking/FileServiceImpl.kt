@@ -315,11 +315,7 @@ class FileServiceImpl internal constructor(private val clientOptions: ClientOpti
                         else "https://upload.imagekit.io"
                     )
                     .addPathSegments("api", "v1", "files", "upload")
-                    .apply {
-                        params._body().ifPresent {
-                            body(multipartFormData(clientOptions.jsonMapper, it))
-                        }
-                    }
+                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
