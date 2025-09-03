@@ -346,7 +346,11 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                         else "https://upload.imagekit.io"
                     )
                     .addPathSegments("api", "v1", "files", "upload")
-                    .body(multipartFormData(clientOptions.jsonMapper, params._body()))
+                    .apply {
+                        params._body().ifPresent {
+                            body(multipartFormData(clientOptions.jsonMapper, it))
+                        }
+                    }
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

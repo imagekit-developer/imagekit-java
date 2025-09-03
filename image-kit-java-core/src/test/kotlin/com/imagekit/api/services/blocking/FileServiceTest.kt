@@ -220,83 +220,104 @@ internal class FileServiceTest {
         val response =
             fileService.upload(
                 FileUploadParams.builder()
-                    .file("some content".byteInputStream())
-                    .fileName("fileName")
-                    .token("token")
-                    .checks("\"request.folder\" : \"marketing/\"\n")
-                    .customCoordinates("customCoordinates")
-                    .customMetadata(
-                        FileUploadParams.CustomMetadata.builder()
-                            .putAdditionalProperty("brand", JsonValue.from("bar"))
-                            .putAdditionalProperty("color", JsonValue.from("bar"))
-                            .build()
-                    )
-                    .description("Running shoes")
-                    .expire(0L)
-                    .extensions(
-                        listOf(
-                            FileUploadParams.Extension.ofRemoveBg(
-                                FileUploadParams.Extension.RemoveBg.builder()
-                                    .options(
-                                        FileUploadParams.Extension.RemoveBg.Options.builder()
-                                            .addShadow(true)
-                                            .bgColor("bg_color")
-                                            .bgImageUrl("bg_image_url")
-                                            .semitransparency(true)
+                    .body(
+                        FileUploadParams.Body.FileUploadV1.builder()
+                            .file("some content".byteInputStream())
+                            .fileName("fileName")
+                            .token("token")
+                            .checks("\"request.folder\" : \"marketing/\"\n")
+                            .customCoordinates("customCoordinates")
+                            .customMetadata(
+                                FileUploadParams.Body.FileUploadV1.CustomMetadata.builder()
+                                    .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                    .putAdditionalProperty("color", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .description("Running shoes")
+                            .expire(0L)
+                            .extensions(
+                                listOf(
+                                    FileUploadParams.Body.FileUploadV1.Extension.ofRemoveBg(
+                                        FileUploadParams.Body.FileUploadV1.Extension.RemoveBg
+                                            .builder()
+                                            .options(
+                                                FileUploadParams.Body.FileUploadV1.Extension
+                                                    .RemoveBg
+                                                    .Options
+                                                    .builder()
+                                                    .addShadow(true)
+                                                    .bgColor("bg_color")
+                                                    .bgImageUrl("bg_image_url")
+                                                    .semitransparency(true)
+                                                    .build()
+                                            )
+                                            .build()
+                                    ),
+                                    FileUploadParams.Body.FileUploadV1.Extension.ofAutoTagging(
+                                        FileUploadParams.Body.FileUploadV1.Extension
+                                            .AutoTaggingExtension
+                                            .builder()
+                                            .maxTags(5L)
+                                            .minConfidence(95L)
+                                            .name(
+                                                FileUploadParams.Body.FileUploadV1.Extension
+                                                    .AutoTaggingExtension
+                                                    .Name
+                                                    .GOOGLE_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    FileUploadParams.Body.FileUploadV1.Extension
+                                        .ofAiAutoDescription(),
+                                )
+                            )
+                            .folder("folder")
+                            .isPrivateFile(true)
+                            .isPublished(true)
+                            .overwriteAiTags(true)
+                            .overwriteCustomMetadata(true)
+                            .overwriteFile(true)
+                            .overwriteTags(true)
+                            .publicKey("publicKey")
+                            .responseFields(
+                                listOf(
+                                    FileUploadParams.Body.FileUploadV1.ResponseField.TAGS,
+                                    FileUploadParams.Body.FileUploadV1.ResponseField
+                                        .CUSTOM_COORDINATES,
+                                    FileUploadParams.Body.FileUploadV1.ResponseField.IS_PRIVATE_FILE,
+                                )
+                            )
+                            .signature("signature")
+                            .tags(listOf("t-shirt", "round-neck", "men"))
+                            .transformation(
+                                FileUploadParams.Body.FileUploadV1.Transformation.builder()
+                                    .addPost(
+                                        FileUploadParams.Body.FileUploadV1.Transformation.Post
+                                            .Thumbnail
+                                            .builder()
+                                            .value("w-150,h-150")
                                             .build()
                                     )
-                                    .build()
-                            ),
-                            FileUploadParams.Extension.ofAutoTagging(
-                                FileUploadParams.Extension.AutoTaggingExtension.builder()
-                                    .maxTags(5L)
-                                    .minConfidence(95L)
-                                    .name(
-                                        FileUploadParams.Extension.AutoTaggingExtension.Name
-                                            .GOOGLE_AUTO_TAGGING
+                                    .addPost(
+                                        FileUploadParams.Body.FileUploadV1.Transformation.Post.Abs
+                                            .builder()
+                                            .protocol(
+                                                FileUploadParams.Body.FileUploadV1.Transformation
+                                                    .Post
+                                                    .Abs
+                                                    .Protocol
+                                                    .DASH
+                                            )
+                                            .value("sr-240_360_480_720_1080")
+                                            .build()
                                     )
-                                    .build()
-                            ),
-                            FileUploadParams.Extension.ofAiAutoDescription(),
-                        )
-                    )
-                    .folder("folder")
-                    .isPrivateFile(true)
-                    .isPublished(true)
-                    .overwriteAiTags(true)
-                    .overwriteCustomMetadata(true)
-                    .overwriteFile(true)
-                    .overwriteTags(true)
-                    .publicKey("publicKey")
-                    .responseFields(
-                        listOf(
-                            FileUploadParams.ResponseField.TAGS,
-                            FileUploadParams.ResponseField.CUSTOM_COORDINATES,
-                            FileUploadParams.ResponseField.IS_PRIVATE_FILE,
-                        )
-                    )
-                    .signature("signature")
-                    .tags(listOf("t-shirt", "round-neck", "men"))
-                    .transformation(
-                        FileUploadParams.Transformation.builder()
-                            .addPost(
-                                FileUploadParams.Transformation.Post.Thumbnail.builder()
-                                    .value("w-150,h-150")
+                                    .pre("w-300,h-300,q-80")
                                     .build()
                             )
-                            .addPost(
-                                FileUploadParams.Transformation.Post.Abs.builder()
-                                    .protocol(
-                                        FileUploadParams.Transformation.Post.Abs.Protocol.DASH
-                                    )
-                                    .value("sr-240_360_480_720_1080")
-                                    .build()
-                            )
-                            .pre("w-300,h-300,q-80")
+                            .useUniqueFileName(true)
+                            .webhookUrl("https://example.com")
                             .build()
                     )
-                    .useUniqueFileName(true)
-                    .webhookUrl("https://example.com")
                     .build()
             )
 
