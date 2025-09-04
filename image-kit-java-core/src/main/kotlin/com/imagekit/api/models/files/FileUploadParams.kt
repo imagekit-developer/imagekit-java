@@ -159,7 +159,7 @@ private constructor(
     fun expire(): Optional<Long> = body.expire()
 
     /**
-     * Array of extensions to be applied to the image. Each extension can be configured with
+     * Array of extensions to be applied to the asset. Each extension can be configured with
      * specific parameters based on the extension type.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -714,7 +714,7 @@ private constructor(
         fun expire(expire: MultipartField<Long>) = apply { body.expire(expire) }
 
         /**
-         * Array of extensions to be applied to the image. Each extension can be configured with
+         * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          */
         fun extensions(extensions: List<Extension>) = apply { body.extensions(extensions) }
@@ -1318,7 +1318,7 @@ private constructor(
         fun expire(): Optional<Long> = expire.value.getOptional("expire")
 
         /**
-         * Array of extensions to be applied to the image. Each extension can be configured with
+         * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1954,7 +1954,7 @@ private constructor(
             fun expire(expire: MultipartField<Long>) = apply { this.expire = expire }
 
             /**
-             * Array of extensions to be applied to the image. Each extension can be configured with
+             * Array of extensions to be applied to the asset. Each extension can be configured with
              * specific parameters based on the extension type.
              */
             fun extensions(extensions: List<Extension>) = extensions(MultipartField.of(extensions))
