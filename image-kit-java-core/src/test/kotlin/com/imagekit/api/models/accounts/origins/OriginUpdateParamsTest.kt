@@ -11,7 +11,7 @@ internal class OriginUpdateParamsTest {
     fun create() {
         OriginUpdateParams.builder()
             .id("id")
-            .origin(
+            .originRequest(
                 OriginRequest.S3.builder()
                     .accessKey("AKIATEST123")
                     .bucket("test-bucket")
@@ -30,7 +30,7 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .origin(
+                .originRequest(
                     OriginRequest.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
@@ -50,7 +50,7 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .origin(
+                .originRequest(
                     OriginRequest.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
@@ -86,7 +86,7 @@ internal class OriginUpdateParamsTest {
         val params =
             OriginUpdateParams.builder()
                 .id("id")
-                .origin(
+                .originRequest(
                     OriginRequest.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")

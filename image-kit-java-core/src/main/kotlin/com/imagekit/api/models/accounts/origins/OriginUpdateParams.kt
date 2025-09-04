@@ -17,7 +17,7 @@ import kotlin.jvm.optionals.getOrNull
 class OriginUpdateParams
 private constructor(
     private val id: String?,
-    private val origin: OriginRequest,
+    private val originRequest: OriginRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -28,7 +28,7 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Schema for origin request resources. */
-    fun origin(): OriginRequest = origin
+    fun originRequest(): OriginRequest = originRequest
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -45,7 +45,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .origin()
+         * .originRequest()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -55,14 +55,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: String? = null
-        private var origin: OriginRequest? = null
+        private var originRequest: OriginRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(originUpdateParams: OriginUpdateParams) = apply {
             id = originUpdateParams.id
-            origin = originUpdateParams.origin
+            originRequest = originUpdateParams.originRequest
             additionalHeaders = originUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = originUpdateParams.additionalQueryParams.toBuilder()
         }
@@ -77,47 +77,53 @@ private constructor(
         fun id(id: Optional<String>) = id(id.getOrNull())
 
         /** Schema for origin request resources. */
-        fun origin(origin: OriginRequest) = apply { this.origin = origin }
+        fun originRequest(originRequest: OriginRequest) = apply {
+            this.originRequest = originRequest
+        }
 
-        /** Alias for calling [origin] with `OriginRequest.ofS3(s3)`. */
-        fun origin(s3: OriginRequest.S3) = origin(OriginRequest.ofS3(s3))
+        /** Alias for calling [originRequest] with `OriginRequest.ofS3(s3)`. */
+        fun originRequest(s3: OriginRequest.S3) = originRequest(OriginRequest.ofS3(s3))
 
-        /** Alias for calling [origin] with `OriginRequest.ofS3Compatible(s3Compatible)`. */
-        fun origin(s3Compatible: OriginRequest.S3Compatible) =
-            origin(OriginRequest.ofS3Compatible(s3Compatible))
-
-        /** Alias for calling [origin] with `OriginRequest.ofCloudinaryBackup(cloudinaryBackup)`. */
-        fun origin(cloudinaryBackup: OriginRequest.CloudinaryBackup) =
-            origin(OriginRequest.ofCloudinaryBackup(cloudinaryBackup))
-
-        /** Alias for calling [origin] with `OriginRequest.ofWebFolder(webFolder)`. */
-        fun origin(webFolder: OriginRequest.WebFolder) =
-            origin(OriginRequest.ofWebFolder(webFolder))
-
-        /** Alias for calling [origin] with `OriginRequest.ofWebProxy(webProxy)`. */
-        fun origin(webProxy: OriginRequest.WebProxy) = origin(OriginRequest.ofWebProxy(webProxy))
+        /** Alias for calling [originRequest] with `OriginRequest.ofS3Compatible(s3Compatible)`. */
+        fun originRequest(s3Compatible: OriginRequest.S3Compatible) =
+            originRequest(OriginRequest.ofS3Compatible(s3Compatible))
 
         /**
-         * Alias for calling [origin] with the following:
+         * Alias for calling [originRequest] with
+         * `OriginRequest.ofCloudinaryBackup(cloudinaryBackup)`.
+         */
+        fun originRequest(cloudinaryBackup: OriginRequest.CloudinaryBackup) =
+            originRequest(OriginRequest.ofCloudinaryBackup(cloudinaryBackup))
+
+        /** Alias for calling [originRequest] with `OriginRequest.ofWebFolder(webFolder)`. */
+        fun originRequest(webFolder: OriginRequest.WebFolder) =
+            originRequest(OriginRequest.ofWebFolder(webFolder))
+
+        /** Alias for calling [originRequest] with `OriginRequest.ofWebProxy(webProxy)`. */
+        fun originRequest(webProxy: OriginRequest.WebProxy) =
+            originRequest(OriginRequest.ofWebProxy(webProxy))
+
+        /**
+         * Alias for calling [originRequest] with the following:
          * ```java
          * OriginRequest.WebProxy.builder()
          *     .name(name)
          *     .build()
          * ```
          */
-        fun webProxyOrigin(name: String) =
-            origin(OriginRequest.WebProxy.builder().name(name).build())
+        fun webProxyOriginRequest(name: String) =
+            originRequest(OriginRequest.WebProxy.builder().name(name).build())
 
-        /** Alias for calling [origin] with `OriginRequest.ofGcs(gcs)`. */
-        fun origin(gcs: OriginRequest.Gcs) = origin(OriginRequest.ofGcs(gcs))
+        /** Alias for calling [originRequest] with `OriginRequest.ofGcs(gcs)`. */
+        fun originRequest(gcs: OriginRequest.Gcs) = originRequest(OriginRequest.ofGcs(gcs))
 
-        /** Alias for calling [origin] with `OriginRequest.ofAzureBlob(azureBlob)`. */
-        fun origin(azureBlob: OriginRequest.AzureBlob) =
-            origin(OriginRequest.ofAzureBlob(azureBlob))
+        /** Alias for calling [originRequest] with `OriginRequest.ofAzureBlob(azureBlob)`. */
+        fun originRequest(azureBlob: OriginRequest.AzureBlob) =
+            originRequest(OriginRequest.ofAzureBlob(azureBlob))
 
-        /** Alias for calling [origin] with `OriginRequest.ofAkeneoPim(akeneoPim)`. */
-        fun origin(akeneoPim: OriginRequest.AkeneoPim) =
-            origin(OriginRequest.ofAkeneoPim(akeneoPim))
+        /** Alias for calling [originRequest] with `OriginRequest.ofAkeneoPim(akeneoPim)`. */
+        fun originRequest(akeneoPim: OriginRequest.AkeneoPim) =
+            originRequest(OriginRequest.ofAkeneoPim(akeneoPim))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -224,7 +230,7 @@ private constructor(
          *
          * The following fields are required:
          * ```java
-         * .origin()
+         * .originRequest()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
@@ -232,13 +238,13 @@ private constructor(
         fun build(): OriginUpdateParams =
             OriginUpdateParams(
                 id,
-                checkRequired("origin", origin),
+                checkRequired("originRequest", originRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): OriginRequest = origin
+    fun _body(): OriginRequest = originRequest
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -257,14 +263,14 @@ private constructor(
 
         return other is OriginUpdateParams &&
             id == other.id &&
-            origin == other.origin &&
+            originRequest == other.originRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(id, origin, additionalHeaders, additionalQueryParams)
+        Objects.hash(id, originRequest, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "OriginUpdateParams{id=$id, origin=$origin, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "OriginUpdateParams{id=$id, originRequest=$originRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

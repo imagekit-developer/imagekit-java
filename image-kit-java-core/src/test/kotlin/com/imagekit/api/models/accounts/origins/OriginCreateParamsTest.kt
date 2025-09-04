@@ -10,7 +10,7 @@ internal class OriginCreateParamsTest {
     @Test
     fun create() {
         OriginCreateParams.builder()
-            .origin(
+            .originRequest(
                 OriginRequest.S3.builder()
                     .accessKey("AKIATEST123")
                     .bucket("test-bucket")
@@ -28,7 +28,7 @@ internal class OriginCreateParamsTest {
     fun body() {
         val params =
             OriginCreateParams.builder()
-                .origin(
+                .originRequest(
                     OriginRequest.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
@@ -63,7 +63,7 @@ internal class OriginCreateParamsTest {
     fun bodyWithoutOptionalFields() {
         val params =
             OriginCreateParams.builder()
-                .origin(
+                .originRequest(
                     OriginRequest.S3.builder()
                         .accessKey("AKIATEST123")
                         .bucket("test-bucket")
