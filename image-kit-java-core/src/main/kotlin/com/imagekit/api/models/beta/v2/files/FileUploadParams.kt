@@ -18,6 +18,7 @@ import com.imagekit.api.core.BaseSerializer
 import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
+import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.MultipartField
 import com.imagekit.api.core.Params
@@ -28,6 +29,7 @@ import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import java.io.InputStream
 import java.nio.file.Path
 import java.util.Collections
@@ -152,7 +154,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun extensions(): Optional<List<Extension>> = body.extensions()
+    fun extensions(): Optional<List<UnnamedSchemaWithArrayParent3>> = body.extensions()
 
     /**
      * The folder path in which the image has to be uploaded. If the folder(s) didn't exist before,
@@ -339,7 +341,7 @@ private constructor(
      *
      * Unlike [extensions], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _extensions(): MultipartField<List<Extension>> = body._extensions()
+    fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent3>> = body._extensions()
 
     /**
      * Returns the raw multipart value of [folder].
@@ -637,35 +639,51 @@ private constructor(
          * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          */
-        fun extensions(extensions: List<Extension>) = apply { body.extensions(extensions) }
-
-        /**
-         * Sets [Builder.extensions] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.extensions] with a well-typed `List<Extension>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
-         */
-        fun extensions(extensions: MultipartField<List<Extension>>) = apply {
+        fun extensions(extensions: List<UnnamedSchemaWithArrayParent3>) = apply {
             body.extensions(extensions)
         }
 
         /**
-         * Adds a single [Extension] to [extensions].
+         * Sets [Builder.extensions] to an arbitrary multipart value.
+         *
+         * You should usually call [Builder.extensions] with a well-typed
+         * `List<UnnamedSchemaWithArrayParent3>` value instead. This method is primarily for setting
+         * the field to an undocumented or not yet supported value.
+         */
+        fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>) = apply {
+            body.extensions(extensions)
+        }
+
+        /**
+         * Adds a single [UnnamedSchemaWithArrayParent3] to [extensions].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addExtension(extension: Extension) = apply { body.addExtension(extension) }
-
-        /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
-        fun addExtension(removeBg: Extension.RemoveBg) = apply { body.addExtension(removeBg) }
-
-        /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
-        fun addExtension(autoTagging: Extension.AutoTaggingExtension) = apply {
-            body.addExtension(autoTagging)
+        fun addExtension(extension: UnnamedSchemaWithArrayParent3) = apply {
+            body.addExtension(extension)
         }
 
-        /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
+        /**
+         * Alias for calling [addExtension] with
+         * `UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg)`.
+         */
+        fun addExtension(removeBg: UnnamedSchemaWithArrayParent3.RemoveBg) = apply {
+            body.addExtension(removeBg)
+        }
+
+        /**
+         * Alias for calling [addExtension] with
+         * `UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)`.
+         */
+        fun addExtension(autoTaggingExtension: UnnamedSchemaWithArrayParent3.AutoTaggingExtension) =
+            apply {
+                body.addExtension(autoTaggingExtension)
+            }
+
+        /**
+         * Alias for calling [addExtension] with
+         * `UnnamedSchemaWithArrayParent3.ofAiAutoDescription()`.
+         */
         fun addExtensionAiAutoDescription() = apply { body.addExtensionAiAutoDescription() }
 
         /**
@@ -1082,7 +1100,7 @@ private constructor(
         private val customCoordinates: MultipartField<String>,
         private val customMetadata: MultipartField<CustomMetadata>,
         private val description: MultipartField<String>,
-        private val extensions: MultipartField<List<Extension>>,
+        private val extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>,
         private val folder: MultipartField<String>,
         private val isPrivateFile: MultipartField<Boolean>,
         private val isPublished: MultipartField<Boolean>,
@@ -1187,7 +1205,8 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun extensions(): Optional<List<Extension>> = extensions.value.getOptional("extensions")
+        fun extensions(): Optional<List<UnnamedSchemaWithArrayParent3>> =
+            extensions.value.getOptional("extensions")
 
         /**
          * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -1390,7 +1409,7 @@ private constructor(
          */
         @JsonProperty("extensions")
         @ExcludeMissing
-        fun _extensions(): MultipartField<List<Extension>> = extensions
+        fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent3>> = extensions
 
         /**
          * Returns the raw multipart value of [folder].
@@ -1542,7 +1561,8 @@ private constructor(
             private var customCoordinates: MultipartField<String> = MultipartField.of(null)
             private var customMetadata: MultipartField<CustomMetadata> = MultipartField.of(null)
             private var description: MultipartField<String> = MultipartField.of(null)
-            private var extensions: MultipartField<MutableList<Extension>>? = null
+            private var extensions: MultipartField<MutableList<UnnamedSchemaWithArrayParent3>>? =
+                null
             private var folder: MultipartField<String> = MultipartField.of(null)
             private var isPrivateFile: MultipartField<Boolean> = MultipartField.of(null)
             private var isPublished: MultipartField<Boolean> = MultipartField.of(null)
@@ -1742,41 +1762,57 @@ private constructor(
              * Array of extensions to be applied to the asset. Each extension can be configured with
              * specific parameters based on the extension type.
              */
-            fun extensions(extensions: List<Extension>) = extensions(MultipartField.of(extensions))
+            fun extensions(extensions: List<UnnamedSchemaWithArrayParent3>) =
+                extensions(MultipartField.of(extensions))
 
             /**
              * Sets [Builder.extensions] to an arbitrary multipart value.
              *
-             * You should usually call [Builder.extensions] with a well-typed `List<Extension>`
-             * value instead. This method is primarily for setting the field to an undocumented or
-             * not yet supported value.
+             * You should usually call [Builder.extensions] with a well-typed
+             * `List<UnnamedSchemaWithArrayParent3>` value instead. This method is primarily for
+             * setting the field to an undocumented or not yet supported value.
              */
-            fun extensions(extensions: MultipartField<List<Extension>>) = apply {
-                this.extensions = extensions.map { it.toMutableList() }
-            }
+            fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>) =
+                apply {
+                    this.extensions = extensions.map { it.toMutableList() }
+                }
 
             /**
-             * Adds a single [Extension] to [extensions].
+             * Adds a single [UnnamedSchemaWithArrayParent3] to [extensions].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addExtension(extension: Extension) = apply {
+            fun addExtension(extension: UnnamedSchemaWithArrayParent3) = apply {
                 extensions =
                     (extensions ?: MultipartField.of(mutableListOf())).also {
                         checkKnown("extensions", it).add(extension)
                     }
             }
 
-            /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
-            fun addExtension(removeBg: Extension.RemoveBg) =
-                addExtension(Extension.ofRemoveBg(removeBg))
+            /**
+             * Alias for calling [addExtension] with
+             * `UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg)`.
+             */
+            fun addExtension(removeBg: UnnamedSchemaWithArrayParent3.RemoveBg) =
+                addExtension(UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg))
 
-            /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
-            fun addExtension(autoTagging: Extension.AutoTaggingExtension) =
-                addExtension(Extension.ofAutoTagging(autoTagging))
+            /**
+             * Alias for calling [addExtension] with
+             * `UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)`.
+             */
+            fun addExtension(
+                autoTaggingExtension: UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+            ) =
+                addExtension(
+                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)
+                )
 
-            /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
-            fun addExtensionAiAutoDescription() = addExtension(Extension.ofAiAutoDescription())
+            /**
+             * Alias for calling [addExtension] with
+             * `UnnamedSchemaWithArrayParent3.ofAiAutoDescription()`.
+             */
+            fun addExtensionAiAutoDescription() =
+                addExtension(UnnamedSchemaWithArrayParent3.ofAiAutoDescription())
 
             /**
              * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -2282,31 +2318,33 @@ private constructor(
         override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
     }
 
-    @JsonDeserialize(using = Extension.Deserializer::class)
-    @JsonSerialize(using = Extension.Serializer::class)
-    class Extension
+    @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
+    @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
+    class UnnamedSchemaWithArrayParent3
     private constructor(
         private val removeBg: RemoveBg? = null,
-        private val autoTagging: AutoTaggingExtension? = null,
+        private val autoTaggingExtension: AutoTaggingExtension? = null,
         private val aiAutoDescription: JsonValue? = null,
         private val _json: JsonValue? = null,
     ) {
 
         fun removeBg(): Optional<RemoveBg> = Optional.ofNullable(removeBg)
 
-        fun autoTagging(): Optional<AutoTaggingExtension> = Optional.ofNullable(autoTagging)
+        fun autoTaggingExtension(): Optional<AutoTaggingExtension> =
+            Optional.ofNullable(autoTaggingExtension)
 
         fun aiAutoDescription(): Optional<JsonValue> = Optional.ofNullable(aiAutoDescription)
 
         fun isRemoveBg(): Boolean = removeBg != null
 
-        fun isAutoTagging(): Boolean = autoTagging != null
+        fun isAutoTaggingExtension(): Boolean = autoTaggingExtension != null
 
         fun isAiAutoDescription(): Boolean = aiAutoDescription != null
 
         fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
-        fun asAutoTagging(): AutoTaggingExtension = autoTagging.getOrThrow("autoTagging")
+        fun asAutoTaggingExtension(): AutoTaggingExtension =
+            autoTaggingExtension.getOrThrow("autoTaggingExtension")
 
         fun asAiAutoDescription(): JsonValue = aiAutoDescription.getOrThrow("aiAutoDescription")
 
@@ -2315,14 +2353,15 @@ private constructor(
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 removeBg != null -> visitor.visitRemoveBg(removeBg)
-                autoTagging != null -> visitor.visitAutoTagging(autoTagging)
+                autoTaggingExtension != null ->
+                    visitor.visitAutoTaggingExtension(autoTaggingExtension)
                 aiAutoDescription != null -> visitor.visitAiAutoDescription(aiAutoDescription)
                 else -> visitor.unknown(_json)
             }
 
         private var validated: Boolean = false
 
-        fun validate(): Extension = apply {
+        fun validate(): UnnamedSchemaWithArrayParent3 = apply {
             if (validated) {
                 return@apply
             }
@@ -2333,8 +2372,10 @@ private constructor(
                         removeBg.validate()
                     }
 
-                    override fun visitAutoTagging(autoTagging: AutoTaggingExtension) {
-                        autoTagging.validate()
+                    override fun visitAutoTaggingExtension(
+                        autoTaggingExtension: AutoTaggingExtension
+                    ) {
+                        autoTaggingExtension.validate()
                     }
 
                     override fun visitAiAutoDescription(aiAutoDescription: JsonValue) {
@@ -2371,8 +2412,9 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitRemoveBg(removeBg: RemoveBg) = removeBg.validity()
 
-                    override fun visitAutoTagging(autoTagging: AutoTaggingExtension) =
-                        autoTagging.validity()
+                    override fun visitAutoTaggingExtension(
+                        autoTaggingExtension: AutoTaggingExtension
+                    ) = autoTaggingExtension.validity()
 
                     override fun visitAiAutoDescription(aiAutoDescription: JsonValue) =
                         aiAutoDescription.let {
@@ -2389,103 +2431,113 @@ private constructor(
                 return true
             }
 
-            return other is Extension &&
+            return other is UnnamedSchemaWithArrayParent3 &&
                 removeBg == other.removeBg &&
-                autoTagging == other.autoTagging &&
+                autoTaggingExtension == other.autoTaggingExtension &&
                 aiAutoDescription == other.aiAutoDescription
         }
 
-        override fun hashCode(): Int = Objects.hash(removeBg, autoTagging, aiAutoDescription)
+        override fun hashCode(): Int =
+            Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription)
 
         override fun toString(): String =
             when {
-                removeBg != null -> "Extension{removeBg=$removeBg}"
-                autoTagging != null -> "Extension{autoTagging=$autoTagging}"
-                aiAutoDescription != null -> "Extension{aiAutoDescription=$aiAutoDescription}"
-                _json != null -> "Extension{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Extension")
+                removeBg != null -> "UnnamedSchemaWithArrayParent3{removeBg=$removeBg}"
+                autoTaggingExtension != null ->
+                    "UnnamedSchemaWithArrayParent3{autoTaggingExtension=$autoTaggingExtension}"
+                aiAutoDescription != null ->
+                    "UnnamedSchemaWithArrayParent3{aiAutoDescription=$aiAutoDescription}"
+                _json != null -> "UnnamedSchemaWithArrayParent3{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
             }
 
         companion object {
 
-            @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = Extension(removeBg = removeBg)
+            @JvmStatic
+            fun ofRemoveBg(removeBg: RemoveBg) = UnnamedSchemaWithArrayParent3(removeBg = removeBg)
 
             @JvmStatic
-            fun ofAutoTagging(autoTagging: AutoTaggingExtension) =
-                Extension(autoTagging = autoTagging)
+            fun ofAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension) =
+                UnnamedSchemaWithArrayParent3(autoTaggingExtension = autoTaggingExtension)
 
             @JvmStatic
             fun ofAiAutoDescription() =
-                Extension(
+                UnnamedSchemaWithArrayParent3(
                     aiAutoDescription = JsonValue.from(mapOf("name" to "ai-auto-description"))
                 )
         }
 
         /**
-         * An interface that defines how to map each variant of [Extension] to a value of type [T].
+         * An interface that defines how to map each variant of [UnnamedSchemaWithArrayParent3] to a
+         * value of type [T].
          */
         interface Visitor<out T> {
 
             fun visitRemoveBg(removeBg: RemoveBg): T
 
-            fun visitAutoTagging(autoTagging: AutoTaggingExtension): T
+            fun visitAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension): T
 
             fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
             /**
-             * Maps an unknown variant of [Extension] to a value of type [T].
+             * Maps an unknown variant of [UnnamedSchemaWithArrayParent3] to a value of type [T].
              *
-             * An instance of [Extension] can contain an unknown variant if it was deserialized from
-             * data that doesn't match any known variant. For example, if the SDK is on an older
-             * version than the API, then the API may respond with new variants that the SDK is
-             * unaware of.
+             * An instance of [UnnamedSchemaWithArrayParent3] can contain an unknown variant if it
+             * was deserialized from data that doesn't match any known variant. For example, if the
+             * SDK is on an older version than the API, then the API may respond with new variants
+             * that the SDK is unaware of.
              *
              * @throws ImageKitInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown Extension: $json")
+                throw ImageKitInvalidDataException("Unknown UnnamedSchemaWithArrayParent3: $json")
             }
         }
 
-        internal class Deserializer : BaseDeserializer<Extension>(Extension::class) {
+        internal class Deserializer :
+            BaseDeserializer<UnnamedSchemaWithArrayParent3>(UnnamedSchemaWithArrayParent3::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): Extension {
+            override fun ObjectCodec.deserialize(node: JsonNode): UnnamedSchemaWithArrayParent3 {
                 val json = JsonValue.fromJsonNode(node)
                 val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
                 when (name) {
                     "remove-bg" -> {
                         return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
-                            Extension(removeBg = it, _json = json)
-                        } ?: Extension(_json = json)
+                            UnnamedSchemaWithArrayParent3(removeBg = it, _json = json)
+                        } ?: UnnamedSchemaWithArrayParent3(_json = json)
                     }
                     "ai-auto-description" -> {
                         return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                            ?.let { Extension(aiAutoDescription = it, _json = json) }
-                            ?.takeIf { it.isValid() } ?: Extension(_json = json)
+                            ?.let {
+                                UnnamedSchemaWithArrayParent3(aiAutoDescription = it, _json = json)
+                            }
+                            ?.takeIf { it.isValid() } ?: UnnamedSchemaWithArrayParent3(_json = json)
                     }
                 }
 
                 return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                    Extension(autoTagging = it, _json = json)
-                } ?: Extension(_json = json)
+                    UnnamedSchemaWithArrayParent3(autoTaggingExtension = it, _json = json)
+                } ?: UnnamedSchemaWithArrayParent3(_json = json)
             }
         }
 
-        internal class Serializer : BaseSerializer<Extension>(Extension::class) {
+        internal class Serializer :
+            BaseSerializer<UnnamedSchemaWithArrayParent3>(UnnamedSchemaWithArrayParent3::class) {
 
             override fun serialize(
-                value: Extension,
+                value: UnnamedSchemaWithArrayParent3,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
                 when {
                     value.removeBg != null -> generator.writeObject(value.removeBg)
-                    value.autoTagging != null -> generator.writeObject(value.autoTagging)
+                    value.autoTaggingExtension != null ->
+                        generator.writeObject(value.autoTaggingExtension)
                     value.aiAutoDescription != null ->
                         generator.writeObject(value.aiAutoDescription)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Extension")
+                    else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                 }
             }
         }
@@ -2493,9 +2545,17 @@ private constructor(
         class RemoveBg
         private constructor(
             private val name: JsonValue,
-            private val options: MultipartField<Options>,
+            private val options: JsonField<Options>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
+                @JsonProperty("options")
+                @ExcludeMissing
+                options: JsonField<Options> = JsonMissing.of(),
+            ) : this(name, options, mutableMapOf())
 
             /**
              * Specifies the background removal extension.
@@ -2514,17 +2574,14 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun options(): Optional<Options> = options.value.getOptional("options")
+            fun options(): Optional<Options> = options.getOptional("options")
 
             /**
-             * Returns the raw multipart value of [options].
+             * Returns the raw JSON value of [options].
              *
-             * Unlike [options], this method doesn't throw if the multipart field has an unexpected
-             * type.
+             * Unlike [options], this method doesn't throw if the JSON field has an unexpected type.
              */
-            @JsonProperty("options")
-            @ExcludeMissing
-            fun _options(): MultipartField<Options> = options
+            @JsonProperty("options") @ExcludeMissing fun _options(): JsonField<Options> = options
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2548,7 +2605,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var name: JsonValue = JsonValue.from("remove-bg")
-                private var options: MultipartField<Options> = MultipartField.of(null)
+                private var options: JsonField<Options> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -2572,16 +2629,16 @@ private constructor(
                  */
                 fun name(name: JsonValue) = apply { this.name = name }
 
-                fun options(options: Options) = options(MultipartField.of(options))
+                fun options(options: Options) = options(JsonField.of(options))
 
                 /**
-                 * Sets [Builder.options] to an arbitrary multipart value.
+                 * Sets [Builder.options] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.options] with a well-typed [Options] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun options(options: MultipartField<Options>) = apply { this.options = options }
+                fun options(options: JsonField<Options>) = apply { this.options = options }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -2637,14 +2694,41 @@ private constructor(
                     false
                 }
 
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                name.let { if (it == JsonValue.from("remove-bg")) 1 else 0 } +
+                    (options.asKnown().getOrNull()?.validity() ?: 0)
+
             class Options
             private constructor(
-                private val addShadow: MultipartField<Boolean>,
-                private val bgColor: MultipartField<String>,
-                private val bgImageUrl: MultipartField<String>,
-                private val semitransparency: MultipartField<Boolean>,
+                private val addShadow: JsonField<Boolean>,
+                private val bgColor: JsonField<String>,
+                private val bgImageUrl: JsonField<String>,
+                private val semitransparency: JsonField<Boolean>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
+
+                @JsonCreator
+                private constructor(
+                    @JsonProperty("add_shadow")
+                    @ExcludeMissing
+                    addShadow: JsonField<Boolean> = JsonMissing.of(),
+                    @JsonProperty("bg_color")
+                    @ExcludeMissing
+                    bgColor: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("bg_image_url")
+                    @ExcludeMissing
+                    bgImageUrl: JsonField<String> = JsonMissing.of(),
+                    @JsonProperty("semitransparency")
+                    @ExcludeMissing
+                    semitransparency: JsonField<Boolean> = JsonMissing.of(),
+                ) : this(addShadow, bgColor, bgImageUrl, semitransparency, mutableMapOf())
 
                 /**
                  * Whether to add an artificial shadow to the result. Default is false. Note: Adding
@@ -2653,7 +2737,7 @@ private constructor(
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
-                fun addShadow(): Optional<Boolean> = addShadow.value.getOptional("add_shadow")
+                fun addShadow(): Optional<Boolean> = addShadow.getOptional("add_shadow")
 
                 /**
                  * Specifies a solid color background using hex code (e.g., "81d4fa", "fff") or
@@ -2663,7 +2747,7 @@ private constructor(
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
-                fun bgColor(): Optional<String> = bgColor.value.getOptional("bg_color")
+                fun bgColor(): Optional<String> = bgColor.getOptional("bg_color")
 
                 /**
                  * Sets a background image from a URL. If this parameter is set, `bg_color` must be
@@ -2672,7 +2756,7 @@ private constructor(
                  * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                  *   (e.g. if the server responded with an unexpected value).
                  */
-                fun bgImageUrl(): Optional<String> = bgImageUrl.value.getOptional("bg_image_url")
+                fun bgImageUrl(): Optional<String> = bgImageUrl.getOptional("bg_image_url")
 
                 /**
                  * Allows semi-transparent regions in the result. Default is true. Note:
@@ -2682,47 +2766,47 @@ private constructor(
                  *   (e.g. if the server responded with an unexpected value).
                  */
                 fun semitransparency(): Optional<Boolean> =
-                    semitransparency.value.getOptional("semitransparency")
+                    semitransparency.getOptional("semitransparency")
 
                 /**
-                 * Returns the raw multipart value of [addShadow].
+                 * Returns the raw JSON value of [addShadow].
                  *
-                 * Unlike [addShadow], this method doesn't throw if the multipart field has an
-                 * unexpected type.
+                 * Unlike [addShadow], this method doesn't throw if the JSON field has an unexpected
+                 * type.
                  */
                 @JsonProperty("add_shadow")
                 @ExcludeMissing
-                fun _addShadow(): MultipartField<Boolean> = addShadow
+                fun _addShadow(): JsonField<Boolean> = addShadow
 
                 /**
-                 * Returns the raw multipart value of [bgColor].
+                 * Returns the raw JSON value of [bgColor].
                  *
-                 * Unlike [bgColor], this method doesn't throw if the multipart field has an
-                 * unexpected type.
+                 * Unlike [bgColor], this method doesn't throw if the JSON field has an unexpected
+                 * type.
                  */
                 @JsonProperty("bg_color")
                 @ExcludeMissing
-                fun _bgColor(): MultipartField<String> = bgColor
+                fun _bgColor(): JsonField<String> = bgColor
 
                 /**
-                 * Returns the raw multipart value of [bgImageUrl].
+                 * Returns the raw JSON value of [bgImageUrl].
                  *
-                 * Unlike [bgImageUrl], this method doesn't throw if the multipart field has an
+                 * Unlike [bgImageUrl], this method doesn't throw if the JSON field has an
                  * unexpected type.
                  */
                 @JsonProperty("bg_image_url")
                 @ExcludeMissing
-                fun _bgImageUrl(): MultipartField<String> = bgImageUrl
+                fun _bgImageUrl(): JsonField<String> = bgImageUrl
 
                 /**
-                 * Returns the raw multipart value of [semitransparency].
+                 * Returns the raw JSON value of [semitransparency].
                  *
-                 * Unlike [semitransparency], this method doesn't throw if the multipart field has
-                 * an unexpected type.
+                 * Unlike [semitransparency], this method doesn't throw if the JSON field has an
+                 * unexpected type.
                  */
                 @JsonProperty("semitransparency")
                 @ExcludeMissing
-                fun _semitransparency(): MultipartField<Boolean> = semitransparency
+                fun _semitransparency(): JsonField<Boolean> = semitransparency
 
                 @JsonAnySetter
                 private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2745,10 +2829,10 @@ private constructor(
                 /** A builder for [Options]. */
                 class Builder internal constructor() {
 
-                    private var addShadow: MultipartField<Boolean> = MultipartField.of(null)
-                    private var bgColor: MultipartField<String> = MultipartField.of(null)
-                    private var bgImageUrl: MultipartField<String> = MultipartField.of(null)
-                    private var semitransparency: MultipartField<Boolean> = MultipartField.of(null)
+                    private var addShadow: JsonField<Boolean> = JsonMissing.of()
+                    private var bgColor: JsonField<String> = JsonMissing.of()
+                    private var bgImageUrl: JsonField<String> = JsonMissing.of()
+                    private var semitransparency: JsonField<Boolean> = JsonMissing.of()
                     private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                     @JvmSynthetic
@@ -2764,16 +2848,16 @@ private constructor(
                      * Whether to add an artificial shadow to the result. Default is false. Note:
                      * Adding shadows is currently only supported for car photos.
                      */
-                    fun addShadow(addShadow: Boolean) = addShadow(MultipartField.of(addShadow))
+                    fun addShadow(addShadow: Boolean) = addShadow(JsonField.of(addShadow))
 
                     /**
-                     * Sets [Builder.addShadow] to an arbitrary multipart value.
+                     * Sets [Builder.addShadow] to an arbitrary JSON value.
                      *
                      * You should usually call [Builder.addShadow] with a well-typed [Boolean] value
                      * instead. This method is primarily for setting the field to an undocumented or
                      * not yet supported value.
                      */
-                    fun addShadow(addShadow: MultipartField<Boolean>) = apply {
+                    fun addShadow(addShadow: JsonField<Boolean>) = apply {
                         this.addShadow = addShadow
                     }
 
@@ -2782,31 +2866,31 @@ private constructor(
                      * color name (e.g., "green"). If this parameter is set, `bg_image_url` must be
                      * empty.
                      */
-                    fun bgColor(bgColor: String) = bgColor(MultipartField.of(bgColor))
+                    fun bgColor(bgColor: String) = bgColor(JsonField.of(bgColor))
 
                     /**
-                     * Sets [Builder.bgColor] to an arbitrary multipart value.
+                     * Sets [Builder.bgColor] to an arbitrary JSON value.
                      *
                      * You should usually call [Builder.bgColor] with a well-typed [String] value
                      * instead. This method is primarily for setting the field to an undocumented or
                      * not yet supported value.
                      */
-                    fun bgColor(bgColor: MultipartField<String>) = apply { this.bgColor = bgColor }
+                    fun bgColor(bgColor: JsonField<String>) = apply { this.bgColor = bgColor }
 
                     /**
                      * Sets a background image from a URL. If this parameter is set, `bg_color` must
                      * be empty.
                      */
-                    fun bgImageUrl(bgImageUrl: String) = bgImageUrl(MultipartField.of(bgImageUrl))
+                    fun bgImageUrl(bgImageUrl: String) = bgImageUrl(JsonField.of(bgImageUrl))
 
                     /**
-                     * Sets [Builder.bgImageUrl] to an arbitrary multipart value.
+                     * Sets [Builder.bgImageUrl] to an arbitrary JSON value.
                      *
                      * You should usually call [Builder.bgImageUrl] with a well-typed [String] value
                      * instead. This method is primarily for setting the field to an undocumented or
                      * not yet supported value.
                      */
-                    fun bgImageUrl(bgImageUrl: MultipartField<String>) = apply {
+                    fun bgImageUrl(bgImageUrl: JsonField<String>) = apply {
                         this.bgImageUrl = bgImageUrl
                     }
 
@@ -2815,16 +2899,16 @@ private constructor(
                      * Semitransparency is currently only supported for car windows.
                      */
                     fun semitransparency(semitransparency: Boolean) =
-                        semitransparency(MultipartField.of(semitransparency))
+                        semitransparency(JsonField.of(semitransparency))
 
                     /**
-                     * Sets [Builder.semitransparency] to an arbitrary multipart value.
+                     * Sets [Builder.semitransparency] to an arbitrary JSON value.
                      *
                      * You should usually call [Builder.semitransparency] with a well-typed
                      * [Boolean] value instead. This method is primarily for setting the field to an
                      * undocumented or not yet supported value.
                      */
-                    fun semitransparency(semitransparency: MultipartField<Boolean>) = apply {
+                    fun semitransparency(semitransparency: JsonField<Boolean>) = apply {
                         this.semitransparency = semitransparency
                     }
 
@@ -2887,6 +2971,19 @@ private constructor(
                         false
                     }
 
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic
+                internal fun validity(): Int =
+                    (if (addShadow.asKnown().isPresent) 1 else 0) +
+                        (if (bgColor.asKnown().isPresent) 1 else 0) +
+                        (if (bgImageUrl.asKnown().isPresent) 1 else 0) +
+                        (if (semitransparency.asKnown().isPresent) 1 else 0)
+
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
@@ -2937,11 +3034,22 @@ private constructor(
 
         class AutoTaggingExtension
         private constructor(
-            private val maxTags: MultipartField<Long>,
-            private val minConfidence: MultipartField<Long>,
-            private val name: MultipartField<Name>,
+            private val maxTags: JsonField<Long>,
+            private val minConfidence: JsonField<Long>,
+            private val name: JsonField<Name>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("maxTags")
+                @ExcludeMissing
+                maxTags: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("minConfidence")
+                @ExcludeMissing
+                minConfidence: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
+            ) : this(maxTags, minConfidence, name, mutableMapOf())
 
             /**
              * Maximum number of tags to attach to the asset.
@@ -2950,7 +3058,7 @@ private constructor(
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun maxTags(): Long = maxTags.value.getRequired("maxTags")
+            fun maxTags(): Long = maxTags.getRequired("maxTags")
 
             /**
              * Minimum confidence level for tags to be considered valid.
@@ -2959,7 +3067,7 @@ private constructor(
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun minConfidence(): Long = minConfidence.value.getRequired("minConfidence")
+            fun minConfidence(): Long = minConfidence.getRequired("minConfidence")
 
             /**
              * Specifies the auto-tagging extension used.
@@ -2968,33 +3076,31 @@ private constructor(
              *   unexpectedly missing or null (e.g. if the server responded with an unexpected
              *   value).
              */
-            fun name(): Name = name.value.getRequired("name")
+            fun name(): Name = name.getRequired("name")
 
             /**
-             * Returns the raw multipart value of [maxTags].
+             * Returns the raw JSON value of [maxTags].
              *
-             * Unlike [maxTags], this method doesn't throw if the multipart field has an unexpected
-             * type.
+             * Unlike [maxTags], this method doesn't throw if the JSON field has an unexpected type.
              */
-            @JsonProperty("maxTags") @ExcludeMissing fun _maxTags(): MultipartField<Long> = maxTags
+            @JsonProperty("maxTags") @ExcludeMissing fun _maxTags(): JsonField<Long> = maxTags
 
             /**
-             * Returns the raw multipart value of [minConfidence].
+             * Returns the raw JSON value of [minConfidence].
              *
-             * Unlike [minConfidence], this method doesn't throw if the multipart field has an
-             * unexpected type.
+             * Unlike [minConfidence], this method doesn't throw if the JSON field has an unexpected
+             * type.
              */
             @JsonProperty("minConfidence")
             @ExcludeMissing
-            fun _minConfidence(): MultipartField<Long> = minConfidence
+            fun _minConfidence(): JsonField<Long> = minConfidence
 
             /**
-             * Returns the raw multipart value of [name].
+             * Returns the raw JSON value of [name].
              *
-             * Unlike [name], this method doesn't throw if the multipart field has an unexpected
-             * type.
+             * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
              */
-            @JsonProperty("name") @ExcludeMissing fun _name(): MultipartField<Name> = name
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<Name> = name
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3026,9 +3132,9 @@ private constructor(
             /** A builder for [AutoTaggingExtension]. */
             class Builder internal constructor() {
 
-                private var maxTags: MultipartField<Long>? = null
-                private var minConfidence: MultipartField<Long>? = null
-                private var name: MultipartField<Name>? = null
+                private var maxTags: JsonField<Long>? = null
+                private var minConfidence: JsonField<Long>? = null
+                private var name: JsonField<Name>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -3040,43 +3146,42 @@ private constructor(
                 }
 
                 /** Maximum number of tags to attach to the asset. */
-                fun maxTags(maxTags: Long) = maxTags(MultipartField.of(maxTags))
+                fun maxTags(maxTags: Long) = maxTags(JsonField.of(maxTags))
 
                 /**
-                 * Sets [Builder.maxTags] to an arbitrary multipart value.
+                 * Sets [Builder.maxTags] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.maxTags] with a well-typed [Long] value instead.
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun maxTags(maxTags: MultipartField<Long>) = apply { this.maxTags = maxTags }
+                fun maxTags(maxTags: JsonField<Long>) = apply { this.maxTags = maxTags }
 
                 /** Minimum confidence level for tags to be considered valid. */
-                fun minConfidence(minConfidence: Long) =
-                    minConfidence(MultipartField.of(minConfidence))
+                fun minConfidence(minConfidence: Long) = minConfidence(JsonField.of(minConfidence))
 
                 /**
-                 * Sets [Builder.minConfidence] to an arbitrary multipart value.
+                 * Sets [Builder.minConfidence] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.minConfidence] with a well-typed [Long] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun minConfidence(minConfidence: MultipartField<Long>) = apply {
+                fun minConfidence(minConfidence: JsonField<Long>) = apply {
                     this.minConfidence = minConfidence
                 }
 
                 /** Specifies the auto-tagging extension used. */
-                fun name(name: Name) = name(MultipartField.of(name))
+                fun name(name: Name) = name(JsonField.of(name))
 
                 /**
-                 * Sets [Builder.name] to an arbitrary multipart value.
+                 * Sets [Builder.name] to an arbitrary JSON value.
                  *
                  * You should usually call [Builder.name] with a well-typed [Name] value instead.
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun name(name: MultipartField<Name>) = apply { this.name = name }
+                fun name(name: JsonField<Name>) = apply { this.name = name }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -3143,6 +3248,18 @@ private constructor(
                 } catch (e: ImageKitInvalidDataException) {
                     false
                 }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (maxTags.asKnown().isPresent) 1 else 0) +
+                    (if (minConfidence.asKnown().isPresent) 1 else 0) +
+                    (name.asKnown().getOrNull()?.validity() ?: 0)
 
             /** Specifies the auto-tagging extension used. */
             class Name @JsonCreator private constructor(private val value: JsonField<String>) :

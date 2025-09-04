@@ -4,6 +4,7 @@ package com.imagekit.api.models.beta.v2.files
 
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.MultipartField
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -27,10 +28,10 @@ internal class FileUploadParamsTest {
             .description("Running shoes")
             .extensions(
                 listOf(
-                    FileUploadParams.Extension.ofRemoveBg(
-                        FileUploadParams.Extension.RemoveBg.builder()
+                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                             .options(
-                                FileUploadParams.Extension.RemoveBg.Options.builder()
+                                UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                     .addShadow(true)
                                     .bgColor("bg_color")
                                     .bgImageUrl("bg_image_url")
@@ -39,17 +40,17 @@ internal class FileUploadParamsTest {
                             )
                             .build()
                     ),
-                    FileUploadParams.Extension.ofAutoTagging(
-                        FileUploadParams.Extension.AutoTaggingExtension.builder()
+                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                             .maxTags(5L)
                             .minConfidence(95L)
                             .name(
-                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                     .GOOGLE_AUTO_TAGGING
                             )
                             .build()
                     ),
-                    FileUploadParams.Extension.ofAiAutoDescription(),
+                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                 )
             )
             .folder("folder")
@@ -106,10 +107,10 @@ internal class FileUploadParamsTest {
                 .description("Running shoes")
                 .extensions(
                     listOf(
-                        FileUploadParams.Extension.ofRemoveBg(
-                            FileUploadParams.Extension.RemoveBg.builder()
+                        UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                            UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                 .options(
-                                    FileUploadParams.Extension.RemoveBg.Options.builder()
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -118,17 +119,17 @@ internal class FileUploadParamsTest {
                                 )
                                 .build()
                         ),
-                        FileUploadParams.Extension.ofAutoTagging(
-                            FileUploadParams.Extension.AutoTaggingExtension.builder()
+                        UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
                                 .name(
-                                    FileUploadParams.Extension.AutoTaggingExtension.Name
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                         .GOOGLE_AUTO_TAGGING
                                 )
                                 .build()
                         ),
-                        FileUploadParams.Extension.ofAiAutoDescription(),
+                        UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                     )
                 )
                 .folder("folder")
@@ -194,10 +195,10 @@ internal class FileUploadParamsTest {
                         "extensions" to
                             MultipartField.of(
                                 listOf(
-                                    FileUploadParams.Extension.ofRemoveBg(
-                                        FileUploadParams.Extension.RemoveBg.builder()
+                                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                             .options(
-                                                FileUploadParams.Extension.RemoveBg.Options
+                                                UnnamedSchemaWithArrayParent3.RemoveBg.Options
                                                     .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
@@ -207,17 +208,18 @@ internal class FileUploadParamsTest {
                                             )
                                             .build()
                                     ),
-                                    FileUploadParams.Extension.ofAutoTagging(
-                                        FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                             .maxTags(5L)
                                             .minConfidence(95L)
                                             .name(
-                                                FileUploadParams.Extension.AutoTaggingExtension.Name
+                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                    .Name
                                                     .GOOGLE_AUTO_TAGGING
                                             )
                                             .build()
                                     ),
-                                    FileUploadParams.Extension.ofAiAutoDescription(),
+                                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                                 )
                             ),
                         "folder" to MultipartField.of("folder"),

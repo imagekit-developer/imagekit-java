@@ -5,6 +5,7 @@ package com.imagekit.api.services.async
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.JsonValue
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileRenameParams
@@ -44,13 +45,10 @@ internal class FileServiceAsyncTest {
                             .description("description")
                             .extensions(
                                 listOf(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension.ofRemoveBg(
-                                        FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
-                                            .builder()
+                                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                             .options(
-                                                FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                    .RemoveBg
-                                                    .Options
+                                                UnnamedSchemaWithArrayParent3.RemoveBg.Options
                                                     .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
@@ -60,40 +58,29 @@ internal class FileServiceAsyncTest {
                                             )
                                             .build()
                                     ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofAutoTagging(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .builder()
-                                                .maxTags(10L)
-                                                .minConfidence(80L)
-                                                .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .AutoTaggingExtension
-                                                        .Name
-                                                        .GOOGLE_AUTO_TAGGING
-                                                )
-                                                .build()
-                                        ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofAutoTagging(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .builder()
-                                                .maxTags(10L)
-                                                .minConfidence(80L)
-                                                .name(
-                                                    FileUpdateParams.Update.UpdateFileDetails
-                                                        .Extension
-                                                        .AutoTaggingExtension
-                                                        .Name
-                                                        .AWS_AUTO_TAGGING
-                                                )
-                                                .build()
-                                        ),
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .ofAiAutoDescription(),
+                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                    .Name
+                                                    .GOOGLE_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                    .Name
+                                                    .AWS_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
+                                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                                 )
                             )
                             .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -242,10 +229,10 @@ internal class FileServiceAsyncTest {
                     .expire(0L)
                     .extensions(
                         listOf(
-                            FileUploadParams.Extension.ofRemoveBg(
-                                FileUploadParams.Extension.RemoveBg.builder()
+                            UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                     .options(
-                                        FileUploadParams.Extension.RemoveBg.Options.builder()
+                                        UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -254,17 +241,17 @@ internal class FileServiceAsyncTest {
                                     )
                                     .build()
                             ),
-                            FileUploadParams.Extension.ofAutoTagging(
-                                FileUploadParams.Extension.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                     .maxTags(5L)
                                     .minConfidence(95L)
                                     .name(
-                                        FileUploadParams.Extension.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            FileUploadParams.Extension.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                         )
                     )
                     .folder("folder")

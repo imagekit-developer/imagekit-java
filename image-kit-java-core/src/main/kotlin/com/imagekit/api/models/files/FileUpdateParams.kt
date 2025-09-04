@@ -29,6 +29,7 @@ import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
@@ -418,7 +419,7 @@ private constructor(
             private val customCoordinates: JsonField<String>,
             private val customMetadata: JsonField<CustomMetadata>,
             private val description: JsonField<String>,
-            private val extensions: JsonField<List<Extension>>,
+            private val extensions: JsonField<List<UnnamedSchemaWithArrayParent3>>,
             private val removeAiTags: JsonField<RemoveAiTags>,
             private val tags: JsonField<List<String>>,
             private val webhookUrl: JsonField<String>,
@@ -438,7 +439,7 @@ private constructor(
                 description: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("extensions")
                 @ExcludeMissing
-                extensions: JsonField<List<Extension>> = JsonMissing.of(),
+                extensions: JsonField<List<UnnamedSchemaWithArrayParent3>> = JsonMissing.of(),
                 @JsonProperty("removeAITags")
                 @ExcludeMissing
                 removeAiTags: JsonField<RemoveAiTags> = JsonMissing.of(),
@@ -495,7 +496,8 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun extensions(): Optional<List<Extension>> = extensions.getOptional("extensions")
+            fun extensions(): Optional<List<UnnamedSchemaWithArrayParent3>> =
+                extensions.getOptional("extensions")
 
             /**
              * An array of AITags associated with the file that you want to remove, e.g. `["car",
@@ -569,7 +571,7 @@ private constructor(
              */
             @JsonProperty("extensions")
             @ExcludeMissing
-            fun _extensions(): JsonField<List<Extension>> = extensions
+            fun _extensions(): JsonField<List<UnnamedSchemaWithArrayParent3>> = extensions
 
             /**
              * Returns the raw JSON value of [removeAiTags].
@@ -624,7 +626,8 @@ private constructor(
                 private var customCoordinates: JsonField<String> = JsonMissing.of()
                 private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
                 private var description: JsonField<String> = JsonMissing.of()
-                private var extensions: JsonField<MutableList<Extension>>? = null
+                private var extensions: JsonField<MutableList<UnnamedSchemaWithArrayParent3>>? =
+                    null
                 private var removeAiTags: JsonField<RemoveAiTags> = JsonMissing.of()
                 private var tags: JsonField<MutableList<String>>? = null
                 private var webhookUrl: JsonField<String> = JsonMissing.of()
@@ -704,41 +707,56 @@ private constructor(
                  * Array of extensions to be applied to the asset. Each extension can be configured
                  * with specific parameters based on the extension type.
                  */
-                fun extensions(extensions: List<Extension>) = extensions(JsonField.of(extensions))
+                fun extensions(extensions: List<UnnamedSchemaWithArrayParent3>) =
+                    extensions(JsonField.of(extensions))
 
                 /**
                  * Sets [Builder.extensions] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.extensions] with a well-typed `List<Extension>`
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
+                 * You should usually call [Builder.extensions] with a well-typed
+                 * `List<UnnamedSchemaWithArrayParent3>` value instead. This method is primarily for
+                 * setting the field to an undocumented or not yet supported value.
                  */
-                fun extensions(extensions: JsonField<List<Extension>>) = apply {
+                fun extensions(extensions: JsonField<List<UnnamedSchemaWithArrayParent3>>) = apply {
                     this.extensions = extensions.map { it.toMutableList() }
                 }
 
                 /**
-                 * Adds a single [Extension] to [extensions].
+                 * Adds a single [UnnamedSchemaWithArrayParent3] to [extensions].
                  *
                  * @throws IllegalStateException if the field was previously set to a non-list.
                  */
-                fun addExtension(extension: Extension) = apply {
+                fun addExtension(extension: UnnamedSchemaWithArrayParent3) = apply {
                     extensions =
                         (extensions ?: JsonField.of(mutableListOf())).also {
                             checkKnown("extensions", it).add(extension)
                         }
                 }
 
-                /** Alias for calling [addExtension] with `Extension.ofRemoveBg(removeBg)`. */
-                fun addExtension(removeBg: Extension.RemoveBg) =
-                    addExtension(Extension.ofRemoveBg(removeBg))
+                /**
+                 * Alias for calling [addExtension] with
+                 * `UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg)`.
+                 */
+                fun addExtension(removeBg: UnnamedSchemaWithArrayParent3.RemoveBg) =
+                    addExtension(UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg))
 
-                /** Alias for calling [addExtension] with `Extension.ofAutoTagging(autoTagging)`. */
-                fun addExtension(autoTagging: Extension.AutoTaggingExtension) =
-                    addExtension(Extension.ofAutoTagging(autoTagging))
+                /**
+                 * Alias for calling [addExtension] with
+                 * `UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)`.
+                 */
+                fun addExtension(
+                    autoTaggingExtension: UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                ) =
+                    addExtension(
+                        UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)
+                    )
 
-                /** Alias for calling [addExtension] with `Extension.ofAiAutoDescription()`. */
-                fun addExtensionAiAutoDescription() = addExtension(Extension.ofAiAutoDescription())
+                /**
+                 * Alias for calling [addExtension] with
+                 * `UnnamedSchemaWithArrayParent3.ofAiAutoDescription()`.
+                 */
+                fun addExtensionAiAutoDescription() =
+                    addExtension(UnnamedSchemaWithArrayParent3.ofAiAutoDescription())
 
                 /**
                  * An array of AITags associated with the file that you want to remove, e.g.
@@ -1015,32 +1033,34 @@ private constructor(
                     "CustomMetadata{additionalProperties=$additionalProperties}"
             }
 
-            @JsonDeserialize(using = Extension.Deserializer::class)
-            @JsonSerialize(using = Extension.Serializer::class)
-            class Extension
+            @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
+            @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
+            class UnnamedSchemaWithArrayParent3
             private constructor(
                 private val removeBg: RemoveBg? = null,
-                private val autoTagging: AutoTaggingExtension? = null,
+                private val autoTaggingExtension: AutoTaggingExtension? = null,
                 private val aiAutoDescription: JsonValue? = null,
                 private val _json: JsonValue? = null,
             ) {
 
                 fun removeBg(): Optional<RemoveBg> = Optional.ofNullable(removeBg)
 
-                fun autoTagging(): Optional<AutoTaggingExtension> = Optional.ofNullable(autoTagging)
+                fun autoTaggingExtension(): Optional<AutoTaggingExtension> =
+                    Optional.ofNullable(autoTaggingExtension)
 
                 fun aiAutoDescription(): Optional<JsonValue> =
                     Optional.ofNullable(aiAutoDescription)
 
                 fun isRemoveBg(): Boolean = removeBg != null
 
-                fun isAutoTagging(): Boolean = autoTagging != null
+                fun isAutoTaggingExtension(): Boolean = autoTaggingExtension != null
 
                 fun isAiAutoDescription(): Boolean = aiAutoDescription != null
 
                 fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
-                fun asAutoTagging(): AutoTaggingExtension = autoTagging.getOrThrow("autoTagging")
+                fun asAutoTaggingExtension(): AutoTaggingExtension =
+                    autoTaggingExtension.getOrThrow("autoTaggingExtension")
 
                 fun asAiAutoDescription(): JsonValue =
                     aiAutoDescription.getOrThrow("aiAutoDescription")
@@ -1050,7 +1070,8 @@ private constructor(
                 fun <T> accept(visitor: Visitor<T>): T =
                     when {
                         removeBg != null -> visitor.visitRemoveBg(removeBg)
-                        autoTagging != null -> visitor.visitAutoTagging(autoTagging)
+                        autoTaggingExtension != null ->
+                            visitor.visitAutoTaggingExtension(autoTaggingExtension)
                         aiAutoDescription != null ->
                             visitor.visitAiAutoDescription(aiAutoDescription)
                         else -> visitor.unknown(_json)
@@ -1058,7 +1079,7 @@ private constructor(
 
                 private var validated: Boolean = false
 
-                fun validate(): Extension = apply {
+                fun validate(): UnnamedSchemaWithArrayParent3 = apply {
                     if (validated) {
                         return@apply
                     }
@@ -1069,8 +1090,10 @@ private constructor(
                                 removeBg.validate()
                             }
 
-                            override fun visitAutoTagging(autoTagging: AutoTaggingExtension) {
-                                autoTagging.validate()
+                            override fun visitAutoTaggingExtension(
+                                autoTaggingExtension: AutoTaggingExtension
+                            ) {
+                                autoTaggingExtension.validate()
                             }
 
                             override fun visitAiAutoDescription(aiAutoDescription: JsonValue) {
@@ -1109,8 +1132,9 @@ private constructor(
                         object : Visitor<Int> {
                             override fun visitRemoveBg(removeBg: RemoveBg) = removeBg.validity()
 
-                            override fun visitAutoTagging(autoTagging: AutoTaggingExtension) =
-                                autoTagging.validity()
+                            override fun visitAutoTaggingExtension(
+                                autoTaggingExtension: AutoTaggingExtension
+                            ) = autoTaggingExtension.validity()
 
                             override fun visitAiAutoDescription(aiAutoDescription: JsonValue) =
                                 aiAutoDescription.let {
@@ -1130,107 +1154,129 @@ private constructor(
                         return true
                     }
 
-                    return other is Extension &&
+                    return other is UnnamedSchemaWithArrayParent3 &&
                         removeBg == other.removeBg &&
-                        autoTagging == other.autoTagging &&
+                        autoTaggingExtension == other.autoTaggingExtension &&
                         aiAutoDescription == other.aiAutoDescription
                 }
 
                 override fun hashCode(): Int =
-                    Objects.hash(removeBg, autoTagging, aiAutoDescription)
+                    Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription)
 
                 override fun toString(): String =
                     when {
-                        removeBg != null -> "Extension{removeBg=$removeBg}"
-                        autoTagging != null -> "Extension{autoTagging=$autoTagging}"
+                        removeBg != null -> "UnnamedSchemaWithArrayParent3{removeBg=$removeBg}"
+                        autoTaggingExtension != null ->
+                            "UnnamedSchemaWithArrayParent3{autoTaggingExtension=$autoTaggingExtension}"
                         aiAutoDescription != null ->
-                            "Extension{aiAutoDescription=$aiAutoDescription}"
-                        _json != null -> "Extension{_unknown=$_json}"
-                        else -> throw IllegalStateException("Invalid Extension")
+                            "UnnamedSchemaWithArrayParent3{aiAutoDescription=$aiAutoDescription}"
+                        _json != null -> "UnnamedSchemaWithArrayParent3{_unknown=$_json}"
+                        else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                     }
 
                 companion object {
 
-                    @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = Extension(removeBg = removeBg)
+                    @JvmStatic
+                    fun ofRemoveBg(removeBg: RemoveBg) =
+                        UnnamedSchemaWithArrayParent3(removeBg = removeBg)
 
                     @JvmStatic
-                    fun ofAutoTagging(autoTagging: AutoTaggingExtension) =
-                        Extension(autoTagging = autoTagging)
+                    fun ofAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension) =
+                        UnnamedSchemaWithArrayParent3(autoTaggingExtension = autoTaggingExtension)
 
                     @JvmStatic
                     fun ofAiAutoDescription() =
-                        Extension(
+                        UnnamedSchemaWithArrayParent3(
                             aiAutoDescription =
                                 JsonValue.from(mapOf("name" to "ai-auto-description"))
                         )
                 }
 
                 /**
-                 * An interface that defines how to map each variant of [Extension] to a value of
-                 * type [T].
+                 * An interface that defines how to map each variant of
+                 * [UnnamedSchemaWithArrayParent3] to a value of type [T].
                  */
                 interface Visitor<out T> {
 
                     fun visitRemoveBg(removeBg: RemoveBg): T
 
-                    fun visitAutoTagging(autoTagging: AutoTaggingExtension): T
+                    fun visitAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension): T
 
                     fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
                     /**
-                     * Maps an unknown variant of [Extension] to a value of type [T].
+                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent3] to a value of type
+                     * [T].
                      *
-                     * An instance of [Extension] can contain an unknown variant if it was
-                     * deserialized from data that doesn't match any known variant. For example, if
-                     * the SDK is on an older version than the API, then the API may respond with
-                     * new variants that the SDK is unaware of.
+                     * An instance of [UnnamedSchemaWithArrayParent3] can contain an unknown variant
+                     * if it was deserialized from data that doesn't match any known variant. For
+                     * example, if the SDK is on an older version than the API, then the API may
+                     * respond with new variants that the SDK is unaware of.
                      *
                      * @throws ImageKitInvalidDataException in the default implementation.
                      */
                     fun unknown(json: JsonValue?): T {
-                        throw ImageKitInvalidDataException("Unknown Extension: $json")
+                        throw ImageKitInvalidDataException(
+                            "Unknown UnnamedSchemaWithArrayParent3: $json"
+                        )
                     }
                 }
 
-                internal class Deserializer : BaseDeserializer<Extension>(Extension::class) {
+                internal class Deserializer :
+                    BaseDeserializer<UnnamedSchemaWithArrayParent3>(
+                        UnnamedSchemaWithArrayParent3::class
+                    ) {
 
-                    override fun ObjectCodec.deserialize(node: JsonNode): Extension {
+                    override fun ObjectCodec.deserialize(
+                        node: JsonNode
+                    ): UnnamedSchemaWithArrayParent3 {
                         val json = JsonValue.fromJsonNode(node)
                         val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
                         when (name) {
                             "remove-bg" -> {
                                 return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
-                                    Extension(removeBg = it, _json = json)
-                                } ?: Extension(_json = json)
+                                    UnnamedSchemaWithArrayParent3(removeBg = it, _json = json)
+                                } ?: UnnamedSchemaWithArrayParent3(_json = json)
                             }
                             "ai-auto-description" -> {
                                 return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                    ?.let { Extension(aiAutoDescription = it, _json = json) }
-                                    ?.takeIf { it.isValid() } ?: Extension(_json = json)
+                                    ?.let {
+                                        UnnamedSchemaWithArrayParent3(
+                                            aiAutoDescription = it,
+                                            _json = json,
+                                        )
+                                    }
+                                    ?.takeIf { it.isValid() }
+                                    ?: UnnamedSchemaWithArrayParent3(_json = json)
                             }
                         }
 
                         return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                            Extension(autoTagging = it, _json = json)
-                        } ?: Extension(_json = json)
+                            UnnamedSchemaWithArrayParent3(autoTaggingExtension = it, _json = json)
+                        } ?: UnnamedSchemaWithArrayParent3(_json = json)
                     }
                 }
 
-                internal class Serializer : BaseSerializer<Extension>(Extension::class) {
+                internal class Serializer :
+                    BaseSerializer<UnnamedSchemaWithArrayParent3>(
+                        UnnamedSchemaWithArrayParent3::class
+                    ) {
 
                     override fun serialize(
-                        value: Extension,
+                        value: UnnamedSchemaWithArrayParent3,
                         generator: JsonGenerator,
                         provider: SerializerProvider,
                     ) {
                         when {
                             value.removeBg != null -> generator.writeObject(value.removeBg)
-                            value.autoTagging != null -> generator.writeObject(value.autoTagging)
+                            value.autoTaggingExtension != null ->
+                                generator.writeObject(value.autoTaggingExtension)
                             value.aiAutoDescription != null ->
                                 generator.writeObject(value.aiAutoDescription)
                             value._json != null -> generator.writeObject(value._json)
-                            else -> throw IllegalStateException("Invalid Extension")
+                            else ->
+                                throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                         }
                     }
                 }
