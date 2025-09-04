@@ -146,7 +146,7 @@ private constructor(
     fun description(): Optional<String> = body.description()
 
     /**
-     * Array of extensions to be applied to the image. Each extension can be configured with
+     * Array of extensions to be applied to the asset. Each extension can be configured with
      * specific parameters based on the extension type.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -634,7 +634,7 @@ private constructor(
         }
 
         /**
-         * Array of extensions to be applied to the image. Each extension can be configured with
+         * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          */
         fun extensions(extensions: List<Extension>) = apply { body.extensions(extensions) }
@@ -1181,7 +1181,7 @@ private constructor(
         fun description(): Optional<String> = description.value.getOptional("description")
 
         /**
-         * Array of extensions to be applied to the image. Each extension can be configured with
+         * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -1739,7 +1739,7 @@ private constructor(
             }
 
             /**
-             * Array of extensions to be applied to the image. Each extension can be configured with
+             * Array of extensions to be applied to the asset. Each extension can be configured with
              * specific parameters based on the extension type.
              */
             fun extensions(extensions: List<Extension>) = extensions(MultipartField.of(extensions))
