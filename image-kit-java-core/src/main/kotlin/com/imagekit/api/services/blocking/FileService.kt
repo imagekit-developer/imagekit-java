@@ -202,21 +202,13 @@ interface FileService {
      *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
      * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
      */
-    fun upload(): FileUploadResponse = upload(FileUploadParams.none())
+    fun upload(params: FileUploadParams): FileUploadResponse = upload(params, RequestOptions.none())
 
     /** @see upload */
     fun upload(
-        params: FileUploadParams = FileUploadParams.none(),
+        params: FileUploadParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): FileUploadResponse
-
-    /** @see upload */
-    fun upload(params: FileUploadParams = FileUploadParams.none()): FileUploadResponse =
-        upload(params, RequestOptions.none())
-
-    /** @see upload */
-    fun upload(requestOptions: RequestOptions): FileUploadResponse =
-        upload(FileUploadParams.none(), requestOptions)
 
     /** A view of [FileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -404,24 +396,14 @@ interface FileService {
          * [FileService.upload].
          */
         @MustBeClosed
-        fun upload(): HttpResponseFor<FileUploadResponse> = upload(FileUploadParams.none())
+        fun upload(params: FileUploadParams): HttpResponseFor<FileUploadResponse> =
+            upload(params, RequestOptions.none())
 
         /** @see upload */
         @MustBeClosed
         fun upload(
-            params: FileUploadParams = FileUploadParams.none(),
+            params: FileUploadParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<FileUploadResponse>
-
-        /** @see upload */
-        @MustBeClosed
-        fun upload(
-            params: FileUploadParams = FileUploadParams.none()
-        ): HttpResponseFor<FileUploadResponse> = upload(params, RequestOptions.none())
-
-        /** @see upload */
-        @MustBeClosed
-        fun upload(requestOptions: RequestOptions): HttpResponseFor<FileUploadResponse> =
-            upload(FileUploadParams.none(), requestOptions)
     }
 }
