@@ -33,11 +33,11 @@ internal class FileServiceTest {
             fileService.update(
                 FileUpdateParams.builder()
                     .fileId("fileId")
-                    .update(
-                        FileUpdateParams.Update.UpdateFileDetails.builder()
+                    .body(
+                        FileUpdateParams.Body.UpdateFileDetails.builder()
                             .customCoordinates("10,10,100,100")
                             .customMetadata(
-                                FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
+                                FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
                                     .putAdditionalProperty("brand", JsonValue.from("bar"))
                                     .putAdditionalProperty("color", JsonValue.from("bar"))
                                     .build()

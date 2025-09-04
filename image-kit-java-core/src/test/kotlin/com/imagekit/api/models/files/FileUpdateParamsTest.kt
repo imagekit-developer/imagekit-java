@@ -14,11 +14,11 @@ internal class FileUpdateParamsTest {
     fun create() {
         FileUpdateParams.builder()
             .fileId("fileId")
-            .update(
-                FileUpdateParams.Update.UpdateFileDetails.builder()
+            .body(
+                FileUpdateParams.Body.UpdateFileDetails.builder()
                     .customCoordinates("10,10,100,100")
                     .customMetadata(
-                        FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
+                        FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
                             .putAdditionalProperty("brand", JsonValue.from("bar"))
                             .putAdditionalProperty("color", JsonValue.from("bar"))
                             .build()
@@ -84,11 +84,11 @@ internal class FileUpdateParamsTest {
         val params =
             FileUpdateParams.builder()
                 .fileId("fileId")
-                .update(
-                    FileUpdateParams.Update.UpdateFileDetails.builder()
+                .body(
+                    FileUpdateParams.Body.UpdateFileDetails.builder()
                         .customCoordinates("10,10,100,100")
                         .customMetadata(
-                            FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
+                            FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
                                 .putAdditionalProperty("brand", JsonValue.from("bar"))
                                 .putAdditionalProperty("color", JsonValue.from("bar"))
                                 .build()
@@ -143,11 +143,11 @@ internal class FileUpdateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                FileUpdateParams.Update.ofFileDetails(
-                    FileUpdateParams.Update.UpdateFileDetails.builder()
+                FileUpdateParams.Body.ofUpdateFileDetails(
+                    FileUpdateParams.Body.UpdateFileDetails.builder()
                         .customCoordinates("10,10,100,100")
                         .customMetadata(
-                            FileUpdateParams.Update.UpdateFileDetails.CustomMetadata.builder()
+                            FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
                                 .putAdditionalProperty("brand", JsonValue.from("bar"))
                                 .putAdditionalProperty("color", JsonValue.from("bar"))
                                 .build()

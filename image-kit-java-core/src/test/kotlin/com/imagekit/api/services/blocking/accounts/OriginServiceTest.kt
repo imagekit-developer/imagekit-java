@@ -28,7 +28,7 @@ internal class OriginServiceTest {
         val originResponse =
             originService.create(
                 OriginCreateParams.builder()
-                    .origin(
+                    .originRequest(
                         OriginRequest.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
@@ -60,7 +60,7 @@ internal class OriginServiceTest {
             originService.update(
                 OriginUpdateParams.builder()
                     .id("id")
-                    .origin(
+                    .originRequest(
                         OriginRequest.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")

@@ -28,7 +28,7 @@ internal class OriginServiceAsyncTest {
         val originResponseFuture =
             originServiceAsync.create(
                 OriginCreateParams.builder()
-                    .origin(
+                    .originRequest(
                         OriginRequest.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
@@ -61,7 +61,7 @@ internal class OriginServiceAsyncTest {
             originServiceAsync.update(
                 OriginUpdateParams.builder()
                     .id("id")
-                    .origin(
+                    .originRequest(
                         OriginRequest.S3.builder()
                             .accessKey("AKIATEST123")
                             .bucket("test-bucket")
