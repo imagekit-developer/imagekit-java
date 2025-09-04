@@ -22,6 +22,7 @@ import com.imagekit.api.errors.RateLimitException
 import com.imagekit.api.errors.UnauthorizedException
 import com.imagekit.api.errors.UnexpectedStatusCodeException
 import com.imagekit.api.errors.UnprocessableEntityException
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import com.imagekit.api.models.files.FileUploadParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
@@ -88,10 +89,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -100,17 +101,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -188,10 +189,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -200,17 +201,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -288,10 +289,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -300,17 +301,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -388,10 +389,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -400,17 +401,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -488,10 +489,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -500,17 +501,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -588,10 +589,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -600,17 +601,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -688,10 +689,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -700,17 +701,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -788,10 +789,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -800,17 +801,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -888,10 +889,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -900,17 +901,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -988,10 +989,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1000,17 +1001,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1088,10 +1089,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1100,17 +1101,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1188,10 +1189,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1200,17 +1201,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1288,10 +1289,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1300,17 +1301,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1388,10 +1389,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1400,17 +1401,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1488,10 +1489,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1500,17 +1501,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1588,10 +1589,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1600,17 +1601,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")
@@ -1686,10 +1687,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                FileUploadParams.Extension.ofRemoveBg(
-                                    FileUploadParams.Extension.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUploadParams.Extension.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1698,17 +1699,17 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAutoTagging(
-                                    FileUploadParams.Extension.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            FileUploadParams.Extension.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUploadParams.Extension.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .folder("folder")

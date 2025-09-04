@@ -3,6 +3,7 @@
 package com.imagekit.api.models.files
 
 import com.imagekit.api.core.JsonValue
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -25,13 +26,10 @@ internal class FileUpdateParamsTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            FileUpdateParams.Update.UpdateFileDetails.Extension.ofRemoveBg(
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
-                                    .builder()
+                            UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                     .options(
-                                        FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
-                                            .Options
-                                            .builder()
+                                        UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -40,36 +38,27 @@ internal class FileUpdateParamsTest {
                                     )
                                     .build()
                             ),
-                            FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                FileUpdateParams.Update.UpdateFileDetails.Extension
-                                    .AutoTaggingExtension
-                                    .builder()
+                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        FileUpdateParams.Update.UpdateFileDetails.Extension
-                                            .AutoTaggingExtension
-                                            .Name
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                FileUpdateParams.Update.UpdateFileDetails.Extension
-                                    .AutoTaggingExtension
-                                    .builder()
+                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        FileUpdateParams.Update.UpdateFileDetails.Extension
-                                            .AutoTaggingExtension
-                                            .Name
+                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                             .AWS_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                .ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                         )
                     )
                     .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -107,14 +96,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofRemoveBg(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .RemoveBg
-                                                .Options
-                                                .builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -123,36 +108,27 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .AutoTaggingExtension
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .AutoTaggingExtension
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension
-                                    .ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -179,14 +155,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofRemoveBg(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension.RemoveBg
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
                                         .options(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .RemoveBg
-                                                .Options
-                                                .builder()
+                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -195,36 +167,27 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .AutoTaggingExtension
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension.ofAutoTagging(
-                                    FileUpdateParams.Update.UpdateFileDetails.Extension
-                                        .AutoTaggingExtension
-                                        .builder()
+                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            FileUpdateParams.Update.UpdateFileDetails.Extension
-                                                .AutoTaggingExtension
-                                                .Name
+                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
                                                 .AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                FileUpdateParams.Update.UpdateFileDetails.Extension
-                                    .ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
