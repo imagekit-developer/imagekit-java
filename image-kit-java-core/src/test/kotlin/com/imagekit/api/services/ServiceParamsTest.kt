@@ -15,7 +15,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.imagekit.api.client.ImageKitClient
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import com.imagekit.api.models.files.FileUploadParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -61,10 +61,10 @@ internal class ServiceParamsTest {
                 .expire(0L)
                 .extensions(
                     listOf(
-                        UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                            UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                        UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                            UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                 .options(
-                                    UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                    UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -73,17 +73,17 @@ internal class ServiceParamsTest {
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                        UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
                                 .name(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                         .GOOGLE_AUTO_TAGGING
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                        UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                     )
                 )
                 .folder("folder")

@@ -4,7 +4,7 @@ package com.imagekit.api.models.files
 
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.MultipartField
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import java.io.InputStream
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -29,10 +29,10 @@ internal class FileUploadParamsTest {
             .expire(0L)
             .extensions(
                 listOf(
-                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                    UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                        UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                             .options(
-                                UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                     .addShadow(true)
                                     .bgColor("bg_color")
                                     .bgImageUrl("bg_image_url")
@@ -41,17 +41,17 @@ internal class FileUploadParamsTest {
                             )
                             .build()
                     ),
-                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                             .maxTags(5L)
                             .minConfidence(95L)
                             .name(
-                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                     .GOOGLE_AUTO_TAGGING
                             )
                             .build()
                     ),
-                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                    UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                 )
             )
             .folder("folder")
@@ -111,10 +111,10 @@ internal class FileUploadParamsTest {
                 .expire(0L)
                 .extensions(
                     listOf(
-                        UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                            UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                        UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                            UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                 .options(
-                                    UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                    UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -123,17 +123,17 @@ internal class FileUploadParamsTest {
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                        UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
                                 .name(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                         .GOOGLE_AUTO_TAGGING
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                        UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                     )
                 )
                 .folder("folder")
@@ -202,10 +202,10 @@ internal class FileUploadParamsTest {
                         "extensions" to
                             MultipartField.of(
                                 listOf(
-                                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                                    UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                             .options(
-                                                UnnamedSchemaWithArrayParent3.RemoveBg.Options
+                                                UnnamedSchemaWithArrayParent1.RemoveBg.Options
                                                     .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
@@ -215,18 +215,18 @@ internal class FileUploadParamsTest {
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                             .maxTags(5L)
                                             .minConfidence(95L)
                                             .name(
-                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension
                                                     .Name
                                                     .GOOGLE_AUTO_TAGGING
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                                    UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                                 )
                             ),
                         "folder" to MultipartField.of("folder"),

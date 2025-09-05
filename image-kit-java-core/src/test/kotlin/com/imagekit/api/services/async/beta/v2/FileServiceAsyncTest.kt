@@ -5,7 +5,7 @@ package com.imagekit.api.services.async.beta.v2
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import com.imagekit.api.models.beta.v2.files.FileUploadParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
@@ -42,10 +42,10 @@ internal class FileServiceAsyncTest {
                     .description("Running shoes")
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                            UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -54,17 +54,17 @@ internal class FileServiceAsyncTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                     .maxTags(5L)
                                     .minConfidence(95L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                         )
                     )
                     .folder("folder")
