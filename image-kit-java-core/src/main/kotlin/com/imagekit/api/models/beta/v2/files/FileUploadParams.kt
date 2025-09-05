@@ -29,7 +29,7 @@ import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import java.io.InputStream
 import java.nio.file.Path
 import java.util.Collections
@@ -154,7 +154,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun extensions(): Optional<List<UnnamedSchemaWithArrayParent3>> = body.extensions()
+    fun extensions(): Optional<List<UnnamedSchemaWithArrayParent1>> = body.extensions()
 
     /**
      * The folder path in which the image has to be uploaded. If the folder(s) didn't exist before,
@@ -341,7 +341,7 @@ private constructor(
      *
      * Unlike [extensions], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent3>> = body._extensions()
+    fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent1>> = body._extensions()
 
     /**
      * Returns the raw multipart value of [folder].
@@ -639,7 +639,7 @@ private constructor(
          * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          */
-        fun extensions(extensions: List<UnnamedSchemaWithArrayParent3>) = apply {
+        fun extensions(extensions: List<UnnamedSchemaWithArrayParent1>) = apply {
             body.extensions(extensions)
         }
 
@@ -647,42 +647,42 @@ private constructor(
          * Sets [Builder.extensions] to an arbitrary multipart value.
          *
          * You should usually call [Builder.extensions] with a well-typed
-         * `List<UnnamedSchemaWithArrayParent3>` value instead. This method is primarily for setting
+         * `List<UnnamedSchemaWithArrayParent1>` value instead. This method is primarily for setting
          * the field to an undocumented or not yet supported value.
          */
-        fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>) = apply {
+        fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>) = apply {
             body.extensions(extensions)
         }
 
         /**
-         * Adds a single [UnnamedSchemaWithArrayParent3] to [extensions].
+         * Adds a single [UnnamedSchemaWithArrayParent1] to [extensions].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addExtension(extension: UnnamedSchemaWithArrayParent3) = apply {
+        fun addExtension(extension: UnnamedSchemaWithArrayParent1) = apply {
             body.addExtension(extension)
         }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg)`.
+         * `UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg)`.
          */
-        fun addExtension(removeBg: UnnamedSchemaWithArrayParent3.RemoveBg) = apply {
+        fun addExtension(removeBg: UnnamedSchemaWithArrayParent1.RemoveBg) = apply {
             body.addExtension(removeBg)
         }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)`.
+         * `UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)`.
          */
-        fun addExtension(autoTaggingExtension: UnnamedSchemaWithArrayParent3.AutoTaggingExtension) =
+        fun addExtension(autoTaggingExtension: UnnamedSchemaWithArrayParent1.AutoTaggingExtension) =
             apply {
                 body.addExtension(autoTaggingExtension)
             }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent3.ofAiAutoDescription()`.
+         * `UnnamedSchemaWithArrayParent1.ofAiAutoDescription()`.
          */
         fun addExtensionAiAutoDescription() = apply { body.addExtensionAiAutoDescription() }
 
@@ -1100,7 +1100,7 @@ private constructor(
         private val customCoordinates: MultipartField<String>,
         private val customMetadata: MultipartField<CustomMetadata>,
         private val description: MultipartField<String>,
-        private val extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>,
+        private val extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>,
         private val folder: MultipartField<String>,
         private val isPrivateFile: MultipartField<Boolean>,
         private val isPublished: MultipartField<Boolean>,
@@ -1205,7 +1205,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun extensions(): Optional<List<UnnamedSchemaWithArrayParent3>> =
+        fun extensions(): Optional<List<UnnamedSchemaWithArrayParent1>> =
             extensions.value.getOptional("extensions")
 
         /**
@@ -1409,7 +1409,7 @@ private constructor(
          */
         @JsonProperty("extensions")
         @ExcludeMissing
-        fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent3>> = extensions
+        fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent1>> = extensions
 
         /**
          * Returns the raw multipart value of [folder].
@@ -1561,7 +1561,7 @@ private constructor(
             private var customCoordinates: MultipartField<String> = MultipartField.of(null)
             private var customMetadata: MultipartField<CustomMetadata> = MultipartField.of(null)
             private var description: MultipartField<String> = MultipartField.of(null)
-            private var extensions: MultipartField<MutableList<UnnamedSchemaWithArrayParent3>>? =
+            private var extensions: MultipartField<MutableList<UnnamedSchemaWithArrayParent1>>? =
                 null
             private var folder: MultipartField<String> = MultipartField.of(null)
             private var isPrivateFile: MultipartField<Boolean> = MultipartField.of(null)
@@ -1762,27 +1762,27 @@ private constructor(
              * Array of extensions to be applied to the asset. Each extension can be configured with
              * specific parameters based on the extension type.
              */
-            fun extensions(extensions: List<UnnamedSchemaWithArrayParent3>) =
+            fun extensions(extensions: List<UnnamedSchemaWithArrayParent1>) =
                 extensions(MultipartField.of(extensions))
 
             /**
              * Sets [Builder.extensions] to an arbitrary multipart value.
              *
              * You should usually call [Builder.extensions] with a well-typed
-             * `List<UnnamedSchemaWithArrayParent3>` value instead. This method is primarily for
+             * `List<UnnamedSchemaWithArrayParent1>` value instead. This method is primarily for
              * setting the field to an undocumented or not yet supported value.
              */
-            fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent3>>) =
+            fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>) =
                 apply {
                     this.extensions = extensions.map { it.toMutableList() }
                 }
 
             /**
-             * Adds a single [UnnamedSchemaWithArrayParent3] to [extensions].
+             * Adds a single [UnnamedSchemaWithArrayParent1] to [extensions].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addExtension(extension: UnnamedSchemaWithArrayParent3) = apply {
+            fun addExtension(extension: UnnamedSchemaWithArrayParent1) = apply {
                 extensions =
                     (extensions ?: MultipartField.of(mutableListOf())).also {
                         checkKnown("extensions", it).add(extension)
@@ -1791,28 +1791,28 @@ private constructor(
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg)`.
+             * `UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg)`.
              */
-            fun addExtension(removeBg: UnnamedSchemaWithArrayParent3.RemoveBg) =
-                addExtension(UnnamedSchemaWithArrayParent3.ofRemoveBg(removeBg))
+            fun addExtension(removeBg: UnnamedSchemaWithArrayParent1.RemoveBg) =
+                addExtension(UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg))
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)`.
+             * `UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)`.
              */
             fun addExtension(
-                autoTaggingExtension: UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                autoTaggingExtension: UnnamedSchemaWithArrayParent1.AutoTaggingExtension
             ) =
                 addExtension(
-                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(autoTaggingExtension)
+                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)
                 )
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent3.ofAiAutoDescription()`.
+             * `UnnamedSchemaWithArrayParent1.ofAiAutoDescription()`.
              */
             fun addExtensionAiAutoDescription() =
-                addExtension(UnnamedSchemaWithArrayParent3.ofAiAutoDescription())
+                addExtension(UnnamedSchemaWithArrayParent1.ofAiAutoDescription())
 
             /**
              * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -2318,9 +2318,9 @@ private constructor(
         override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
     }
 
-    @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
-    @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
-    class UnnamedSchemaWithArrayParent3
+    @JsonDeserialize(using = UnnamedSchemaWithArrayParent1.Deserializer::class)
+    @JsonSerialize(using = UnnamedSchemaWithArrayParent1.Serializer::class)
+    class UnnamedSchemaWithArrayParent1
     private constructor(
         private val removeBg: RemoveBg? = null,
         private val autoTaggingExtension: AutoTaggingExtension? = null,
@@ -2361,7 +2361,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): UnnamedSchemaWithArrayParent3 = apply {
+        fun validate(): UnnamedSchemaWithArrayParent1 = apply {
             if (validated) {
                 return@apply
             }
@@ -2431,7 +2431,7 @@ private constructor(
                 return true
             }
 
-            return other is UnnamedSchemaWithArrayParent3 &&
+            return other is UnnamedSchemaWithArrayParent1 &&
                 removeBg == other.removeBg &&
                 autoTaggingExtension == other.autoTaggingExtension &&
                 aiAutoDescription == other.aiAutoDescription
@@ -2442,33 +2442,33 @@ private constructor(
 
         override fun toString(): String =
             when {
-                removeBg != null -> "UnnamedSchemaWithArrayParent3{removeBg=$removeBg}"
+                removeBg != null -> "UnnamedSchemaWithArrayParent1{removeBg=$removeBg}"
                 autoTaggingExtension != null ->
-                    "UnnamedSchemaWithArrayParent3{autoTaggingExtension=$autoTaggingExtension}"
+                    "UnnamedSchemaWithArrayParent1{autoTaggingExtension=$autoTaggingExtension}"
                 aiAutoDescription != null ->
-                    "UnnamedSchemaWithArrayParent3{aiAutoDescription=$aiAutoDescription}"
-                _json != null -> "UnnamedSchemaWithArrayParent3{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
+                    "UnnamedSchemaWithArrayParent1{aiAutoDescription=$aiAutoDescription}"
+                _json != null -> "UnnamedSchemaWithArrayParent1{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent1")
             }
 
         companion object {
 
             @JvmStatic
-            fun ofRemoveBg(removeBg: RemoveBg) = UnnamedSchemaWithArrayParent3(removeBg = removeBg)
+            fun ofRemoveBg(removeBg: RemoveBg) = UnnamedSchemaWithArrayParent1(removeBg = removeBg)
 
             @JvmStatic
             fun ofAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension) =
-                UnnamedSchemaWithArrayParent3(autoTaggingExtension = autoTaggingExtension)
+                UnnamedSchemaWithArrayParent1(autoTaggingExtension = autoTaggingExtension)
 
             @JvmStatic
             fun ofAiAutoDescription() =
-                UnnamedSchemaWithArrayParent3(
+                UnnamedSchemaWithArrayParent1(
                     aiAutoDescription = JsonValue.from(mapOf("name" to "ai-auto-description"))
                 )
         }
 
         /**
-         * An interface that defines how to map each variant of [UnnamedSchemaWithArrayParent3] to a
+         * An interface that defines how to map each variant of [UnnamedSchemaWithArrayParent1] to a
          * value of type [T].
          */
         interface Visitor<out T> {
@@ -2480,9 +2480,9 @@ private constructor(
             fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
             /**
-             * Maps an unknown variant of [UnnamedSchemaWithArrayParent3] to a value of type [T].
+             * Maps an unknown variant of [UnnamedSchemaWithArrayParent1] to a value of type [T].
              *
-             * An instance of [UnnamedSchemaWithArrayParent3] can contain an unknown variant if it
+             * An instance of [UnnamedSchemaWithArrayParent1] can contain an unknown variant if it
              * was deserialized from data that doesn't match any known variant. For example, if the
              * SDK is on an older version than the API, then the API may respond with new variants
              * that the SDK is unaware of.
@@ -2490,43 +2490,43 @@ private constructor(
              * @throws ImageKitInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown UnnamedSchemaWithArrayParent3: $json")
+                throw ImageKitInvalidDataException("Unknown UnnamedSchemaWithArrayParent1: $json")
             }
         }
 
         internal class Deserializer :
-            BaseDeserializer<UnnamedSchemaWithArrayParent3>(UnnamedSchemaWithArrayParent3::class) {
+            BaseDeserializer<UnnamedSchemaWithArrayParent1>(UnnamedSchemaWithArrayParent1::class) {
 
-            override fun ObjectCodec.deserialize(node: JsonNode): UnnamedSchemaWithArrayParent3 {
+            override fun ObjectCodec.deserialize(node: JsonNode): UnnamedSchemaWithArrayParent1 {
                 val json = JsonValue.fromJsonNode(node)
                 val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
                 when (name) {
                     "remove-bg" -> {
                         return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
-                            UnnamedSchemaWithArrayParent3(removeBg = it, _json = json)
-                        } ?: UnnamedSchemaWithArrayParent3(_json = json)
+                            UnnamedSchemaWithArrayParent1(removeBg = it, _json = json)
+                        } ?: UnnamedSchemaWithArrayParent1(_json = json)
                     }
                     "ai-auto-description" -> {
                         return tryDeserialize(node, jacksonTypeRef<JsonValue>())
                             ?.let {
-                                UnnamedSchemaWithArrayParent3(aiAutoDescription = it, _json = json)
+                                UnnamedSchemaWithArrayParent1(aiAutoDescription = it, _json = json)
                             }
-                            ?.takeIf { it.isValid() } ?: UnnamedSchemaWithArrayParent3(_json = json)
+                            ?.takeIf { it.isValid() } ?: UnnamedSchemaWithArrayParent1(_json = json)
                     }
                 }
 
                 return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                    UnnamedSchemaWithArrayParent3(autoTaggingExtension = it, _json = json)
-                } ?: UnnamedSchemaWithArrayParent3(_json = json)
+                    UnnamedSchemaWithArrayParent1(autoTaggingExtension = it, _json = json)
+                } ?: UnnamedSchemaWithArrayParent1(_json = json)
             }
         }
 
         internal class Serializer :
-            BaseSerializer<UnnamedSchemaWithArrayParent3>(UnnamedSchemaWithArrayParent3::class) {
+            BaseSerializer<UnnamedSchemaWithArrayParent1>(UnnamedSchemaWithArrayParent1::class) {
 
             override fun serialize(
-                value: UnnamedSchemaWithArrayParent3,
+                value: UnnamedSchemaWithArrayParent1,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
@@ -2537,7 +2537,7 @@ private constructor(
                     value.aiAutoDescription != null ->
                         generator.writeObject(value.aiAutoDescription)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
+                    else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent1")
                 }
             }
         }

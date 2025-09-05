@@ -3,7 +3,7 @@
 package com.imagekit.api.models.files
 
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -14,11 +14,11 @@ internal class FileUpdateParamsTest {
     fun create() {
         FileUpdateParams.builder()
             .fileId("fileId")
-            .body(
-                FileUpdateParams.Body.UpdateFileDetails.builder()
+            .updateFileDetailsRequest(
+                UpdateFileDetailsRequest.UpdateFileDetails.builder()
                     .customCoordinates("10,10,100,100")
                     .customMetadata(
-                        FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
+                        UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
                             .putAdditionalProperty("brand", JsonValue.from("bar"))
                             .putAdditionalProperty("color", JsonValue.from("bar"))
                             .build()
@@ -26,10 +26,10 @@ internal class FileUpdateParamsTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                            UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -38,27 +38,27 @@ internal class FileUpdateParamsTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                             .AWS_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                         )
                     )
                     .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -84,11 +84,11 @@ internal class FileUpdateParamsTest {
         val params =
             FileUpdateParams.builder()
                 .fileId("fileId")
-                .body(
-                    FileUpdateParams.Body.UpdateFileDetails.builder()
+                .updateFileDetailsRequest(
+                    UpdateFileDetailsRequest.UpdateFileDetails.builder()
                         .customCoordinates("10,10,100,100")
                         .customMetadata(
-                            FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
+                            UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
                                 .putAdditionalProperty("brand", JsonValue.from("bar"))
                                 .putAdditionalProperty("color", JsonValue.from("bar"))
                                 .build()
@@ -96,10 +96,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -108,27 +108,27 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                                 .AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -143,11 +143,11 @@ internal class FileUpdateParamsTest {
 
         assertThat(body)
             .isEqualTo(
-                FileUpdateParams.Body.ofUpdateFileDetails(
-                    FileUpdateParams.Body.UpdateFileDetails.builder()
+                UpdateFileDetailsRequest.ofUpdateFileDetails(
+                    UpdateFileDetailsRequest.UpdateFileDetails.builder()
                         .customCoordinates("10,10,100,100")
                         .customMetadata(
-                            FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
+                            UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
                                 .putAdditionalProperty("brand", JsonValue.from("bar"))
                                 .putAdditionalProperty("color", JsonValue.from("bar"))
                                 .build()
@@ -155,10 +155,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -167,27 +167,27 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                                 .AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                             )
                         )
                         .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))

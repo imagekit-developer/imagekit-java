@@ -744,7 +744,7 @@ private constructor(
             fun defaultValue(bool: Boolean) = defaultValue(DefaultValue.ofBool(bool))
 
             /** Alias for calling [defaultValue] with `DefaultValue.ofMixed(mixed)`. */
-            fun defaultValueOfMixed(mixed: List<DefaultValue.UnnamedSchemaWithArrayParent2>) =
+            fun defaultValueOfMixed(mixed: List<DefaultValue.UnnamedSchemaWithArrayParent3>) =
                 defaultValue(DefaultValue.ofMixed(mixed))
 
             /**
@@ -969,7 +969,7 @@ private constructor(
             private val string: String? = null,
             private val number: Double? = null,
             private val bool: Boolean? = null,
-            private val mixed: List<UnnamedSchemaWithArrayParent2>? = null,
+            private val mixed: List<UnnamedSchemaWithArrayParent3>? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -983,7 +983,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent2>> = Optional.ofNullable(mixed)
+            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent3>> = Optional.ofNullable(mixed)
 
             fun isString(): Boolean = string != null
 
@@ -1003,7 +1003,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun asMixed(): List<UnnamedSchemaWithArrayParent2> = mixed.getOrThrow("mixed")
+            fun asMixed(): List<UnnamedSchemaWithArrayParent3> = mixed.getOrThrow("mixed")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1031,7 +1031,7 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) {}
 
-                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent2>) {
+                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>) {
                             mixed.forEach { it.validate() }
                         }
                     }
@@ -1063,7 +1063,7 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) = 1
 
-                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent2>) =
+                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>) =
                             mixed.sumOf { it.validity().toInt() }
 
                         override fun unknown(json: JsonValue?) = 0
@@ -1107,7 +1107,7 @@ private constructor(
                  * `MultiSelect`.
                  */
                 @JvmStatic
-                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent2>) =
+                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent3>) =
                     DefaultValue(mixed = mixed.toImmutable())
             }
 
@@ -1127,7 +1127,7 @@ private constructor(
                  * Default value should be of type array when custom metadata field type is set to
                  * `MultiSelect`.
                  */
-                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent2>): T
+                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent3>): T
 
                 /**
                  * Maps an unknown variant of [DefaultValue] to a value of type [T].
@@ -1162,7 +1162,7 @@ private constructor(
                                 },
                                 tryDeserialize(
                                         node,
-                                        jacksonTypeRef<List<UnnamedSchemaWithArrayParent2>>(),
+                                        jacksonTypeRef<List<UnnamedSchemaWithArrayParent3>>(),
                                     )
                                     ?.let { DefaultValue(mixed = it, _json = json) },
                             )
@@ -1200,9 +1200,9 @@ private constructor(
                 }
             }
 
-            @JsonDeserialize(using = UnnamedSchemaWithArrayParent2.Deserializer::class)
-            @JsonSerialize(using = UnnamedSchemaWithArrayParent2.Serializer::class)
-            class UnnamedSchemaWithArrayParent2
+            @JsonDeserialize(using = UnnamedSchemaWithArrayParent3.Deserializer::class)
+            @JsonSerialize(using = UnnamedSchemaWithArrayParent3.Serializer::class)
+            class UnnamedSchemaWithArrayParent3
             private constructor(
                 private val string: String? = null,
                 private val number: Double? = null,
@@ -1240,7 +1240,7 @@ private constructor(
 
                 private var validated: Boolean = false
 
-                fun validate(): UnnamedSchemaWithArrayParent2 = apply {
+                fun validate(): UnnamedSchemaWithArrayParent3 = apply {
                     if (validated) {
                         return@apply
                     }
@@ -1290,7 +1290,7 @@ private constructor(
                         return true
                     }
 
-                    return other is UnnamedSchemaWithArrayParent2 &&
+                    return other is UnnamedSchemaWithArrayParent3 &&
                         string == other.string &&
                         number == other.number &&
                         bool == other.bool
@@ -1300,28 +1300,28 @@ private constructor(
 
                 override fun toString(): String =
                     when {
-                        string != null -> "UnnamedSchemaWithArrayParent2{string=$string}"
-                        number != null -> "UnnamedSchemaWithArrayParent2{number=$number}"
-                        bool != null -> "UnnamedSchemaWithArrayParent2{bool=$bool}"
-                        _json != null -> "UnnamedSchemaWithArrayParent2{_unknown=$_json}"
-                        else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent2")
+                        string != null -> "UnnamedSchemaWithArrayParent3{string=$string}"
+                        number != null -> "UnnamedSchemaWithArrayParent3{number=$number}"
+                        bool != null -> "UnnamedSchemaWithArrayParent3{bool=$bool}"
+                        _json != null -> "UnnamedSchemaWithArrayParent3{_unknown=$_json}"
+                        else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                     }
 
                 companion object {
 
                     @JvmStatic
-                    fun ofString(string: String) = UnnamedSchemaWithArrayParent2(string = string)
+                    fun ofString(string: String) = UnnamedSchemaWithArrayParent3(string = string)
 
                     @JvmStatic
-                    fun ofNumber(number: Double) = UnnamedSchemaWithArrayParent2(number = number)
+                    fun ofNumber(number: Double) = UnnamedSchemaWithArrayParent3(number = number)
 
                     @JvmStatic
-                    fun ofBool(bool: Boolean) = UnnamedSchemaWithArrayParent2(bool = bool)
+                    fun ofBool(bool: Boolean) = UnnamedSchemaWithArrayParent3(bool = bool)
                 }
 
                 /**
                  * An interface that defines how to map each variant of
-                 * [UnnamedSchemaWithArrayParent2] to a value of type [T].
+                 * [UnnamedSchemaWithArrayParent3] to a value of type [T].
                  */
                 interface Visitor<out T> {
 
@@ -1332,10 +1332,10 @@ private constructor(
                     fun visitBool(bool: Boolean): T
 
                     /**
-                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent2] to a value of type
+                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent3] to a value of type
                      * [T].
                      *
-                     * An instance of [UnnamedSchemaWithArrayParent2] can contain an unknown variant
+                     * An instance of [UnnamedSchemaWithArrayParent3] can contain an unknown variant
                      * if it was deserialized from data that doesn't match any known variant. For
                      * example, if the SDK is on an older version than the API, then the API may
                      * respond with new variants that the SDK is unaware of.
@@ -1344,31 +1344,31 @@ private constructor(
                      */
                     fun unknown(json: JsonValue?): T {
                         throw ImageKitInvalidDataException(
-                            "Unknown UnnamedSchemaWithArrayParent2: $json"
+                            "Unknown UnnamedSchemaWithArrayParent3: $json"
                         )
                     }
                 }
 
                 internal class Deserializer :
-                    BaseDeserializer<UnnamedSchemaWithArrayParent2>(
-                        UnnamedSchemaWithArrayParent2::class
+                    BaseDeserializer<UnnamedSchemaWithArrayParent3>(
+                        UnnamedSchemaWithArrayParent3::class
                     ) {
 
                     override fun ObjectCodec.deserialize(
                         node: JsonNode
-                    ): UnnamedSchemaWithArrayParent2 {
+                    ): UnnamedSchemaWithArrayParent3 {
                         val json = JsonValue.fromJsonNode(node)
 
                         val bestMatches =
                             sequenceOf(
                                     tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                        UnnamedSchemaWithArrayParent2(string = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(string = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                        UnnamedSchemaWithArrayParent2(number = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(number = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
-                                        UnnamedSchemaWithArrayParent2(bool = it, _json = json)
+                                        UnnamedSchemaWithArrayParent3(bool = it, _json = json)
                                     },
                                 )
                                 .filterNotNull()
@@ -1378,7 +1378,7 @@ private constructor(
                             // This can happen if what we're deserializing is completely
                             // incompatible with all the possible variants (e.g. deserializing from
                             // object).
-                            0 -> UnnamedSchemaWithArrayParent2(_json = json)
+                            0 -> UnnamedSchemaWithArrayParent3(_json = json)
                             1 -> bestMatches.single()
                             // If there's more than one match with the highest validity, then use
                             // the first completely valid match, or simply the first match if none
@@ -1389,12 +1389,12 @@ private constructor(
                 }
 
                 internal class Serializer :
-                    BaseSerializer<UnnamedSchemaWithArrayParent2>(
-                        UnnamedSchemaWithArrayParent2::class
+                    BaseSerializer<UnnamedSchemaWithArrayParent3>(
+                        UnnamedSchemaWithArrayParent3::class
                     ) {
 
                     override fun serialize(
-                        value: UnnamedSchemaWithArrayParent2,
+                        value: UnnamedSchemaWithArrayParent3,
                         generator: JsonGenerator,
                         provider: SerializerProvider,
                     ) {
@@ -1404,7 +1404,7 @@ private constructor(
                             value.bool != null -> generator.writeObject(value.bool)
                             value._json != null -> generator.writeObject(value._json)
                             else ->
-                                throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent2")
+                                throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent3")
                         }
                     }
                 }

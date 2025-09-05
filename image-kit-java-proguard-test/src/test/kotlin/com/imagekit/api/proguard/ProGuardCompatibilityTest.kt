@@ -6,13 +6,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
-import com.imagekit.api.models.Overlay
-import com.imagekit.api.models.OverlayPosition
-import com.imagekit.api.models.OverlayTiming
 import com.imagekit.api.models.StreamingResolution
-import com.imagekit.api.models.TextOverlay
-import com.imagekit.api.models.TextOverlayTransformation
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import com.imagekit.api.models.files.File
+import com.imagekit.api.models.files.UpdateFileDetailsRequest
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -111,45 +108,59 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun overlayRoundtrip() {
+    fun updateFileDetailsRequestRoundtrip() {
         val jsonMapper = jsonMapper()
-        val overlay =
-            Overlay.ofText(
-                TextOverlay.builder()
-                    .position(
-                        OverlayPosition.builder()
-                            .focus(OverlayPosition.Focus.CENTER)
-                            .x(0.0)
-                            .y(0.0)
+        val updateFileDetailsRequest =
+            UpdateFileDetailsRequest.ofUpdateFileDetails(
+                UpdateFileDetailsRequest.UpdateFileDetails.builder()
+                    .customCoordinates("customCoordinates")
+                    .customMetadata(
+                        UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
-                    .timing(OverlayTiming.builder().duration(0.0).end(0.0).start(0.0).build())
-                    .text("text")
-                    .encoding(TextOverlay.Encoding.AUTO)
-                    .addTransformation(
-                        TextOverlayTransformation.builder()
-                            .alpha(1.0)
-                            .background("background")
-                            .flip(TextOverlayTransformation.Flip.H)
-                            .fontColor("fontColor")
-                            .fontFamily("fontFamily")
-                            .fontSize(0.0)
-                            .innerAlignment(TextOverlayTransformation.InnerAlignment.LEFT)
-                            .lineHeight(0.0)
-                            .padding(0.0)
-                            .radius(0.0)
-                            .rotation(0.0)
-                            .typography("typography")
-                            .width(0.0)
-                            .build()
+                    .description("description")
+                    .extensions(
+                        listOf(
+                            UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                    .options(
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            .addShadow(true)
+                                            .bgColor("bg_color")
+                                            .bgImageUrl("bg_image_url")
+                                            .semitransparency(true)
+                                            .build()
+                                    )
+                                    .build()
+                            ),
+                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                    .maxTags(5L)
+                                    .minConfidence(95L)
+                                    .name(
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            .GOOGLE_AUTO_TAGGING
+                                    )
+                                    .build()
+                            ),
+                            UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                        )
                     )
+                    .removeAiTagsOfStrings(listOf("string"))
+                    .addTag("tag1")
+                    .addTag("tag2")
+                    .webhookUrl("https://example.com")
                     .build()
             )
 
-        val roundtrippedOverlay =
-            jsonMapper.readValue(jsonMapper.writeValueAsString(overlay), jacksonTypeRef<Overlay>())
+        val roundtrippedUpdateFileDetailsRequest =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(updateFileDetailsRequest),
+                jacksonTypeRef<UpdateFileDetailsRequest>(),
+            )
 
-        assertThat(roundtrippedOverlay).isEqualTo(overlay)
+        assertThat(roundtrippedUpdateFileDetailsRequest).isEqualTo(updateFileDetailsRequest)
     }
 
     @Test

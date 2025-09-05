@@ -5,12 +5,13 @@ package com.imagekit.api.services.async
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent3
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import com.imagekit.api.models.files.FileCopyParams
 import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileRenameParams
 import com.imagekit.api.models.files.FileUpdateParams
 import com.imagekit.api.models.files.FileUploadParams
+import com.imagekit.api.models.files.UpdateFileDetailsRequest
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -33,11 +34,11 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.update(
                 FileUpdateParams.builder()
                     .fileId("fileId")
-                    .body(
-                        FileUpdateParams.Body.UpdateFileDetails.builder()
+                    .updateFileDetailsRequest(
+                        UpdateFileDetailsRequest.UpdateFileDetails.builder()
                             .customCoordinates("10,10,100,100")
                             .customMetadata(
-                                FileUpdateParams.Body.UpdateFileDetails.CustomMetadata.builder()
+                                UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
                                     .putAdditionalProperty("brand", JsonValue.from("bar"))
                                     .putAdditionalProperty("color", JsonValue.from("bar"))
                                     .build()
@@ -45,10 +46,10 @@ internal class FileServiceAsyncTest {
                             .description("description")
                             .extensions(
                                 listOf(
-                                    UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                        UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                                    UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                             .options(
-                                                UnnamedSchemaWithArrayParent3.RemoveBg.Options
+                                                UnnamedSchemaWithArrayParent1.RemoveBg.Options
                                                     .builder()
                                                     .addShadow(true)
                                                     .bgColor("bg_color")
@@ -58,29 +59,29 @@ internal class FileServiceAsyncTest {
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                             .maxTags(10L)
                                             .minConfidence(80L)
                                             .name(
-                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension
                                                     .Name
                                                     .GOOGLE_AUTO_TAGGING
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                             .maxTags(10L)
                                             .minConfidence(80L)
                                             .name(
-                                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension
+                                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension
                                                     .Name
                                                     .AWS_AUTO_TAGGING
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                                    UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                                 )
                             )
                             .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
@@ -229,10 +230,10 @@ internal class FileServiceAsyncTest {
                     .expire(0L)
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent3.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent3.RemoveBg.builder()
+                            UnnamedSchemaWithArrayParent1.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent1.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent3.RemoveBg.Options.builder()
+                                        UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -241,17 +242,17 @@ internal class FileServiceAsyncTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent3.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
                                     .maxTags(5L)
                                     .minConfidence(95L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent3.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent3.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                         )
                     )
                     .folder("folder")
