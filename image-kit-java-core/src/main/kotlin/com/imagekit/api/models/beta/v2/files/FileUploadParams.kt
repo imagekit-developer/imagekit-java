@@ -7,13 +7,8 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.core.ObjectCodec
-import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
-import com.imagekit.api.core.BaseDeserializer
 import com.imagekit.api.core.BaseSerializer
 import com.imagekit.api.core.Enum
 import com.imagekit.api.core.ExcludeMissing
@@ -37,7 +32,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.io.path.inputStream
 import kotlin.io.path.name
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * The V2 API enhances security by verifying the entire payload using JWT. This API is in beta.
@@ -2318,7 +2312,6 @@ private constructor(
         override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
     }
 
-    @JsonDeserialize(using = UnnamedSchemaWithArrayParent1.Deserializer::class)
     @JsonSerialize(using = UnnamedSchemaWithArrayParent1.Serializer::class)
     class UnnamedSchemaWithArrayParent1
     private constructor(
@@ -2400,32 +2393,6 @@ private constructor(
                 false
             }
 
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitRemoveBg(removeBg: RemoveBg) = removeBg.validity()
-
-                    override fun visitAutoTaggingExtension(
-                        autoTaggingExtension: AutoTaggingExtension
-                    ) = autoTaggingExtension.validity()
-
-                    override fun visitAiAutoDescription(aiAutoDescription: JsonValue) =
-                        aiAutoDescription.let {
-                            if (it == JsonValue.from(mapOf("name" to "ai-auto-description"))) 1
-                            else 0
-                        }
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
-
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -2494,34 +2461,6 @@ private constructor(
             }
         }
 
-        internal class Deserializer :
-            BaseDeserializer<UnnamedSchemaWithArrayParent1>(UnnamedSchemaWithArrayParent1::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): UnnamedSchemaWithArrayParent1 {
-                val json = JsonValue.fromJsonNode(node)
-                val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
-
-                when (name) {
-                    "remove-bg" -> {
-                        return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
-                            UnnamedSchemaWithArrayParent1(removeBg = it, _json = json)
-                        } ?: UnnamedSchemaWithArrayParent1(_json = json)
-                    }
-                    "ai-auto-description" -> {
-                        return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                            ?.let {
-                                UnnamedSchemaWithArrayParent1(aiAutoDescription = it, _json = json)
-                            }
-                            ?.takeIf { it.isValid() } ?: UnnamedSchemaWithArrayParent1(_json = json)
-                    }
-                }
-
-                return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                    UnnamedSchemaWithArrayParent1(autoTaggingExtension = it, _json = json)
-                } ?: UnnamedSchemaWithArrayParent1(_json = json)
-            }
-        }
-
         internal class Serializer :
             BaseSerializer<UnnamedSchemaWithArrayParent1>(UnnamedSchemaWithArrayParent1::class) {
 
@@ -2548,14 +2487,6 @@ private constructor(
             private val options: JsonField<Options>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
-                @JsonProperty("options")
-                @ExcludeMissing
-                options: JsonField<Options> = JsonMissing.of(),
-            ) : this(name, options, mutableMapOf())
 
             /**
              * Specifies the background removal extension.
@@ -2694,17 +2625,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                name.let { if (it == JsonValue.from("remove-bg")) 1 else 0 } +
-                    (options.asKnown().getOrNull()?.validity() ?: 0)
-
             class Options
             private constructor(
                 private val addShadow: JsonField<Boolean>,
@@ -2713,22 +2633,6 @@ private constructor(
                 private val semitransparency: JsonField<Boolean>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
             ) {
-
-                @JsonCreator
-                private constructor(
-                    @JsonProperty("add_shadow")
-                    @ExcludeMissing
-                    addShadow: JsonField<Boolean> = JsonMissing.of(),
-                    @JsonProperty("bg_color")
-                    @ExcludeMissing
-                    bgColor: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("bg_image_url")
-                    @ExcludeMissing
-                    bgImageUrl: JsonField<String> = JsonMissing.of(),
-                    @JsonProperty("semitransparency")
-                    @ExcludeMissing
-                    semitransparency: JsonField<Boolean> = JsonMissing.of(),
-                ) : this(addShadow, bgColor, bgImageUrl, semitransparency, mutableMapOf())
 
                 /**
                  * Whether to add an artificial shadow to the result. Default is false. Note: Adding
@@ -2971,19 +2875,6 @@ private constructor(
                         false
                     }
 
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic
-                internal fun validity(): Int =
-                    (if (addShadow.asKnown().isPresent) 1 else 0) +
-                        (if (bgColor.asKnown().isPresent) 1 else 0) +
-                        (if (bgImageUrl.asKnown().isPresent) 1 else 0) +
-                        (if (semitransparency.asKnown().isPresent) 1 else 0)
-
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
@@ -3039,17 +2930,6 @@ private constructor(
             private val name: JsonField<Name>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("maxTags")
-                @ExcludeMissing
-                maxTags: JsonField<Long> = JsonMissing.of(),
-                @JsonProperty("minConfidence")
-                @ExcludeMissing
-                minConfidence: JsonField<Long> = JsonMissing.of(),
-                @JsonProperty("name") @ExcludeMissing name: JsonField<Name> = JsonMissing.of(),
-            ) : this(maxTags, minConfidence, name, mutableMapOf())
 
             /**
              * Maximum number of tags to attach to the asset.
@@ -3248,18 +3128,6 @@ private constructor(
                 } catch (e: ImageKitInvalidDataException) {
                     false
                 }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (maxTags.asKnown().isPresent) 1 else 0) +
-                    (if (minConfidence.asKnown().isPresent) 1 else 0) +
-                    (name.asKnown().getOrNull()?.validity() ?: 0)
 
             /** Specifies the auto-tagging extension used. */
             class Name @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -3776,7 +3644,6 @@ private constructor(
                 false
             }
 
-        @JsonDeserialize(using = Post.Deserializer::class)
         @JsonSerialize(using = Post.Serializer::class)
         class Post
         private constructor(
@@ -3861,29 +3728,6 @@ private constructor(
                     false
                 }
 
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                accept(
-                    object : Visitor<Int> {
-                        override fun visitTransformation(transformation: InnerTransformation) =
-                            transformation.validity()
-
-                        override fun visitGifToVideo(gifToVideo: GifToVideo) = gifToVideo.validity()
-
-                        override fun visitThumbnail(thumbnail: Thumbnail) = thumbnail.validity()
-
-                        override fun visitAbs(abs: Abs) = abs.validity()
-
-                        override fun unknown(json: JsonValue?) = 0
-                    }
-                )
-
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
@@ -3946,39 +3790,6 @@ private constructor(
                  */
                 fun unknown(json: JsonValue?): T {
                     throw ImageKitInvalidDataException("Unknown Post: $json")
-                }
-            }
-
-            internal class Deserializer : BaseDeserializer<Post>(Post::class) {
-
-                override fun ObjectCodec.deserialize(node: JsonNode): Post {
-                    val json = JsonValue.fromJsonNode(node)
-                    val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
-
-                    when (type) {
-                        "transformation" -> {
-                            return tryDeserialize(node, jacksonTypeRef<InnerTransformation>())
-                                ?.let { Post(transformation = it, _json = json) }
-                                ?: Post(_json = json)
-                        }
-                        "gif-to-video" -> {
-                            return tryDeserialize(node, jacksonTypeRef<GifToVideo>())?.let {
-                                Post(gifToVideo = it, _json = json)
-                            } ?: Post(_json = json)
-                        }
-                        "thumbnail" -> {
-                            return tryDeserialize(node, jacksonTypeRef<Thumbnail>())?.let {
-                                Post(thumbnail = it, _json = json)
-                            } ?: Post(_json = json)
-                        }
-                        "abs" -> {
-                            return tryDeserialize(node, jacksonTypeRef<Abs>())?.let {
-                                Post(abs = it, _json = json)
-                            } ?: Post(_json = json)
-                        }
-                    }
-
-                    return Post(_json = json)
                 }
             }
 
