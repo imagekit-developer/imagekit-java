@@ -83,7 +83,7 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
-    .privateApiKey("My Private API Key")
+    .privateKey("My Private Key")
     .password("My Password")
     .build();
 ```
@@ -98,7 +98,7 @@ ImageKitClient client = ImageKitOkHttpClient.builder()
     // Configures using the `imagekit.imagekitPrivateApiKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
     // Or configures using the `IMAGEKIT_PRIVATE_API_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
     .fromEnv()
-    .privateApiKey("My Private API Key")
+    .privateKey("My Private Key")
     .build();
 ```
 
@@ -106,7 +106,7 @@ See this table for the available options:
 
 | Setter          | System property                        | Environment variable             | Required | Default value               |
 | --------------- | -------------------------------------- | -------------------------------- | -------- | --------------------------- |
-| `privateApiKey` | `imagekit.imagekitPrivateApiKey`       | `IMAGEKIT_PRIVATE_API_KEY`       | true     | -                           |
+| `privateKey`    | `imagekit.imagekitPrivateApiKey`       | `IMAGEKIT_PRIVATE_API_KEY`       | true     | -                           |
 | `password`      | `imagekit.optionalImagekitIgnoresThis` | `OPTIONAL_IMAGEKIT_IGNORES_THIS` | false    | `"do_not_set"`              |
 | `webhookSecret` | `imagekit.imagekitWebhookSecret`       | `IMAGEKIT_WEBHOOK_SECRET`        | false    | -                           |
 | `baseUrl`       | `imagekit.baseUrl`                     | `IMAGE_KIT_BASE_URL`             | true     | `"https://api.imagekit.io"` |

@@ -18,7 +18,7 @@ internal class MetadataServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val metadataService = client.files().metadata()
@@ -34,7 +34,7 @@ internal class MetadataServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val metadataService = client.files().metadata()

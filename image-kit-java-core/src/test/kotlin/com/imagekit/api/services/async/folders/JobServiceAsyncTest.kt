@@ -17,7 +17,7 @@ internal class JobServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val jobServiceAsync = client.folders().job()

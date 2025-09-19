@@ -20,7 +20,7 @@ internal class FileServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val fileServiceAsync = client.beta().v2().files()

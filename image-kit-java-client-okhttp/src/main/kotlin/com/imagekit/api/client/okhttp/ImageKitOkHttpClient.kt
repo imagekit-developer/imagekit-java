@@ -187,13 +187,10 @@ class ImageKitOkHttpClient private constructor() {
          * Your ImageKit private API key (it starts with `private_`). You can view and manage API
          * keys in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
          */
-        fun privateApiKey(privateApiKey: String) = apply {
-            clientOptions.privateApiKey(privateApiKey)
-        }
+        fun privateKey(privateKey: String) = apply { clientOptions.privateKey(privateKey) }
 
         /**
-         * ImageKit Basic Auth only uses the username field and ignores the password. This field is
-         * unused.
+         * ImageKit Basic Auth only uses the `private_key` as username and ignores the password.
          *
          * Defaults to `"do_not_set"`.
          */
