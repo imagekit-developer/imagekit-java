@@ -11,6 +11,7 @@ import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
 import com.imagekit.api.models.accounts.origins.OriginListParams
+import com.imagekit.api.models.accounts.origins.OriginRequest
 import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import java.util.function.Consumer
@@ -39,6 +40,17 @@ interface OriginService {
         params: OriginCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): OriginResponse
+
+    /** @see create */
+    fun create(
+        originRequest: OriginRequest,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse =
+        create(OriginCreateParams.builder().originRequest(originRequest).build(), requestOptions)
+
+    /** @see create */
+    fun create(originRequest: OriginRequest): OriginResponse =
+        create(originRequest, RequestOptions.none())
 
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
@@ -161,6 +173,22 @@ interface OriginService {
             params: OriginCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<OriginResponse>
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            originRequest: OriginRequest,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(
+                OriginCreateParams.builder().originRequest(originRequest).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        @MustBeClosed
+        fun create(originRequest: OriginRequest): HttpResponseFor<OriginResponse> =
+            create(originRequest, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the

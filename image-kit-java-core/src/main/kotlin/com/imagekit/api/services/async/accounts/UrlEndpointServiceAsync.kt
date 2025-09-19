@@ -10,6 +10,7 @@ import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointDeleteParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListParams
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -41,6 +42,20 @@ interface UrlEndpointServiceAsync {
         params: UrlEndpointCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<UrlEndpointResponse>
+
+    /** @see create */
+    fun create(
+        urlEndpointRequest: UrlEndpointRequest,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<UrlEndpointResponse> =
+        create(
+            UrlEndpointCreateParams.builder().urlEndpointRequest(urlEndpointRequest).build(),
+            requestOptions,
+        )
+
+    /** @see create */
+    fun create(urlEndpointRequest: UrlEndpointRequest): CompletableFuture<UrlEndpointResponse> =
+        create(urlEndpointRequest, RequestOptions.none())
 
     /**
      * **Note:** This API is currently in beta. Updates the URL‑endpoint identified by `id` and
@@ -184,6 +199,22 @@ interface UrlEndpointServiceAsync {
             params: UrlEndpointCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>>
+
+        /** @see create */
+        fun create(
+            urlEndpointRequest: UrlEndpointRequest,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>> =
+            create(
+                UrlEndpointCreateParams.builder().urlEndpointRequest(urlEndpointRequest).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        fun create(
+            urlEndpointRequest: UrlEndpointRequest
+        ): CompletableFuture<HttpResponseFor<UrlEndpointResponse>> =
+            create(urlEndpointRequest, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/url-endpoints/{id}`, but is otherwise

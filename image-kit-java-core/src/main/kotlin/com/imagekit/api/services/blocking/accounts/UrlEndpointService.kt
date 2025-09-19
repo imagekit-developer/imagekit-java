@@ -11,6 +11,7 @@ import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointDeleteParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointGetParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointListParams
+import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointResponse
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import java.util.function.Consumer
@@ -41,6 +42,20 @@ interface UrlEndpointService {
         params: UrlEndpointCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): UrlEndpointResponse
+
+    /** @see create */
+    fun create(
+        urlEndpointRequest: UrlEndpointRequest,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): UrlEndpointResponse =
+        create(
+            UrlEndpointCreateParams.builder().urlEndpointRequest(urlEndpointRequest).build(),
+            requestOptions,
+        )
+
+    /** @see create */
+    fun create(urlEndpointRequest: UrlEndpointRequest): UrlEndpointResponse =
+        create(urlEndpointRequest, RequestOptions.none())
 
     /**
      * **Note:** This API is currently in beta. Updates the URL‑endpoint identified by `id` and
@@ -174,6 +189,22 @@ interface UrlEndpointService {
             params: UrlEndpointCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<UrlEndpointResponse>
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            urlEndpointRequest: UrlEndpointRequest,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<UrlEndpointResponse> =
+            create(
+                UrlEndpointCreateParams.builder().urlEndpointRequest(urlEndpointRequest).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        @MustBeClosed
+        fun create(urlEndpointRequest: UrlEndpointRequest): HttpResponseFor<UrlEndpointResponse> =
+            create(urlEndpointRequest, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/url-endpoints/{id}`, but is otherwise

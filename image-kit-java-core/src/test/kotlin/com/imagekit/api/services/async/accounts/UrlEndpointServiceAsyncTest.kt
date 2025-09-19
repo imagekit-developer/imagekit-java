@@ -4,7 +4,6 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
-import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointCreateParams
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -27,17 +26,13 @@ internal class UrlEndpointServiceAsyncTest {
 
         val urlEndpointResponseFuture =
             urlEndpointServiceAsync.create(
-                UrlEndpointCreateParams.builder()
-                    .urlEndpointRequest(
-                        UrlEndpointRequest.builder()
-                            .description("My custom URL endpoint")
-                            .addOrigin("origin-id-1")
-                            .urlPrefix("product-images")
-                            .urlRewriter(
-                                UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
-                                    .preserveAssetDeliveryTypes(true)
-                                    .build()
-                            )
+                UrlEndpointRequest.builder()
+                    .description("My custom URL endpoint")
+                    .addOrigin("origin-id-1")
+                    .urlPrefix("product-images")
+                    .urlRewriter(
+                        UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
+                            .preserveAssetDeliveryTypes(true)
                             .build()
                     )
                     .build()
