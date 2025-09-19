@@ -5,9 +5,13 @@ package com.imagekit.api.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.errors.ImageKitInvalidDataException
 import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.EnumSource
 
 internal class UpdateFileRequestTest {
 
@@ -119,7 +123,15 @@ internal class UpdateFileRequestTest {
 
     @Test
     fun ofChangePublicationStatus() {
-        val changePublicationStatus = JsonValue.from(mapOf<String, Any>())
+        val changePublicationStatus =
+            UpdateFileRequest.ChangePublicationStatus.builder()
+                .publish(
+                    UpdateFileRequest.ChangePublicationStatus.Publish.builder()
+                        .isPublished(true)
+                        .includeFileVersions(true)
+                        .build()
+                )
+                .build()
 
         val updateFileRequest = UpdateFileRequest.ofChangePublicationStatus(changePublicationStatus)
 
@@ -131,7 +143,16 @@ internal class UpdateFileRequestTest {
     fun ofChangePublicationStatusRoundtrip() {
         val jsonMapper = jsonMapper()
         val updateFileRequest =
-            UpdateFileRequest.ofChangePublicationStatus(JsonValue.from(mapOf<String, Any>()))
+            UpdateFileRequest.ofChangePublicationStatus(
+                UpdateFileRequest.ChangePublicationStatus.builder()
+                    .publish(
+                        UpdateFileRequest.ChangePublicationStatus.Publish.builder()
+                            .isPublished(true)
+                            .includeFileVersions(true)
+                            .build()
+                    )
+                    .build()
+            )
 
         val roundtrippedUpdateFileRequest =
             jsonMapper.readValue(
@@ -140,5 +161,23 @@ internal class UpdateFileRequestTest {
             )
 
         assertThat(roundtrippedUpdateFileRequest).isEqualTo(updateFileRequest)
+    }
+
+    enum class IncompatibleJsonShapeTestCase(val value: JsonValue) {
+        BOOLEAN(JsonValue.from(false)),
+        STRING(JsonValue.from("invalid")),
+        INTEGER(JsonValue.from(-1)),
+        FLOAT(JsonValue.from(3.14)),
+        ARRAY(JsonValue.from(listOf("invalid", "array"))),
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    fun incompatibleJsonShapeDeserializesToUnknown(testCase: IncompatibleJsonShapeTestCase) {
+        val updateFileRequest =
+            jsonMapper().convertValue(testCase.value, jacksonTypeRef<UpdateFileRequest>())
+
+        val e = assertThrows<ImageKitInvalidDataException> { updateFileRequest.validate() }
+        assertThat(e).hasMessageStartingWith("Unknown ")
     }
 }

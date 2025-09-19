@@ -36,10 +36,11 @@ internal class FileServiceTest {
                     .fileId("fileId")
                     .updateFileRequest(
                         UpdateFileRequest.UpdateFileDetails.builder()
-                            .customCoordinates("customCoordinates")
+                            .customCoordinates("10,10,100,100")
                             .customMetadata(
                                 UpdateFileRequest.UpdateFileDetails.CustomMetadata.builder()
-                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .putAdditionalProperty("brand", JsonValue.from("bar"))
+                                    .putAdditionalProperty("color", JsonValue.from("bar"))
                                     .build()
                             )
                             .description("description")
@@ -60,8 +61,8 @@ internal class FileServiceTest {
                                     ),
                                     UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
                                         UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
-                                            .maxTags(5L)
-                                            .minConfidence(95L)
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
                                             .name(
                                                 UnnamedSchemaWithArrayParent1.AutoTaggingExtension
                                                     .Name
@@ -69,12 +70,24 @@ internal class FileServiceTest {
                                             )
                                             .build()
                                     ),
+                                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
+                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                            .maxTags(10L)
+                                            .minConfidence(80L)
+                                            .name(
+                                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension
+                                                    .Name
+                                                    .AWS_AUTO_TAGGING
+                                            )
+                                            .build()
+                                    ),
                                     UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                                 )
                             )
-                            .removeAiTagsOfStrings(listOf("string"))
-                            .tags(listOf("car", "vehicle", "motorsports"))
-                            .webhookUrl("https://example.com")
+                            .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
+                            .addTag("tag1")
+                            .addTag("tag2")
+                            .webhookUrl("https://webhook.site/0d6b6c7a-8e5a-4b3a-8b7c-0d6b6c7a8e5a")
                             .build()
                     )
                     .build()

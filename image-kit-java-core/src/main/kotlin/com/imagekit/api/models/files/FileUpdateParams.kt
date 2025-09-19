@@ -2,7 +2,6 @@
 
 package com.imagekit.api.models.files
 
-import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.Params
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.http.Headers
@@ -84,7 +83,7 @@ private constructor(
          * Alias for calling [updateFileRequest] with
          * `UpdateFileRequest.ofChangePublicationStatus(changePublicationStatus)`.
          */
-        fun updateFileRequest(changePublicationStatus: JsonValue) =
+        fun updateFileRequest(changePublicationStatus: UpdateFileRequest.ChangePublicationStatus) =
             updateFileRequest(UpdateFileRequest.ofChangePublicationStatus(changePublicationStatus))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
