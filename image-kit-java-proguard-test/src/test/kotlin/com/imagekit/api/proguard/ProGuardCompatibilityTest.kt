@@ -51,7 +51,7 @@ internal class ProGuardCompatibilityTest {
     fun client() {
         val client =
             ImageKitOkHttpClient.builder()
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
 

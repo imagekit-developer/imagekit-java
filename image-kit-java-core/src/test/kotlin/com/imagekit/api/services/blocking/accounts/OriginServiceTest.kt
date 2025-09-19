@@ -19,7 +19,7 @@ internal class OriginServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originService = client.accounts().origins()
@@ -48,7 +48,7 @@ internal class OriginServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originService = client.accounts().origins()
@@ -80,7 +80,7 @@ internal class OriginServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originService = client.accounts().origins()
@@ -96,7 +96,7 @@ internal class OriginServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originService = client.accounts().origins()
@@ -110,7 +110,7 @@ internal class OriginServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originService = client.accounts().origins()

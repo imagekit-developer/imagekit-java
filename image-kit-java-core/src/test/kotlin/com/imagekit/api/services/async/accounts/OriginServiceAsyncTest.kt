@@ -19,7 +19,7 @@ internal class OriginServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originServiceAsync = client.accounts().origins()
@@ -49,7 +49,7 @@ internal class OriginServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originServiceAsync = client.accounts().origins()
@@ -82,7 +82,7 @@ internal class OriginServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originServiceAsync = client.accounts().origins()
@@ -99,7 +99,7 @@ internal class OriginServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originServiceAsync = client.accounts().origins()
@@ -115,7 +115,7 @@ internal class OriginServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val originServiceAsync = client.accounts().origins()

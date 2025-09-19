@@ -20,7 +20,7 @@ internal class CustomMetadataFieldServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val customMetadataFieldService = client.customMetadataFields()
@@ -73,7 +73,7 @@ internal class CustomMetadataFieldServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val customMetadataFieldService = client.customMetadataFields()
@@ -125,7 +125,7 @@ internal class CustomMetadataFieldServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val customMetadataFieldService = client.customMetadataFields()
@@ -144,7 +144,7 @@ internal class CustomMetadataFieldServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val customMetadataFieldService = client.customMetadataFields()

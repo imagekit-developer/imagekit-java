@@ -88,7 +88,7 @@ private constructor(
      * Your ImageKit private API key (it starts with `private_`). You can view and manage API keys
      * in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
      */
-    @get:JvmName("privateApiKey") val privateApiKey: String,
+    @get:JvmName("privateKey") val privateKey: String,
     private val password: String?,
     private val webhookSecret: String?,
 ) {
@@ -109,8 +109,7 @@ private constructor(
     fun baseUrlOverridden(): Boolean = baseUrl != null
 
     /**
-     * ImageKit Basic Auth only uses the username field and ignores the password. This field is
-     * unused.
+     * ImageKit Basic Auth only uses the `private_key` as username and ignores the password.
      *
      * Defaults to `"do_not_set"`.
      */
@@ -137,7 +136,7 @@ private constructor(
          * The following fields are required:
          * ```java
          * .httpClient()
-         * .privateApiKey()
+         * .privateKey()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -163,7 +162,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
-        private var privateApiKey: String? = null
+        private var privateKey: String? = null
         private var password: String? = "do_not_set"
         private var webhookSecret: String? = null
 
@@ -179,7 +178,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
-            privateApiKey = clientOptions.privateApiKey
+            privateKey = clientOptions.privateKey
             password = clientOptions.password
             webhookSecret = clientOptions.webhookSecret
         }
@@ -281,11 +280,10 @@ private constructor(
          * Your ImageKit private API key (it starts with `private_`). You can view and manage API
          * keys in the [dashboard](https://imagekit.io/dashboard/developer/api-keys).
          */
-        fun privateApiKey(privateApiKey: String) = apply { this.privateApiKey = privateApiKey }
+        fun privateKey(privateKey: String) = apply { this.privateKey = privateKey }
 
         /**
-         * ImageKit Basic Auth only uses the username field and ignores the password. This field is
-         * unused.
+         * ImageKit Basic Auth only uses the `private_key` as username and ignores the password.
          *
          * Defaults to `"do_not_set"`.
          */
@@ -396,7 +394,7 @@ private constructor(
          *
          * |Setter         |System property                       |Environment variable            |Required|Default value              |
          * |---------------|--------------------------------------|--------------------------------|--------|---------------------------|
-         * |`privateApiKey`|`imagekit.imagekitPrivateApiKey`      |`IMAGEKIT_PRIVATE_API_KEY`      |true    |-                          |
+         * |`privateKey`   |`imagekit.imagekitPrivateApiKey`      |`IMAGEKIT_PRIVATE_API_KEY`      |true    |-                          |
          * |`password`     |`imagekit.optionalImagekitIgnoresThis`|`OPTIONAL_IMAGEKIT_IGNORES_THIS`|false   |`"do_not_set"`             |
          * |`webhookSecret`|`imagekit.imagekitWebhookSecret`      |`IMAGEKIT_WEBHOOK_SECRET`       |false   |-                          |
          * |`baseUrl`      |`imagekit.baseUrl`                    |`IMAGE_KIT_BASE_URL`            |true    |`"https://api.imagekit.io"`|
@@ -409,7 +407,7 @@ private constructor(
             }
             (System.getProperty("imagekit.imagekitPrivateApiKey")
                     ?: System.getenv("IMAGEKIT_PRIVATE_API_KEY"))
-                ?.let { privateApiKey(it) }
+                ?.let { privateKey(it) }
             (System.getProperty("imagekit.optionalImagekitIgnoresThis")
                     ?: System.getenv("OPTIONAL_IMAGEKIT_IGNORES_THIS"))
                 ?.let { password(it) }
@@ -426,14 +424,14 @@ private constructor(
          * The following fields are required:
          * ```java
          * .httpClient()
-         * .privateApiKey()
+         * .privateKey()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
-            val privateApiKey = checkRequired("privateApiKey", privateApiKey)
+            val privateKey = checkRequired("privateKey", privateKey)
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -444,7 +442,7 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
-            privateApiKey.let { username ->
+            privateKey.let { username ->
                 password?.let { password ->
                     if (!username.isEmpty() && !password.isEmpty()) {
                         headers.put(
@@ -473,7 +471,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
-                privateApiKey,
+                privateKey,
                 password,
                 webhookSecret,
             )

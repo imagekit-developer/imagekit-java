@@ -21,7 +21,7 @@ internal class BulkServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val bulkServiceAsync = client.files().bulk()
@@ -44,7 +44,7 @@ internal class BulkServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val bulkServiceAsync = client.files().bulk()
@@ -68,7 +68,7 @@ internal class BulkServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val bulkServiceAsync = client.files().bulk()
@@ -92,7 +92,7 @@ internal class BulkServiceAsyncTest {
         val client =
             ImageKitOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val bulkServiceAsync = client.files().bulk()

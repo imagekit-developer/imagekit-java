@@ -19,7 +19,7 @@ internal class UrlEndpointServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
@@ -47,7 +47,7 @@ internal class UrlEndpointServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
@@ -80,7 +80,7 @@ internal class UrlEndpointServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
@@ -96,7 +96,7 @@ internal class UrlEndpointServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()
@@ -110,7 +110,7 @@ internal class UrlEndpointServiceTest {
         val client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
         val urlEndpointService = client.accounts().urlEndpoints()

@@ -33,7 +33,7 @@ internal class ServiceParamsTest {
         client =
             ImageKitOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
-                .privateApiKey("My Private API Key")
+                .privateKey("My Private Key")
                 .password("My Password")
                 .build()
     }
