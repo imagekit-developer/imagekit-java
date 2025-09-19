@@ -160,7 +160,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("v1", "files", params._pathParam(0), "details")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

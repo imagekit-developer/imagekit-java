@@ -11,7 +11,7 @@ import com.imagekit.api.models.files.FileMoveParams
 import com.imagekit.api.models.files.FileRenameParams
 import com.imagekit.api.models.files.FileUpdateParams
 import com.imagekit.api.models.files.FileUploadParams
-import com.imagekit.api.models.files.UpdateFileDetailsRequest
+import com.imagekit.api.models.files.UpdateFileRequest
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,13 +34,12 @@ internal class FileServiceAsyncTest {
             fileServiceAsync.update(
                 FileUpdateParams.builder()
                     .fileId("fileId")
-                    .updateFileDetailsRequest(
-                        UpdateFileDetailsRequest.UpdateFileDetails.builder()
-                            .customCoordinates("10,10,100,100")
+                    .updateFileRequest(
+                        UpdateFileRequest.UpdateFileDetails.builder()
+                            .customCoordinates("customCoordinates")
                             .customMetadata(
-                                UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
-                                    .putAdditionalProperty("brand", JsonValue.from("bar"))
-                                    .putAdditionalProperty("color", JsonValue.from("bar"))
+                                UpdateFileRequest.UpdateFileDetails.CustomMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
                             .description("description")
@@ -61,8 +60,8 @@ internal class FileServiceAsyncTest {
                                     ),
                                     UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
                                         UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
-                                            .maxTags(10L)
-                                            .minConfidence(80L)
+                                            .maxTags(5L)
+                                            .minConfidence(95L)
                                             .name(
                                                 UnnamedSchemaWithArrayParent1.AutoTaggingExtension
                                                     .Name
@@ -70,24 +69,12 @@ internal class FileServiceAsyncTest {
                                             )
                                             .build()
                                     ),
-                                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
-                                            .maxTags(10L)
-                                            .minConfidence(80L)
-                                            .name(
-                                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension
-                                                    .Name
-                                                    .AWS_AUTO_TAGGING
-                                            )
-                                            .build()
-                                    ),
                                     UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
                                 )
                             )
-                            .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))
-                            .addTag("tag1")
-                            .addTag("tag2")
-                            .webhookUrl("https://webhook.site/0d6b6c7a-8e5a-4b3a-8b7c-0d6b6c7a8e5a")
+                            .removeAiTagsOfStrings(listOf("string"))
+                            .tags(listOf("car", "vehicle", "motorsports"))
+                            .webhookUrl("https://example.com")
                             .build()
                     )
                     .build()
