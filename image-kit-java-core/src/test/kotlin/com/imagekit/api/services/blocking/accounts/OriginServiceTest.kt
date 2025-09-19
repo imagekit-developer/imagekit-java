@@ -4,7 +4,6 @@ package com.imagekit.api.services.blocking.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
-import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginRequest
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -27,19 +26,17 @@ internal class OriginServiceTest {
 
         val originResponse =
             originService.create(
-                OriginCreateParams.builder()
-                    .originRequest(
-                        OriginRequest.S3.builder()
-                            .accessKey("AKIATEST123")
-                            .bucket("test-bucket")
-                            .name("My S3 Origin")
-                            .secretKey("secrettest123")
-                            .baseUrlForCanonicalHeader("https://cdn.example.com")
-                            .includeCanonicalHeader(false)
-                            .prefix("images")
-                            .build()
-                    )
-                    .build()
+                OriginRequest.ofS3(
+                    OriginRequest.S3.builder()
+                        .accessKey("AKIATEST123")
+                        .bucket("test-bucket")
+                        .name("My S3 Origin")
+                        .secretKey("secrettest123")
+                        .baseUrlForCanonicalHeader("https://cdn.example.com")
+                        .includeCanonicalHeader(false)
+                        .prefix("images")
+                        .build()
+                )
             )
 
         originResponse.validate()

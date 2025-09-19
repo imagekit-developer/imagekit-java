@@ -10,6 +10,7 @@ import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginDeleteParams
 import com.imagekit.api.models.accounts.origins.OriginGetParams
 import com.imagekit.api.models.accounts.origins.OriginListParams
+import com.imagekit.api.models.accounts.origins.OriginRequest
 import com.imagekit.api.models.accounts.origins.OriginResponse
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -40,6 +41,17 @@ interface OriginServiceAsync {
         params: OriginCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OriginResponse>
+
+    /** @see create */
+    fun create(
+        originRequest: OriginRequest,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginCreateParams.builder().originRequest(originRequest).build(), requestOptions)
+
+    /** @see create */
+    fun create(originRequest: OriginRequest): CompletableFuture<OriginResponse> =
+        create(originRequest, RequestOptions.none())
 
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
@@ -175,6 +187,22 @@ interface OriginServiceAsync {
             params: OriginCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<OriginResponse>>
+
+        /** @see create */
+        fun create(
+            originRequest: OriginRequest,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(
+                OriginCreateParams.builder().originRequest(originRequest).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        fun create(
+            originRequest: OriginRequest
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(originRequest, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the

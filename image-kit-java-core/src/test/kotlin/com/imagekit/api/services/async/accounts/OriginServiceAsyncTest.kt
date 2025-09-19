@@ -4,7 +4,6 @@ package com.imagekit.api.services.async.accounts
 
 import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
-import com.imagekit.api.models.accounts.origins.OriginCreateParams
 import com.imagekit.api.models.accounts.origins.OriginRequest
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
@@ -27,19 +26,17 @@ internal class OriginServiceAsyncTest {
 
         val originResponseFuture =
             originServiceAsync.create(
-                OriginCreateParams.builder()
-                    .originRequest(
-                        OriginRequest.S3.builder()
-                            .accessKey("AKIATEST123")
-                            .bucket("test-bucket")
-                            .name("My S3 Origin")
-                            .secretKey("secrettest123")
-                            .baseUrlForCanonicalHeader("https://cdn.example.com")
-                            .includeCanonicalHeader(false)
-                            .prefix("images")
-                            .build()
-                    )
-                    .build()
+                OriginRequest.ofS3(
+                    OriginRequest.S3.builder()
+                        .accessKey("AKIATEST123")
+                        .bucket("test-bucket")
+                        .name("My S3 Origin")
+                        .secretKey("secrettest123")
+                        .baseUrlForCanonicalHeader("https://cdn.example.com")
+                        .includeCanonicalHeader(false)
+                        .prefix("images")
+                        .build()
+                )
             )
 
         val originResponse = originResponseFuture.get()
