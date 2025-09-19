@@ -2,7 +2,9 @@
 
 package com.imagekit.api.models.files
 
+import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.Params
+import com.imagekit.api.core.checkRequired
 import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import java.util.Objects
@@ -17,15 +19,15 @@ import kotlin.jvm.optionals.getOrNull
 class FileUpdateParams
 private constructor(
     private val fileId: String?,
-    private val updateFileDetailsRequest: UpdateFileDetailsRequest?,
+    private val updateFileRequest: UpdateFileRequest,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     fun fileId(): Optional<String> = Optional.ofNullable(fileId)
 
-    fun updateFileDetailsRequest(): Optional<UpdateFileDetailsRequest> =
-        Optional.ofNullable(updateFileDetailsRequest)
+    /** Schema for update file update request. */
+    fun updateFileRequest(): UpdateFileRequest = updateFileRequest
 
     /** Additional headers to send with the request. */
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -37,9 +39,14 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): FileUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [FileUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [FileUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .updateFileRequest()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -47,14 +54,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var fileId: String? = null
-        private var updateFileDetailsRequest: UpdateFileDetailsRequest? = null
+        private var updateFileRequest: UpdateFileRequest? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(fileUpdateParams: FileUpdateParams) = apply {
             fileId = fileUpdateParams.fileId
-            updateFileDetailsRequest = fileUpdateParams.updateFileDetailsRequest
+            updateFileRequest = fileUpdateParams.updateFileRequest
             additionalHeaders = fileUpdateParams.additionalHeaders.toBuilder()
             additionalQueryParams = fileUpdateParams.additionalQueryParams.toBuilder()
         }
@@ -64,38 +71,21 @@ private constructor(
         /** Alias for calling [Builder.fileId] with `fileId.orElse(null)`. */
         fun fileId(fileId: Optional<String>) = fileId(fileId.getOrNull())
 
-        fun updateFileDetailsRequest(updateFileDetailsRequest: UpdateFileDetailsRequest?) = apply {
-            this.updateFileDetailsRequest = updateFileDetailsRequest
+        /** Schema for update file update request. */
+        fun updateFileRequest(updateFileRequest: UpdateFileRequest) = apply {
+            this.updateFileRequest = updateFileRequest
         }
 
-        /**
-         * Alias for calling [Builder.updateFileDetailsRequest] with
-         * `updateFileDetailsRequest.orElse(null)`.
-         */
-        fun updateFileDetailsRequest(updateFileDetailsRequest: Optional<UpdateFileDetailsRequest>) =
-            updateFileDetailsRequest(updateFileDetailsRequest.getOrNull())
+        /** Alias for calling [updateFileRequest] with `UpdateFileRequest.ofDetails(details)`. */
+        fun updateFileRequest(details: UpdateFileRequest.UpdateFileDetails) =
+            updateFileRequest(UpdateFileRequest.ofDetails(details))
 
         /**
-         * Alias for calling [updateFileDetailsRequest] with
-         * `UpdateFileDetailsRequest.ofUpdateFileDetails(updateFileDetails)`.
+         * Alias for calling [updateFileRequest] with
+         * `UpdateFileRequest.ofChangePublicationStatus(changePublicationStatus)`.
          */
-        fun updateFileDetailsRequest(
-            updateFileDetails: UpdateFileDetailsRequest.UpdateFileDetails
-        ) =
-            updateFileDetailsRequest(
-                UpdateFileDetailsRequest.ofUpdateFileDetails(updateFileDetails)
-            )
-
-        /**
-         * Alias for calling [updateFileDetailsRequest] with
-         * `UpdateFileDetailsRequest.ofChangePublicationStatus(changePublicationStatus)`.
-         */
-        fun updateFileDetailsRequest(
-            changePublicationStatus: UpdateFileDetailsRequest.ChangePublicationStatus
-        ) =
-            updateFileDetailsRequest(
-                UpdateFileDetailsRequest.ofChangePublicationStatus(changePublicationStatus)
-            )
+        fun updateFileRequest(changePublicationStatus: JsonValue) =
+            updateFileRequest(UpdateFileRequest.ofChangePublicationStatus(changePublicationStatus))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -199,17 +189,24 @@ private constructor(
          * Returns an immutable instance of [FileUpdateParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .updateFileRequest()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): FileUpdateParams =
             FileUpdateParams(
                 fileId,
-                updateFileDetailsRequest,
+                checkRequired("updateFileRequest", updateFileRequest),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
     }
 
-    fun _body(): Optional<UpdateFileDetailsRequest> = Optional.ofNullable(updateFileDetailsRequest)
+    fun _body(): UpdateFileRequest = updateFileRequest
 
     fun _pathParam(index: Int): String =
         when (index) {
@@ -228,14 +225,14 @@ private constructor(
 
         return other is FileUpdateParams &&
             fileId == other.fileId &&
-            updateFileDetailsRequest == other.updateFileDetailsRequest &&
+            updateFileRequest == other.updateFileRequest &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(fileId, updateFileDetailsRequest, additionalHeaders, additionalQueryParams)
+        Objects.hash(fileId, updateFileRequest, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "FileUpdateParams{fileId=$fileId, updateFileDetailsRequest=$updateFileDetailsRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "FileUpdateParams{fileId=$fileId, updateFileRequest=$updateFileRequest, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

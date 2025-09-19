@@ -32,34 +32,35 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-@JsonDeserialize(using = UpdateFileDetailsRequest.Deserializer::class)
-@JsonSerialize(using = UpdateFileDetailsRequest.Serializer::class)
-class UpdateFileDetailsRequest
+/** Schema for update file update request. */
+@JsonDeserialize(using = UpdateFileRequest.Deserializer::class)
+@JsonSerialize(using = UpdateFileRequest.Serializer::class)
+class UpdateFileRequest
 private constructor(
-    private val updateFileDetails: UpdateFileDetails? = null,
-    private val changePublicationStatus: ChangePublicationStatus? = null,
+    private val details: UpdateFileDetails? = null,
+    private val changePublicationStatus: JsonValue? = null,
     private val _json: JsonValue? = null,
 ) {
 
-    fun updateFileDetails(): Optional<UpdateFileDetails> = Optional.ofNullable(updateFileDetails)
+    fun details(): Optional<UpdateFileDetails> = Optional.ofNullable(details)
 
-    fun changePublicationStatus(): Optional<ChangePublicationStatus> =
+    fun changePublicationStatus(): Optional<JsonValue> =
         Optional.ofNullable(changePublicationStatus)
 
-    fun isUpdateFileDetails(): Boolean = updateFileDetails != null
+    fun isDetails(): Boolean = details != null
 
     fun isChangePublicationStatus(): Boolean = changePublicationStatus != null
 
-    fun asUpdateFileDetails(): UpdateFileDetails = updateFileDetails.getOrThrow("updateFileDetails")
+    fun asDetails(): UpdateFileDetails = details.getOrThrow("details")
 
-    fun asChangePublicationStatus(): ChangePublicationStatus =
+    fun asChangePublicationStatus(): JsonValue =
         changePublicationStatus.getOrThrow("changePublicationStatus")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
         when {
-            updateFileDetails != null -> visitor.visitUpdateFileDetails(updateFileDetails)
+            details != null -> visitor.visitDetails(details)
             changePublicationStatus != null ->
                 visitor.visitChangePublicationStatus(changePublicationStatus)
             else -> visitor.unknown(_json)
@@ -67,22 +68,18 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): UpdateFileDetailsRequest = apply {
+    fun validate(): UpdateFileRequest = apply {
         if (validated) {
             return@apply
         }
 
         accept(
             object : Visitor<Unit> {
-                override fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails) {
-                    updateFileDetails.validate()
+                override fun visitDetails(details: UpdateFileDetails) {
+                    details.validate()
                 }
 
-                override fun visitChangePublicationStatus(
-                    changePublicationStatus: ChangePublicationStatus
-                ) {
-                    changePublicationStatus.validate()
-                }
+                override fun visitChangePublicationStatus(changePublicationStatus: JsonValue) {}
             }
         )
         validated = true
@@ -105,12 +102,9 @@ private constructor(
     internal fun validity(): Int =
         accept(
             object : Visitor<Int> {
-                override fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails) =
-                    updateFileDetails.validity()
+                override fun visitDetails(details: UpdateFileDetails) = details.validity()
 
-                override fun visitChangePublicationStatus(
-                    changePublicationStatus: ChangePublicationStatus
-                ) = changePublicationStatus.validity()
+                override fun visitChangePublicationStatus(changePublicationStatus: JsonValue) = 1
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -121,72 +115,68 @@ private constructor(
             return true
         }
 
-        return other is UpdateFileDetailsRequest &&
-            updateFileDetails == other.updateFileDetails &&
+        return other is UpdateFileRequest &&
+            details == other.details &&
             changePublicationStatus == other.changePublicationStatus
     }
 
-    override fun hashCode(): Int = Objects.hash(updateFileDetails, changePublicationStatus)
+    override fun hashCode(): Int = Objects.hash(details, changePublicationStatus)
 
     override fun toString(): String =
         when {
-            updateFileDetails != null ->
-                "UpdateFileDetailsRequest{updateFileDetails=$updateFileDetails}"
+            details != null -> "UpdateFileRequest{details=$details}"
             changePublicationStatus != null ->
-                "UpdateFileDetailsRequest{changePublicationStatus=$changePublicationStatus}"
-            _json != null -> "UpdateFileDetailsRequest{_unknown=$_json}"
-            else -> throw IllegalStateException("Invalid UpdateFileDetailsRequest")
+                "UpdateFileRequest{changePublicationStatus=$changePublicationStatus}"
+            _json != null -> "UpdateFileRequest{_unknown=$_json}"
+            else -> throw IllegalStateException("Invalid UpdateFileRequest")
         }
 
     companion object {
 
-        @JvmStatic
-        fun ofUpdateFileDetails(updateFileDetails: UpdateFileDetails) =
-            UpdateFileDetailsRequest(updateFileDetails = updateFileDetails)
+        @JvmStatic fun ofDetails(details: UpdateFileDetails) = UpdateFileRequest(details = details)
 
         @JvmStatic
-        fun ofChangePublicationStatus(changePublicationStatus: ChangePublicationStatus) =
-            UpdateFileDetailsRequest(changePublicationStatus = changePublicationStatus)
+        fun ofChangePublicationStatus(changePublicationStatus: JsonValue) =
+            UpdateFileRequest(changePublicationStatus = changePublicationStatus)
     }
 
     /**
-     * An interface that defines how to map each variant of [UpdateFileDetailsRequest] to a value of
-     * type [T].
+     * An interface that defines how to map each variant of [UpdateFileRequest] to a value of type
+     * [T].
      */
     interface Visitor<out T> {
 
-        fun visitUpdateFileDetails(updateFileDetails: UpdateFileDetails): T
+        fun visitDetails(details: UpdateFileDetails): T
 
-        fun visitChangePublicationStatus(changePublicationStatus: ChangePublicationStatus): T
+        fun visitChangePublicationStatus(changePublicationStatus: JsonValue): T
 
         /**
-         * Maps an unknown variant of [UpdateFileDetailsRequest] to a value of type [T].
+         * Maps an unknown variant of [UpdateFileRequest] to a value of type [T].
          *
-         * An instance of [UpdateFileDetailsRequest] can contain an unknown variant if it was
-         * deserialized from data that doesn't match any known variant. For example, if the SDK is
-         * on an older version than the API, then the API may respond with new variants that the SDK
-         * is unaware of.
+         * An instance of [UpdateFileRequest] can contain an unknown variant if it was deserialized
+         * from data that doesn't match any known variant. For example, if the SDK is on an older
+         * version than the API, then the API may respond with new variants that the SDK is unaware
+         * of.
          *
          * @throws ImageKitInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw ImageKitInvalidDataException("Unknown UpdateFileDetailsRequest: $json")
+            throw ImageKitInvalidDataException("Unknown UpdateFileRequest: $json")
         }
     }
 
-    internal class Deserializer :
-        BaseDeserializer<UpdateFileDetailsRequest>(UpdateFileDetailsRequest::class) {
+    internal class Deserializer : BaseDeserializer<UpdateFileRequest>(UpdateFileRequest::class) {
 
-        override fun ObjectCodec.deserialize(node: JsonNode): UpdateFileDetailsRequest {
+        override fun ObjectCodec.deserialize(node: JsonNode): UpdateFileRequest {
             val json = JsonValue.fromJsonNode(node)
 
             val bestMatches =
                 sequenceOf(
                         tryDeserialize(node, jacksonTypeRef<UpdateFileDetails>())?.let {
-                            UpdateFileDetailsRequest(updateFileDetails = it, _json = json)
+                            UpdateFileRequest(details = it, _json = json)
                         },
-                        tryDeserialize(node, jacksonTypeRef<ChangePublicationStatus>())?.let {
-                            UpdateFileDetailsRequest(changePublicationStatus = it, _json = json)
+                        tryDeserialize(node, jacksonTypeRef<JsonValue>())?.let {
+                            UpdateFileRequest(changePublicationStatus = it, _json = json)
                         },
                     )
                     .filterNotNull()
@@ -194,8 +184,8 @@ private constructor(
                     .toList()
             return when (bestMatches.size) {
                 // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> UpdateFileDetailsRequest(_json = json)
+                // the possible variants.
+                0 -> UpdateFileRequest(_json = json)
                 1 -> bestMatches.single()
                 // If there's more than one match with the highest validity, then use the first
                 // completely valid match, or simply the first match if none are completely valid.
@@ -204,20 +194,19 @@ private constructor(
         }
     }
 
-    internal class Serializer :
-        BaseSerializer<UpdateFileDetailsRequest>(UpdateFileDetailsRequest::class) {
+    internal class Serializer : BaseSerializer<UpdateFileRequest>(UpdateFileRequest::class) {
 
         override fun serialize(
-            value: UpdateFileDetailsRequest,
+            value: UpdateFileRequest,
             generator: JsonGenerator,
             provider: SerializerProvider,
         ) {
             when {
-                value.updateFileDetails != null -> generator.writeObject(value.updateFileDetails)
+                value.details != null -> generator.writeObject(value.details)
                 value.changePublicationStatus != null ->
                     generator.writeObject(value.changePublicationStatus)
                 value._json != null -> generator.writeObject(value._json)
-                else -> throw IllegalStateException("Invalid UpdateFileDetailsRequest")
+                else -> throw IllegalStateException("Invalid UpdateFileRequest")
             }
         }
     }
@@ -2166,371 +2155,5 @@ private constructor(
 
         override fun toString() =
             "UpdateFileDetails{customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, extensions=$extensions, removeAiTags=$removeAiTags, tags=$tags, webhookUrl=$webhookUrl, additionalProperties=$additionalProperties}"
-    }
-
-    class ChangePublicationStatus
-    private constructor(
-        private val publish: JsonField<Publish>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("publish") @ExcludeMissing publish: JsonField<Publish> = JsonMissing.of()
-        ) : this(publish, mutableMapOf())
-
-        /**
-         * Configure the publication status of a file and its versions.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun publish(): Optional<Publish> = publish.getOptional("publish")
-
-        /**
-         * Returns the raw JSON value of [publish].
-         *
-         * Unlike [publish], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("publish") @ExcludeMissing fun _publish(): JsonField<Publish> = publish
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [ChangePublicationStatus].
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [ChangePublicationStatus]. */
-        class Builder internal constructor() {
-
-            private var publish: JsonField<Publish> = JsonMissing.of()
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(changePublicationStatus: ChangePublicationStatus) = apply {
-                publish = changePublicationStatus.publish
-                additionalProperties = changePublicationStatus.additionalProperties.toMutableMap()
-            }
-
-            /** Configure the publication status of a file and its versions. */
-            fun publish(publish: Publish) = publish(JsonField.of(publish))
-
-            /**
-             * Sets [Builder.publish] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.publish] with a well-typed [Publish] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun publish(publish: JsonField<Publish>) = apply { this.publish = publish }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [ChangePublicationStatus].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): ChangePublicationStatus =
-                ChangePublicationStatus(publish, additionalProperties.toMutableMap())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): ChangePublicationStatus = apply {
-            if (validated) {
-                return@apply
-            }
-
-            publish().ifPresent { it.validate() }
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int = (publish.asKnown().getOrNull()?.validity() ?: 0)
-
-        /** Configure the publication status of a file and its versions. */
-        class Publish
-        private constructor(
-            private val isPublished: JsonField<Boolean>,
-            private val includeFileVersions: JsonField<Boolean>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("isPublished")
-                @ExcludeMissing
-                isPublished: JsonField<Boolean> = JsonMissing.of(),
-                @JsonProperty("includeFileVersions")
-                @ExcludeMissing
-                includeFileVersions: JsonField<Boolean> = JsonMissing.of(),
-            ) : this(isPublished, includeFileVersions, mutableMapOf())
-
-            /**
-             * Set to `true` to publish the file. Set to `false` to unpublish the file.
-             *
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun isPublished(): Boolean = isPublished.getRequired("isPublished")
-
-            /**
-             * Set to `true` to publish/unpublish all versions of the file. Set to `false` to
-             * publish/unpublish only the current version of the file.
-             *
-             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
-             *   if the server responded with an unexpected value).
-             */
-            fun includeFileVersions(): Optional<Boolean> =
-                includeFileVersions.getOptional("includeFileVersions")
-
-            /**
-             * Returns the raw JSON value of [isPublished].
-             *
-             * Unlike [isPublished], this method doesn't throw if the JSON field has an unexpected
-             * type.
-             */
-            @JsonProperty("isPublished")
-            @ExcludeMissing
-            fun _isPublished(): JsonField<Boolean> = isPublished
-
-            /**
-             * Returns the raw JSON value of [includeFileVersions].
-             *
-             * Unlike [includeFileVersions], this method doesn't throw if the JSON field has an
-             * unexpected type.
-             */
-            @JsonProperty("includeFileVersions")
-            @ExcludeMissing
-            fun _includeFileVersions(): JsonField<Boolean> = includeFileVersions
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [Publish].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .isPublished()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [Publish]. */
-            class Builder internal constructor() {
-
-                private var isPublished: JsonField<Boolean>? = null
-                private var includeFileVersions: JsonField<Boolean> = JsonMissing.of()
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(publish: Publish) = apply {
-                    isPublished = publish.isPublished
-                    includeFileVersions = publish.includeFileVersions
-                    additionalProperties = publish.additionalProperties.toMutableMap()
-                }
-
-                /** Set to `true` to publish the file. Set to `false` to unpublish the file. */
-                fun isPublished(isPublished: Boolean) = isPublished(JsonField.of(isPublished))
-
-                /**
-                 * Sets [Builder.isPublished] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.isPublished] with a well-typed [Boolean] value
-                 * instead. This method is primarily for setting the field to an undocumented or not
-                 * yet supported value.
-                 */
-                fun isPublished(isPublished: JsonField<Boolean>) = apply {
-                    this.isPublished = isPublished
-                }
-
-                /**
-                 * Set to `true` to publish/unpublish all versions of the file. Set to `false` to
-                 * publish/unpublish only the current version of the file.
-                 */
-                fun includeFileVersions(includeFileVersions: Boolean) =
-                    includeFileVersions(JsonField.of(includeFileVersions))
-
-                /**
-                 * Sets [Builder.includeFileVersions] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.includeFileVersions] with a well-typed [Boolean]
-                 * value instead. This method is primarily for setting the field to an undocumented
-                 * or not yet supported value.
-                 */
-                fun includeFileVersions(includeFileVersions: JsonField<Boolean>) = apply {
-                    this.includeFileVersions = includeFileVersions
-                }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Publish].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .isPublished()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): Publish =
-                    Publish(
-                        checkRequired("isPublished", isPublished),
-                        includeFileVersions,
-                        additionalProperties.toMutableMap(),
-                    )
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): Publish = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                isPublished()
-                includeFileVersions()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int =
-                (if (isPublished.asKnown().isPresent) 1 else 0) +
-                    (if (includeFileVersions.asKnown().isPresent) 1 else 0)
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Publish &&
-                    isPublished == other.isPublished &&
-                    includeFileVersions == other.includeFileVersions &&
-                    additionalProperties == other.additionalProperties
-            }
-
-            private val hashCode: Int by lazy {
-                Objects.hash(isPublished, includeFileVersions, additionalProperties)
-            }
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "Publish{isPublished=$isPublished, includeFileVersions=$includeFileVersions, additionalProperties=$additionalProperties}"
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is ChangePublicationStatus &&
-                publish == other.publish &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(publish, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() =
-            "ChangePublicationStatus{publish=$publish, additionalProperties=$additionalProperties}"
     }
 }

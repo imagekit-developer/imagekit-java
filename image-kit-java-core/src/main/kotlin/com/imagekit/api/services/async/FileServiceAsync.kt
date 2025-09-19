@@ -50,28 +50,16 @@ interface FileServiceAsync {
      * `tags`, `customCoordinates`, `customMetadata`, publication status, remove existing `AITags`
      * and apply extensions using this API.
      */
-    fun update(fileId: String): CompletableFuture<FileUpdateResponse> =
-        update(fileId, FileUpdateParams.none())
+    fun update(fileId: String, params: FileUpdateParams): CompletableFuture<FileUpdateResponse> =
+        update(fileId, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         fileId: String,
-        params: FileUpdateParams = FileUpdateParams.none(),
+        params: FileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<FileUpdateResponse> =
         update(params.toBuilder().fileId(fileId).build(), requestOptions)
-
-    /** @see update */
-    fun update(
-        fileId: String,
-        params: FileUpdateParams = FileUpdateParams.none(),
-    ): CompletableFuture<FileUpdateResponse> = update(fileId, params, RequestOptions.none())
-
-    /** @see update */
-    fun update(
-        params: FileUpdateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileUpdateResponse>
 
     /** @see update */
     fun update(params: FileUpdateParams): CompletableFuture<FileUpdateResponse> =
@@ -79,10 +67,9 @@ interface FileServiceAsync {
 
     /** @see update */
     fun update(
-        fileId: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<FileUpdateResponse> =
-        update(fileId, FileUpdateParams.none(), requestOptions)
+        params: FileUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<FileUpdateResponse>
 
     /**
      * This API deletes the file and all its file versions permanently.
@@ -249,29 +236,19 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `patch /v1/files/{fileId}/details`, but is otherwise the
          * same as [FileServiceAsync.update].
          */
-        fun update(fileId: String): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
-            update(fileId, FileUpdateParams.none())
-
-        /** @see update */
         fun update(
             fileId: String,
-            params: FileUpdateParams = FileUpdateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
-            update(params.toBuilder().fileId(fileId).build(), requestOptions)
-
-        /** @see update */
-        fun update(
-            fileId: String,
-            params: FileUpdateParams = FileUpdateParams.none(),
+            params: FileUpdateParams,
         ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
             update(fileId, params, RequestOptions.none())
 
         /** @see update */
         fun update(
+            fileId: String,
             params: FileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>>
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
+            update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
         /** @see update */
         fun update(
@@ -281,10 +258,9 @@ interface FileServiceAsync {
 
         /** @see update */
         fun update(
-            fileId: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>> =
-            update(fileId, FileUpdateParams.none(), requestOptions)
+            params: FileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<FileUpdateResponse>>
 
         /**
          * Returns a raw HTTP response for `delete /v1/files/{fileId}`, but is otherwise the same as

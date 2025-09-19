@@ -50,33 +50,24 @@ interface FileService {
      * `tags`, `customCoordinates`, `customMetadata`, publication status, remove existing `AITags`
      * and apply extensions using this API.
      */
-    fun update(fileId: String): FileUpdateResponse = update(fileId, FileUpdateParams.none())
+    fun update(fileId: String, params: FileUpdateParams): FileUpdateResponse =
+        update(fileId, params, RequestOptions.none())
 
     /** @see update */
     fun update(
         fileId: String,
-        params: FileUpdateParams = FileUpdateParams.none(),
+        params: FileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): FileUpdateResponse = update(params.toBuilder().fileId(fileId).build(), requestOptions)
 
     /** @see update */
-    fun update(
-        fileId: String,
-        params: FileUpdateParams = FileUpdateParams.none(),
-    ): FileUpdateResponse = update(fileId, params, RequestOptions.none())
+    fun update(params: FileUpdateParams): FileUpdateResponse = update(params, RequestOptions.none())
 
     /** @see update */
     fun update(
         params: FileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): FileUpdateResponse
-
-    /** @see update */
-    fun update(params: FileUpdateParams): FileUpdateResponse = update(params, RequestOptions.none())
-
-    /** @see update */
-    fun update(fileId: String, requestOptions: RequestOptions): FileUpdateResponse =
-        update(fileId, FileUpdateParams.none(), requestOptions)
 
     /**
      * This API deletes the file and all its file versions permanently.
@@ -231,31 +222,17 @@ interface FileService {
          * same as [FileService.update].
          */
         @MustBeClosed
-        fun update(fileId: String): HttpResponseFor<FileUpdateResponse> =
-            update(fileId, FileUpdateParams.none())
+        fun update(fileId: String, params: FileUpdateParams): HttpResponseFor<FileUpdateResponse> =
+            update(fileId, params, RequestOptions.none())
 
         /** @see update */
         @MustBeClosed
         fun update(
             fileId: String,
-            params: FileUpdateParams = FileUpdateParams.none(),
+            params: FileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<FileUpdateResponse> =
             update(params.toBuilder().fileId(fileId).build(), requestOptions)
-
-        /** @see update */
-        @MustBeClosed
-        fun update(
-            fileId: String,
-            params: FileUpdateParams = FileUpdateParams.none(),
-        ): HttpResponseFor<FileUpdateResponse> = update(fileId, params, RequestOptions.none())
-
-        /** @see update */
-        @MustBeClosed
-        fun update(
-            params: FileUpdateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileUpdateResponse>
 
         /** @see update */
         @MustBeClosed
@@ -265,10 +242,9 @@ interface FileService {
         /** @see update */
         @MustBeClosed
         fun update(
-            fileId: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<FileUpdateResponse> =
-            update(fileId, FileUpdateParams.none(), requestOptions)
+            params: FileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<FileUpdateResponse>
 
         /**
          * Returns a raw HTTP response for `delete /v1/files/{fileId}`, but is otherwise the same as

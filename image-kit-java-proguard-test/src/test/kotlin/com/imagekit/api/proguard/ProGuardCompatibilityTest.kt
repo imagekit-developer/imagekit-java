@@ -9,7 +9,7 @@ import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.models.StreamingResolution
 import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
 import com.imagekit.api.models.files.File
-import com.imagekit.api.models.files.UpdateFileDetailsRequest
+import com.imagekit.api.models.files.UpdateFileRequest
 import java.time.OffsetDateTime
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -108,14 +108,14 @@ internal class ProGuardCompatibilityTest {
     }
 
     @Test
-    fun updateFileDetailsRequestRoundtrip() {
+    fun updateFileRequestRoundtrip() {
         val jsonMapper = jsonMapper()
-        val updateFileDetailsRequest =
-            UpdateFileDetailsRequest.ofUpdateFileDetails(
-                UpdateFileDetailsRequest.UpdateFileDetails.builder()
+        val updateFileRequest =
+            UpdateFileRequest.ofDetails(
+                UpdateFileRequest.UpdateFileDetails.builder()
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        UpdateFileDetailsRequest.UpdateFileDetails.CustomMetadata.builder()
+                        UpdateFileRequest.UpdateFileDetails.CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -148,19 +148,18 @@ internal class ProGuardCompatibilityTest {
                         )
                     )
                     .removeAiTagsOfStrings(listOf("string"))
-                    .addTag("tag1")
-                    .addTag("tag2")
+                    .tags(listOf("car", "vehicle", "motorsports"))
                     .webhookUrl("https://example.com")
                     .build()
             )
 
-        val roundtrippedUpdateFileDetailsRequest =
+        val roundtrippedUpdateFileRequest =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(updateFileDetailsRequest),
-                jacksonTypeRef<UpdateFileDetailsRequest>(),
+                jsonMapper.writeValueAsString(updateFileRequest),
+                jacksonTypeRef<UpdateFileRequest>(),
             )
 
-        assertThat(roundtrippedUpdateFileDetailsRequest).isEqualTo(updateFileDetailsRequest)
+        assertThat(roundtrippedUpdateFileRequest).isEqualTo(updateFileRequest)
     }
 
     @Test
