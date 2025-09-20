@@ -9,8 +9,6 @@
 
 The Image Kit Java SDK provides convenient access to the [Image Kit REST API](https://imagekit.io/docs/api-reference) from applications written in Java.
 
-It is generated with [Stainless](https://www.stainless.com/).
-
 <!-- x-release-please-start-version -->
 
 The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
