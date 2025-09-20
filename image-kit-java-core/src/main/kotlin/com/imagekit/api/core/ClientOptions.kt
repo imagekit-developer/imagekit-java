@@ -416,7 +416,7 @@ private constructor(
          *
          * |Setter         |System property                       |Environment variable            |Required|Default value              |
          * |---------------|--------------------------------------|--------------------------------|--------|---------------------------|
-         * |`privateKey`   |`imagekit.imagekitPrivateApiKey`      |`IMAGEKIT_PRIVATE_API_KEY`      |true    |-                          |
+         * |`privateKey`   |`imagekit.imagekitPrivateKey`         |`IMAGEKIT_PRIVATE_KEY`          |true    |-                          |
          * |`password`     |`imagekit.optionalImagekitIgnoresThis`|`OPTIONAL_IMAGEKIT_IGNORES_THIS`|false   |`"do_not_set"`             |
          * |`webhookSecret`|`imagekit.imagekitWebhookSecret`      |`IMAGEKIT_WEBHOOK_SECRET`       |false   |-                          |
          * |`baseUrl`      |`imagekit.baseUrl`                    |`IMAGE_KIT_BASE_URL`            |true    |`"https://api.imagekit.io"`|
@@ -427,8 +427,8 @@ private constructor(
             (System.getProperty("imagekit.baseUrl") ?: System.getenv("IMAGE_KIT_BASE_URL"))?.let {
                 baseUrl(it)
             }
-            (System.getProperty("imagekit.imagekitPrivateApiKey")
-                    ?: System.getenv("IMAGEKIT_PRIVATE_API_KEY"))
+            (System.getProperty("imagekit.imagekitPrivateKey")
+                    ?: System.getenv("IMAGEKIT_PRIVATE_KEY"))
                 ?.let { privateKey(it) }
             (System.getProperty("imagekit.optionalImagekitIgnoresThis")
                     ?: System.getenv("OPTIONAL_IMAGEKIT_IGNORES_THIS"))
