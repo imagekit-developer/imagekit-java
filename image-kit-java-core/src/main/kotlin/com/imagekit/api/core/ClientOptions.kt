@@ -42,6 +42,16 @@ private constructor(
      */
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
     /**
+     * The interface to use for delaying execution, like during retries.
+     *
+     * This is primarily useful for using fake delays in tests.
+     *
+     * Defaults to real execution delays.
+     *
+     * This class takes ownership of the sleeper and closes it when closed.
+     */
+    @get:JvmName("sleeper") val sleeper: Sleeper,
+    /**
      * The clock to use for operations that require timing, like retries.
      *
      * This is primarily useful for using a fake clock in tests.
@@ -154,6 +164,7 @@ private constructor(
         private var httpClient: HttpClient? = null
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
+        private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
         private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
@@ -170,6 +181,7 @@ private constructor(
             httpClient = clientOptions.originalHttpClient
             checkJacksonVersionCompatibility = clientOptions.checkJacksonVersionCompatibility
             jsonMapper = clientOptions.jsonMapper
+            sleeper = clientOptions.sleeper
             clock = clientOptions.clock
             baseUrl = clientOptions.baseUrl
             headers = clientOptions.headers.toBuilder()
@@ -211,6 +223,17 @@ private constructor(
          * rarely needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
+
+        /**
+         * The interface to use for delaying execution, like during retries.
+         *
+         * This is primarily useful for using fake delays in tests.
+         *
+         * Defaults to real execution delays.
+         *
+         * This class takes ownership of the sleeper and closes it when closed.
+         */
+        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = PhantomReachableSleeper(sleeper) }
 
         /**
          * The clock to use for operations that require timing, like retries.
@@ -430,6 +453,7 @@ private constructor(
          */
         fun build(): ClientOptions {
             val httpClient = checkRequired("httpClient", httpClient)
+            val sleeper = sleeper ?: PhantomReachableSleeper(DefaultSleeper())
             val privateKey = checkRequired("privateKey", privateKey)
 
             val headers = Headers.builder()
@@ -458,11 +482,13 @@ private constructor(
                 httpClient,
                 RetryingHttpClient.builder()
                     .httpClient(httpClient)
+                    .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
                     .build(),
                 checkJacksonVersionCompatibility,
                 jsonMapper,
+                sleeper,
                 clock,
                 baseUrl,
                 headers.build(),
@@ -489,5 +515,6 @@ private constructor(
      */
     fun close() {
         httpClient.close()
+        sleeper.close()
     }
 }
