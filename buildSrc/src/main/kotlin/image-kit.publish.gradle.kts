@@ -27,9 +27,9 @@ configure<PublishingExtension> {
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/imagekit-developer/imagekit-java.git")
-                    developerConnection.set("scm:git:git://github.com/imagekit-developer/imagekit-java.git")
-                    url.set("https://github.com/imagekit-developer/imagekit-java")
+                    connection.set("scm:git:git://github.com/stainless-sdks/imagekit-java.git")
+                    developerConnection.set("scm:git:git://github.com/stainless-sdks/imagekit-java.git")
+                    url.set("https://github.com/stainless-sdks/imagekit-java")
                 }
 
                 versionMapping {
