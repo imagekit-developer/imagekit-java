@@ -3727,7 +3727,7 @@ private constructor(
     ) {
 
         /**
-         * List of transformations to apply _after_ the file is uploaded. Each item must match one
+         * List of transformations to apply *after* the file is uploaded. Each item must match one
          * of the following types: `transformation`, `gif-to-video`, `thumbnail`, `abs`.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -3791,7 +3791,7 @@ private constructor(
             }
 
             /**
-             * List of transformations to apply _after_ the file is uploaded. Each item must match
+             * List of transformations to apply *after* the file is uploaded. Each item must match
              * one of the following types: `transformation`, `gif-to-video`, `thumbnail`, `abs`.
              */
             fun post(post: List<Post>) = post(MultipartField.of(post))
