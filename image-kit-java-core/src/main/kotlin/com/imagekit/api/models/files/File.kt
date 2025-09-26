@@ -22,6 +22,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a file or file version. */
 class File
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val aiTags: JsonField<List<AiTag>>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -970,6 +971,7 @@ private constructor(
             (if (width.asKnown().isPresent) 1 else 0)
 
     class AiTag
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val confidence: JsonField<Double>,
         private val name: JsonField<String>,
@@ -1418,6 +1420,7 @@ private constructor(
 
     /** An object with details of the file version. */
     class VersionInfo
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val name: JsonField<String>,

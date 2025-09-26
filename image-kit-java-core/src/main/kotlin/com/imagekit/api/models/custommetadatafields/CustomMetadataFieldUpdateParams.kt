@@ -307,6 +307,7 @@ private constructor(
     override fun _queryParams(): QueryParams = additionalQueryParams
 
     class Body
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val label: JsonField<String>,
         private val schema: JsonField<Schema>,
@@ -503,6 +504,7 @@ private constructor(
      * `schema`. The schema will be validated as per the existing `type`.
      */
     class Schema
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val defaultValue: JsonField<DefaultValue>,
         private val isValueRequired: JsonField<Boolean>,

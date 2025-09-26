@@ -31,6 +31,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Schema for URL endpoint resource. */
 class UrlEndpointRequest
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val description: JsonField<String>,
     private val origins: JsonField<List<String>>,
@@ -529,6 +530,7 @@ private constructor(
         }
 
         class Cloudinary
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val type: JsonValue,
             private val preserveAssetDeliveryTypes: JsonField<Boolean>,

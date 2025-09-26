@@ -21,6 +21,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a successful upload. */
 class FileUploadResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val aiTags: JsonField<List<AiTag>>,
     private val audioCodec: JsonField<String>,
@@ -1105,6 +1106,7 @@ private constructor(
             (if (width.asKnown().isPresent) 1 else 0)
 
     class AiTag
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val confidence: JsonField<Double>,
         private val name: JsonField<String>,
@@ -1546,6 +1548,7 @@ private constructor(
      * If no extension was requested, then this parameter is not returned.
      */
     class ExtensionStatus
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val aiAutoDescription: JsonField<AiAutoDescription>,
         private val awsAutoTagging: JsonField<AwsAutoTagging>,
@@ -2375,6 +2378,7 @@ private constructor(
 
     /** An object containing the file or file version's `id` (versionId) and `name`. */
     class VersionInfo
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val name: JsonField<String>,

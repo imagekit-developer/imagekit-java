@@ -218,6 +218,7 @@ private constructor(
     }
 
     class UpdateFileDetails
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val customCoordinates: JsonField<String>,
         private val customMetadata: JsonField<CustomMetadata>,
@@ -1052,6 +1053,7 @@ private constructor(
             }
 
             class RemoveBg
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val name: JsonValue,
                 private val options: JsonField<Options>,
@@ -1219,6 +1221,7 @@ private constructor(
                         (options.asKnown().getOrNull()?.validity() ?: 0)
 
                 class Options
+                @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                 private constructor(
                     private val addShadow: JsonField<Boolean>,
                     private val bgColor: JsonField<String>,
@@ -1549,6 +1552,7 @@ private constructor(
             }
 
             class AutoTaggingExtension
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val maxTags: JsonField<Long>,
                 private val minConfidence: JsonField<Long>,
@@ -2164,6 +2168,7 @@ private constructor(
     }
 
     class ChangePublicationStatus
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val publish: JsonField<Publish>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -2291,6 +2296,7 @@ private constructor(
 
         /** Configure the publication status of a file and its versions. */
         class Publish
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val isPublished: JsonField<Boolean>,
             private val includeFileVersions: JsonField<Boolean>,

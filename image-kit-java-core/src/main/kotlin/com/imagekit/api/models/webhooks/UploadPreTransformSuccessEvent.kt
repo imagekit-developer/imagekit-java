@@ -27,6 +27,7 @@ import kotlin.jvm.optionals.getOrNull
  * requested transformation and is now available in the Media Library.
  */
 class UploadPreTransformSuccessEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
@@ -315,6 +316,7 @@ private constructor(
 
     /** Object containing details of a successful upload. */
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val aiTags: JsonField<List<AiTag>>,
         private val audioCodec: JsonField<String>,
@@ -1440,6 +1442,7 @@ private constructor(
                 (if (width.asKnown().isPresent) 1 else 0)
 
         class AiTag
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val confidence: JsonField<Double>,
             private val name: JsonField<String>,
@@ -1896,6 +1899,7 @@ private constructor(
          * If no extension was requested, then this parameter is not returned.
          */
         class ExtensionStatus
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val aiAutoDescription: JsonField<AiAutoDescription>,
             private val awsAutoTagging: JsonField<AwsAutoTagging>,
@@ -2738,6 +2742,7 @@ private constructor(
 
         /** An object containing the file or file version's `id` (versionId) and `name`. */
         class VersionInfo
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val id: JsonField<String>,
             private val name: JsonField<String>,
@@ -2986,6 +2991,7 @@ private constructor(
     }
 
     class Request
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val transformation: JsonField<String>,
         private val xRequestId: JsonField<String>,

@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
  * from the docs.
  */
 class SubtitleOverlayTransformation
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val background: JsonField<String>,
     private val color: JsonField<String>,

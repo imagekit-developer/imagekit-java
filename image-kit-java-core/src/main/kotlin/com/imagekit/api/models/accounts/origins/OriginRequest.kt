@@ -364,6 +364,7 @@ private constructor(
     }
 
     class S3
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
@@ -821,6 +822,7 @@ private constructor(
     }
 
     class S3Compatible
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
@@ -1364,6 +1366,7 @@ private constructor(
     }
 
     class CloudinaryBackup
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val accessKey: JsonField<String>,
         private val bucket: JsonField<String>,
@@ -1821,6 +1824,7 @@ private constructor(
     }
 
     class WebFolder
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val baseUrl: JsonField<String>,
         private val name: JsonField<String>,
@@ -2205,6 +2209,7 @@ private constructor(
     }
 
     class WebProxy
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val name: JsonField<String>,
         private val type: JsonValue,
@@ -2498,6 +2503,7 @@ private constructor(
     }
 
     class Gcs
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val bucket: JsonField<String>,
         private val clientEmail: JsonField<String>,
@@ -2949,6 +2955,7 @@ private constructor(
     }
 
     class AzureBlob
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val accountName: JsonField<String>,
         private val container: JsonField<String>,
@@ -3400,6 +3407,7 @@ private constructor(
     }
 
     class AkeneoPim
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val baseUrl: JsonField<String>,
         private val clientId: JsonField<String>,

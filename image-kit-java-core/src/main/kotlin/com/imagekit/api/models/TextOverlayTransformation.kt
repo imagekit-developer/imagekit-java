@@ -29,6 +29,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class TextOverlayTransformation
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val alpha: JsonField<Double>,
     private val background: JsonField<String>,

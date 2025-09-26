@@ -22,6 +22,7 @@ import kotlin.jvm.optionals.getOrNull
  * requested transformation could not be applied.
  */
 class UploadPreTransformErrorEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
@@ -304,6 +305,7 @@ private constructor(
             (request.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val name: JsonField<String>,
         private val path: JsonField<String>,
@@ -523,6 +525,7 @@ private constructor(
                 (transformation.asKnown().getOrNull()?.validity() ?: 0)
 
         class Transformation
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val error: JsonField<Error>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -665,6 +668,7 @@ private constructor(
             internal fun validity(): Int = (error.asKnown().getOrNull()?.validity() ?: 0)
 
             class Error
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val reason: JsonField<String>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
@@ -868,6 +872,7 @@ private constructor(
     }
 
     class Request
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val transformation: JsonField<String>,
         private val xRequestId: JsonField<String>,

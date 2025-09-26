@@ -12,6 +12,7 @@ import java.util.Collections
 import java.util.Objects
 
 class CustomMetadataFieldDeleteResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(private val additionalProperties: MutableMap<String, JsonValue>) {
 
     @JsonCreator private constructor() : this(mutableMapOf())

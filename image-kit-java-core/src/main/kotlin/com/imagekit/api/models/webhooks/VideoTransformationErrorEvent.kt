@@ -27,6 +27,7 @@ import kotlin.jvm.optionals.getOrNull
  * download failure. For other errors, contact ImageKit support.
  */
 class VideoTransformationErrorEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
@@ -313,6 +314,7 @@ private constructor(
             (request.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val asset: JsonField<Asset>,
         private val transformation: JsonField<Transformation>,
@@ -497,6 +499,7 @@ private constructor(
 
         /** Information about the source video asset being transformed. */
         class Asset
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val url: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -655,6 +658,7 @@ private constructor(
         }
 
         class Transformation
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val type: JsonField<Type>,
             private val error: JsonField<Error>,
@@ -1023,6 +1027,7 @@ private constructor(
 
             /** Details about the transformation error. */
             class Error
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val reason: JsonField<Reason>,
                 private val additionalProperties: MutableMap<String, JsonValue>,
@@ -1341,6 +1346,7 @@ private constructor(
 
             /** Configuration options for video transformations. */
             class Options
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val audioCodec: JsonField<AudioCodec>,
                 private val autoRotate: JsonField<Boolean>,
@@ -2390,6 +2396,7 @@ private constructor(
 
     /** Information about the original request that triggered the video transformation. */
     class Request
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val url: JsonField<String>,
         private val xRequestId: JsonField<String>,

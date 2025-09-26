@@ -21,6 +21,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class ImageOverlay
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val position: JsonField<OverlayPosition>,
     private val timing: JsonField<OverlayTiming>,

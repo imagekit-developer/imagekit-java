@@ -25,6 +25,7 @@ import kotlin.jvm.optionals.getOrNull
  * generates a separate webhook event.
  */
 class UploadPostTransformSuccessEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
@@ -310,6 +311,7 @@ private constructor(
             (request.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val fileId: JsonField<String>,
         private val name: JsonField<String>,
@@ -544,6 +546,7 @@ private constructor(
     }
 
     class Request
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val transformation: JsonField<Transformation>,
         private val xRequestId: JsonField<String>,
@@ -731,6 +734,7 @@ private constructor(
                 (if (xRequestId.asKnown().isPresent) 1 else 0)
 
         class Transformation
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val type: JsonField<Type>,
             private val protocol: JsonField<Protocol>,

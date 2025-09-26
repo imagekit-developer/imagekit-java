@@ -27,6 +27,7 @@ import kotlin.jvm.optionals.getOrNull
  * your application can start showing the transformed video to users.
  */
 class VideoTransformationReadyEvent
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
@@ -346,6 +347,7 @@ private constructor(
             (timings.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val asset: JsonField<Asset>,
         private val transformation: JsonField<Transformation>,
@@ -530,6 +532,7 @@ private constructor(
 
         /** Information about the source video asset being transformed. */
         class Asset
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val url: JsonField<String>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -688,6 +691,7 @@ private constructor(
         }
 
         class Transformation
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val type: JsonField<Type>,
             private val options: JsonField<Options>,
@@ -1056,6 +1060,7 @@ private constructor(
 
             /** Configuration options for video transformations. */
             class Options
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val audioCodec: JsonField<AudioCodec>,
                 private val autoRotate: JsonField<Boolean>,
@@ -2062,6 +2067,7 @@ private constructor(
 
             /** Information about the transformed output video. */
             class Output
+            @JsonCreator(mode = JsonCreator.Mode.DISABLED)
             private constructor(
                 private val url: JsonField<String>,
                 private val videoMetadata: JsonField<VideoMetadata>,
@@ -2252,6 +2258,7 @@ private constructor(
 
                 /** Metadata of the output video file. */
                 class VideoMetadata
+                @JsonCreator(mode = JsonCreator.Mode.DISABLED)
                 private constructor(
                     private val bitrate: JsonField<Long>,
                     private val duration: JsonField<Double>,
@@ -2617,6 +2624,7 @@ private constructor(
 
     /** Information about the original request that triggered the video transformation. */
     class Request
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val url: JsonField<String>,
         private val xRequestId: JsonField<String>,
@@ -2858,6 +2866,7 @@ private constructor(
 
     /** Performance metrics for the transformation process. */
     class Timings
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val downloadDuration: JsonField<Long>,
         private val encodingDuration: JsonField<Long>,
