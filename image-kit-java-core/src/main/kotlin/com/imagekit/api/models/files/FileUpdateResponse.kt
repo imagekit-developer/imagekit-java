@@ -22,6 +22,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a file or file version. */
 class FileUpdateResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val aiTags: JsonField<List<File.AiTag>>,
     private val createdAt: JsonField<OffsetDateTime>,
@@ -1039,6 +1040,7 @@ private constructor(
             (extensionStatus.asKnown().getOrNull()?.validity() ?: 0)
 
     class ExtensionStatus
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val aiAutoDescription: JsonField<AiAutoDescription>,
         private val awsAutoTagging: JsonField<AwsAutoTagging>,

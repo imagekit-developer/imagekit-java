@@ -28,6 +28,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class OverlayTiming
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val duration: JsonField<Duration>,
     private val end: JsonField<End>,

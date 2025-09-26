@@ -19,6 +19,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BulkRemoveTagsResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val successfullyUpdatedFileIds: JsonField<List<String>>,
     private val additionalProperties: MutableMap<String, JsonValue>,

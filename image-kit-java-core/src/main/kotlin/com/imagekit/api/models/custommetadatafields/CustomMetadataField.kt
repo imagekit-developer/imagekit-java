@@ -33,6 +33,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** Object containing details of a custom metadata field. */
 class CustomMetadataField
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val label: JsonField<String>,
@@ -287,6 +288,7 @@ private constructor(
 
     /** An object that describes the rules for the custom metadata field value. */
     class Schema
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val type: JsonField<Type>,
         private val defaultValue: JsonField<DefaultValue>,

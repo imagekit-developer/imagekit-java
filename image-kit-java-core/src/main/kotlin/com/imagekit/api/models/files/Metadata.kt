@@ -20,6 +20,7 @@ import kotlin.jvm.optionals.getOrNull
 
 /** JSON object containing metadata. */
 class Metadata
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val audioCodec: JsonField<String>,
     private val bitRate: JsonField<Long>,
@@ -610,6 +611,7 @@ private constructor(
             (if (width.asKnown().isPresent) 1 else 0)
 
     class Exif
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val exif: JsonField<InnerExif>,
         private val gps: JsonField<Gps>,
@@ -923,6 +925,7 @@ private constructor(
 
         /** Object containing Exif details. */
         class InnerExif
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val apertureValue: JsonField<Double>,
             private val colorSpace: JsonField<Long>,
@@ -2109,6 +2112,7 @@ private constructor(
 
         /** Object containing GPS information. */
         class Gps
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val gpsVersionId: JsonField<List<Long>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
@@ -2275,6 +2279,7 @@ private constructor(
 
         /** Object containing EXIF image information. */
         class Image
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val exifOffset: JsonField<Long>,
             private val gpsInfo: JsonField<Long>,
@@ -2825,6 +2830,7 @@ private constructor(
 
         /** JSON object. */
         class Interoperability
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val interopIndex: JsonField<String>,
             private val interopVersion: JsonField<String>,
@@ -3123,6 +3129,7 @@ private constructor(
 
         /** Object containing Thumbnail information. */
         class Thumbnail
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val compression: JsonField<Long>,
             private val resolutionUnit: JsonField<Long>,

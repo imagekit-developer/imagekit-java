@@ -17,6 +17,7 @@ import java.util.Objects
 
 /** Job submitted successfully. A `jobId` will be returned. */
 class FolderMoveResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val jobId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,

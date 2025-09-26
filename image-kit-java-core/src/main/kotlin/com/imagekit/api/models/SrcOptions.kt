@@ -24,6 +24,7 @@ import kotlin.jvm.optionals.getOrNull
  * [Transformations guide](https://imagekit.io/docs/transformations).
  */
 class SrcOptions
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val src: JsonField<String>,
     private val urlEndpoint: JsonField<String>,

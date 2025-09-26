@@ -38,6 +38,7 @@ import kotlin.jvm.optionals.getOrNull
  * [Transformations documentation](https://imagekit.io/docs/transformations).
  */
 class Transformation
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val aiChangeBackground: JsonField<String>,
     private val aiDropShadow: JsonField<AiDropShadow>,

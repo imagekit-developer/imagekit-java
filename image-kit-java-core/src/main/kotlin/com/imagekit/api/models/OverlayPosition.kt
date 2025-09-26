@@ -29,6 +29,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class OverlayPosition
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val focus: JsonField<Focus>,
     private val x: JsonField<X>,

@@ -16,6 +16,7 @@ import java.util.Objects
 import java.util.Optional
 
 class UsageGetResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val bandwidthBytes: JsonField<Long>,
     private val extensionUnitsCount: JsonField<Long>,

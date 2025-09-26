@@ -16,6 +16,7 @@ import java.util.Objects
 import java.util.Optional
 
 class FileRenameResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val purgeRequestId: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
