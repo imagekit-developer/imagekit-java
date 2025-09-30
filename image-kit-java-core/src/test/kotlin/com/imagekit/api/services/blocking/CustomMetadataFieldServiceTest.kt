@@ -132,7 +132,10 @@ internal class CustomMetadataFieldServiceTest {
 
         val customMetadataFields =
             customMetadataFieldService.list(
-                CustomMetadataFieldListParams.builder().includeDeleted(true).build()
+                CustomMetadataFieldListParams.builder()
+                    .folderPath("folderPath")
+                    .includeDeleted(true)
+                    .build()
             )
 
         customMetadataFields.forEach { it.validate() }

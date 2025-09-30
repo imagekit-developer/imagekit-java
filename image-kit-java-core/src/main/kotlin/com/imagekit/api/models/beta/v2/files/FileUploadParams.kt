@@ -3312,6 +3312,8 @@ private constructor(
 
             @JvmField val METADATA = of("metadata")
 
+            @JvmField val SELECTED_FIELDS_SCHEMA = of("selectedFieldsSchema")
+
             @JvmStatic fun of(value: String) = ResponseField(JsonField.of(value))
         }
 
@@ -3324,6 +3326,7 @@ private constructor(
             IS_PUBLISHED,
             CUSTOM_METADATA,
             METADATA,
+            SELECTED_FIELDS_SCHEMA,
         }
 
         /**
@@ -3343,6 +3346,7 @@ private constructor(
             IS_PUBLISHED,
             CUSTOM_METADATA,
             METADATA,
+            SELECTED_FIELDS_SCHEMA,
             /**
              * An enum member indicating that [ResponseField] was instantiated with an unknown
              * value.
@@ -3366,6 +3370,7 @@ private constructor(
                 IS_PUBLISHED -> Value.IS_PUBLISHED
                 CUSTOM_METADATA -> Value.CUSTOM_METADATA
                 METADATA -> Value.METADATA
+                SELECTED_FIELDS_SCHEMA -> Value.SELECTED_FIELDS_SCHEMA
                 else -> Value._UNKNOWN
             }
 
@@ -3387,6 +3392,7 @@ private constructor(
                 IS_PUBLISHED -> Known.IS_PUBLISHED
                 CUSTOM_METADATA -> Known.CUSTOM_METADATA
                 METADATA -> Known.METADATA
+                SELECTED_FIELDS_SCHEMA -> Known.SELECTED_FIELDS_SCHEMA
                 else -> throw ImageKitInvalidDataException("Unknown ResponseField: $value")
             }
 

@@ -12,13 +12,25 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * This API returns the array of created custom metadata field objects. By default the API returns
  * only non deleted field objects, but you can include deleted fields in the API response.
+ *
+ * You can also filter results by a specific folder path to retrieve custom metadata fields
+ * applicable at that location. This path-specific filtering is useful when using the **Path
+ * policy** feature to determine which custom metadata fields are selected for a given path.
  */
 class CustomMetadataFieldListParams
 private constructor(
+    private val folderPath: String?,
     private val includeDeleted: Boolean?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
+
+    /**
+     * The folder path (e.g., `/path/to/folder`) for which to retrieve applicable custom metadata
+     * fields. Useful for determining path-specific field selections when the
+     * [Path policy](https://imagekit.io/docs/dam/path-policy) feature is in use.
+     */
+    fun folderPath(): Optional<String> = Optional.ofNullable(folderPath)
 
     /** Set it to `true` to include deleted field objects in the API response. */
     fun includeDeleted(): Optional<Boolean> = Optional.ofNullable(includeDeleted)
@@ -45,16 +57,28 @@ private constructor(
     /** A builder for [CustomMetadataFieldListParams]. */
     class Builder internal constructor() {
 
+        private var folderPath: String? = null
         private var includeDeleted: Boolean? = null
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
         @JvmSynthetic
         internal fun from(customMetadataFieldListParams: CustomMetadataFieldListParams) = apply {
+            folderPath = customMetadataFieldListParams.folderPath
             includeDeleted = customMetadataFieldListParams.includeDeleted
             additionalHeaders = customMetadataFieldListParams.additionalHeaders.toBuilder()
             additionalQueryParams = customMetadataFieldListParams.additionalQueryParams.toBuilder()
         }
+
+        /**
+         * The folder path (e.g., `/path/to/folder`) for which to retrieve applicable custom
+         * metadata fields. Useful for determining path-specific field selections when the
+         * [Path policy](https://imagekit.io/docs/dam/path-policy) feature is in use.
+         */
+        fun folderPath(folderPath: String?) = apply { this.folderPath = folderPath }
+
+        /** Alias for calling [Builder.folderPath] with `folderPath.orElse(null)`. */
+        fun folderPath(folderPath: Optional<String>) = folderPath(folderPath.getOrNull())
 
         /** Set it to `true` to include deleted field objects in the API response. */
         fun includeDeleted(includeDeleted: Boolean?) = apply {
@@ -177,6 +201,7 @@ private constructor(
          */
         fun build(): CustomMetadataFieldListParams =
             CustomMetadataFieldListParams(
+                folderPath,
                 includeDeleted,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
@@ -188,6 +213,7 @@ private constructor(
     override fun _queryParams(): QueryParams =
         QueryParams.builder()
             .apply {
+                folderPath?.let { put("folderPath", it) }
                 includeDeleted?.let { put("includeDeleted", it.toString()) }
                 putAll(additionalQueryParams)
             }
@@ -199,14 +225,15 @@ private constructor(
         }
 
         return other is CustomMetadataFieldListParams &&
+            folderPath == other.folderPath &&
             includeDeleted == other.includeDeleted &&
             additionalHeaders == other.additionalHeaders &&
             additionalQueryParams == other.additionalQueryParams
     }
 
     override fun hashCode(): Int =
-        Objects.hash(includeDeleted, additionalHeaders, additionalQueryParams)
+        Objects.hash(folderPath, includeDeleted, additionalHeaders, additionalQueryParams)
 
     override fun toString() =
-        "CustomMetadataFieldListParams{includeDeleted=$includeDeleted, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CustomMetadataFieldListParams{folderPath=$folderPath, includeDeleted=$includeDeleted, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
 }

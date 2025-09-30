@@ -134,7 +134,10 @@ internal class CustomMetadataFieldServiceAsyncTest {
 
         val customMetadataFieldsFuture =
             customMetadataFieldServiceAsync.list(
-                CustomMetadataFieldListParams.builder().includeDeleted(true).build()
+                CustomMetadataFieldListParams.builder()
+                    .folderPath("folderPath")
+                    .includeDeleted(true)
+                    .build()
             )
 
         val customMetadataFields = customMetadataFieldsFuture.get()
