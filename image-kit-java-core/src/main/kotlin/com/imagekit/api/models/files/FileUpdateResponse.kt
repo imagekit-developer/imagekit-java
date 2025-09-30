@@ -38,6 +38,7 @@ private constructor(
     private val isPublished: JsonField<Boolean>,
     private val mime: JsonField<String>,
     private val name: JsonField<String>,
+    private val selectedFieldsSchema: JsonField<File.SelectedFieldsSchema>,
     private val size: JsonField<Double>,
     private val tags: JsonField<List<String>>,
     private val thumbnail: JsonField<String>,
@@ -80,6 +81,9 @@ private constructor(
         isPublished: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("mime") @ExcludeMissing mime: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("selectedFieldsSchema")
+        @ExcludeMissing
+        selectedFieldsSchema: JsonField<File.SelectedFieldsSchema> = JsonMissing.of(),
         @JsonProperty("size") @ExcludeMissing size: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("thumbnail") @ExcludeMissing thumbnail: JsonField<String> = JsonMissing.of(),
@@ -110,6 +114,7 @@ private constructor(
         isPublished,
         mime,
         name,
+        selectedFieldsSchema,
         size,
         tags,
         thumbnail,
@@ -138,6 +143,7 @@ private constructor(
             .isPublished(isPublished)
             .mime(mime)
             .name(name)
+            .selectedFieldsSchema(selectedFieldsSchema)
             .size(size)
             .tags(tags)
             .thumbnail(thumbnail)
@@ -263,6 +269,21 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
+
+    /**
+     * This field is included in the response only if the Path policy feature is available in the
+     * plan. It contains schema definitions for the custom metadata fields selected for the
+     * specified file path. Field selection can only be done when the Path policy feature is
+     * enabled.
+     *
+     * Keys are the names of the custom metadata fields; the value object has details about the
+     * custom metadata schema.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun selectedFieldsSchema(): Optional<File.SelectedFieldsSchema> =
+        selectedFieldsSchema.getOptional("selectedFieldsSchema")
 
     /**
      * Size of the file in bytes.
@@ -446,6 +467,16 @@ private constructor(
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
     /**
+     * Returns the raw JSON value of [selectedFieldsSchema].
+     *
+     * Unlike [selectedFieldsSchema], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("selectedFieldsSchema")
+    @ExcludeMissing
+    fun _selectedFieldsSchema(): JsonField<File.SelectedFieldsSchema> = selectedFieldsSchema
+
+    /**
      * Returns the raw JSON value of [size].
      *
      * Unlike [size], this method doesn't throw if the JSON field has an unexpected type.
@@ -549,6 +580,7 @@ private constructor(
         private var isPublished: JsonField<Boolean> = JsonMissing.of()
         private var mime: JsonField<String> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
+        private var selectedFieldsSchema: JsonField<File.SelectedFieldsSchema> = JsonMissing.of()
         private var size: JsonField<Double> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var thumbnail: JsonField<String> = JsonMissing.of()
@@ -576,6 +608,7 @@ private constructor(
             isPublished = fileUpdateResponse.isPublished
             mime = fileUpdateResponse.mime
             name = fileUpdateResponse.name
+            selectedFieldsSchema = fileUpdateResponse.selectedFieldsSchema
             size = fileUpdateResponse.size
             tags = fileUpdateResponse.tags.map { it.toMutableList() }
             thumbnail = fileUpdateResponse.thumbnail
@@ -786,6 +819,30 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
+        /**
+         * This field is included in the response only if the Path policy feature is available in
+         * the plan. It contains schema definitions for the custom metadata fields selected for the
+         * specified file path. Field selection can only be done when the Path policy feature is
+         * enabled.
+         *
+         * Keys are the names of the custom metadata fields; the value object has details about the
+         * custom metadata schema.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: File.SelectedFieldsSchema) =
+            selectedFieldsSchema(JsonField.of(selectedFieldsSchema))
+
+        /**
+         * Sets [Builder.selectedFieldsSchema] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.selectedFieldsSchema] with a well-typed
+         * [File.SelectedFieldsSchema] value instead. This method is primarily for setting the field
+         * to an undocumented or not yet supported value.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: JsonField<File.SelectedFieldsSchema>) =
+            apply {
+                this.selectedFieldsSchema = selectedFieldsSchema
+            }
+
         /** Size of the file in bytes. */
         fun size(size: Double) = size(JsonField.of(size))
 
@@ -954,6 +1011,7 @@ private constructor(
                 isPublished,
                 mime,
                 name,
+                selectedFieldsSchema,
                 size,
                 (tags ?: JsonMissing.of()).map { it.toImmutable() },
                 thumbnail,
@@ -988,6 +1046,7 @@ private constructor(
         isPublished()
         mime()
         name()
+        selectedFieldsSchema().ifPresent { it.validate() }
         size()
         tags()
         thumbnail()
@@ -1029,6 +1088,7 @@ private constructor(
             (if (isPublished.asKnown().isPresent) 1 else 0) +
             (if (mime.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
+            (selectedFieldsSchema.asKnown().getOrNull()?.validity() ?: 0) +
             (if (size.asKnown().isPresent) 1 else 0) +
             (tags.asKnown().getOrNull()?.size ?: 0) +
             (if (thumbnail.asKnown().isPresent) 1 else 0) +
@@ -1888,6 +1948,7 @@ private constructor(
             isPublished == other.isPublished &&
             mime == other.mime &&
             name == other.name &&
+            selectedFieldsSchema == other.selectedFieldsSchema &&
             size == other.size &&
             tags == other.tags &&
             thumbnail == other.thumbnail &&
@@ -1916,6 +1977,7 @@ private constructor(
             isPublished,
             mime,
             name,
+            selectedFieldsSchema,
             size,
             tags,
             thumbnail,
@@ -1932,5 +1994,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, extensionStatus=$extensionStatus, additionalProperties=$additionalProperties}"
+        "FileUpdateResponse{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, selectedFieldsSchema=$selectedFieldsSchema, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, extensionStatus=$extensionStatus, additionalProperties=$additionalProperties}"
 }

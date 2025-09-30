@@ -69,6 +69,27 @@ internal class FileUploadParamsTest {
                     FileUploadParams.ResponseField.IS_PRIVATE_FILE,
                 )
             )
+            .selectedFieldsSchema(
+                FileUploadParams.SelectedFieldsSchema.builder()
+                    .putAdditionalProperty(
+                        "foo",
+                        JsonValue.from(
+                            mapOf(
+                                "type" to "Text",
+                                "defaultValue" to "string",
+                                "isValueRequired" to true,
+                                "maxLength" to 0,
+                                "maxValue" to "string",
+                                "minLength" to 0,
+                                "minValue" to "string",
+                                "readOnly" to true,
+                                "selectOptions" to listOf("small", "medium", "large", 30, 40, true),
+                                "selectOptionsTruncated" to true,
+                            )
+                        ),
+                    )
+                    .build()
+            )
             .signature("signature")
             .tags(listOf("t-shirt", "round-neck", "men"))
             .transformation(
@@ -150,6 +171,28 @@ internal class FileUploadParamsTest {
                         FileUploadParams.ResponseField.CUSTOM_COORDINATES,
                         FileUploadParams.ResponseField.IS_PRIVATE_FILE,
                     )
+                )
+                .selectedFieldsSchema(
+                    FileUploadParams.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
                 )
                 .signature("signature")
                 .tags(listOf("t-shirt", "round-neck", "men"))
@@ -244,6 +287,36 @@ internal class FileUploadParamsTest {
                                     FileUploadParams.ResponseField.CUSTOM_COORDINATES,
                                     FileUploadParams.ResponseField.IS_PRIVATE_FILE,
                                 )
+                            ),
+                        "selectedFieldsSchema" to
+                            MultipartField.of(
+                                FileUploadParams.SelectedFieldsSchema.builder()
+                                    .putAdditionalProperty(
+                                        "foo",
+                                        JsonValue.from(
+                                            mapOf(
+                                                "type" to "Text",
+                                                "defaultValue" to "string",
+                                                "isValueRequired" to true,
+                                                "maxLength" to 0,
+                                                "maxValue" to "string",
+                                                "minLength" to 0,
+                                                "minValue" to "string",
+                                                "readOnly" to true,
+                                                "selectOptions" to
+                                                    listOf(
+                                                        "small",
+                                                        "medium",
+                                                        "large",
+                                                        30,
+                                                        40,
+                                                        true,
+                                                    ),
+                                                "selectOptionsTruncated" to true,
+                                            )
+                                        ),
+                                    )
+                                    .build()
                             ),
                         "signature" to MultipartField.of("signature"),
                         "tags" to MultipartField.of(listOf("t-shirt", "round-neck", "men")),

@@ -36,6 +36,28 @@ internal class FileUpdateResponseTest {
                 .isPublished(true)
                 .mime("mime")
                 .name("name")
+                .selectedFieldsSchema(
+                    File.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
@@ -81,6 +103,28 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.isPublished()).contains(true)
         assertThat(fileUpdateResponse.mime()).contains("mime")
         assertThat(fileUpdateResponse.name()).contains("name")
+        assertThat(fileUpdateResponse.selectedFieldsSchema())
+            .contains(
+                File.SelectedFieldsSchema.builder()
+                    .putAdditionalProperty(
+                        "foo",
+                        JsonValue.from(
+                            mapOf(
+                                "type" to "Text",
+                                "defaultValue" to "string",
+                                "isValueRequired" to true,
+                                "maxLength" to 0,
+                                "maxValue" to "string",
+                                "minLength" to 0,
+                                "minValue" to "string",
+                                "readOnly" to true,
+                                "selectOptions" to listOf("small", "medium", "large", 30, 40, true),
+                                "selectOptionsTruncated" to true,
+                            )
+                        ),
+                    )
+                    .build()
+            )
         assertThat(fileUpdateResponse.size()).contains(0.0)
         assertThat(fileUpdateResponse.tags().getOrNull()).containsExactly("string")
         assertThat(fileUpdateResponse.thumbnail()).contains("https://example.com")
@@ -127,6 +171,28 @@ internal class FileUpdateResponseTest {
                 .isPublished(true)
                 .mime("mime")
                 .name("name")
+                .selectedFieldsSchema(
+                    File.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
