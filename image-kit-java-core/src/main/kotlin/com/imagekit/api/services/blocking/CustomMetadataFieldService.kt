@@ -77,6 +77,10 @@ interface CustomMetadataFieldService {
      * This API returns the array of created custom metadata field objects. By default the API
      * returns only non deleted field objects, but you can include deleted fields in the API
      * response.
+     *
+     * You can also filter results by a specific folder path to retrieve custom metadata fields
+     * applicable at that location. This path-specific filtering is useful when using the **Path
+     * policy** feature to determine which custom metadata fields are selected for a given path.
      */
     fun list(): List<CustomMetadataField> = list(CustomMetadataFieldListParams.none())
 
