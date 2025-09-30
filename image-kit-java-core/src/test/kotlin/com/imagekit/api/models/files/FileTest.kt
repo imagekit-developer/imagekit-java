@@ -36,6 +36,28 @@ internal class FileTest {
                 .isPublished(true)
                 .mime("mime")
                 .name("name")
+                .selectedFieldsSchema(
+                    File.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")
@@ -68,6 +90,28 @@ internal class FileTest {
         assertThat(file.isPublished()).contains(true)
         assertThat(file.mime()).contains("mime")
         assertThat(file.name()).contains("name")
+        assertThat(file.selectedFieldsSchema())
+            .contains(
+                File.SelectedFieldsSchema.builder()
+                    .putAdditionalProperty(
+                        "foo",
+                        JsonValue.from(
+                            mapOf(
+                                "type" to "Text",
+                                "defaultValue" to "string",
+                                "isValueRequired" to true,
+                                "maxLength" to 0,
+                                "maxValue" to "string",
+                                "minLength" to 0,
+                                "minValue" to "string",
+                                "readOnly" to true,
+                                "selectOptions" to listOf("small", "medium", "large", 30, 40, true),
+                                "selectOptionsTruncated" to true,
+                            )
+                        ),
+                    )
+                    .build()
+            )
         assertThat(file.size()).contains(0.0)
         assertThat(file.tags().getOrNull()).containsExactly("string")
         assertThat(file.thumbnail()).contains("https://example.com")
@@ -104,6 +148,28 @@ internal class FileTest {
                 .isPublished(true)
                 .mime("mime")
                 .name("name")
+                .selectedFieldsSchema(
+                    File.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnail("https://example.com")

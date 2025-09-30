@@ -229,6 +229,20 @@ private constructor(
     fun responseFields(): Optional<List<ResponseField>> = body.responseFields()
 
     /**
+     * This field is included in the response only if the Path policy feature is available in the
+     * plan. It contains schema definitions for the custom metadata fields selected for the
+     * specified file path. Field selection can only be done when the Path policy feature is
+     * enabled.
+     *
+     * Keys are the names of the custom metadata fields; the value object has details about the
+     * custom metadata schema.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> = body.selectedFieldsSchema()
+
+    /**
      * Set the tags while uploading the file. Provide an array of tag strings (e.g. `["tag1",
      * "tag2", "tag3"]`). The combined length of all tag characters must not exceed 500, and the `%`
      * character is not allowed. If this field is not specified and the file is overwritten, the
@@ -399,6 +413,14 @@ private constructor(
      * type.
      */
     fun _responseFields(): MultipartField<List<ResponseField>> = body._responseFields()
+
+    /**
+     * Returns the raw multipart value of [selectedFieldsSchema].
+     *
+     * Unlike [selectedFieldsSchema], this method doesn't throw if the multipart field has an
+     * unexpected type.
+     */
+    fun _selectedFieldsSchema(): MultipartField<SelectedFieldsSchema> = body._selectedFieldsSchema()
 
     /**
      * Returns the raw multipart value of [tags].
@@ -833,6 +855,31 @@ private constructor(
         }
 
         /**
+         * This field is included in the response only if the Path policy feature is available in
+         * the plan. It contains schema definitions for the custom metadata fields selected for the
+         * specified file path. Field selection can only be done when the Path policy feature is
+         * enabled.
+         *
+         * Keys are the names of the custom metadata fields; the value object has details about the
+         * custom metadata schema.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) = apply {
+            body.selectedFieldsSchema(selectedFieldsSchema)
+        }
+
+        /**
+         * Sets [Builder.selectedFieldsSchema] to an arbitrary multipart value.
+         *
+         * You should usually call [Builder.selectedFieldsSchema] with a well-typed
+         * [SelectedFieldsSchema] value instead. This method is primarily for setting the field to
+         * an undocumented or not yet supported value.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: MultipartField<SelectedFieldsSchema>) =
+            apply {
+                body.selectedFieldsSchema(selectedFieldsSchema)
+            }
+
+        /**
          * Set the tags while uploading the file. Provide an array of tag strings (e.g. `["tag1",
          * "tag2", "tag3"]`). The combined length of all tag characters must not exceed 500, and the
          * `%` character is not allowed. If this field is not specified and the file is overwritten,
@@ -1074,6 +1121,7 @@ private constructor(
                 "overwriteFile" to _overwriteFile(),
                 "overwriteTags" to _overwriteTags(),
                 "responseFields" to _responseFields(),
+                "selectedFieldsSchema" to _selectedFieldsSchema(),
                 "tags" to _tags(),
                 "transformation" to _transformation(),
                 "useUniqueFileName" to _useUniqueFileName(),
@@ -1103,6 +1151,7 @@ private constructor(
         private val overwriteFile: MultipartField<Boolean>,
         private val overwriteTags: MultipartField<Boolean>,
         private val responseFields: MultipartField<List<ResponseField>>,
+        private val selectedFieldsSchema: MultipartField<SelectedFieldsSchema>,
         private val tags: MultipartField<List<String>>,
         private val transformation: MultipartField<Transformation>,
         private val useUniqueFileName: MultipartField<Boolean>,
@@ -1282,6 +1331,21 @@ private constructor(
          */
         fun responseFields(): Optional<List<ResponseField>> =
             responseFields.value.getOptional("responseFields")
+
+        /**
+         * This field is included in the response only if the Path policy feature is available in
+         * the plan. It contains schema definitions for the custom metadata fields selected for the
+         * specified file path. Field selection can only be done when the Path policy feature is
+         * enabled.
+         *
+         * Keys are the names of the custom metadata fields; the value object has details about the
+         * custom metadata schema.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> =
+            selectedFieldsSchema.value.getOptional("selectedFieldsSchema")
 
         /**
          * Set the tags while uploading the file. Provide an array of tag strings (e.g. `["tag1",
@@ -1483,6 +1547,16 @@ private constructor(
         fun _responseFields(): MultipartField<List<ResponseField>> = responseFields
 
         /**
+         * Returns the raw multipart value of [selectedFieldsSchema].
+         *
+         * Unlike [selectedFieldsSchema], this method doesn't throw if the multipart field has an
+         * unexpected type.
+         */
+        @JsonProperty("selectedFieldsSchema")
+        @ExcludeMissing
+        fun _selectedFieldsSchema(): MultipartField<SelectedFieldsSchema> = selectedFieldsSchema
+
+        /**
          * Returns the raw multipart value of [tags].
          *
          * Unlike [tags], this method doesn't throw if the multipart field has an unexpected type.
@@ -1565,6 +1639,8 @@ private constructor(
             private var overwriteFile: MultipartField<Boolean> = MultipartField.of(null)
             private var overwriteTags: MultipartField<Boolean> = MultipartField.of(null)
             private var responseFields: MultipartField<MutableList<ResponseField>>? = null
+            private var selectedFieldsSchema: MultipartField<SelectedFieldsSchema> =
+                MultipartField.of(null)
             private var tags: MultipartField<MutableList<String>>? = null
             private var transformation: MultipartField<Transformation> = MultipartField.of(null)
             private var useUniqueFileName: MultipartField<Boolean> = MultipartField.of(null)
@@ -1589,6 +1665,7 @@ private constructor(
                 overwriteFile = body.overwriteFile
                 overwriteTags = body.overwriteTags
                 responseFields = body.responseFields.map { it.toMutableList() }
+                selectedFieldsSchema = body.selectedFieldsSchema
                 tags = body.tags.map { it.toMutableList() }
                 transformation = body.transformation
                 useUniqueFileName = body.useUniqueFileName
@@ -1966,6 +2043,30 @@ private constructor(
             }
 
             /**
+             * This field is included in the response only if the Path policy feature is available
+             * in the plan. It contains schema definitions for the custom metadata fields selected
+             * for the specified file path. Field selection can only be done when the Path policy
+             * feature is enabled.
+             *
+             * Keys are the names of the custom metadata fields; the value object has details about
+             * the custom metadata schema.
+             */
+            fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) =
+                selectedFieldsSchema(MultipartField.of(selectedFieldsSchema))
+
+            /**
+             * Sets [Builder.selectedFieldsSchema] to an arbitrary multipart value.
+             *
+             * You should usually call [Builder.selectedFieldsSchema] with a well-typed
+             * [SelectedFieldsSchema] value instead. This method is primarily for setting the field
+             * to an undocumented or not yet supported value.
+             */
+            fun selectedFieldsSchema(selectedFieldsSchema: MultipartField<SelectedFieldsSchema>) =
+                apply {
+                    this.selectedFieldsSchema = selectedFieldsSchema
+                }
+
+            /**
              * Set the tags while uploading the file. Provide an array of tag strings (e.g.
              * `["tag1", "tag2", "tag3"]`). The combined length of all tag characters must not
              * exceed 500, and the `%` character is not allowed. If this field is not specified and
@@ -2113,6 +2214,7 @@ private constructor(
                     overwriteFile,
                     overwriteTags,
                     (responseFields ?: MultipartField.of(null)).map { it.toImmutable() },
+                    selectedFieldsSchema,
                     (tags ?: MultipartField.of(null)).map { it.toImmutable() },
                     transformation,
                     useUniqueFileName,
@@ -2144,6 +2246,7 @@ private constructor(
             overwriteFile()
             overwriteTags()
             responseFields().ifPresent { it.forEach { it.validate() } }
+            selectedFieldsSchema().ifPresent { it.validate() }
             tags()
             transformation().ifPresent { it.validate() }
             useUniqueFileName()
@@ -2181,6 +2284,7 @@ private constructor(
                 overwriteFile == other.overwriteFile &&
                 overwriteTags == other.overwriteTags &&
                 responseFields == other.responseFields &&
+                selectedFieldsSchema == other.selectedFieldsSchema &&
                 tags == other.tags &&
                 transformation == other.transformation &&
                 useUniqueFileName == other.useUniqueFileName &&
@@ -2206,6 +2310,7 @@ private constructor(
                 overwriteFile,
                 overwriteTags,
                 responseFields,
+                selectedFieldsSchema,
                 tags,
                 transformation,
                 useUniqueFileName,
@@ -2217,7 +2322,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{file=$file, fileName=$fileName, token=$token, checks=$checks, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, extensions=$extensions, folder=$folder, isPrivateFile=$isPrivateFile, isPublished=$isPublished, overwriteAiTags=$overwriteAiTags, overwriteCustomMetadata=$overwriteCustomMetadata, overwriteFile=$overwriteFile, overwriteTags=$overwriteTags, responseFields=$responseFields, tags=$tags, transformation=$transformation, useUniqueFileName=$useUniqueFileName, webhookUrl=$webhookUrl, additionalProperties=$additionalProperties}"
+            "Body{file=$file, fileName=$fileName, token=$token, checks=$checks, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, extensions=$extensions, folder=$folder, isPrivateFile=$isPrivateFile, isPublished=$isPublished, overwriteAiTags=$overwriteAiTags, overwriteCustomMetadata=$overwriteCustomMetadata, overwriteFile=$overwriteFile, overwriteTags=$overwriteTags, responseFields=$responseFields, selectedFieldsSchema=$selectedFieldsSchema, tags=$tags, transformation=$transformation, useUniqueFileName=$useUniqueFileName, webhookUrl=$webhookUrl, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -3448,6 +3553,105 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
+    }
+
+    /**
+     * This field is included in the response only if the Path policy feature is available in the
+     * plan. It contains schema definitions for the custom metadata fields selected for the
+     * specified file path. Field selection can only be done when the Path policy feature is
+     * enabled.
+     *
+     * Keys are the names of the custom metadata fields; the value object has details about the
+     * custom metadata schema.
+     */
+    class SelectedFieldsSchema
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [SelectedFieldsSchema]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [SelectedFieldsSchema]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(selectedFieldsSchema: SelectedFieldsSchema) = apply {
+                additionalProperties = selectedFieldsSchema.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [SelectedFieldsSchema].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): SelectedFieldsSchema =
+                SelectedFieldsSchema(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): SelectedFieldsSchema = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is SelectedFieldsSchema &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "SelectedFieldsSchema{additionalProperties=$additionalProperties}"
     }
 
     /**
