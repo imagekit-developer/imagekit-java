@@ -346,7 +346,7 @@ private constructor(
         fun type(): Type = type.getRequired("type")
 
         /**
-         * The default value for this custom metadata field. Date type of default value depends on
+         * The default value for this custom metadata field. Data type of default value depends on
          * the field type.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -536,7 +536,7 @@ private constructor(
             fun type(type: JsonField<Type>) = apply { this.type = type }
 
             /**
-             * The default value for this custom metadata field. Date type of default value depends
+             * The default value for this custom metadata field. Data type of default value depends
              * on the field type.
              */
             fun defaultValue(defaultValue: DefaultValue) = defaultValue(JsonField.of(defaultValue))
@@ -931,7 +931,7 @@ private constructor(
         }
 
         /**
-         * The default value for this custom metadata field. Date type of default value depends on
+         * The default value for this custom metadata field. Data type of default value depends on
          * the field type.
          */
         @JsonDeserialize(using = DefaultValue.Deserializer::class)
