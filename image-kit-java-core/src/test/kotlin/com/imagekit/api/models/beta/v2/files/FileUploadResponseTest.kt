@@ -145,6 +145,28 @@ internal class FileUploadResponseTest {
                         .build()
                 )
                 .name("name")
+                .selectedFieldsSchema(
+                    FileUploadResponse.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnailUrl("thumbnailUrl")
@@ -284,6 +306,28 @@ internal class FileUploadResponseTest {
                     .build()
             )
         assertThat(fileUploadResponse.name()).contains("name")
+        assertThat(fileUploadResponse.selectedFieldsSchema())
+            .contains(
+                FileUploadResponse.SelectedFieldsSchema.builder()
+                    .putAdditionalProperty(
+                        "foo",
+                        JsonValue.from(
+                            mapOf(
+                                "type" to "Text",
+                                "defaultValue" to "string",
+                                "isValueRequired" to true,
+                                "maxLength" to 0,
+                                "maxValue" to "string",
+                                "minLength" to 0,
+                                "minValue" to "string",
+                                "readOnly" to true,
+                                "selectOptions" to listOf("small", "medium", "large", 30, 40, true),
+                                "selectOptionsTruncated" to true,
+                            )
+                        ),
+                    )
+                    .build()
+            )
         assertThat(fileUploadResponse.size()).contains(0.0)
         assertThat(fileUploadResponse.tags().getOrNull()).containsExactly("string")
         assertThat(fileUploadResponse.thumbnailUrl()).contains("thumbnailUrl")
@@ -428,6 +472,28 @@ internal class FileUploadResponseTest {
                         .build()
                 )
                 .name("name")
+                .selectedFieldsSchema(
+                    FileUploadResponse.SelectedFieldsSchema.builder()
+                        .putAdditionalProperty(
+                            "foo",
+                            JsonValue.from(
+                                mapOf(
+                                    "type" to "Text",
+                                    "defaultValue" to "string",
+                                    "isValueRequired" to true,
+                                    "maxLength" to 0,
+                                    "maxValue" to "string",
+                                    "minLength" to 0,
+                                    "minValue" to "string",
+                                    "readOnly" to true,
+                                    "selectOptions" to
+                                        listOf("small", "medium", "large", 30, 40, true),
+                                    "selectOptionsTruncated" to true,
+                                )
+                            ),
+                        )
+                        .build()
+                )
                 .size(0.0)
                 .addTag("string")
                 .thumbnailUrl("thumbnailUrl")

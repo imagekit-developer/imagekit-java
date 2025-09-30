@@ -41,6 +41,7 @@ private constructor(
     private val isPublished: JsonField<Boolean>,
     private val metadata: JsonField<Metadata>,
     private val name: JsonField<String>,
+    private val selectedFieldsSchema: JsonField<SelectedFieldsSchema>,
     private val size: JsonField<Double>,
     private val tags: JsonField<List<String>>,
     private val thumbnailUrl: JsonField<String>,
@@ -86,6 +87,9 @@ private constructor(
         isPublished: JsonField<Boolean> = JsonMissing.of(),
         @JsonProperty("metadata") @ExcludeMissing metadata: JsonField<Metadata> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("selectedFieldsSchema")
+        @ExcludeMissing
+        selectedFieldsSchema: JsonField<SelectedFieldsSchema> = JsonMissing.of(),
         @JsonProperty("size") @ExcludeMissing size: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("thumbnailUrl")
@@ -117,6 +121,7 @@ private constructor(
         isPublished,
         metadata,
         name,
+        selectedFieldsSchema,
         size,
         tags,
         thumbnailUrl,
@@ -283,6 +288,21 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun name(): Optional<String> = name.getOptional("name")
+
+    /**
+     * This field is included in the response only if the Path policy feature is available in the
+     * plan. It contains schema definitions for the custom metadata fields selected for the
+     * specified file path. Field selection can only be done when the Path policy feature is
+     * enabled.
+     *
+     * Keys are the names of the custom metadata fields; the value object has details about the
+     * custom metadata schema.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> =
+        selectedFieldsSchema.getOptional("selectedFieldsSchema")
 
     /**
      * Size of the image file in Bytes.
@@ -475,6 +495,16 @@ private constructor(
     @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
     /**
+     * Returns the raw JSON value of [selectedFieldsSchema].
+     *
+     * Unlike [selectedFieldsSchema], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("selectedFieldsSchema")
+    @ExcludeMissing
+    fun _selectedFieldsSchema(): JsonField<SelectedFieldsSchema> = selectedFieldsSchema
+
+    /**
      * Returns the raw JSON value of [size].
      *
      * Unlike [size], this method doesn't throw if the JSON field has an unexpected type.
@@ -565,6 +595,7 @@ private constructor(
         private var isPublished: JsonField<Boolean> = JsonMissing.of()
         private var metadata: JsonField<Metadata> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
+        private var selectedFieldsSchema: JsonField<SelectedFieldsSchema> = JsonMissing.of()
         private var size: JsonField<Double> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var thumbnailUrl: JsonField<String> = JsonMissing.of()
@@ -593,6 +624,7 @@ private constructor(
             isPublished = fileUploadResponse.isPublished
             metadata = fileUploadResponse.metadata
             name = fileUploadResponse.name
+            selectedFieldsSchema = fileUploadResponse.selectedFieldsSchema
             size = fileUploadResponse.size
             tags = fileUploadResponse.tags.map { it.toMutableList() }
             thumbnailUrl = fileUploadResponse.thumbnailUrl
@@ -876,6 +908,29 @@ private constructor(
          */
         fun name(name: JsonField<String>) = apply { this.name = name }
 
+        /**
+         * This field is included in the response only if the Path policy feature is available in
+         * the plan. It contains schema definitions for the custom metadata fields selected for the
+         * specified file path. Field selection can only be done when the Path policy feature is
+         * enabled.
+         *
+         * Keys are the names of the custom metadata fields; the value object has details about the
+         * custom metadata schema.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) =
+            selectedFieldsSchema(JsonField.of(selectedFieldsSchema))
+
+        /**
+         * Sets [Builder.selectedFieldsSchema] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.selectedFieldsSchema] with a well-typed
+         * [SelectedFieldsSchema] value instead. This method is primarily for setting the field to
+         * an undocumented or not yet supported value.
+         */
+        fun selectedFieldsSchema(selectedFieldsSchema: JsonField<SelectedFieldsSchema>) = apply {
+            this.selectedFieldsSchema = selectedFieldsSchema
+        }
+
         /** Size of the image file in Bytes. */
         fun size(size: Double) = size(JsonField.of(size))
 
@@ -1021,6 +1076,7 @@ private constructor(
                 isPublished,
                 metadata,
                 name,
+                selectedFieldsSchema,
                 size,
                 (tags ?: JsonMissing.of()).map { it.toImmutable() },
                 thumbnailUrl,
@@ -1056,6 +1112,7 @@ private constructor(
         isPublished()
         metadata().ifPresent { it.validate() }
         name()
+        selectedFieldsSchema().ifPresent { it.validate() }
         size()
         tags()
         thumbnailUrl()
@@ -1098,6 +1155,7 @@ private constructor(
             (if (isPublished.asKnown().isPresent) 1 else 0) +
             (metadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
+            (selectedFieldsSchema.asKnown().getOrNull()?.validity() ?: 0) +
             (if (size.asKnown().isPresent) 1 else 0) +
             (tags.asKnown().getOrNull()?.size ?: 0) +
             (if (thumbnailUrl.asKnown().isPresent) 1 else 0) +
@@ -2377,6 +2435,116 @@ private constructor(
             "ExtensionStatus{aiAutoDescription=$aiAutoDescription, awsAutoTagging=$awsAutoTagging, googleAutoTagging=$googleAutoTagging, removeBg=$removeBg, additionalProperties=$additionalProperties}"
     }
 
+    /**
+     * This field is included in the response only if the Path policy feature is available in the
+     * plan. It contains schema definitions for the custom metadata fields selected for the
+     * specified file path. Field selection can only be done when the Path policy feature is
+     * enabled.
+     *
+     * Keys are the names of the custom metadata fields; the value object has details about the
+     * custom metadata schema.
+     */
+    class SelectedFieldsSchema
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [SelectedFieldsSchema]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [SelectedFieldsSchema]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(selectedFieldsSchema: SelectedFieldsSchema) = apply {
+                additionalProperties = selectedFieldsSchema.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [SelectedFieldsSchema].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): SelectedFieldsSchema =
+                SelectedFieldsSchema(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): SelectedFieldsSchema = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is SelectedFieldsSchema &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "SelectedFieldsSchema{additionalProperties=$additionalProperties}"
+    }
+
     /** An object containing the file or file version's `id` (versionId) and `name`. */
     class VersionInfo
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -2577,6 +2745,7 @@ private constructor(
             isPublished == other.isPublished &&
             metadata == other.metadata &&
             name == other.name &&
+            selectedFieldsSchema == other.selectedFieldsSchema &&
             size == other.size &&
             tags == other.tags &&
             thumbnailUrl == other.thumbnailUrl &&
@@ -2606,6 +2775,7 @@ private constructor(
             isPublished,
             metadata,
             name,
+            selectedFieldsSchema,
             size,
             tags,
             thumbnailUrl,
@@ -2620,5 +2790,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileUploadResponse{aiTags=$aiTags, audioCodec=$audioCodec, bitRate=$bitRate, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, duration=$duration, embeddedMetadata=$embeddedMetadata, extensionStatus=$extensionStatus, fileId=$fileId, filePath=$filePath, fileType=$fileType, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, metadata=$metadata, name=$name, size=$size, tags=$tags, thumbnailUrl=$thumbnailUrl, url=$url, versionInfo=$versionInfo, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
+        "FileUploadResponse{aiTags=$aiTags, audioCodec=$audioCodec, bitRate=$bitRate, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, duration=$duration, embeddedMetadata=$embeddedMetadata, extensionStatus=$extensionStatus, fileId=$fileId, filePath=$filePath, fileType=$fileType, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, metadata=$metadata, name=$name, selectedFieldsSchema=$selectedFieldsSchema, size=$size, tags=$tags, thumbnailUrl=$thumbnailUrl, url=$url, versionInfo=$versionInfo, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
 }

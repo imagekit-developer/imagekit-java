@@ -257,20 +257,6 @@ private constructor(
     fun responseFields(): Optional<List<ResponseField>> = body.responseFields()
 
     /**
-     * This field is included in the response only if the Path policy feature is available in the
-     * plan. It contains schema definitions for the custom metadata fields selected for the
-     * specified file path. Field selection can only be done when the Path policy feature is
-     * enabled.
-     *
-     * Keys are the names of the custom metadata fields; the value object has details about the
-     * custom metadata schema.
-     *
-     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
-     *   server responded with an unexpected value).
-     */
-    fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> = body.selectedFieldsSchema()
-
-    /**
      * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key. Learn
      * how to create a signature on the page below. This should be in lowercase.
      *
@@ -467,14 +453,6 @@ private constructor(
      * type.
      */
     fun _responseFields(): MultipartField<List<ResponseField>> = body._responseFields()
-
-    /**
-     * Returns the raw multipart value of [selectedFieldsSchema].
-     *
-     * Unlike [selectedFieldsSchema], this method doesn't throw if the multipart field has an
-     * unexpected type.
-     */
-    fun _selectedFieldsSchema(): MultipartField<SelectedFieldsSchema> = body._selectedFieldsSchema()
 
     /**
      * Returns the raw multipart value of [signature].
@@ -956,31 +934,6 @@ private constructor(
         }
 
         /**
-         * This field is included in the response only if the Path policy feature is available in
-         * the plan. It contains schema definitions for the custom metadata fields selected for the
-         * specified file path. Field selection can only be done when the Path policy feature is
-         * enabled.
-         *
-         * Keys are the names of the custom metadata fields; the value object has details about the
-         * custom metadata schema.
-         */
-        fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) = apply {
-            body.selectedFieldsSchema(selectedFieldsSchema)
-        }
-
-        /**
-         * Sets [Builder.selectedFieldsSchema] to an arbitrary multipart value.
-         *
-         * You should usually call [Builder.selectedFieldsSchema] with a well-typed
-         * [SelectedFieldsSchema] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
-         */
-        fun selectedFieldsSchema(selectedFieldsSchema: MultipartField<SelectedFieldsSchema>) =
-            apply {
-                body.selectedFieldsSchema(selectedFieldsSchema)
-            }
-
-        /**
          * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key.
          * Learn how to create a signature on the page below. This should be in lowercase.
          *
@@ -1242,7 +1195,6 @@ private constructor(
                 "overwriteTags" to _overwriteTags(),
                 "publicKey" to _publicKey(),
                 "responseFields" to _responseFields(),
-                "selectedFieldsSchema" to _selectedFieldsSchema(),
                 "signature" to _signature(),
                 "tags" to _tags(),
                 "transformation" to _transformation(),
@@ -1275,7 +1227,6 @@ private constructor(
         private val overwriteTags: MultipartField<Boolean>,
         private val publicKey: MultipartField<String>,
         private val responseFields: MultipartField<List<ResponseField>>,
-        private val selectedFieldsSchema: MultipartField<SelectedFieldsSchema>,
         private val signature: MultipartField<String>,
         private val tags: MultipartField<List<String>>,
         private val transformation: MultipartField<Transformation>,
@@ -1483,21 +1434,6 @@ private constructor(
          */
         fun responseFields(): Optional<List<ResponseField>> =
             responseFields.value.getOptional("responseFields")
-
-        /**
-         * This field is included in the response only if the Path policy feature is available in
-         * the plan. It contains schema definitions for the custom metadata fields selected for the
-         * specified file path. Field selection can only be done when the Path policy feature is
-         * enabled.
-         *
-         * Keys are the names of the custom metadata fields; the value object has details about the
-         * custom metadata schema.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> =
-            selectedFieldsSchema.value.getOptional("selectedFieldsSchema")
 
         /**
          * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key.
@@ -1728,16 +1664,6 @@ private constructor(
         fun _responseFields(): MultipartField<List<ResponseField>> = responseFields
 
         /**
-         * Returns the raw multipart value of [selectedFieldsSchema].
-         *
-         * Unlike [selectedFieldsSchema], this method doesn't throw if the multipart field has an
-         * unexpected type.
-         */
-        @JsonProperty("selectedFieldsSchema")
-        @ExcludeMissing
-        fun _selectedFieldsSchema(): MultipartField<SelectedFieldsSchema> = selectedFieldsSchema
-
-        /**
          * Returns the raw multipart value of [signature].
          *
          * Unlike [signature], this method doesn't throw if the multipart field has an unexpected
@@ -1832,8 +1758,6 @@ private constructor(
             private var overwriteTags: MultipartField<Boolean> = MultipartField.of(null)
             private var publicKey: MultipartField<String> = MultipartField.of(null)
             private var responseFields: MultipartField<MutableList<ResponseField>>? = null
-            private var selectedFieldsSchema: MultipartField<SelectedFieldsSchema> =
-                MultipartField.of(null)
             private var signature: MultipartField<String> = MultipartField.of(null)
             private var tags: MultipartField<MutableList<String>>? = null
             private var transformation: MultipartField<Transformation> = MultipartField.of(null)
@@ -1861,7 +1785,6 @@ private constructor(
                 overwriteTags = body.overwriteTags
                 publicKey = body.publicKey
                 responseFields = body.responseFields.map { it.toMutableList() }
-                selectedFieldsSchema = body.selectedFieldsSchema
                 signature = body.signature
                 tags = body.tags.map { it.toMutableList() }
                 transformation = body.transformation
@@ -2279,30 +2202,6 @@ private constructor(
             }
 
             /**
-             * This field is included in the response only if the Path policy feature is available
-             * in the plan. It contains schema definitions for the custom metadata fields selected
-             * for the specified file path. Field selection can only be done when the Path policy
-             * feature is enabled.
-             *
-             * Keys are the names of the custom metadata fields; the value object has details about
-             * the custom metadata schema.
-             */
-            fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) =
-                selectedFieldsSchema(MultipartField.of(selectedFieldsSchema))
-
-            /**
-             * Sets [Builder.selectedFieldsSchema] to an arbitrary multipart value.
-             *
-             * You should usually call [Builder.selectedFieldsSchema] with a well-typed
-             * [SelectedFieldsSchema] value instead. This method is primarily for setting the field
-             * to an undocumented or not yet supported value.
-             */
-            fun selectedFieldsSchema(selectedFieldsSchema: MultipartField<SelectedFieldsSchema>) =
-                apply {
-                    this.selectedFieldsSchema = selectedFieldsSchema
-                }
-
-            /**
              * HMAC-SHA1 digest of the token+expire using your ImageKit.io private API key as a key.
              * Learn how to create a signature on the page below. This should be in lowercase.
              *
@@ -2470,7 +2369,6 @@ private constructor(
                     overwriteTags,
                     publicKey,
                     (responseFields ?: MultipartField.of(null)).map { it.toImmutable() },
-                    selectedFieldsSchema,
                     signature,
                     (tags ?: MultipartField.of(null)).map { it.toImmutable() },
                     transformation,
@@ -2505,7 +2403,6 @@ private constructor(
             overwriteTags()
             publicKey()
             responseFields().ifPresent { it.forEach { it.validate() } }
-            selectedFieldsSchema().ifPresent { it.validate() }
             signature()
             tags()
             transformation().ifPresent { it.validate() }
@@ -2546,7 +2443,6 @@ private constructor(
                 overwriteTags == other.overwriteTags &&
                 publicKey == other.publicKey &&
                 responseFields == other.responseFields &&
-                selectedFieldsSchema == other.selectedFieldsSchema &&
                 signature == other.signature &&
                 tags == other.tags &&
                 transformation == other.transformation &&
@@ -2575,7 +2471,6 @@ private constructor(
                 overwriteTags,
                 publicKey,
                 responseFields,
-                selectedFieldsSchema,
                 signature,
                 tags,
                 transformation,
@@ -2588,7 +2483,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{file=$file, fileName=$fileName, token=$token, checks=$checks, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, expire=$expire, extensions=$extensions, folder=$folder, isPrivateFile=$isPrivateFile, isPublished=$isPublished, overwriteAiTags=$overwriteAiTags, overwriteCustomMetadata=$overwriteCustomMetadata, overwriteFile=$overwriteFile, overwriteTags=$overwriteTags, publicKey=$publicKey, responseFields=$responseFields, selectedFieldsSchema=$selectedFieldsSchema, signature=$signature, tags=$tags, transformation=$transformation, useUniqueFileName=$useUniqueFileName, webhookUrl=$webhookUrl, additionalProperties=$additionalProperties}"
+            "Body{file=$file, fileName=$fileName, token=$token, checks=$checks, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, expire=$expire, extensions=$extensions, folder=$folder, isPrivateFile=$isPrivateFile, isPublished=$isPublished, overwriteAiTags=$overwriteAiTags, overwriteCustomMetadata=$overwriteCustomMetadata, overwriteFile=$overwriteFile, overwriteTags=$overwriteTags, publicKey=$publicKey, responseFields=$responseFields, signature=$signature, tags=$tags, transformation=$transformation, useUniqueFileName=$useUniqueFileName, webhookUrl=$webhookUrl, additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -3819,105 +3714,6 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
-    }
-
-    /**
-     * This field is included in the response only if the Path policy feature is available in the
-     * plan. It contains schema definitions for the custom metadata fields selected for the
-     * specified file path. Field selection can only be done when the Path policy feature is
-     * enabled.
-     *
-     * Keys are the names of the custom metadata fields; the value object has details about the
-     * custom metadata schema.
-     */
-    class SelectedFieldsSchema
-    private constructor(
-        @com.fasterxml.jackson.annotation.JsonValue
-        private val additionalProperties: Map<String, JsonValue>
-    ) {
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /** Returns a mutable builder for constructing an instance of [SelectedFieldsSchema]. */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [SelectedFieldsSchema]. */
-        class Builder internal constructor() {
-
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(selectedFieldsSchema: SelectedFieldsSchema) = apply {
-                additionalProperties = selectedFieldsSchema.additionalProperties.toMutableMap()
-            }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [SelectedFieldsSchema].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             */
-            fun build(): SelectedFieldsSchema =
-                SelectedFieldsSchema(additionalProperties.toImmutable())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): SelectedFieldsSchema = apply {
-            if (validated) {
-                return@apply
-            }
-
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is SelectedFieldsSchema &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() = "SelectedFieldsSchema{additionalProperties=$additionalProperties}"
     }
 
     /**
