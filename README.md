@@ -305,13 +305,13 @@ The SDK uses the standard [OkHttp logging interceptor](https://github.com/square
 Enable logging by setting the `IMAGE_KIT_LOG` environment variable to `info`:
 
 ```sh
-$ export IMAGE_KIT_LOG=info
+export IMAGE_KIT_LOG=info
 ```
 
 Or to `debug` for more verbose logging:
 
 ```sh
-$ export IMAGE_KIT_LOG=debug
+export IMAGE_KIT_LOG=debug
 ```
 
 ## ProGuard and R8
