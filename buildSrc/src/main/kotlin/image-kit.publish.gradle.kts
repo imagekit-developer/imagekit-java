@@ -40,6 +40,14 @@ configure<PublishingExtension> {
             }
         }
     }
+    repositories {
+        if (project.hasProperty("publishLocal")) {
+            maven {
+                name = "LocalFileSystem"
+                url = uri("${rootProject.layout.buildDirectory.get()}/local-maven-repo")
+            }
+        }
+    }
 }
 
 signing {
