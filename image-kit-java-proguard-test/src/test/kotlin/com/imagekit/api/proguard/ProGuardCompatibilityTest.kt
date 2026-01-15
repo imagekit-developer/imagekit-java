@@ -7,7 +7,7 @@ import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.models.StreamingResolution
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
 import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.UpdateFileRequest
 import java.time.OffsetDateTime
@@ -58,6 +58,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client).isNotNull()
         assertThat(client.customMetadataFields()).isNotNull()
         assertThat(client.files()).isNotNull()
+        assertThat(client.savedExtensions()).isNotNull()
         assertThat(client.assets()).isNotNull()
         assertThat(client.cache()).isNotNull()
         assertThat(client.folders()).isNotNull()
@@ -145,10 +146,10 @@ internal class ProGuardCompatibilityTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                            UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                        UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -157,27 +158,47 @@ internal class ProGuardCompatibilityTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                             .GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                             .AWS_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                            UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                    .addTask(
+                                        UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                            .builder()
+                                            .instruction(
+                                                "What types of clothing items are visible?"
+                                            )
+                                            .vocabulary(listOf("shirt", "dress", "jacket"))
+                                            .maxSelections(1L)
+                                            .minSelections(0L)
+                                            .build()
+                                    )
+                                    .build()
+                            ),
+                            UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                    .id("ext_abc123")
+                                    .build()
+                            ),
                         )
                     )
                     .removeAiTagsOfStrings(listOf("car", "vehicle", "motorsports"))

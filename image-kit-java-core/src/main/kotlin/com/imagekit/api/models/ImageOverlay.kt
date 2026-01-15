@@ -23,6 +23,7 @@ import kotlin.jvm.optionals.getOrNull
 class ImageOverlay
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
+    private val layerMode: JsonField<BaseOverlay.LayerMode>,
     private val position: JsonField<OverlayPosition>,
     private val timing: JsonField<OverlayTiming>,
     private val input: JsonField<String>,
@@ -34,6 +35,9 @@ private constructor(
 
     @JsonCreator
     private constructor(
+        @JsonProperty("layerMode")
+        @ExcludeMissing
+        layerMode: JsonField<BaseOverlay.LayerMode> = JsonMissing.of(),
         @JsonProperty("position")
         @ExcludeMissing
         position: JsonField<OverlayPosition> = JsonMissing.of(),
@@ -44,18 +48,46 @@ private constructor(
         @JsonProperty("transformation")
         @ExcludeMissing
         transformation: JsonField<List<Transformation>> = JsonMissing.of(),
-    ) : this(position, timing, input, type, encoding, transformation, mutableMapOf())
+    ) : this(layerMode, position, timing, input, type, encoding, transformation, mutableMapOf())
 
     fun toBaseOverlay(): BaseOverlay =
-        BaseOverlay.builder().position(position).timing(timing).build()
+        BaseOverlay.builder().layerMode(layerMode).position(position).timing(timing).build()
 
     /**
+     * Controls how the layer blends with the base image or underlying content. Maps to `lm` in the
+     * URL. By default, layers completely cover the base image beneath them. Layer modes change this
+     * behavior:
+     * - `multiply`: Multiplies the pixel values of the layer with the base image. The result is
+     *   always darker than the original images. This is ideal for applying shadows or color tints.
+     * - `displace`: Uses the layer as a displacement map to distort pixels in the base image. The
+     *   red channel controls horizontal displacement, and the green channel controls vertical
+     *   displacement. Requires `x` or `y` parameter to control displacement magnitude.
+     * - `cutout`: Acts as an inverse mask where opaque areas of the layer turn the base image
+     *   transparent, while transparent areas leave the base image unchanged. This mode functions
+     *   like a hole-punch, effectively cutting the shape of the layer out of the underlying image.
+     * - `cutter`: Acts as a shape mask where only the parts of the base image that fall inside the
+     *   opaque area of the layer are preserved. This mode functions like a cookie-cutter, trimming
+     *   the base image to match the specific dimensions and shape of the layer. See
+     *   [Layer modes](https://imagekit.io/docs/add-overlays-on-images#layer-modes).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun layerMode(): Optional<BaseOverlay.LayerMode> = layerMode.getOptional("layerMode")
+
+    /**
+     * Specifies the overlay's position relative to the parent asset. See
+     * [Position of Layer](https://imagekit.io/docs/transformations#position-of-layer).
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
     fun position(): Optional<OverlayPosition> = position.getOptional("position")
 
     /**
+     * Specifies timing information for the overlay (only applicable if the base asset is a video).
+     * See [Position of Layer](https://imagekit.io/docs/transformations#position-of-layer).
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -86,6 +118,10 @@ private constructor(
      * automatically. To always use base64 encoding (`ie-{base64}`), set this parameter to `base64`.
      * To always use plain text (`i-{input}`), set it to `plain`.
      *
+     * Regardless of the encoding method:
+     * - Leading and trailing slashes are removed.
+     * - Remaining slashes within the path are replaced with `@@` when using plain text.
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
@@ -103,6 +139,15 @@ private constructor(
      */
     fun transformation(): Optional<List<Transformation>> =
         transformation.getOptional("transformation")
+
+    /**
+     * Returns the raw JSON value of [layerMode].
+     *
+     * Unlike [layerMode], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("layerMode")
+    @ExcludeMissing
+    fun _layerMode(): JsonField<BaseOverlay.LayerMode> = layerMode
 
     /**
      * Returns the raw JSON value of [position].
@@ -169,6 +214,7 @@ private constructor(
     /** A builder for [ImageOverlay]. */
     class Builder internal constructor() {
 
+        private var layerMode: JsonField<BaseOverlay.LayerMode> = JsonMissing.of()
         private var position: JsonField<OverlayPosition> = JsonMissing.of()
         private var timing: JsonField<OverlayTiming> = JsonMissing.of()
         private var input: JsonField<String>? = null
@@ -179,6 +225,7 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(imageOverlay: ImageOverlay) = apply {
+            layerMode = imageOverlay.layerMode
             position = imageOverlay.position
             timing = imageOverlay.timing
             input = imageOverlay.input
@@ -188,6 +235,42 @@ private constructor(
             additionalProperties = imageOverlay.additionalProperties.toMutableMap()
         }
 
+        /**
+         * Controls how the layer blends with the base image or underlying content. Maps to `lm` in
+         * the URL. By default, layers completely cover the base image beneath them. Layer modes
+         * change this behavior:
+         * - `multiply`: Multiplies the pixel values of the layer with the base image. The result is
+         *   always darker than the original images. This is ideal for applying shadows or color
+         *   tints.
+         * - `displace`: Uses the layer as a displacement map to distort pixels in the base image.
+         *   The red channel controls horizontal displacement, and the green channel controls
+         *   vertical displacement. Requires `x` or `y` parameter to control displacement magnitude.
+         * - `cutout`: Acts as an inverse mask where opaque areas of the layer turn the base image
+         *   transparent, while transparent areas leave the base image unchanged. This mode
+         *   functions like a hole-punch, effectively cutting the shape of the layer out of the
+         *   underlying image.
+         * - `cutter`: Acts as a shape mask where only the parts of the base image that fall inside
+         *   the opaque area of the layer are preserved. This mode functions like a cookie-cutter,
+         *   trimming the base image to match the specific dimensions and shape of the layer. See
+         *   [Layer modes](https://imagekit.io/docs/add-overlays-on-images#layer-modes).
+         */
+        fun layerMode(layerMode: BaseOverlay.LayerMode) = layerMode(JsonField.of(layerMode))
+
+        /**
+         * Sets [Builder.layerMode] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.layerMode] with a well-typed [BaseOverlay.LayerMode]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun layerMode(layerMode: JsonField<BaseOverlay.LayerMode>) = apply {
+            this.layerMode = layerMode
+        }
+
+        /**
+         * Specifies the overlay's position relative to the parent asset. See
+         * [Position of Layer](https://imagekit.io/docs/transformations#position-of-layer).
+         */
         fun position(position: OverlayPosition) = position(JsonField.of(position))
 
         /**
@@ -199,6 +282,11 @@ private constructor(
          */
         fun position(position: JsonField<OverlayPosition>) = apply { this.position = position }
 
+        /**
+         * Specifies timing information for the overlay (only applicable if the base asset is a
+         * video). See
+         * [Position of Layer](https://imagekit.io/docs/transformations#position-of-layer).
+         */
         fun timing(timing: OverlayTiming) = timing(JsonField.of(timing))
 
         /**
@@ -240,6 +328,10 @@ private constructor(
          * `ie-{base64_encoded_input}`. By default, the SDK determines the appropriate format
          * automatically. To always use base64 encoding (`ie-{base64}`), set this parameter to
          * `base64`. To always use plain text (`i-{input}`), set it to `plain`.
+         *
+         * Regardless of the encoding method:
+         * - Leading and trailing slashes are removed.
+         * - Remaining slashes within the path are replaced with `@@` when using plain text.
          */
         fun encoding(encoding: Encoding) = encoding(JsonField.of(encoding))
 
@@ -318,6 +410,7 @@ private constructor(
          */
         fun build(): ImageOverlay =
             ImageOverlay(
+                layerMode,
                 position,
                 timing,
                 checkRequired("input", input),
@@ -335,6 +428,7 @@ private constructor(
             return@apply
         }
 
+        layerMode().ifPresent { it.validate() }
         position().ifPresent { it.validate() }
         timing().ifPresent { it.validate() }
         input()
@@ -363,7 +457,8 @@ private constructor(
      */
     @JvmSynthetic
     internal fun validity(): Int =
-        (position.asKnown().getOrNull()?.validity() ?: 0) +
+        (layerMode.asKnown().getOrNull()?.validity() ?: 0) +
+            (position.asKnown().getOrNull()?.validity() ?: 0) +
             (timing.asKnown().getOrNull()?.validity() ?: 0) +
             (if (input.asKnown().isPresent) 1 else 0) +
             type.let { if (it == JsonValue.from("image")) 1 else 0 } +
@@ -375,6 +470,10 @@ private constructor(
      * `ie-{base64_encoded_input}`. By default, the SDK determines the appropriate format
      * automatically. To always use base64 encoding (`ie-{base64}`), set this parameter to `base64`.
      * To always use plain text (`i-{input}`), set it to `plain`.
+     *
+     * Regardless of the encoding method:
+     * - Leading and trailing slashes are removed.
+     * - Remaining slashes within the path are replaced with `@@` when using plain text.
      */
     class Encoding @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
@@ -515,6 +614,7 @@ private constructor(
         }
 
         return other is ImageOverlay &&
+            layerMode == other.layerMode &&
             position == other.position &&
             timing == other.timing &&
             input == other.input &&
@@ -525,11 +625,20 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(position, timing, input, type, encoding, transformation, additionalProperties)
+        Objects.hash(
+            layerMode,
+            position,
+            timing,
+            input,
+            type,
+            encoding,
+            transformation,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "ImageOverlay{position=$position, timing=$timing, input=$input, type=$type, encoding=$encoding, transformation=$transformation, additionalProperties=$additionalProperties}"
+        "ImageOverlay{layerMode=$layerMode, position=$position, timing=$timing, input=$input, type=$type, encoding=$encoding, transformation=$transformation, additionalProperties=$additionalProperties}"
 }

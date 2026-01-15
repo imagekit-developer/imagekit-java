@@ -18,6 +18,8 @@ import com.imagekit.api.services.async.FileServiceAsync
 import com.imagekit.api.services.async.FileServiceAsyncImpl
 import com.imagekit.api.services.async.FolderServiceAsync
 import com.imagekit.api.services.async.FolderServiceAsyncImpl
+import com.imagekit.api.services.async.SavedExtensionServiceAsync
+import com.imagekit.api.services.async.SavedExtensionServiceAsyncImpl
 import com.imagekit.api.services.async.WebhookServiceAsync
 import com.imagekit.api.services.async.WebhookServiceAsyncImpl
 import java.util.function.Consumer
@@ -44,6 +46,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
     }
 
     private val files: FileServiceAsync by lazy { FileServiceAsyncImpl(clientOptionsWithUserAgent) }
+
+    private val savedExtensions: SavedExtensionServiceAsync by lazy {
+        SavedExtensionServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
 
     private val assets: AssetServiceAsync by lazy {
         AssetServiceAsyncImpl(clientOptionsWithUserAgent)
@@ -78,6 +84,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun files(): FileServiceAsync = files
 
+    override fun savedExtensions(): SavedExtensionServiceAsync = savedExtensions
+
     override fun assets(): AssetServiceAsync = assets
 
     override fun cache(): CacheServiceAsync = cache
@@ -101,6 +109,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
         private val files: FileServiceAsync.WithRawResponse by lazy {
             FileServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val savedExtensions: SavedExtensionServiceAsync.WithRawResponse by lazy {
+            SavedExtensionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val assets: AssetServiceAsync.WithRawResponse by lazy {
@@ -138,6 +150,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
             customMetadataFields
 
         override fun files(): FileServiceAsync.WithRawResponse = files
+
+        override fun savedExtensions(): SavedExtensionServiceAsync.WithRawResponse = savedExtensions
 
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
 

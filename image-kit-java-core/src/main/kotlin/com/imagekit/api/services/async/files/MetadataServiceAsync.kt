@@ -126,7 +126,7 @@ interface MetadataServiceAsync {
             get(fileId, MetadataGetParams.none(), requestOptions)
 
         /**
-         * Returns a raw HTTP response for `get /v1/files/metadata`, but is otherwise the same as
+         * Returns a raw HTTP response for `get /v1/metadata`, but is otherwise the same as
          * [MetadataServiceAsync.getFromUrl].
          */
         fun getFromUrl(

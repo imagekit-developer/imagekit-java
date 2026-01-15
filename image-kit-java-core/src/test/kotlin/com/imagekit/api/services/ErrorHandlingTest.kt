@@ -22,7 +22,7 @@ import com.imagekit.api.errors.RateLimitException
 import com.imagekit.api.errors.UnauthorizedException
 import com.imagekit.api.errors.UnexpectedStatusCodeException
 import com.imagekit.api.errors.UnprocessableEntityException
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
 import com.imagekit.api.models.files.FileUploadParams
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.entry
@@ -89,10 +89,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -101,17 +101,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -189,10 +318,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -201,17 +330,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -289,10 +547,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -301,17 +559,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -389,10 +776,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -401,17 +788,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -489,10 +1005,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -501,17 +1017,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -589,10 +1234,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -601,17 +1246,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -689,10 +1463,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -701,17 +1475,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -789,10 +1692,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -801,17 +1704,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -889,10 +1921,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -901,17 +1933,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -989,10 +2150,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1001,17 +2162,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1089,10 +2379,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1101,17 +2391,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1189,10 +2608,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1201,17 +2620,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1289,10 +2837,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1301,17 +2849,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1389,10 +3066,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1401,17 +3078,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1489,10 +3295,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1501,17 +3307,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1589,10 +3524,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1601,17 +3536,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")
@@ -1687,10 +3751,10 @@ internal class ErrorHandlingTest {
                         .expire(0L)
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent1.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent1.RemoveBg.builder()
+                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
+                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent1.RemoveBg.Options.builder()
+                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -1699,17 +3763,146 @@ internal class ErrorHandlingTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent1.AutoTaggingExtension.builder()
+                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
+                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
                                         .maxTags(5L)
                                         .minConfidence(95L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent1.AutoTaggingExtension.Name
+                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent1.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
+                                UnnamedSchemaWithArrayParent4.ofAiTasks(
+                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
+                                                .builder()
+                                                .instruction(
+                                                    "What types of clothing items are visible in this image?"
+                                                )
+                                                .vocabulary(
+                                                    listOf(
+                                                        "shirt",
+                                                        "tshirt",
+                                                        "dress",
+                                                        "trousers",
+                                                        "jacket",
+                                                    )
+                                                )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
+                                                .build()
+                                        )
+                                        .addTask(
+                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                .builder()
+                                                .instruction(
+                                                    "Is this a luxury or high-end fashion item?"
+                                                )
+                                                .onNo(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnNo
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnNo
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onUnknown(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnUnknown
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnUnknown
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .onYes(
+                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
+                                                        .OnYes
+                                                        .builder()
+                                                        .addAddTag("luxury")
+                                                        .addAddTag("premium")
+                                                        .addRemoveTag("budget")
+                                                        .addRemoveTag("affordable")
+                                                        .addSetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .SetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .value("premium")
+                                                                .build()
+                                                        )
+                                                        .addUnsetMetadata(
+                                                            UnnamedSchemaWithArrayParent4.AiTasks
+                                                                .Task
+                                                                .YesNo
+                                                                .OnYes
+                                                                .UnsetMetadata
+                                                                .builder()
+                                                                .field("price_range")
+                                                                .build()
+                                                        )
+                                                        .build()
+                                                )
+                                                .build()
+                                        )
+                                        .build()
+                                ),
+                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
+                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+                                        .id("ext_abc123")
+                                        .build()
+                                ),
                             )
                         )
                         .folder("folder")

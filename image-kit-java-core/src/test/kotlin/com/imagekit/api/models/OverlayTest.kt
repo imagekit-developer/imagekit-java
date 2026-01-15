@@ -18,6 +18,7 @@ internal class OverlayTest {
     fun ofText() {
         val text =
             TextOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -62,6 +63,7 @@ internal class OverlayTest {
         val overlay =
             Overlay.ofText(
                 TextOverlay.builder()
+                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                     .position(
                         OverlayPosition.builder()
                             .focus(OverlayPosition.Focus.CENTER)
@@ -102,6 +104,7 @@ internal class OverlayTest {
     fun ofImage() {
         val image =
             ImageOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -128,10 +131,12 @@ internal class OverlayTest {
                         .blur(10.0)
                         .border("5_FF0000")
                         .colorProfile(true)
+                        .colorReplace("colorReplace")
                         .contrastStretch(Transformation.ContrastStretch.TRUE)
                         .crop(Transformation.Crop.FORCE)
                         .cropMode(Transformation.CropMode.PAD_RESIZE)
                         .defaultImage("defaultImage")
+                        .distort("distort")
                         .dpr(2.0)
                         .duration(0.0)
                         .endOffset(0.0)
@@ -148,6 +153,7 @@ internal class OverlayTest {
                         .original(true)
                         .overlay(
                             TextOverlay.builder()
+                                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
                                         .focus(OverlayPosition.Focus.CENTER)
@@ -223,6 +229,7 @@ internal class OverlayTest {
         val overlay =
             Overlay.ofImage(
                 ImageOverlay.builder()
+                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                     .position(
                         OverlayPosition.builder()
                             .focus(OverlayPosition.Focus.CENTER)
@@ -251,10 +258,12 @@ internal class OverlayTest {
                             .blur(10.0)
                             .border("5_FF0000")
                             .colorProfile(true)
+                            .colorReplace("colorReplace")
                             .contrastStretch(Transformation.ContrastStretch.TRUE)
                             .crop(Transformation.Crop.FORCE)
                             .cropMode(Transformation.CropMode.PAD_RESIZE)
                             .defaultImage("defaultImage")
+                            .distort("distort")
                             .dpr(2.0)
                             .duration(0.0)
                             .endOffset(0.0)
@@ -271,6 +280,7 @@ internal class OverlayTest {
                             .original(true)
                             .overlay(
                                 TextOverlay.builder()
+                                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                     .position(
                                         OverlayPosition.builder()
                                             .focus(OverlayPosition.Focus.CENTER)
@@ -342,6 +352,7 @@ internal class OverlayTest {
     fun ofVideo() {
         val video =
             VideoOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -368,10 +379,12 @@ internal class OverlayTest {
                         .blur(10.0)
                         .border("5_FF0000")
                         .colorProfile(true)
+                        .colorReplace("colorReplace")
                         .contrastStretch(Transformation.ContrastStretch.TRUE)
                         .crop(Transformation.Crop.FORCE)
                         .cropMode(Transformation.CropMode.PAD_RESIZE)
                         .defaultImage("defaultImage")
+                        .distort("distort")
                         .dpr(2.0)
                         .duration(0.0)
                         .endOffset(0.0)
@@ -388,6 +401,7 @@ internal class OverlayTest {
                         .original(true)
                         .overlay(
                             TextOverlay.builder()
+                                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
                                         .focus(OverlayPosition.Focus.CENTER)
@@ -463,6 +477,7 @@ internal class OverlayTest {
         val overlay =
             Overlay.ofVideo(
                 VideoOverlay.builder()
+                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                     .position(
                         OverlayPosition.builder()
                             .focus(OverlayPosition.Focus.CENTER)
@@ -491,10 +506,12 @@ internal class OverlayTest {
                             .blur(10.0)
                             .border("5_FF0000")
                             .colorProfile(true)
+                            .colorReplace("colorReplace")
                             .contrastStretch(Transformation.ContrastStretch.TRUE)
                             .crop(Transformation.Crop.FORCE)
                             .cropMode(Transformation.CropMode.PAD_RESIZE)
                             .defaultImage("defaultImage")
+                            .distort("distort")
                             .dpr(2.0)
                             .duration(0.0)
                             .endOffset(0.0)
@@ -511,6 +528,7 @@ internal class OverlayTest {
                             .original(true)
                             .overlay(
                                 TextOverlay.builder()
+                                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                     .position(
                                         OverlayPosition.builder()
                                             .focus(OverlayPosition.Focus.CENTER)
@@ -582,6 +600,7 @@ internal class OverlayTest {
     fun ofSubtitle() {
         val subtitle =
             SubtitleOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -620,6 +639,7 @@ internal class OverlayTest {
         val overlay =
             Overlay.ofSubtitle(
                 SubtitleOverlay.builder()
+                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                     .position(
                         OverlayPosition.builder()
                             .focus(OverlayPosition.Focus.CENTER)
@@ -654,6 +674,7 @@ internal class OverlayTest {
     fun ofSolidColor() {
         val solidColor =
             SolidColorOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -690,6 +711,7 @@ internal class OverlayTest {
         val overlay =
             Overlay.ofSolidColor(
                 SolidColorOverlay.builder()
+                    .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                     .position(
                         OverlayPosition.builder()
                             .focus(OverlayPosition.Focus.CENTER)

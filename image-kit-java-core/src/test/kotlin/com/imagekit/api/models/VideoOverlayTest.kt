@@ -14,6 +14,7 @@ internal class VideoOverlayTest {
     fun create() {
         val videoOverlay =
             VideoOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -40,10 +41,12 @@ internal class VideoOverlayTest {
                         .blur(10.0)
                         .border("5_FF0000")
                         .colorProfile(true)
+                        .colorReplace("colorReplace")
                         .contrastStretch(Transformation.ContrastStretch.TRUE)
                         .crop(Transformation.Crop.FORCE)
                         .cropMode(Transformation.CropMode.PAD_RESIZE)
                         .defaultImage("defaultImage")
+                        .distort("distort")
                         .dpr(2.0)
                         .duration(0.0)
                         .endOffset(0.0)
@@ -60,6 +63,7 @@ internal class VideoOverlayTest {
                         .original(true)
                         .overlay(
                             TextOverlay.builder()
+                                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
                                         .focus(OverlayPosition.Focus.CENTER)
@@ -120,6 +124,7 @@ internal class VideoOverlayTest {
                 )
                 .build()
 
+        assertThat(videoOverlay.layerMode()).contains(BaseOverlay.LayerMode.MULTIPLY)
         assertThat(videoOverlay.position())
             .contains(
                 OverlayPosition.builder().focus(OverlayPosition.Focus.CENTER).x(0.0).y(0.0).build()
@@ -145,10 +150,12 @@ internal class VideoOverlayTest {
                     .blur(10.0)
                     .border("5_FF0000")
                     .colorProfile(true)
+                    .colorReplace("colorReplace")
                     .contrastStretch(Transformation.ContrastStretch.TRUE)
                     .crop(Transformation.Crop.FORCE)
                     .cropMode(Transformation.CropMode.PAD_RESIZE)
                     .defaultImage("defaultImage")
+                    .distort("distort")
                     .dpr(2.0)
                     .duration(0.0)
                     .endOffset(0.0)
@@ -165,6 +172,7 @@ internal class VideoOverlayTest {
                     .original(true)
                     .overlay(
                         TextOverlay.builder()
+                            .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                             .position(
                                 OverlayPosition.builder()
                                     .focus(OverlayPosition.Focus.CENTER)
@@ -224,6 +232,7 @@ internal class VideoOverlayTest {
         val jsonMapper = jsonMapper()
         val videoOverlay =
             VideoOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -250,10 +259,12 @@ internal class VideoOverlayTest {
                         .blur(10.0)
                         .border("5_FF0000")
                         .colorProfile(true)
+                        .colorReplace("colorReplace")
                         .contrastStretch(Transformation.ContrastStretch.TRUE)
                         .crop(Transformation.Crop.FORCE)
                         .cropMode(Transformation.CropMode.PAD_RESIZE)
                         .defaultImage("defaultImage")
+                        .distort("distort")
                         .dpr(2.0)
                         .duration(0.0)
                         .endOffset(0.0)
@@ -270,6 +281,7 @@ internal class VideoOverlayTest {
                         .original(true)
                         .overlay(
                             TextOverlay.builder()
+                                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
                                         .focus(OverlayPosition.Focus.CENTER)

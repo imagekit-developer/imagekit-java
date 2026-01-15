@@ -14,6 +14,7 @@ internal class SubtitleOverlayTest {
     fun create() {
         val subtitleOverlay =
             SubtitleOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -37,6 +38,7 @@ internal class SubtitleOverlayTest {
                 )
                 .build()
 
+        assertThat(subtitleOverlay.layerMode()).contains(BaseOverlay.LayerMode.MULTIPLY)
         assertThat(subtitleOverlay.position())
             .contains(
                 OverlayPosition.builder().focus(OverlayPosition.Focus.CENTER).x(0.0).y(0.0).build()
@@ -64,6 +66,7 @@ internal class SubtitleOverlayTest {
         val jsonMapper = jsonMapper()
         val subtitleOverlay =
             SubtitleOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)

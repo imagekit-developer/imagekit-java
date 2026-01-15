@@ -52,8 +52,8 @@ private constructor(
     ) : this(alpha, background, gradient, height, radius, width, mutableMapOf())
 
     /**
-     * Specifies the transparency level of the solid color overlay. Accepts integers from `1` to
-     * `9`.
+     * Specifies the transparency level of the overlaid solid color layer. Supports integers from
+     * `1` to `9`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -90,8 +90,12 @@ private constructor(
     fun height(): Optional<Height> = height.getOptional("height")
 
     /**
-     * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
-     * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+     * Specifies the corner radius of the solid color overlay.
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -196,8 +200,8 @@ private constructor(
             }
 
         /**
-         * Specifies the transparency level of the solid color overlay. Accepts integers from `1` to
-         * `9`.
+         * Specifies the transparency level of the overlaid solid color layer. Supports integers
+         * from `1` to `9`.
          */
         fun alpha(alpha: Double) = alpha(JsonField.of(alpha))
 
@@ -268,8 +272,12 @@ private constructor(
         fun height(string: String) = height(Height.ofString(string))
 
         /**
-         * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
-         * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+         * Specifies the corner radius of the solid color overlay.
+         * - Single value (positive integer): Applied to all corners (e.g., `20`).
+         * - `max`: Creates a circular or oval shape.
+         * - Per-corner array: Provide four underscore-separated values representing top-left,
+         *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`).
+         *   See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
          */
         fun radius(radius: Radius) = radius(JsonField.of(radius))
 
@@ -286,6 +294,9 @@ private constructor(
 
         /** Alias for calling [radius] with `Radius.ofMax()`. */
         fun radiusMax() = radius(Radius.ofMax())
+
+        /** Alias for calling [radius] with `Radius.ofString(string)`. */
+        fun radius(string: String) = radius(Radius.ofString(string))
 
         /**
          * Controls the width of the solid color overlay. Accepts a numeric value or an arithmetic
@@ -738,8 +749,12 @@ private constructor(
     }
 
     /**
-     * Specifies the corner radius of the solid color overlay. Set to `max` for circular or oval
-     * shape. See [radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+     * Specifies the corner radius of the solid color overlay.
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      */
     @JsonDeserialize(using = Radius.Deserializer::class)
     @JsonSerialize(using = Radius.Serializer::class)
@@ -747,6 +762,7 @@ private constructor(
     private constructor(
         private val number: Double? = null,
         private val max: JsonValue? = null,
+        private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -754,13 +770,19 @@ private constructor(
 
         fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
         fun isNumber(): Boolean = number != null
 
         fun isMax(): Boolean = max != null
 
+        fun isString(): Boolean = string != null
+
         fun asNumber(): Double = number.getOrThrow("number")
 
         fun asMax(): JsonValue = max.getOrThrow("max")
+
+        fun asString(): String = string.getOrThrow("string")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -768,6 +790,7 @@ private constructor(
             when {
                 number != null -> visitor.visitNumber(number)
                 max != null -> visitor.visitMax(max)
+                string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
 
@@ -789,6 +812,8 @@ private constructor(
                             }
                         }
                     }
+
+                    override fun visitString(string: String) {}
                 }
             )
             validated = true
@@ -817,6 +842,8 @@ private constructor(
                     override fun visitMax(max: JsonValue) =
                         max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
+                    override fun visitString(string: String) = 1
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -826,15 +853,19 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && max == other.max
+            return other is Radius &&
+                number == other.number &&
+                max == other.max &&
+                string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(number, max)
+        override fun hashCode(): Int = Objects.hash(number, max, string)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
                 max != null -> "Radius{max=$max}"
+                string != null -> "Radius{string=$string}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -844,6 +875,8 @@ private constructor(
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
             @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
+
+            @JvmStatic fun ofString(string: String) = Radius(string = string)
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -852,6 +885,8 @@ private constructor(
             fun visitNumber(number: Double): T
 
             fun visitMax(max: JsonValue): T
+
+            fun visitString(string: String): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -881,6 +916,9 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Radius(string = it, _json = json)
+                            },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -908,6 +946,7 @@ private constructor(
                 when {
                     value.number != null -> generator.writeObject(value.number)
                     value.max != null -> generator.writeObject(value.max)
+                    value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }

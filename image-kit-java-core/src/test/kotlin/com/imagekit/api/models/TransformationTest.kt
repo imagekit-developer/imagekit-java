@@ -28,10 +28,12 @@ internal class TransformationTest {
                 .blur(10.0)
                 .border("5_FF0000")
                 .colorProfile(true)
+                .colorReplace("colorReplace")
                 .contrastStretch(Transformation.ContrastStretch.TRUE)
                 .crop(Transformation.Crop.FORCE)
                 .cropMode(Transformation.CropMode.PAD_RESIZE)
                 .defaultImage("defaultImage")
+                .distort("distort")
                 .dpr(2.0)
                 .duration(0.0)
                 .endOffset(0.0)
@@ -48,6 +50,7 @@ internal class TransformationTest {
                 .original(true)
                 .overlay(
                     TextOverlay.builder()
+                        .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                         .position(
                             OverlayPosition.builder()
                                 .focus(OverlayPosition.Focus.CENTER)
@@ -115,10 +118,12 @@ internal class TransformationTest {
         assertThat(transformation.blur()).contains(10.0)
         assertThat(transformation.border()).contains("5_FF0000")
         assertThat(transformation.colorProfile()).contains(true)
+        assertThat(transformation.colorReplace()).contains("colorReplace")
         assertThat(transformation.contrastStretch()).contains(Transformation.ContrastStretch.TRUE)
         assertThat(transformation.crop()).contains(Transformation.Crop.FORCE)
         assertThat(transformation.cropMode()).contains(Transformation.CropMode.PAD_RESIZE)
         assertThat(transformation.defaultImage()).contains("defaultImage")
+        assertThat(transformation.distort()).contains("distort")
         assertThat(transformation.dpr()).contains(2.0)
         assertThat(transformation.duration()).contains(Transformation.Duration.ofNumber(0.0))
         assertThat(transformation.endOffset()).contains(Transformation.EndOffset.ofNumber(0.0))
@@ -137,6 +142,7 @@ internal class TransformationTest {
             .contains(
                 Overlay.ofText(
                     TextOverlay.builder()
+                        .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                         .position(
                             OverlayPosition.builder()
                                 .focus(OverlayPosition.Focus.CENTER)
@@ -208,10 +214,12 @@ internal class TransformationTest {
                 .blur(10.0)
                 .border("5_FF0000")
                 .colorProfile(true)
+                .colorReplace("colorReplace")
                 .contrastStretch(Transformation.ContrastStretch.TRUE)
                 .crop(Transformation.Crop.FORCE)
                 .cropMode(Transformation.CropMode.PAD_RESIZE)
                 .defaultImage("defaultImage")
+                .distort("distort")
                 .dpr(2.0)
                 .duration(0.0)
                 .endOffset(0.0)
@@ -228,6 +236,7 @@ internal class TransformationTest {
                 .original(true)
                 .overlay(
                     TextOverlay.builder()
+                        .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                         .position(
                             OverlayPosition.builder()
                                 .focus(OverlayPosition.Focus.CENTER)

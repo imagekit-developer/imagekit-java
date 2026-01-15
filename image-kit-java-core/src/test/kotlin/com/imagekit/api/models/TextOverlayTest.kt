@@ -14,6 +14,7 @@ internal class TextOverlayTest {
     fun create() {
         val textOverlay =
             TextOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -43,6 +44,7 @@ internal class TextOverlayTest {
                 )
                 .build()
 
+        assertThat(textOverlay.layerMode()).contains(BaseOverlay.LayerMode.MULTIPLY)
         assertThat(textOverlay.position())
             .contains(
                 OverlayPosition.builder().focus(OverlayPosition.Focus.CENTER).x(0.0).y(0.0).build()
@@ -76,6 +78,7 @@ internal class TextOverlayTest {
         val jsonMapper = jsonMapper()
         val textOverlay =
             TextOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
