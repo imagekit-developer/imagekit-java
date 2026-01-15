@@ -42,6 +42,7 @@ internal class FileUploadResponseTest {
                         .aiAutoDescription(
                             FileUploadResponse.ExtensionStatus.AiAutoDescription.SUCCESS
                         )
+                        .aiTasks(FileUploadResponse.ExtensionStatus.AiTasks.SUCCESS)
                         .awsAutoTagging(FileUploadResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
                         .googleAutoTagging(
                             FileUploadResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS
@@ -204,6 +205,7 @@ internal class FileUploadResponseTest {
             .contains(
                 FileUploadResponse.ExtensionStatus.builder()
                     .aiAutoDescription(FileUploadResponse.ExtensionStatus.AiAutoDescription.SUCCESS)
+                    .aiTasks(FileUploadResponse.ExtensionStatus.AiTasks.SUCCESS)
                     .awsAutoTagging(FileUploadResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
                     .googleAutoTagging(FileUploadResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS)
                     .removeBg(FileUploadResponse.ExtensionStatus.RemoveBg.SUCCESS)
@@ -369,6 +371,7 @@ internal class FileUploadResponseTest {
                         .aiAutoDescription(
                             FileUploadResponse.ExtensionStatus.AiAutoDescription.SUCCESS
                         )
+                        .aiTasks(FileUploadResponse.ExtensionStatus.AiTasks.SUCCESS)
                         .awsAutoTagging(FileUploadResponse.ExtensionStatus.AwsAutoTagging.SUCCESS)
                         .googleAutoTagging(
                             FileUploadResponse.ExtensionStatus.GoogleAutoTagging.SUCCESS

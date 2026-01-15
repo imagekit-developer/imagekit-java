@@ -50,6 +50,10 @@ internal class UploadPreTransformSuccessEventTest {
                                         .AiAutoDescription
                                         .SUCCESS
                                 )
+                                .aiTasks(
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus.AiTasks
+                                        .SUCCESS
+                                )
                                 .awsAutoTagging(
                                     UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AwsAutoTagging
@@ -243,6 +247,9 @@ internal class UploadPreTransformSuccessEventTest {
                                     .AiAutoDescription
                                     .SUCCESS
                             )
+                            .aiTasks(
+                                UploadPreTransformSuccessEvent.Data.ExtensionStatus.AiTasks.SUCCESS
+                            )
                             .awsAutoTagging(
                                 UploadPreTransformSuccessEvent.Data.ExtensionStatus.AwsAutoTagging
                                     .SUCCESS
@@ -434,6 +441,10 @@ internal class UploadPreTransformSuccessEventTest {
                                 .aiAutoDescription(
                                     UploadPreTransformSuccessEvent.Data.ExtensionStatus
                                         .AiAutoDescription
+                                        .SUCCESS
+                                )
+                                .aiTasks(
+                                    UploadPreTransformSuccessEvent.Data.ExtensionStatus.AiTasks
                                         .SUCCESS
                                 )
                                 .awsAutoTagging(
