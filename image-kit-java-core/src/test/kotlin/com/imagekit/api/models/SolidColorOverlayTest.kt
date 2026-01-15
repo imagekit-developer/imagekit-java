@@ -14,6 +14,7 @@ internal class SolidColorOverlayTest {
     fun create() {
         val solidColorOverlay =
             SolidColorOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)
@@ -35,6 +36,7 @@ internal class SolidColorOverlayTest {
                 )
                 .build()
 
+        assertThat(solidColorOverlay.layerMode()).contains(BaseOverlay.LayerMode.MULTIPLY)
         assertThat(solidColorOverlay.position())
             .contains(
                 OverlayPosition.builder().focus(OverlayPosition.Focus.CENTER).x(0.0).y(0.0).build()
@@ -60,6 +62,7 @@ internal class SolidColorOverlayTest {
         val jsonMapper = jsonMapper()
         val solidColorOverlay =
             SolidColorOverlay.builder()
+                .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                 .position(
                     OverlayPosition.builder()
                         .focus(OverlayPosition.Focus.CENTER)

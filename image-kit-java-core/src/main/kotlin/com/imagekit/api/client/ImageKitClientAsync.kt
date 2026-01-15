@@ -10,6 +10,7 @@ import com.imagekit.api.services.async.CacheServiceAsync
 import com.imagekit.api.services.async.CustomMetadataFieldServiceAsync
 import com.imagekit.api.services.async.FileServiceAsync
 import com.imagekit.api.services.async.FolderServiceAsync
+import com.imagekit.api.services.async.SavedExtensionServiceAsync
 import com.imagekit.api.services.async.WebhookServiceAsync
 import java.util.function.Consumer
 
@@ -53,6 +54,8 @@ interface ImageKitClientAsync {
 
     fun files(): FileServiceAsync
 
+    fun savedExtensions(): SavedExtensionServiceAsync
+
     fun assets(): AssetServiceAsync
 
     fun cache(): CacheServiceAsync
@@ -95,6 +98,8 @@ interface ImageKitClientAsync {
         fun customMetadataFields(): CustomMetadataFieldServiceAsync.WithRawResponse
 
         fun files(): FileServiceAsync.WithRawResponse
+
+        fun savedExtensions(): SavedExtensionServiceAsync.WithRawResponse
 
         fun assets(): AssetServiceAsync.WithRawResponse
 

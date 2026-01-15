@@ -54,10 +54,12 @@ private constructor(
     private val blur: JsonField<Double>,
     private val border: JsonField<String>,
     private val colorProfile: JsonField<Boolean>,
+    private val colorReplace: JsonField<String>,
     private val contrastStretch: JsonField<ContrastStretch>,
     private val crop: JsonField<Crop>,
     private val cropMode: JsonField<CropMode>,
     private val defaultImage: JsonField<String>,
+    private val distort: JsonField<String>,
     private val dpr: JsonField<Double>,
     private val duration: JsonField<Duration>,
     private val endOffset: JsonField<EndOffset>,
@@ -133,6 +135,9 @@ private constructor(
         @JsonProperty("colorProfile")
         @ExcludeMissing
         colorProfile: JsonField<Boolean> = JsonMissing.of(),
+        @JsonProperty("colorReplace")
+        @ExcludeMissing
+        colorReplace: JsonField<String> = JsonMissing.of(),
         @JsonProperty("contrastStretch")
         @ExcludeMissing
         contrastStretch: JsonField<ContrastStretch> = JsonMissing.of(),
@@ -141,6 +146,7 @@ private constructor(
         @JsonProperty("defaultImage")
         @ExcludeMissing
         defaultImage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("distort") @ExcludeMissing distort: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dpr") @ExcludeMissing dpr: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Duration> = JsonMissing.of(),
         @JsonProperty("endOffset")
@@ -204,10 +210,12 @@ private constructor(
         blur,
         border,
         colorProfile,
+        colorReplace,
         contrastStretch,
         crop,
         cropMode,
         defaultImage,
+        distort,
         dpr,
         duration,
         endOffset,
@@ -354,6 +362,11 @@ private constructor(
      * resizing an image.
      * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`. See
      *   [Solid color background](https://imagekit.io/docs/effects-and-enhancements#solid-color-background).
+     * - Dominant color: `dominant` extracts the dominant color from the image. See
+     *   [Dominant color background](https://imagekit.io/docs/effects-and-enhancements#dominant-color-background).
+     * - Gradient: `gradient_dominant` or `gradient_dominant_2` creates a gradient using the
+     *   dominant colors. Optionally specify palette size (2 or 4), e.g., `gradient_dominant_4`. See
+     *   [Gradient background](https://imagekit.io/docs/effects-and-enhancements#gradient-background).
      * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc. See
      *   [Blurred background](https://imagekit.io/docs/effects-and-enhancements#blurred-background).
      * - Expand the image boundaries using generative fill: `genfill`. Not supported inside overlay.
@@ -396,6 +409,19 @@ private constructor(
     fun colorProfile(): Optional<Boolean> = colorProfile.getOptional("colorProfile")
 
     /**
+     * Replaces colors in the image. Supports three formats:
+     * - `toColor` - Replace dominant color with the specified color.
+     * - `toColor_tolerance` - Replace dominant color with specified tolerance (0-100).
+     * - `toColor_tolerance_fromColor` - Replace a specific color with another within tolerance
+     *   range. Colors can be hex codes (e.g., `FF0022`) or names (e.g., `red`, `blue`). See
+     *   [Color replacement](https://imagekit.io/docs/effects-and-enhancements#color-replace---cr).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun colorReplace(): Optional<String> = colorReplace.getOptional("colorReplace")
+
+    /**
      * Automatically enhances the contrast of an image (contrast stretch). See
      * [Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast).
      *
@@ -433,8 +459,24 @@ private constructor(
     fun defaultImage(): Optional<String> = defaultImage.getOptional("defaultImage")
 
     /**
+     * Distorts the shape of an image. Supports two modes:
+     * - Perspective distortion: `p-x1_y1_x2_y2_x3_y3_x4_y4` changes the position of the four
+     *   corners starting clockwise from top-left.
+     * - Arc distortion: `a-degrees` curves the image upwards (positive values) or downwards
+     *   (negative values). See
+     *   [Distort effect](https://imagekit.io/docs/effects-and-enhancements#distort---e-distort).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun distort(): Optional<String> = distort.getOptional("distort")
+
+    /**
      * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR)
-     * calculation. See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
+     * calculation. Also accepts arithmetic expressions.
+     * - Learn about
+     *   [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+     * - See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -619,8 +661,12 @@ private constructor(
     fun quality(): Optional<Double> = quality.getOptional("quality")
 
     /**
-     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
-     * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+     * Specifies the corner radius for rounded corners.
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -896,6 +942,15 @@ private constructor(
     fun _colorProfile(): JsonField<Boolean> = colorProfile
 
     /**
+     * Returns the raw JSON value of [colorReplace].
+     *
+     * Unlike [colorReplace], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("colorReplace")
+    @ExcludeMissing
+    fun _colorReplace(): JsonField<String> = colorReplace
+
+    /**
      * Returns the raw JSON value of [contrastStretch].
      *
      * Unlike [contrastStretch], this method doesn't throw if the JSON field has an unexpected type.
@@ -926,6 +981,13 @@ private constructor(
     @JsonProperty("defaultImage")
     @ExcludeMissing
     fun _defaultImage(): JsonField<String> = defaultImage
+
+    /**
+     * Returns the raw JSON value of [distort].
+     *
+     * Unlike [distort], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("distort") @ExcludeMissing fun _distort(): JsonField<String> = distort
 
     /**
      * Returns the raw JSON value of [dpr].
@@ -1212,10 +1274,12 @@ private constructor(
         private var blur: JsonField<Double> = JsonMissing.of()
         private var border: JsonField<String> = JsonMissing.of()
         private var colorProfile: JsonField<Boolean> = JsonMissing.of()
+        private var colorReplace: JsonField<String> = JsonMissing.of()
         private var contrastStretch: JsonField<ContrastStretch> = JsonMissing.of()
         private var crop: JsonField<Crop> = JsonMissing.of()
         private var cropMode: JsonField<CropMode> = JsonMissing.of()
         private var defaultImage: JsonField<String> = JsonMissing.of()
+        private var distort: JsonField<String> = JsonMissing.of()
         private var dpr: JsonField<Double> = JsonMissing.of()
         private var duration: JsonField<Duration> = JsonMissing.of()
         private var endOffset: JsonField<EndOffset> = JsonMissing.of()
@@ -1268,10 +1332,12 @@ private constructor(
             blur = transformation.blur
             border = transformation.border
             colorProfile = transformation.colorProfile
+            colorReplace = transformation.colorReplace
             contrastStretch = transformation.contrastStretch
             crop = transformation.crop
             cropMode = transformation.cropMode
             defaultImage = transformation.defaultImage
+            distort = transformation.distort
             dpr = transformation.dpr
             duration = transformation.duration
             endOffset = transformation.endOffset
@@ -1503,6 +1569,12 @@ private constructor(
          * resizing an image.
          * - A solid color: e.g., `red`, `F3F3F3`, `AAFF0010`. See
          *   [Solid color background](https://imagekit.io/docs/effects-and-enhancements#solid-color-background).
+         * - Dominant color: `dominant` extracts the dominant color from the image. See
+         *   [Dominant color background](https://imagekit.io/docs/effects-and-enhancements#dominant-color-background).
+         * - Gradient: `gradient_dominant` or `gradient_dominant_2` creates a gradient using the
+         *   dominant colors. Optionally specify palette size (2 or 4), e.g., `gradient_dominant_4`.
+         *   See
+         *   [Gradient background](https://imagekit.io/docs/effects-and-enhancements#gradient-background).
          * - A blurred background: e.g., `blurred`, `blurred_25_N15`, etc. See
          *   [Blurred background](https://imagekit.io/docs/effects-and-enhancements#blurred-background).
          * - Expand the image boundaries using generative fill: `genfill`. Not supported inside
@@ -1571,6 +1643,27 @@ private constructor(
         }
 
         /**
+         * Replaces colors in the image. Supports three formats:
+         * - `toColor` - Replace dominant color with the specified color.
+         * - `toColor_tolerance` - Replace dominant color with specified tolerance (0-100).
+         * - `toColor_tolerance_fromColor` - Replace a specific color with another within tolerance
+         *   range. Colors can be hex codes (e.g., `FF0022`) or names (e.g., `red`, `blue`). See
+         *   [Color replacement](https://imagekit.io/docs/effects-and-enhancements#color-replace---cr).
+         */
+        fun colorReplace(colorReplace: String) = colorReplace(JsonField.of(colorReplace))
+
+        /**
+         * Sets [Builder.colorReplace] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.colorReplace] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun colorReplace(colorReplace: JsonField<String>) = apply {
+            this.colorReplace = colorReplace
+        }
+
+        /**
          * Automatically enhances the contrast of an image (contrast stretch). See
          * [Contrast Stretch](https://imagekit.io/docs/effects-and-enhancements#contrast-stretch---e-contrast).
          */
@@ -1635,8 +1728,29 @@ private constructor(
         }
 
         /**
+         * Distorts the shape of an image. Supports two modes:
+         * - Perspective distortion: `p-x1_y1_x2_y2_x3_y3_x4_y4` changes the position of the four
+         *   corners starting clockwise from top-left.
+         * - Arc distortion: `a-degrees` curves the image upwards (positive values) or downwards
+         *   (negative values). See
+         *   [Distort effect](https://imagekit.io/docs/effects-and-enhancements#distort---e-distort).
+         */
+        fun distort(distort: String) = distort(JsonField.of(distort))
+
+        /**
+         * Sets [Builder.distort] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.distort] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun distort(distort: JsonField<String>) = apply { this.distort = distort }
+
+        /**
          * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR)
-         * calculation. See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
+         * calculation. Also accepts arithmetic expressions.
+         * - Learn about
+         *   [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
+         * - See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
          */
         fun dpr(dpr: Double) = dpr(JsonField.of(dpr))
 
@@ -2016,8 +2130,12 @@ private constructor(
         fun quality(quality: JsonField<Double>) = apply { this.quality = quality }
 
         /**
-         * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
-         * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+         * Specifies the corner radius for rounded corners.
+         * - Single value (positive integer): Applied to all corners (e.g., `20`).
+         * - `max`: Creates a circular or oval shape.
+         * - Per-corner array: Provide four underscore-separated values representing top-left,
+         *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`).
+         *   See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
          */
         fun radius(radius: Radius) = radius(JsonField.of(radius))
 
@@ -2034,6 +2152,9 @@ private constructor(
 
         /** Alias for calling [radius] with `Radius.ofMax()`. */
         fun radiusMax() = radius(Radius.ofMax())
+
+        /** Alias for calling [radius] with `Radius.ofString(string)`. */
+        fun radius(string: String) = radius(Radius.ofString(string))
 
         /**
          * Pass any transformation not directly supported by the SDK. This transformation string is
@@ -2390,10 +2511,12 @@ private constructor(
                 blur,
                 border,
                 colorProfile,
+                colorReplace,
                 contrastStretch,
                 crop,
                 cropMode,
                 defaultImage,
+                distort,
                 dpr,
                 duration,
                 endOffset,
@@ -2453,10 +2576,12 @@ private constructor(
         blur()
         border()
         colorProfile()
+        colorReplace()
         contrastStretch().ifPresent { it.validate() }
         crop().ifPresent { it.validate() }
         cropMode().ifPresent { it.validate() }
         defaultImage()
+        distort()
         dpr()
         duration().ifPresent { it.validate() }
         endOffset().ifPresent { it.validate() }
@@ -2523,10 +2648,12 @@ private constructor(
             (if (blur.asKnown().isPresent) 1 else 0) +
             (if (border.asKnown().isPresent) 1 else 0) +
             (if (colorProfile.asKnown().isPresent) 1 else 0) +
+            (if (colorReplace.asKnown().isPresent) 1 else 0) +
             (contrastStretch.asKnown().getOrNull()?.validity() ?: 0) +
             (crop.asKnown().getOrNull()?.validity() ?: 0) +
             (cropMode.asKnown().getOrNull()?.validity() ?: 0) +
             (if (defaultImage.asKnown().isPresent) 1 else 0) +
+            (if (distort.asKnown().isPresent) 1 else 0) +
             (if (dpr.asKnown().isPresent) 1 else 0) +
             (duration.asKnown().getOrNull()?.validity() ?: 0) +
             (endOffset.asKnown().getOrNull()?.validity() ?: 0) +
@@ -5443,8 +5570,12 @@ private constructor(
     }
 
     /**
-     * Specifies the corner radius for rounded corners (e.g., 20) or `max` for circular or oval
-     * shape. See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
+     * Specifies the corner radius for rounded corners.
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      */
     @JsonDeserialize(using = Radius.Deserializer::class)
     @JsonSerialize(using = Radius.Serializer::class)
@@ -5452,6 +5583,7 @@ private constructor(
     private constructor(
         private val number: Double? = null,
         private val max: JsonValue? = null,
+        private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -5459,13 +5591,19 @@ private constructor(
 
         fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
         fun isNumber(): Boolean = number != null
 
         fun isMax(): Boolean = max != null
 
+        fun isString(): Boolean = string != null
+
         fun asNumber(): Double = number.getOrThrow("number")
 
         fun asMax(): JsonValue = max.getOrThrow("max")
+
+        fun asString(): String = string.getOrThrow("string")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -5473,6 +5611,7 @@ private constructor(
             when {
                 number != null -> visitor.visitNumber(number)
                 max != null -> visitor.visitMax(max)
+                string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
 
@@ -5494,6 +5633,8 @@ private constructor(
                             }
                         }
                     }
+
+                    override fun visitString(string: String) {}
                 }
             )
             validated = true
@@ -5522,6 +5663,8 @@ private constructor(
                     override fun visitMax(max: JsonValue) =
                         max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
+                    override fun visitString(string: String) = 1
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -5531,15 +5674,19 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && max == other.max
+            return other is Radius &&
+                number == other.number &&
+                max == other.max &&
+                string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(number, max)
+        override fun hashCode(): Int = Objects.hash(number, max, string)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
                 max != null -> "Radius{max=$max}"
+                string != null -> "Radius{string=$string}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -5549,6 +5696,8 @@ private constructor(
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
             @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
+
+            @JvmStatic fun ofString(string: String) = Radius(string = string)
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -5557,6 +5706,8 @@ private constructor(
             fun visitNumber(number: Double): T
 
             fun visitMax(max: JsonValue): T
+
+            fun visitString(string: String): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -5586,6 +5737,9 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Radius(string = it, _json = json)
+                            },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -5613,6 +5767,7 @@ private constructor(
                 when {
                     value.number != null -> generator.writeObject(value.number)
                     value.max != null -> generator.writeObject(value.max)
+                    value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }
@@ -7725,10 +7880,12 @@ private constructor(
             blur == other.blur &&
             border == other.border &&
             colorProfile == other.colorProfile &&
+            colorReplace == other.colorReplace &&
             contrastStretch == other.contrastStretch &&
             crop == other.crop &&
             cropMode == other.cropMode &&
             defaultImage == other.defaultImage &&
+            distort == other.distort &&
             dpr == other.dpr &&
             duration == other.duration &&
             endOffset == other.endOffset &&
@@ -7782,10 +7939,12 @@ private constructor(
             blur,
             border,
             colorProfile,
+            colorReplace,
             contrastStretch,
             crop,
             cropMode,
             defaultImage,
+            distort,
             dpr,
             duration,
             endOffset,
@@ -7827,5 +7986,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorProfile=$colorProfile, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
+        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
 }

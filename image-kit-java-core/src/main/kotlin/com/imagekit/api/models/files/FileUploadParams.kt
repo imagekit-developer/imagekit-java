@@ -24,7 +24,7 @@ import com.imagekit.api.core.http.Headers
 import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent1
+import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
 import java.io.InputStream
 import java.nio.file.Path
 import java.util.Collections
@@ -161,7 +161,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun extensions(): Optional<List<UnnamedSchemaWithArrayParent1>> = body.extensions()
+    fun extensions(): Optional<List<UnnamedSchemaWithArrayParent4>> = body.extensions()
 
     /**
      * The folder path in which the image has to be uploaded. If the folder(s) didn't exist before,
@@ -382,7 +382,7 @@ private constructor(
      *
      * Unlike [extensions], this method doesn't throw if the multipart field has an unexpected type.
      */
-    fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent1>> = body._extensions()
+    fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent4>> = body._extensions()
 
     /**
      * Returns the raw multipart value of [folder].
@@ -713,7 +713,7 @@ private constructor(
          * Array of extensions to be applied to the asset. Each extension can be configured with
          * specific parameters based on the extension type.
          */
-        fun extensions(extensions: List<UnnamedSchemaWithArrayParent1>) = apply {
+        fun extensions(extensions: List<UnnamedSchemaWithArrayParent4>) = apply {
             body.extensions(extensions)
         }
 
@@ -721,44 +721,81 @@ private constructor(
          * Sets [Builder.extensions] to an arbitrary multipart value.
          *
          * You should usually call [Builder.extensions] with a well-typed
-         * `List<UnnamedSchemaWithArrayParent1>` value instead. This method is primarily for setting
+         * `List<UnnamedSchemaWithArrayParent4>` value instead. This method is primarily for setting
          * the field to an undocumented or not yet supported value.
          */
-        fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>) = apply {
+        fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent4>>) = apply {
             body.extensions(extensions)
         }
 
         /**
-         * Adds a single [UnnamedSchemaWithArrayParent1] to [extensions].
+         * Adds a single [UnnamedSchemaWithArrayParent4] to [extensions].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addExtension(extension: UnnamedSchemaWithArrayParent1) = apply {
+        fun addExtension(extension: UnnamedSchemaWithArrayParent4) = apply {
             body.addExtension(extension)
         }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg)`.
+         * `UnnamedSchemaWithArrayParent4.ofRemoveBg(removeBg)`.
          */
-        fun addExtension(removeBg: UnnamedSchemaWithArrayParent1.RemoveBg) = apply {
+        fun addExtension(removeBg: UnnamedSchemaWithArrayParent4.RemoveBg) = apply {
             body.addExtension(removeBg)
         }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)`.
+         * `UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(autoTaggingExtension)`.
          */
-        fun addExtension(autoTaggingExtension: UnnamedSchemaWithArrayParent1.AutoTaggingExtension) =
+        fun addExtension(autoTaggingExtension: UnnamedSchemaWithArrayParent4.AutoTaggingExtension) =
             apply {
                 body.addExtension(autoTaggingExtension)
             }
 
         /**
          * Alias for calling [addExtension] with
-         * `UnnamedSchemaWithArrayParent1.ofAiAutoDescription()`.
+         * `UnnamedSchemaWithArrayParent4.ofAiAutoDescription()`.
          */
         fun addExtensionAiAutoDescription() = apply { body.addExtensionAiAutoDescription() }
+
+        /**
+         * Alias for calling [addExtension] with `UnnamedSchemaWithArrayParent4.ofAiTasks(aiTasks)`.
+         */
+        fun addExtension(aiTasks: UnnamedSchemaWithArrayParent4.AiTasks) = apply {
+            body.addExtension(aiTasks)
+        }
+
+        /**
+         * Alias for calling [addExtension] with the following:
+         * ```java
+         * UnnamedSchemaWithArrayParent4.AiTasks.builder()
+         *     .tasks(tasks)
+         *     .build()
+         * ```
+         */
+        fun addAiTasksExtension(tasks: List<UnnamedSchemaWithArrayParent4.AiTasks.Task>) = apply {
+            body.addAiTasksExtension(tasks)
+        }
+
+        /**
+         * Alias for calling [addExtension] with
+         * `UnnamedSchemaWithArrayParent4.ofSavedExtension(savedExtension)`.
+         */
+        fun addExtension(savedExtension: UnnamedSchemaWithArrayParent4.SavedExtension) = apply {
+            body.addExtension(savedExtension)
+        }
+
+        /**
+         * Alias for calling [addExtension] with the following:
+         * ```java
+         * UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+         *     .id(id)
+         *     .build()
+         * ```
+         */
+        fun addSavedExtensionExtension(id: String) = apply { body.addSavedExtensionExtension(id) }
 
         /**
          * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -1217,7 +1254,7 @@ private constructor(
         private val customMetadata: MultipartField<CustomMetadata>,
         private val description: MultipartField<String>,
         private val expire: MultipartField<Long>,
-        private val extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>,
+        private val extensions: MultipartField<List<UnnamedSchemaWithArrayParent4>>,
         private val folder: MultipartField<String>,
         private val isPrivateFile: MultipartField<Boolean>,
         private val isPublished: MultipartField<Boolean>,
@@ -1336,7 +1373,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun extensions(): Optional<List<UnnamedSchemaWithArrayParent1>> =
+        fun extensions(): Optional<List<UnnamedSchemaWithArrayParent4>> =
             extensions.value.getOptional("extensions")
 
         /**
@@ -1574,7 +1611,7 @@ private constructor(
          */
         @JsonProperty("extensions")
         @ExcludeMissing
-        fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent1>> = extensions
+        fun _extensions(): MultipartField<List<UnnamedSchemaWithArrayParent4>> = extensions
 
         /**
          * Returns the raw multipart value of [folder].
@@ -1747,7 +1784,7 @@ private constructor(
             private var customMetadata: MultipartField<CustomMetadata> = MultipartField.of(null)
             private var description: MultipartField<String> = MultipartField.of(null)
             private var expire: MultipartField<Long> = MultipartField.of(null)
-            private var extensions: MultipartField<MutableList<UnnamedSchemaWithArrayParent1>>? =
+            private var extensions: MultipartField<MutableList<UnnamedSchemaWithArrayParent4>>? =
                 null
             private var folder: MultipartField<String> = MultipartField.of(null)
             private var isPrivateFile: MultipartField<Boolean> = MultipartField.of(null)
@@ -1971,27 +2008,27 @@ private constructor(
              * Array of extensions to be applied to the asset. Each extension can be configured with
              * specific parameters based on the extension type.
              */
-            fun extensions(extensions: List<UnnamedSchemaWithArrayParent1>) =
+            fun extensions(extensions: List<UnnamedSchemaWithArrayParent4>) =
                 extensions(MultipartField.of(extensions))
 
             /**
              * Sets [Builder.extensions] to an arbitrary multipart value.
              *
              * You should usually call [Builder.extensions] with a well-typed
-             * `List<UnnamedSchemaWithArrayParent1>` value instead. This method is primarily for
+             * `List<UnnamedSchemaWithArrayParent4>` value instead. This method is primarily for
              * setting the field to an undocumented or not yet supported value.
              */
-            fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent1>>) =
+            fun extensions(extensions: MultipartField<List<UnnamedSchemaWithArrayParent4>>) =
                 apply {
                     this.extensions = extensions.map { it.toMutableList() }
                 }
 
             /**
-             * Adds a single [UnnamedSchemaWithArrayParent1] to [extensions].
+             * Adds a single [UnnamedSchemaWithArrayParent4] to [extensions].
              *
              * @throws IllegalStateException if the field was previously set to a non-list.
              */
-            fun addExtension(extension: UnnamedSchemaWithArrayParent1) = apply {
+            fun addExtension(extension: UnnamedSchemaWithArrayParent4) = apply {
                 extensions =
                     (extensions ?: MultipartField.of(mutableListOf())).also {
                         checkKnown("extensions", it).add(extension)
@@ -2000,28 +2037,64 @@ private constructor(
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg)`.
+             * `UnnamedSchemaWithArrayParent4.ofRemoveBg(removeBg)`.
              */
-            fun addExtension(removeBg: UnnamedSchemaWithArrayParent1.RemoveBg) =
-                addExtension(UnnamedSchemaWithArrayParent1.ofRemoveBg(removeBg))
+            fun addExtension(removeBg: UnnamedSchemaWithArrayParent4.RemoveBg) =
+                addExtension(UnnamedSchemaWithArrayParent4.ofRemoveBg(removeBg))
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)`.
+             * `UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(autoTaggingExtension)`.
              */
             fun addExtension(
-                autoTaggingExtension: UnnamedSchemaWithArrayParent1.AutoTaggingExtension
+                autoTaggingExtension: UnnamedSchemaWithArrayParent4.AutoTaggingExtension
             ) =
                 addExtension(
-                    UnnamedSchemaWithArrayParent1.ofAutoTaggingExtension(autoTaggingExtension)
+                    UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(autoTaggingExtension)
                 )
 
             /**
              * Alias for calling [addExtension] with
-             * `UnnamedSchemaWithArrayParent1.ofAiAutoDescription()`.
+             * `UnnamedSchemaWithArrayParent4.ofAiAutoDescription()`.
              */
             fun addExtensionAiAutoDescription() =
-                addExtension(UnnamedSchemaWithArrayParent1.ofAiAutoDescription())
+                addExtension(UnnamedSchemaWithArrayParent4.ofAiAutoDescription())
+
+            /**
+             * Alias for calling [addExtension] with
+             * `UnnamedSchemaWithArrayParent4.ofAiTasks(aiTasks)`.
+             */
+            fun addExtension(aiTasks: UnnamedSchemaWithArrayParent4.AiTasks) =
+                addExtension(UnnamedSchemaWithArrayParent4.ofAiTasks(aiTasks))
+
+            /**
+             * Alias for calling [addExtension] with the following:
+             * ```java
+             * UnnamedSchemaWithArrayParent4.AiTasks.builder()
+             *     .tasks(tasks)
+             *     .build()
+             * ```
+             */
+            fun addAiTasksExtension(tasks: List<UnnamedSchemaWithArrayParent4.AiTasks.Task>) =
+                addExtension(UnnamedSchemaWithArrayParent4.AiTasks.builder().tasks(tasks).build())
+
+            /**
+             * Alias for calling [addExtension] with
+             * `UnnamedSchemaWithArrayParent4.ofSavedExtension(savedExtension)`.
+             */
+            fun addExtension(savedExtension: UnnamedSchemaWithArrayParent4.SavedExtension) =
+                addExtension(UnnamedSchemaWithArrayParent4.ofSavedExtension(savedExtension))
+
+            /**
+             * Alias for calling [addExtension] with the following:
+             * ```java
+             * UnnamedSchemaWithArrayParent4.SavedExtension.builder()
+             *     .id(id)
+             *     .build()
+             * ```
+             */
+            fun addSavedExtensionExtension(id: String) =
+                addExtension(UnnamedSchemaWithArrayParent4.SavedExtension.builder().id(id).build())
 
             /**
              * The folder path in which the image has to be uploaded. If the folder(s) didn't exist
@@ -2578,12 +2651,14 @@ private constructor(
         override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
     }
 
-    @JsonSerialize(using = UnnamedSchemaWithArrayParent1.Serializer::class)
-    class UnnamedSchemaWithArrayParent1
+    @JsonSerialize(using = UnnamedSchemaWithArrayParent4.Serializer::class)
+    class UnnamedSchemaWithArrayParent4
     private constructor(
         private val removeBg: RemoveBg? = null,
         private val autoTaggingExtension: AutoTaggingExtension? = null,
         private val aiAutoDescription: JsonValue? = null,
+        private val aiTasks: AiTasks? = null,
+        private val savedExtension: SavedExtension? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -2594,11 +2669,19 @@ private constructor(
 
         fun aiAutoDescription(): Optional<JsonValue> = Optional.ofNullable(aiAutoDescription)
 
+        fun aiTasks(): Optional<AiTasks> = Optional.ofNullable(aiTasks)
+
+        fun savedExtension(): Optional<SavedExtension> = Optional.ofNullable(savedExtension)
+
         fun isRemoveBg(): Boolean = removeBg != null
 
         fun isAutoTaggingExtension(): Boolean = autoTaggingExtension != null
 
         fun isAiAutoDescription(): Boolean = aiAutoDescription != null
+
+        fun isAiTasks(): Boolean = aiTasks != null
+
+        fun isSavedExtension(): Boolean = savedExtension != null
 
         fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
@@ -2606,6 +2689,10 @@ private constructor(
             autoTaggingExtension.getOrThrow("autoTaggingExtension")
 
         fun asAiAutoDescription(): JsonValue = aiAutoDescription.getOrThrow("aiAutoDescription")
+
+        fun asAiTasks(): AiTasks = aiTasks.getOrThrow("aiTasks")
+
+        fun asSavedExtension(): SavedExtension = savedExtension.getOrThrow("savedExtension")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -2615,12 +2702,14 @@ private constructor(
                 autoTaggingExtension != null ->
                     visitor.visitAutoTaggingExtension(autoTaggingExtension)
                 aiAutoDescription != null -> visitor.visitAiAutoDescription(aiAutoDescription)
+                aiTasks != null -> visitor.visitAiTasks(aiTasks)
+                savedExtension != null -> visitor.visitSavedExtension(savedExtension)
                 else -> visitor.unknown(_json)
             }
 
         private var validated: Boolean = false
 
-        fun validate(): UnnamedSchemaWithArrayParent1 = apply {
+        fun validate(): UnnamedSchemaWithArrayParent4 = apply {
             if (validated) {
                 return@apply
             }
@@ -2646,6 +2735,14 @@ private constructor(
                             }
                         }
                     }
+
+                    override fun visitAiTasks(aiTasks: AiTasks) {
+                        aiTasks.validate()
+                    }
+
+                    override fun visitSavedExtension(savedExtension: SavedExtension) {
+                        savedExtension.validate()
+                    }
                 }
             )
             validated = true
@@ -2664,44 +2761,56 @@ private constructor(
                 return true
             }
 
-            return other is UnnamedSchemaWithArrayParent1 &&
+            return other is UnnamedSchemaWithArrayParent4 &&
                 removeBg == other.removeBg &&
                 autoTaggingExtension == other.autoTaggingExtension &&
-                aiAutoDescription == other.aiAutoDescription
+                aiAutoDescription == other.aiAutoDescription &&
+                aiTasks == other.aiTasks &&
+                savedExtension == other.savedExtension
         }
 
         override fun hashCode(): Int =
-            Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription)
+            Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription, aiTasks, savedExtension)
 
         override fun toString(): String =
             when {
-                removeBg != null -> "UnnamedSchemaWithArrayParent1{removeBg=$removeBg}"
+                removeBg != null -> "UnnamedSchemaWithArrayParent4{removeBg=$removeBg}"
                 autoTaggingExtension != null ->
-                    "UnnamedSchemaWithArrayParent1{autoTaggingExtension=$autoTaggingExtension}"
+                    "UnnamedSchemaWithArrayParent4{autoTaggingExtension=$autoTaggingExtension}"
                 aiAutoDescription != null ->
-                    "UnnamedSchemaWithArrayParent1{aiAutoDescription=$aiAutoDescription}"
-                _json != null -> "UnnamedSchemaWithArrayParent1{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent1")
+                    "UnnamedSchemaWithArrayParent4{aiAutoDescription=$aiAutoDescription}"
+                aiTasks != null -> "UnnamedSchemaWithArrayParent4{aiTasks=$aiTasks}"
+                savedExtension != null ->
+                    "UnnamedSchemaWithArrayParent4{savedExtension=$savedExtension}"
+                _json != null -> "UnnamedSchemaWithArrayParent4{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent4")
             }
 
         companion object {
 
             @JvmStatic
-            fun ofRemoveBg(removeBg: RemoveBg) = UnnamedSchemaWithArrayParent1(removeBg = removeBg)
+            fun ofRemoveBg(removeBg: RemoveBg) = UnnamedSchemaWithArrayParent4(removeBg = removeBg)
 
             @JvmStatic
             fun ofAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension) =
-                UnnamedSchemaWithArrayParent1(autoTaggingExtension = autoTaggingExtension)
+                UnnamedSchemaWithArrayParent4(autoTaggingExtension = autoTaggingExtension)
 
             @JvmStatic
             fun ofAiAutoDescription() =
-                UnnamedSchemaWithArrayParent1(
+                UnnamedSchemaWithArrayParent4(
                     aiAutoDescription = JsonValue.from(mapOf("name" to "ai-auto-description"))
                 )
+
+            @JvmStatic
+            fun ofAiTasks(aiTasks: AiTasks) = UnnamedSchemaWithArrayParent4(aiTasks = aiTasks)
+
+            @JvmStatic
+            fun ofSavedExtension(savedExtension: SavedExtension) =
+                UnnamedSchemaWithArrayParent4(savedExtension = savedExtension)
         }
 
         /**
-         * An interface that defines how to map each variant of [UnnamedSchemaWithArrayParent1] to a
+         * An interface that defines how to map each variant of [UnnamedSchemaWithArrayParent4] to a
          * value of type [T].
          */
         interface Visitor<out T> {
@@ -2712,10 +2821,14 @@ private constructor(
 
             fun visitAiAutoDescription(aiAutoDescription: JsonValue): T
 
+            fun visitAiTasks(aiTasks: AiTasks): T
+
+            fun visitSavedExtension(savedExtension: SavedExtension): T
+
             /**
-             * Maps an unknown variant of [UnnamedSchemaWithArrayParent1] to a value of type [T].
+             * Maps an unknown variant of [UnnamedSchemaWithArrayParent4] to a value of type [T].
              *
-             * An instance of [UnnamedSchemaWithArrayParent1] can contain an unknown variant if it
+             * An instance of [UnnamedSchemaWithArrayParent4] can contain an unknown variant if it
              * was deserialized from data that doesn't match any known variant. For example, if the
              * SDK is on an older version than the API, then the API may respond with new variants
              * that the SDK is unaware of.
@@ -2723,15 +2836,15 @@ private constructor(
              * @throws ImageKitInvalidDataException in the default implementation.
              */
             fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown UnnamedSchemaWithArrayParent1: $json")
+                throw ImageKitInvalidDataException("Unknown UnnamedSchemaWithArrayParent4: $json")
             }
         }
 
         internal class Serializer :
-            BaseSerializer<UnnamedSchemaWithArrayParent1>(UnnamedSchemaWithArrayParent1::class) {
+            BaseSerializer<UnnamedSchemaWithArrayParent4>(UnnamedSchemaWithArrayParent4::class) {
 
             override fun serialize(
-                value: UnnamedSchemaWithArrayParent1,
+                value: UnnamedSchemaWithArrayParent4,
                 generator: JsonGenerator,
                 provider: SerializerProvider,
             ) {
@@ -2741,8 +2854,10 @@ private constructor(
                         generator.writeObject(value.autoTaggingExtension)
                     value.aiAutoDescription != null ->
                         generator.writeObject(value.aiAutoDescription)
+                    value.aiTasks != null -> generator.writeObject(value.aiTasks)
+                    value.savedExtension != null -> generator.writeObject(value.savedExtension)
                     value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent1")
+                    else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent4")
                 }
             }
         }
@@ -3546,6 +3661,4890 @@ private constructor(
 
             override fun toString() =
                 "AutoTaggingExtension{maxTags=$maxTags, minConfidence=$minConfidence, name=$name, additionalProperties=$additionalProperties}"
+        }
+
+        class AiTasks
+        private constructor(
+            private val name: JsonValue,
+            private val tasks: JsonField<List<Task>>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            /**
+             * Specifies the AI tasks extension for automated image analysis using AI models.
+             *
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("ai-tasks")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
+             */
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
+
+            /**
+             * Array of task objects defining AI operations to perform on the asset.
+             *
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun tasks(): List<Task> = tasks.getRequired("tasks")
+
+            /**
+             * Returns the raw JSON value of [tasks].
+             *
+             * Unlike [tasks], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("tasks") @ExcludeMissing fun _tasks(): JsonField<List<Task>> = tasks
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [AiTasks].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .tasks()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [AiTasks]. */
+            class Builder internal constructor() {
+
+                private var name: JsonValue = JsonValue.from("ai-tasks")
+                private var tasks: JsonField<MutableList<Task>>? = null
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(aiTasks: AiTasks) = apply {
+                    name = aiTasks.name
+                    tasks = aiTasks.tasks.map { it.toMutableList() }
+                    additionalProperties = aiTasks.additionalProperties.toMutableMap()
+                }
+
+                /**
+                 * Sets the field to an arbitrary JSON value.
+                 *
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("ai-tasks")
+                 * ```
+                 *
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun name(name: JsonValue) = apply { this.name = name }
+
+                /** Array of task objects defining AI operations to perform on the asset. */
+                fun tasks(tasks: List<Task>) = tasks(JsonField.of(tasks))
+
+                /**
+                 * Sets [Builder.tasks] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.tasks] with a well-typed `List<Task>` value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun tasks(tasks: JsonField<List<Task>>) = apply {
+                    this.tasks = tasks.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Task] to [tasks].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addTask(task: Task) = apply {
+                    tasks =
+                        (tasks ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("tasks", it).add(task)
+                        }
+                }
+
+                /** Alias for calling [addTask] with `Task.ofSelectTags(selectTags)`. */
+                fun addTask(selectTags: Task.SelectTags) = addTask(Task.ofSelectTags(selectTags))
+
+                /** Alias for calling [addTask] with `Task.ofSelectMetadata(selectMetadata)`. */
+                fun addTask(selectMetadata: Task.SelectMetadata) =
+                    addTask(Task.ofSelectMetadata(selectMetadata))
+
+                /** Alias for calling [addTask] with `Task.ofYesNo(yesNo)`. */
+                fun addTask(yesNo: Task.YesNo) = addTask(Task.ofYesNo(yesNo))
+
+                /**
+                 * Alias for calling [addTask] with the following:
+                 * ```java
+                 * Task.YesNo.builder()
+                 *     .instruction(instruction)
+                 *     .build()
+                 * ```
+                 */
+                fun addYesNoTask(instruction: String) =
+                    addTask(Task.YesNo.builder().instruction(instruction).build())
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [AiTasks].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .tasks()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): AiTasks =
+                    AiTasks(
+                        name,
+                        checkRequired("tasks", tasks).map { it.toImmutable() },
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): AiTasks = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                _name().let {
+                    if (it != JsonValue.from("ai-tasks")) {
+                        throw ImageKitInvalidDataException("'name' is invalid, received $it")
+                    }
+                }
+                tasks().forEach { it.validate() }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: ImageKitInvalidDataException) {
+                    false
+                }
+
+            @JsonSerialize(using = Task.Serializer::class)
+            class Task
+            private constructor(
+                private val selectTags: SelectTags? = null,
+                private val selectMetadata: SelectMetadata? = null,
+                private val yesNo: YesNo? = null,
+                private val _json: JsonValue? = null,
+            ) {
+
+                fun selectTags(): Optional<SelectTags> = Optional.ofNullable(selectTags)
+
+                fun selectMetadata(): Optional<SelectMetadata> = Optional.ofNullable(selectMetadata)
+
+                fun yesNo(): Optional<YesNo> = Optional.ofNullable(yesNo)
+
+                fun isSelectTags(): Boolean = selectTags != null
+
+                fun isSelectMetadata(): Boolean = selectMetadata != null
+
+                fun isYesNo(): Boolean = yesNo != null
+
+                fun asSelectTags(): SelectTags = selectTags.getOrThrow("selectTags")
+
+                fun asSelectMetadata(): SelectMetadata = selectMetadata.getOrThrow("selectMetadata")
+
+                fun asYesNo(): YesNo = yesNo.getOrThrow("yesNo")
+
+                fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                fun <T> accept(visitor: Visitor<T>): T =
+                    when {
+                        selectTags != null -> visitor.visitSelectTags(selectTags)
+                        selectMetadata != null -> visitor.visitSelectMetadata(selectMetadata)
+                        yesNo != null -> visitor.visitYesNo(yesNo)
+                        else -> visitor.unknown(_json)
+                    }
+
+                private var validated: Boolean = false
+
+                fun validate(): Task = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    accept(
+                        object : Visitor<Unit> {
+                            override fun visitSelectTags(selectTags: SelectTags) {
+                                selectTags.validate()
+                            }
+
+                            override fun visitSelectMetadata(selectMetadata: SelectMetadata) {
+                                selectMetadata.validate()
+                            }
+
+                            override fun visitYesNo(yesNo: YesNo) {
+                                yesNo.validate()
+                            }
+                        }
+                    )
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: ImageKitInvalidDataException) {
+                        false
+                    }
+
+                override fun equals(other: Any?): Boolean {
+                    if (this === other) {
+                        return true
+                    }
+
+                    return other is Task &&
+                        selectTags == other.selectTags &&
+                        selectMetadata == other.selectMetadata &&
+                        yesNo == other.yesNo
+                }
+
+                override fun hashCode(): Int = Objects.hash(selectTags, selectMetadata, yesNo)
+
+                override fun toString(): String =
+                    when {
+                        selectTags != null -> "Task{selectTags=$selectTags}"
+                        selectMetadata != null -> "Task{selectMetadata=$selectMetadata}"
+                        yesNo != null -> "Task{yesNo=$yesNo}"
+                        _json != null -> "Task{_unknown=$_json}"
+                        else -> throw IllegalStateException("Invalid Task")
+                    }
+
+                companion object {
+
+                    @JvmStatic
+                    fun ofSelectTags(selectTags: SelectTags) = Task(selectTags = selectTags)
+
+                    @JvmStatic
+                    fun ofSelectMetadata(selectMetadata: SelectMetadata) =
+                        Task(selectMetadata = selectMetadata)
+
+                    @JvmStatic fun ofYesNo(yesNo: YesNo) = Task(yesNo = yesNo)
+                }
+
+                /**
+                 * An interface that defines how to map each variant of [Task] to a value of type
+                 * [T].
+                 */
+                interface Visitor<out T> {
+
+                    fun visitSelectTags(selectTags: SelectTags): T
+
+                    fun visitSelectMetadata(selectMetadata: SelectMetadata): T
+
+                    fun visitYesNo(yesNo: YesNo): T
+
+                    /**
+                     * Maps an unknown variant of [Task] to a value of type [T].
+                     *
+                     * An instance of [Task] can contain an unknown variant if it was deserialized
+                     * from data that doesn't match any known variant. For example, if the SDK is on
+                     * an older version than the API, then the API may respond with new variants
+                     * that the SDK is unaware of.
+                     *
+                     * @throws ImageKitInvalidDataException in the default implementation.
+                     */
+                    fun unknown(json: JsonValue?): T {
+                        throw ImageKitInvalidDataException("Unknown Task: $json")
+                    }
+                }
+
+                internal class Serializer : BaseSerializer<Task>(Task::class) {
+
+                    override fun serialize(
+                        value: Task,
+                        generator: JsonGenerator,
+                        provider: SerializerProvider,
+                    ) {
+                        when {
+                            value.selectTags != null -> generator.writeObject(value.selectTags)
+                            value.selectMetadata != null ->
+                                generator.writeObject(value.selectMetadata)
+                            value.yesNo != null -> generator.writeObject(value.yesNo)
+                            value._json != null -> generator.writeObject(value._json)
+                            else -> throw IllegalStateException("Invalid Task")
+                        }
+                    }
+                }
+
+                class SelectTags
+                private constructor(
+                    private val instruction: JsonField<String>,
+                    private val type: JsonValue,
+                    private val vocabulary: JsonField<List<String>>,
+                    private val maxSelections: JsonField<Long>,
+                    private val minSelections: JsonField<Long>,
+                    private val additionalProperties: MutableMap<String, JsonValue>,
+                ) {
+
+                    /**
+                     * The question or instruction for the AI to analyze the image.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun instruction(): String = instruction.getRequired("instruction")
+
+                    /**
+                     * Task type that analyzes the image and adds matching tags from a vocabulary.
+                     *
+                     * Expected to always return the following:
+                     * ```java
+                     * JsonValue.from("select_tags")
+                     * ```
+                     *
+                     * However, this method can be useful for debugging and logging (e.g. if the
+                     * server responded with an unexpected value).
+                     */
+                    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+                    /**
+                     * Array of possible tag values. Combined length of all strings must not exceed
+                     * 500 characters. Cannot contain the `%` character.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun vocabulary(): List<String> = vocabulary.getRequired("vocabulary")
+
+                    /**
+                     * Maximum number of tags to select from the vocabulary.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun maxSelections(): Optional<Long> =
+                        maxSelections.getOptional("max_selections")
+
+                    /**
+                     * Minimum number of tags to select from the vocabulary.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun minSelections(): Optional<Long> =
+                        minSelections.getOptional("min_selections")
+
+                    /**
+                     * Returns the raw JSON value of [instruction].
+                     *
+                     * Unlike [instruction], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("instruction")
+                    @ExcludeMissing
+                    fun _instruction(): JsonField<String> = instruction
+
+                    /**
+                     * Returns the raw JSON value of [vocabulary].
+                     *
+                     * Unlike [vocabulary], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("vocabulary")
+                    @ExcludeMissing
+                    fun _vocabulary(): JsonField<List<String>> = vocabulary
+
+                    /**
+                     * Returns the raw JSON value of [maxSelections].
+                     *
+                     * Unlike [maxSelections], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("max_selections")
+                    @ExcludeMissing
+                    fun _maxSelections(): JsonField<Long> = maxSelections
+
+                    /**
+                     * Returns the raw JSON value of [minSelections].
+                     *
+                     * Unlike [minSelections], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("min_selections")
+                    @ExcludeMissing
+                    fun _minSelections(): JsonField<Long> = minSelections
+
+                    @JsonAnySetter
+                    private fun putAdditionalProperty(key: String, value: JsonValue) {
+                        additionalProperties.put(key, value)
+                    }
+
+                    @JsonAnyGetter
+                    @ExcludeMissing
+                    fun _additionalProperties(): Map<String, JsonValue> =
+                        Collections.unmodifiableMap(additionalProperties)
+
+                    fun toBuilder() = Builder().from(this)
+
+                    companion object {
+
+                        /**
+                         * Returns a mutable builder for constructing an instance of [SelectTags].
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .instruction()
+                         * .vocabulary()
+                         * ```
+                         */
+                        @JvmStatic fun builder() = Builder()
+                    }
+
+                    /** A builder for [SelectTags]. */
+                    class Builder internal constructor() {
+
+                        private var instruction: JsonField<String>? = null
+                        private var type: JsonValue = JsonValue.from("select_tags")
+                        private var vocabulary: JsonField<MutableList<String>>? = null
+                        private var maxSelections: JsonField<Long> = JsonMissing.of()
+                        private var minSelections: JsonField<Long> = JsonMissing.of()
+                        private var additionalProperties: MutableMap<String, JsonValue> =
+                            mutableMapOf()
+
+                        @JvmSynthetic
+                        internal fun from(selectTags: SelectTags) = apply {
+                            instruction = selectTags.instruction
+                            type = selectTags.type
+                            vocabulary = selectTags.vocabulary.map { it.toMutableList() }
+                            maxSelections = selectTags.maxSelections
+                            minSelections = selectTags.minSelections
+                            additionalProperties = selectTags.additionalProperties.toMutableMap()
+                        }
+
+                        /** The question or instruction for the AI to analyze the image. */
+                        fun instruction(instruction: String) =
+                            instruction(JsonField.of(instruction))
+
+                        /**
+                         * Sets [Builder.instruction] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.instruction] with a well-typed [String]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun instruction(instruction: JsonField<String>) = apply {
+                            this.instruction = instruction
+                        }
+
+                        /**
+                         * Sets the field to an arbitrary JSON value.
+                         *
+                         * It is usually unnecessary to call this method because the field defaults
+                         * to the following:
+                         * ```java
+                         * JsonValue.from("select_tags")
+                         * ```
+                         *
+                         * This method is primarily for setting the field to an undocumented or not
+                         * yet supported value.
+                         */
+                        fun type(type: JsonValue) = apply { this.type = type }
+
+                        /**
+                         * Array of possible tag values. Combined length of all strings must not
+                         * exceed 500 characters. Cannot contain the `%` character.
+                         */
+                        fun vocabulary(vocabulary: List<String>) =
+                            vocabulary(JsonField.of(vocabulary))
+
+                        /**
+                         * Sets [Builder.vocabulary] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.vocabulary] with a well-typed
+                         * `List<String>` value instead. This method is primarily for setting the
+                         * field to an undocumented or not yet supported value.
+                         */
+                        fun vocabulary(vocabulary: JsonField<List<String>>) = apply {
+                            this.vocabulary = vocabulary.map { it.toMutableList() }
+                        }
+
+                        /**
+                         * Adds a single [String] to [Builder.vocabulary].
+                         *
+                         * @throws IllegalStateException if the field was previously set to a
+                         *   non-list.
+                         */
+                        fun addVocabulary(vocabulary: String) = apply {
+                            this.vocabulary =
+                                (this.vocabulary ?: JsonField.of(mutableListOf())).also {
+                                    checkKnown("vocabulary", it).add(vocabulary)
+                                }
+                        }
+
+                        /** Maximum number of tags to select from the vocabulary. */
+                        fun maxSelections(maxSelections: Long) =
+                            maxSelections(JsonField.of(maxSelections))
+
+                        /**
+                         * Sets [Builder.maxSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.maxSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun maxSelections(maxSelections: JsonField<Long>) = apply {
+                            this.maxSelections = maxSelections
+                        }
+
+                        /** Minimum number of tags to select from the vocabulary. */
+                        fun minSelections(minSelections: Long) =
+                            minSelections(JsonField.of(minSelections))
+
+                        /**
+                         * Sets [Builder.minSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.minSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun minSelections(minSelections: JsonField<Long>) = apply {
+                            this.minSelections = minSelections
+                        }
+
+                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                            apply {
+                                this.additionalProperties.clear()
+                                putAllAdditionalProperties(additionalProperties)
+                            }
+
+                        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                            additionalProperties.put(key, value)
+                        }
+
+                        fun putAllAdditionalProperties(
+                            additionalProperties: Map<String, JsonValue>
+                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                        fun removeAdditionalProperty(key: String) = apply {
+                            additionalProperties.remove(key)
+                        }
+
+                        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
+
+                        /**
+                         * Returns an immutable instance of [SelectTags].
+                         *
+                         * Further updates to this [Builder] will not mutate the returned instance.
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .instruction()
+                         * .vocabulary()
+                         * ```
+                         *
+                         * @throws IllegalStateException if any required field is unset.
+                         */
+                        fun build(): SelectTags =
+                            SelectTags(
+                                checkRequired("instruction", instruction),
+                                type,
+                                checkRequired("vocabulary", vocabulary).map { it.toImmutable() },
+                                maxSelections,
+                                minSelections,
+                                additionalProperties.toMutableMap(),
+                            )
+                    }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): SelectTags = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        instruction()
+                        _type().let {
+                            if (it != JsonValue.from("select_tags")) {
+                                throw ImageKitInvalidDataException(
+                                    "'type' is invalid, received $it"
+                                )
+                            }
+                        }
+                        vocabulary()
+                        maxSelections()
+                        minSelections()
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: ImageKitInvalidDataException) {
+                            false
+                        }
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is SelectTags &&
+                            instruction == other.instruction &&
+                            type == other.type &&
+                            vocabulary == other.vocabulary &&
+                            maxSelections == other.maxSelections &&
+                            minSelections == other.minSelections &&
+                            additionalProperties == other.additionalProperties
+                    }
+
+                    private val hashCode: Int by lazy {
+                        Objects.hash(
+                            instruction,
+                            type,
+                            vocabulary,
+                            maxSelections,
+                            minSelections,
+                            additionalProperties,
+                        )
+                    }
+
+                    override fun hashCode(): Int = hashCode
+
+                    override fun toString() =
+                        "SelectTags{instruction=$instruction, type=$type, vocabulary=$vocabulary, maxSelections=$maxSelections, minSelections=$minSelections, additionalProperties=$additionalProperties}"
+                }
+
+                class SelectMetadata
+                private constructor(
+                    private val field: JsonField<String>,
+                    private val instruction: JsonField<String>,
+                    private val type: JsonValue,
+                    private val maxSelections: JsonField<Long>,
+                    private val minSelections: JsonField<Long>,
+                    private val vocabulary: JsonField<List<Vocabulary>>,
+                    private val additionalProperties: MutableMap<String, JsonValue>,
+                ) {
+
+                    /**
+                     * Name of the custom metadata field to set. The field must exist in your
+                     * account.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun field(): String = field.getRequired("field")
+
+                    /**
+                     * The question or instruction for the AI to analyze the image.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun instruction(): String = instruction.getRequired("instruction")
+
+                    /**
+                     * Task type that analyzes the image and sets a custom metadata field value from
+                     * a vocabulary.
+                     *
+                     * Expected to always return the following:
+                     * ```java
+                     * JsonValue.from("select_metadata")
+                     * ```
+                     *
+                     * However, this method can be useful for debugging and logging (e.g. if the
+                     * server responded with an unexpected value).
+                     */
+                    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+                    /**
+                     * Maximum number of values to select from the vocabulary.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun maxSelections(): Optional<Long> =
+                        maxSelections.getOptional("max_selections")
+
+                    /**
+                     * Minimum number of values to select from the vocabulary.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun minSelections(): Optional<Long> =
+                        minSelections.getOptional("min_selections")
+
+                    /**
+                     * Array of possible values matching the custom metadata field type.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun vocabulary(): Optional<List<Vocabulary>> =
+                        vocabulary.getOptional("vocabulary")
+
+                    /**
+                     * Returns the raw JSON value of [field].
+                     *
+                     * Unlike [field], this method doesn't throw if the JSON field has an unexpected
+                     * type.
+                     */
+                    @JsonProperty("field") @ExcludeMissing fun _field(): JsonField<String> = field
+
+                    /**
+                     * Returns the raw JSON value of [instruction].
+                     *
+                     * Unlike [instruction], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("instruction")
+                    @ExcludeMissing
+                    fun _instruction(): JsonField<String> = instruction
+
+                    /**
+                     * Returns the raw JSON value of [maxSelections].
+                     *
+                     * Unlike [maxSelections], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("max_selections")
+                    @ExcludeMissing
+                    fun _maxSelections(): JsonField<Long> = maxSelections
+
+                    /**
+                     * Returns the raw JSON value of [minSelections].
+                     *
+                     * Unlike [minSelections], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("min_selections")
+                    @ExcludeMissing
+                    fun _minSelections(): JsonField<Long> = minSelections
+
+                    /**
+                     * Returns the raw JSON value of [vocabulary].
+                     *
+                     * Unlike [vocabulary], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("vocabulary")
+                    @ExcludeMissing
+                    fun _vocabulary(): JsonField<List<Vocabulary>> = vocabulary
+
+                    @JsonAnySetter
+                    private fun putAdditionalProperty(key: String, value: JsonValue) {
+                        additionalProperties.put(key, value)
+                    }
+
+                    @JsonAnyGetter
+                    @ExcludeMissing
+                    fun _additionalProperties(): Map<String, JsonValue> =
+                        Collections.unmodifiableMap(additionalProperties)
+
+                    fun toBuilder() = Builder().from(this)
+
+                    companion object {
+
+                        /**
+                         * Returns a mutable builder for constructing an instance of
+                         * [SelectMetadata].
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .field()
+                         * .instruction()
+                         * ```
+                         */
+                        @JvmStatic fun builder() = Builder()
+                    }
+
+                    /** A builder for [SelectMetadata]. */
+                    class Builder internal constructor() {
+
+                        private var field: JsonField<String>? = null
+                        private var instruction: JsonField<String>? = null
+                        private var type: JsonValue = JsonValue.from("select_metadata")
+                        private var maxSelections: JsonField<Long> = JsonMissing.of()
+                        private var minSelections: JsonField<Long> = JsonMissing.of()
+                        private var vocabulary: JsonField<MutableList<Vocabulary>>? = null
+                        private var additionalProperties: MutableMap<String, JsonValue> =
+                            mutableMapOf()
+
+                        @JvmSynthetic
+                        internal fun from(selectMetadata: SelectMetadata) = apply {
+                            field = selectMetadata.field
+                            instruction = selectMetadata.instruction
+                            type = selectMetadata.type
+                            maxSelections = selectMetadata.maxSelections
+                            minSelections = selectMetadata.minSelections
+                            vocabulary = selectMetadata.vocabulary.map { it.toMutableList() }
+                            additionalProperties =
+                                selectMetadata.additionalProperties.toMutableMap()
+                        }
+
+                        /**
+                         * Name of the custom metadata field to set. The field must exist in your
+                         * account.
+                         */
+                        fun field(field: String) = field(JsonField.of(field))
+
+                        /**
+                         * Sets [Builder.field] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.field] with a well-typed [String] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun field(field: JsonField<String>) = apply { this.field = field }
+
+                        /** The question or instruction for the AI to analyze the image. */
+                        fun instruction(instruction: String) =
+                            instruction(JsonField.of(instruction))
+
+                        /**
+                         * Sets [Builder.instruction] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.instruction] with a well-typed [String]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun instruction(instruction: JsonField<String>) = apply {
+                            this.instruction = instruction
+                        }
+
+                        /**
+                         * Sets the field to an arbitrary JSON value.
+                         *
+                         * It is usually unnecessary to call this method because the field defaults
+                         * to the following:
+                         * ```java
+                         * JsonValue.from("select_metadata")
+                         * ```
+                         *
+                         * This method is primarily for setting the field to an undocumented or not
+                         * yet supported value.
+                         */
+                        fun type(type: JsonValue) = apply { this.type = type }
+
+                        /** Maximum number of values to select from the vocabulary. */
+                        fun maxSelections(maxSelections: Long) =
+                            maxSelections(JsonField.of(maxSelections))
+
+                        /**
+                         * Sets [Builder.maxSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.maxSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun maxSelections(maxSelections: JsonField<Long>) = apply {
+                            this.maxSelections = maxSelections
+                        }
+
+                        /** Minimum number of values to select from the vocabulary. */
+                        fun minSelections(minSelections: Long) =
+                            minSelections(JsonField.of(minSelections))
+
+                        /**
+                         * Sets [Builder.minSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.minSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun minSelections(minSelections: JsonField<Long>) = apply {
+                            this.minSelections = minSelections
+                        }
+
+                        /** Array of possible values matching the custom metadata field type. */
+                        fun vocabulary(vocabulary: List<Vocabulary>) =
+                            vocabulary(JsonField.of(vocabulary))
+
+                        /**
+                         * Sets [Builder.vocabulary] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.vocabulary] with a well-typed
+                         * `List<Vocabulary>` value instead. This method is primarily for setting
+                         * the field to an undocumented or not yet supported value.
+                         */
+                        fun vocabulary(vocabulary: JsonField<List<Vocabulary>>) = apply {
+                            this.vocabulary = vocabulary.map { it.toMutableList() }
+                        }
+
+                        /**
+                         * Adds a single [Vocabulary] to [Builder.vocabulary].
+                         *
+                         * @throws IllegalStateException if the field was previously set to a
+                         *   non-list.
+                         */
+                        fun addVocabulary(vocabulary: Vocabulary) = apply {
+                            this.vocabulary =
+                                (this.vocabulary ?: JsonField.of(mutableListOf())).also {
+                                    checkKnown("vocabulary", it).add(vocabulary)
+                                }
+                        }
+
+                        /** Alias for calling [addVocabulary] with `Vocabulary.ofString(string)`. */
+                        fun addVocabulary(string: String) =
+                            addVocabulary(Vocabulary.ofString(string))
+
+                        /** Alias for calling [addVocabulary] with `Vocabulary.ofNumber(number)`. */
+                        fun addVocabulary(number: Double) =
+                            addVocabulary(Vocabulary.ofNumber(number))
+
+                        /** Alias for calling [addVocabulary] with `Vocabulary.ofBool(bool)`. */
+                        fun addVocabulary(bool: Boolean) = addVocabulary(Vocabulary.ofBool(bool))
+
+                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                            apply {
+                                this.additionalProperties.clear()
+                                putAllAdditionalProperties(additionalProperties)
+                            }
+
+                        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                            additionalProperties.put(key, value)
+                        }
+
+                        fun putAllAdditionalProperties(
+                            additionalProperties: Map<String, JsonValue>
+                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                        fun removeAdditionalProperty(key: String) = apply {
+                            additionalProperties.remove(key)
+                        }
+
+                        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
+
+                        /**
+                         * Returns an immutable instance of [SelectMetadata].
+                         *
+                         * Further updates to this [Builder] will not mutate the returned instance.
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .field()
+                         * .instruction()
+                         * ```
+                         *
+                         * @throws IllegalStateException if any required field is unset.
+                         */
+                        fun build(): SelectMetadata =
+                            SelectMetadata(
+                                checkRequired("field", field),
+                                checkRequired("instruction", instruction),
+                                type,
+                                maxSelections,
+                                minSelections,
+                                (vocabulary ?: JsonMissing.of()).map { it.toImmutable() },
+                                additionalProperties.toMutableMap(),
+                            )
+                    }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): SelectMetadata = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        field()
+                        instruction()
+                        _type().let {
+                            if (it != JsonValue.from("select_metadata")) {
+                                throw ImageKitInvalidDataException(
+                                    "'type' is invalid, received $it"
+                                )
+                            }
+                        }
+                        maxSelections()
+                        minSelections()
+                        vocabulary().ifPresent { it.forEach { it.validate() } }
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: ImageKitInvalidDataException) {
+                            false
+                        }
+
+                    @JsonSerialize(using = Vocabulary.Serializer::class)
+                    class Vocabulary
+                    private constructor(
+                        private val string: String? = null,
+                        private val number: Double? = null,
+                        private val bool: Boolean? = null,
+                        private val _json: JsonValue? = null,
+                    ) {
+
+                        fun string(): Optional<String> = Optional.ofNullable(string)
+
+                        fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                        fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                        fun isString(): Boolean = string != null
+
+                        fun isNumber(): Boolean = number != null
+
+                        fun isBool(): Boolean = bool != null
+
+                        fun asString(): String = string.getOrThrow("string")
+
+                        fun asNumber(): Double = number.getOrThrow("number")
+
+                        fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                        fun <T> accept(visitor: Visitor<T>): T =
+                            when {
+                                string != null -> visitor.visitString(string)
+                                number != null -> visitor.visitNumber(number)
+                                bool != null -> visitor.visitBool(bool)
+                                else -> visitor.unknown(_json)
+                            }
+
+                        private var validated: Boolean = false
+
+                        fun validate(): Vocabulary = apply {
+                            if (validated) {
+                                return@apply
+                            }
+
+                            accept(
+                                object : Visitor<Unit> {
+                                    override fun visitString(string: String) {}
+
+                                    override fun visitNumber(number: Double) {}
+
+                                    override fun visitBool(bool: Boolean) {}
+                                }
+                            )
+                            validated = true
+                        }
+
+                        fun isValid(): Boolean =
+                            try {
+                                validate()
+                                true
+                            } catch (e: ImageKitInvalidDataException) {
+                                false
+                            }
+
+                        override fun equals(other: Any?): Boolean {
+                            if (this === other) {
+                                return true
+                            }
+
+                            return other is Vocabulary &&
+                                string == other.string &&
+                                number == other.number &&
+                                bool == other.bool
+                        }
+
+                        override fun hashCode(): Int = Objects.hash(string, number, bool)
+
+                        override fun toString(): String =
+                            when {
+                                string != null -> "Vocabulary{string=$string}"
+                                number != null -> "Vocabulary{number=$number}"
+                                bool != null -> "Vocabulary{bool=$bool}"
+                                _json != null -> "Vocabulary{_unknown=$_json}"
+                                else -> throw IllegalStateException("Invalid Vocabulary")
+                            }
+
+                        companion object {
+
+                            @JvmStatic fun ofString(string: String) = Vocabulary(string = string)
+
+                            @JvmStatic fun ofNumber(number: Double) = Vocabulary(number = number)
+
+                            @JvmStatic fun ofBool(bool: Boolean) = Vocabulary(bool = bool)
+                        }
+
+                        /**
+                         * An interface that defines how to map each variant of [Vocabulary] to a
+                         * value of type [T].
+                         */
+                        interface Visitor<out T> {
+
+                            fun visitString(string: String): T
+
+                            fun visitNumber(number: Double): T
+
+                            fun visitBool(bool: Boolean): T
+
+                            /**
+                             * Maps an unknown variant of [Vocabulary] to a value of type [T].
+                             *
+                             * An instance of [Vocabulary] can contain an unknown variant if it was
+                             * deserialized from data that doesn't match any known variant. For
+                             * example, if the SDK is on an older version than the API, then the API
+                             * may respond with new variants that the SDK is unaware of.
+                             *
+                             * @throws ImageKitInvalidDataException in the default implementation.
+                             */
+                            fun unknown(json: JsonValue?): T {
+                                throw ImageKitInvalidDataException("Unknown Vocabulary: $json")
+                            }
+                        }
+
+                        internal class Serializer : BaseSerializer<Vocabulary>(Vocabulary::class) {
+
+                            override fun serialize(
+                                value: Vocabulary,
+                                generator: JsonGenerator,
+                                provider: SerializerProvider,
+                            ) {
+                                when {
+                                    value.string != null -> generator.writeObject(value.string)
+                                    value.number != null -> generator.writeObject(value.number)
+                                    value.bool != null -> generator.writeObject(value.bool)
+                                    value._json != null -> generator.writeObject(value._json)
+                                    else -> throw IllegalStateException("Invalid Vocabulary")
+                                }
+                            }
+                        }
+                    }
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is SelectMetadata &&
+                            field == other.field &&
+                            instruction == other.instruction &&
+                            type == other.type &&
+                            maxSelections == other.maxSelections &&
+                            minSelections == other.minSelections &&
+                            vocabulary == other.vocabulary &&
+                            additionalProperties == other.additionalProperties
+                    }
+
+                    private val hashCode: Int by lazy {
+                        Objects.hash(
+                            field,
+                            instruction,
+                            type,
+                            maxSelections,
+                            minSelections,
+                            vocabulary,
+                            additionalProperties,
+                        )
+                    }
+
+                    override fun hashCode(): Int = hashCode
+
+                    override fun toString() =
+                        "SelectMetadata{field=$field, instruction=$instruction, type=$type, maxSelections=$maxSelections, minSelections=$minSelections, vocabulary=$vocabulary, additionalProperties=$additionalProperties}"
+                }
+
+                class YesNo
+                private constructor(
+                    private val instruction: JsonField<String>,
+                    private val type: JsonValue,
+                    private val onNo: JsonField<OnNo>,
+                    private val onUnknown: JsonField<OnUnknown>,
+                    private val onYes: JsonField<OnYes>,
+                    private val additionalProperties: MutableMap<String, JsonValue>,
+                ) {
+
+                    /**
+                     * The yes/no question for the AI to answer about the image.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   or is unexpectedly missing or null (e.g. if the server responded with an
+                     *   unexpected value).
+                     */
+                    fun instruction(): String = instruction.getRequired("instruction")
+
+                    /**
+                     * Task type that asks a yes/no question and executes actions based on the
+                     * answer.
+                     *
+                     * Expected to always return the following:
+                     * ```java
+                     * JsonValue.from("yes_no")
+                     * ```
+                     *
+                     * However, this method can be useful for debugging and logging (e.g. if the
+                     * server responded with an unexpected value).
+                     */
+                    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+                    /**
+                     * Actions to execute if the AI answers no.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun onNo(): Optional<OnNo> = onNo.getOptional("on_no")
+
+                    /**
+                     * Actions to execute if the AI cannot determine the answer.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun onUnknown(): Optional<OnUnknown> = onUnknown.getOptional("on_unknown")
+
+                    /**
+                     * Actions to execute if the AI answers yes.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun onYes(): Optional<OnYes> = onYes.getOptional("on_yes")
+
+                    /**
+                     * Returns the raw JSON value of [instruction].
+                     *
+                     * Unlike [instruction], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("instruction")
+                    @ExcludeMissing
+                    fun _instruction(): JsonField<String> = instruction
+
+                    /**
+                     * Returns the raw JSON value of [onNo].
+                     *
+                     * Unlike [onNo], this method doesn't throw if the JSON field has an unexpected
+                     * type.
+                     */
+                    @JsonProperty("on_no") @ExcludeMissing fun _onNo(): JsonField<OnNo> = onNo
+
+                    /**
+                     * Returns the raw JSON value of [onUnknown].
+                     *
+                     * Unlike [onUnknown], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("on_unknown")
+                    @ExcludeMissing
+                    fun _onUnknown(): JsonField<OnUnknown> = onUnknown
+
+                    /**
+                     * Returns the raw JSON value of [onYes].
+                     *
+                     * Unlike [onYes], this method doesn't throw if the JSON field has an unexpected
+                     * type.
+                     */
+                    @JsonProperty("on_yes") @ExcludeMissing fun _onYes(): JsonField<OnYes> = onYes
+
+                    @JsonAnySetter
+                    private fun putAdditionalProperty(key: String, value: JsonValue) {
+                        additionalProperties.put(key, value)
+                    }
+
+                    @JsonAnyGetter
+                    @ExcludeMissing
+                    fun _additionalProperties(): Map<String, JsonValue> =
+                        Collections.unmodifiableMap(additionalProperties)
+
+                    fun toBuilder() = Builder().from(this)
+
+                    companion object {
+
+                        /**
+                         * Returns a mutable builder for constructing an instance of [YesNo].
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .instruction()
+                         * ```
+                         */
+                        @JvmStatic fun builder() = Builder()
+                    }
+
+                    /** A builder for [YesNo]. */
+                    class Builder internal constructor() {
+
+                        private var instruction: JsonField<String>? = null
+                        private var type: JsonValue = JsonValue.from("yes_no")
+                        private var onNo: JsonField<OnNo> = JsonMissing.of()
+                        private var onUnknown: JsonField<OnUnknown> = JsonMissing.of()
+                        private var onYes: JsonField<OnYes> = JsonMissing.of()
+                        private var additionalProperties: MutableMap<String, JsonValue> =
+                            mutableMapOf()
+
+                        @JvmSynthetic
+                        internal fun from(yesNo: YesNo) = apply {
+                            instruction = yesNo.instruction
+                            type = yesNo.type
+                            onNo = yesNo.onNo
+                            onUnknown = yesNo.onUnknown
+                            onYes = yesNo.onYes
+                            additionalProperties = yesNo.additionalProperties.toMutableMap()
+                        }
+
+                        /** The yes/no question for the AI to answer about the image. */
+                        fun instruction(instruction: String) =
+                            instruction(JsonField.of(instruction))
+
+                        /**
+                         * Sets [Builder.instruction] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.instruction] with a well-typed [String]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun instruction(instruction: JsonField<String>) = apply {
+                            this.instruction = instruction
+                        }
+
+                        /**
+                         * Sets the field to an arbitrary JSON value.
+                         *
+                         * It is usually unnecessary to call this method because the field defaults
+                         * to the following:
+                         * ```java
+                         * JsonValue.from("yes_no")
+                         * ```
+                         *
+                         * This method is primarily for setting the field to an undocumented or not
+                         * yet supported value.
+                         */
+                        fun type(type: JsonValue) = apply { this.type = type }
+
+                        /** Actions to execute if the AI answers no. */
+                        fun onNo(onNo: OnNo) = onNo(JsonField.of(onNo))
+
+                        /**
+                         * Sets [Builder.onNo] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.onNo] with a well-typed [OnNo] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun onNo(onNo: JsonField<OnNo>) = apply { this.onNo = onNo }
+
+                        /** Actions to execute if the AI cannot determine the answer. */
+                        fun onUnknown(onUnknown: OnUnknown) = onUnknown(JsonField.of(onUnknown))
+
+                        /**
+                         * Sets [Builder.onUnknown] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.onUnknown] with a well-typed [OnUnknown]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun onUnknown(onUnknown: JsonField<OnUnknown>) = apply {
+                            this.onUnknown = onUnknown
+                        }
+
+                        /** Actions to execute if the AI answers yes. */
+                        fun onYes(onYes: OnYes) = onYes(JsonField.of(onYes))
+
+                        /**
+                         * Sets [Builder.onYes] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.onYes] with a well-typed [OnYes] value
+                         * instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun onYes(onYes: JsonField<OnYes>) = apply { this.onYes = onYes }
+
+                        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                            apply {
+                                this.additionalProperties.clear()
+                                putAllAdditionalProperties(additionalProperties)
+                            }
+
+                        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                            additionalProperties.put(key, value)
+                        }
+
+                        fun putAllAdditionalProperties(
+                            additionalProperties: Map<String, JsonValue>
+                        ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                        fun removeAdditionalProperty(key: String) = apply {
+                            additionalProperties.remove(key)
+                        }
+
+                        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                            keys.forEach(::removeAdditionalProperty)
+                        }
+
+                        /**
+                         * Returns an immutable instance of [YesNo].
+                         *
+                         * Further updates to this [Builder] will not mutate the returned instance.
+                         *
+                         * The following fields are required:
+                         * ```java
+                         * .instruction()
+                         * ```
+                         *
+                         * @throws IllegalStateException if any required field is unset.
+                         */
+                        fun build(): YesNo =
+                            YesNo(
+                                checkRequired("instruction", instruction),
+                                type,
+                                onNo,
+                                onUnknown,
+                                onYes,
+                                additionalProperties.toMutableMap(),
+                            )
+                    }
+
+                    private var validated: Boolean = false
+
+                    fun validate(): YesNo = apply {
+                        if (validated) {
+                            return@apply
+                        }
+
+                        instruction()
+                        _type().let {
+                            if (it != JsonValue.from("yes_no")) {
+                                throw ImageKitInvalidDataException(
+                                    "'type' is invalid, received $it"
+                                )
+                            }
+                        }
+                        onNo().ifPresent { it.validate() }
+                        onUnknown().ifPresent { it.validate() }
+                        onYes().ifPresent { it.validate() }
+                        validated = true
+                    }
+
+                    fun isValid(): Boolean =
+                        try {
+                            validate()
+                            true
+                        } catch (e: ImageKitInvalidDataException) {
+                            false
+                        }
+
+                    /** Actions to execute if the AI answers no. */
+                    class OnNo
+                    private constructor(
+                        private val addTags: JsonField<List<String>>,
+                        private val removeTags: JsonField<List<String>>,
+                        private val setMetadata: JsonField<List<SetMetadata>>,
+                        private val unsetMetadata: JsonField<List<UnsetMetadata>>,
+                        private val additionalProperties: MutableMap<String, JsonValue>,
+                    ) {
+
+                        /**
+                         * Array of tag strings to add to the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun addTags(): Optional<List<String>> = addTags.getOptional("add_tags")
+
+                        /**
+                         * Array of tag strings to remove from the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun removeTags(): Optional<List<String>> =
+                            removeTags.getOptional("remove_tags")
+
+                        /**
+                         * Array of custom metadata field updates.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun setMetadata(): Optional<List<SetMetadata>> =
+                            setMetadata.getOptional("set_metadata")
+
+                        /**
+                         * Array of custom metadata fields to remove.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun unsetMetadata(): Optional<List<UnsetMetadata>> =
+                            unsetMetadata.getOptional("unset_metadata")
+
+                        /**
+                         * Returns the raw JSON value of [addTags].
+                         *
+                         * Unlike [addTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("add_tags")
+                        @ExcludeMissing
+                        fun _addTags(): JsonField<List<String>> = addTags
+
+                        /**
+                         * Returns the raw JSON value of [removeTags].
+                         *
+                         * Unlike [removeTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("remove_tags")
+                        @ExcludeMissing
+                        fun _removeTags(): JsonField<List<String>> = removeTags
+
+                        /**
+                         * Returns the raw JSON value of [setMetadata].
+                         *
+                         * Unlike [setMetadata], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("set_metadata")
+                        @ExcludeMissing
+                        fun _setMetadata(): JsonField<List<SetMetadata>> = setMetadata
+
+                        /**
+                         * Returns the raw JSON value of [unsetMetadata].
+                         *
+                         * Unlike [unsetMetadata], this method doesn't throw if the JSON field has
+                         * an unexpected type.
+                         */
+                        @JsonProperty("unset_metadata")
+                        @ExcludeMissing
+                        fun _unsetMetadata(): JsonField<List<UnsetMetadata>> = unsetMetadata
+
+                        @JsonAnySetter
+                        private fun putAdditionalProperty(key: String, value: JsonValue) {
+                            additionalProperties.put(key, value)
+                        }
+
+                        @JsonAnyGetter
+                        @ExcludeMissing
+                        fun _additionalProperties(): Map<String, JsonValue> =
+                            Collections.unmodifiableMap(additionalProperties)
+
+                        fun toBuilder() = Builder().from(this)
+
+                        companion object {
+
+                            /** Returns a mutable builder for constructing an instance of [OnNo]. */
+                            @JvmStatic fun builder() = Builder()
+                        }
+
+                        /** A builder for [OnNo]. */
+                        class Builder internal constructor() {
+
+                            private var addTags: JsonField<MutableList<String>>? = null
+                            private var removeTags: JsonField<MutableList<String>>? = null
+                            private var setMetadata: JsonField<MutableList<SetMetadata>>? = null
+                            private var unsetMetadata: JsonField<MutableList<UnsetMetadata>>? = null
+                            private var additionalProperties: MutableMap<String, JsonValue> =
+                                mutableMapOf()
+
+                            @JvmSynthetic
+                            internal fun from(onNo: OnNo) = apply {
+                                addTags = onNo.addTags.map { it.toMutableList() }
+                                removeTags = onNo.removeTags.map { it.toMutableList() }
+                                setMetadata = onNo.setMetadata.map { it.toMutableList() }
+                                unsetMetadata = onNo.unsetMetadata.map { it.toMutableList() }
+                                additionalProperties = onNo.additionalProperties.toMutableMap()
+                            }
+
+                            /** Array of tag strings to add to the asset. */
+                            fun addTags(addTags: List<String>) = addTags(JsonField.of(addTags))
+
+                            /**
+                             * Sets [Builder.addTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.addTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun addTags(addTags: JsonField<List<String>>) = apply {
+                                this.addTags = addTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [addTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addAddTag(addTag: String) = apply {
+                                addTags =
+                                    (addTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("addTags", it).add(addTag)
+                                    }
+                            }
+
+                            /** Array of tag strings to remove from the asset. */
+                            fun removeTags(removeTags: List<String>) =
+                                removeTags(JsonField.of(removeTags))
+
+                            /**
+                             * Sets [Builder.removeTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.removeTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun removeTags(removeTags: JsonField<List<String>>) = apply {
+                                this.removeTags = removeTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [removeTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addRemoveTag(removeTag: String) = apply {
+                                removeTags =
+                                    (removeTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("removeTags", it).add(removeTag)
+                                    }
+                            }
+
+                            /** Array of custom metadata field updates. */
+                            fun setMetadata(setMetadata: List<SetMetadata>) =
+                                setMetadata(JsonField.of(setMetadata))
+
+                            /**
+                             * Sets [Builder.setMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.setMetadata] with a well-typed
+                             * `List<SetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun setMetadata(setMetadata: JsonField<List<SetMetadata>>) = apply {
+                                this.setMetadata = setMetadata.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [SetMetadata] to [Builder.setMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addSetMetadata(setMetadata: SetMetadata) = apply {
+                                this.setMetadata =
+                                    (this.setMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("setMetadata", it).add(setMetadata)
+                                    }
+                            }
+
+                            /** Array of custom metadata fields to remove. */
+                            fun unsetMetadata(unsetMetadata: List<UnsetMetadata>) =
+                                unsetMetadata(JsonField.of(unsetMetadata))
+
+                            /**
+                             * Sets [Builder.unsetMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.unsetMetadata] with a well-typed
+                             * `List<UnsetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun unsetMetadata(unsetMetadata: JsonField<List<UnsetMetadata>>) =
+                                apply {
+                                    this.unsetMetadata = unsetMetadata.map { it.toMutableList() }
+                                }
+
+                            /**
+                             * Adds a single [UnsetMetadata] to [Builder.unsetMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addUnsetMetadata(unsetMetadata: UnsetMetadata) = apply {
+                                this.unsetMetadata =
+                                    (this.unsetMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("unsetMetadata", it).add(unsetMetadata)
+                                    }
+                            }
+
+                            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                                apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                additionalProperties.put(key, value)
+                            }
+
+                            fun putAllAdditionalProperties(
+                                additionalProperties: Map<String, JsonValue>
+                            ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                            fun removeAdditionalProperty(key: String) = apply {
+                                additionalProperties.remove(key)
+                            }
+
+                            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                keys.forEach(::removeAdditionalProperty)
+                            }
+
+                            /**
+                             * Returns an immutable instance of [OnNo].
+                             *
+                             * Further updates to this [Builder] will not mutate the returned
+                             * instance.
+                             */
+                            fun build(): OnNo =
+                                OnNo(
+                                    (addTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (removeTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (setMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (unsetMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    additionalProperties.toMutableMap(),
+                                )
+                        }
+
+                        private var validated: Boolean = false
+
+                        fun validate(): OnNo = apply {
+                            if (validated) {
+                                return@apply
+                            }
+
+                            addTags()
+                            removeTags()
+                            setMetadata().ifPresent { it.forEach { it.validate() } }
+                            unsetMetadata().ifPresent { it.forEach { it.validate() } }
+                            validated = true
+                        }
+
+                        fun isValid(): Boolean =
+                            try {
+                                validate()
+                                true
+                            } catch (e: ImageKitInvalidDataException) {
+                                false
+                            }
+
+                        class SetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val value: JsonField<Value>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to set.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun value(): Value = value.getRequired("value")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            /**
+                             * Returns the raw JSON value of [value].
+                             *
+                             * Unlike [value], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("value")
+                            @ExcludeMissing
+                            fun _value(): JsonField<Value> = value
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [SetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [SetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var value: JsonField<Value>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(setMetadata: SetMetadata) = apply {
+                                    field = setMetadata.field
+                                    value = setMetadata.value
+                                    additionalProperties =
+                                        setMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to set. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                /**
+                                 * Value to set for the custom metadata field. The value type should
+                                 * match the custom metadata field type.
+                                 */
+                                fun value(value: Value) = value(JsonField.of(value))
+
+                                /**
+                                 * Sets [Builder.value] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.value] with a well-typed [Value]
+                                 * value instead. This method is primarily for setting the field to
+                                 * an undocumented or not yet supported value.
+                                 */
+                                fun value(value: JsonField<Value>) = apply { this.value = value }
+
+                                /** Alias for calling [value] with `Value.ofString(string)`. */
+                                fun value(string: String) = value(Value.ofString(string))
+
+                                /** Alias for calling [value] with `Value.ofNumber(number)`. */
+                                fun value(number: Double) = value(Value.ofNumber(number))
+
+                                /** Alias for calling [value] with `Value.ofBool(bool)`. */
+                                fun value(bool: Boolean) = value(Value.ofBool(bool))
+
+                                /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
+                                fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent5>) =
+                                    value(Value.ofMixed(mixed))
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [SetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): SetMetadata =
+                                    SetMetadata(
+                                        checkRequired("field", field),
+                                        checkRequired("value", value),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): SetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                value().validate()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             */
+                            @JsonSerialize(using = Value.Serializer::class)
+                            class Value
+                            private constructor(
+                                private val string: String? = null,
+                                private val number: Double? = null,
+                                private val bool: Boolean? = null,
+                                private val mixed: List<UnnamedSchemaWithArrayParent5>? = null,
+                                private val _json: JsonValue? = null,
+                            ) {
+
+                                fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                fun mixed(): Optional<List<UnnamedSchemaWithArrayParent5>> =
+                                    Optional.ofNullable(mixed)
+
+                                fun isString(): Boolean = string != null
+
+                                fun isNumber(): Boolean = number != null
+
+                                fun isBool(): Boolean = bool != null
+
+                                fun isMixed(): Boolean = mixed != null
+
+                                fun asString(): String = string.getOrThrow("string")
+
+                                fun asNumber(): Double = number.getOrThrow("number")
+
+                                fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                fun asMixed(): List<UnnamedSchemaWithArrayParent5> =
+                                    mixed.getOrThrow("mixed")
+
+                                fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                fun <T> accept(visitor: Visitor<T>): T =
+                                    when {
+                                        string != null -> visitor.visitString(string)
+                                        number != null -> visitor.visitNumber(number)
+                                        bool != null -> visitor.visitBool(bool)
+                                        mixed != null -> visitor.visitMixed(mixed)
+                                        else -> visitor.unknown(_json)
+                                    }
+
+                                private var validated: Boolean = false
+
+                                fun validate(): Value = apply {
+                                    if (validated) {
+                                        return@apply
+                                    }
+
+                                    accept(
+                                        object : Visitor<Unit> {
+                                            override fun visitString(string: String) {}
+
+                                            override fun visitNumber(number: Double) {}
+
+                                            override fun visitBool(bool: Boolean) {}
+
+                                            override fun visitMixed(
+                                                mixed: List<UnnamedSchemaWithArrayParent5>
+                                            ) {
+                                                mixed.forEach { it.validate() }
+                                            }
+                                        }
+                                    )
+                                    validated = true
+                                }
+
+                                fun isValid(): Boolean =
+                                    try {
+                                        validate()
+                                        true
+                                    } catch (e: ImageKitInvalidDataException) {
+                                        false
+                                    }
+
+                                override fun equals(other: Any?): Boolean {
+                                    if (this === other) {
+                                        return true
+                                    }
+
+                                    return other is Value &&
+                                        string == other.string &&
+                                        number == other.number &&
+                                        bool == other.bool &&
+                                        mixed == other.mixed
+                                }
+
+                                override fun hashCode(): Int =
+                                    Objects.hash(string, number, bool, mixed)
+
+                                override fun toString(): String =
+                                    when {
+                                        string != null -> "Value{string=$string}"
+                                        number != null -> "Value{number=$number}"
+                                        bool != null -> "Value{bool=$bool}"
+                                        mixed != null -> "Value{mixed=$mixed}"
+                                        _json != null -> "Value{_unknown=$_json}"
+                                        else -> throw IllegalStateException("Invalid Value")
+                                    }
+
+                                companion object {
+
+                                    @JvmStatic fun ofString(string: String) = Value(string = string)
+
+                                    @JvmStatic fun ofNumber(number: Double) = Value(number = number)
+
+                                    @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
+
+                                    @JvmStatic
+                                    fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent5>) =
+                                        Value(mixed = mixed.toImmutable())
+                                }
+
+                                /**
+                                 * An interface that defines how to map each variant of [Value] to a
+                                 * value of type [T].
+                                 */
+                                interface Visitor<out T> {
+
+                                    fun visitString(string: String): T
+
+                                    fun visitNumber(number: Double): T
+
+                                    fun visitBool(bool: Boolean): T
+
+                                    fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent5>): T
+
+                                    /**
+                                     * Maps an unknown variant of [Value] to a value of type [T].
+                                     *
+                                     * An instance of [Value] can contain an unknown variant if it
+                                     * was deserialized from data that doesn't match any known
+                                     * variant. For example, if the SDK is on an older version than
+                                     * the API, then the API may respond with new variants that the
+                                     * SDK is unaware of.
+                                     *
+                                     * @throws ImageKitInvalidDataException in the default
+                                     *   implementation.
+                                     */
+                                    fun unknown(json: JsonValue?): T {
+                                        throw ImageKitInvalidDataException("Unknown Value: $json")
+                                    }
+                                }
+
+                                internal class Serializer : BaseSerializer<Value>(Value::class) {
+
+                                    override fun serialize(
+                                        value: Value,
+                                        generator: JsonGenerator,
+                                        provider: SerializerProvider,
+                                    ) {
+                                        when {
+                                            value.string != null ->
+                                                generator.writeObject(value.string)
+                                            value.number != null ->
+                                                generator.writeObject(value.number)
+                                            value.bool != null -> generator.writeObject(value.bool)
+                                            value.mixed != null ->
+                                                generator.writeObject(value.mixed)
+                                            value._json != null ->
+                                                generator.writeObject(value._json)
+                                            else -> throw IllegalStateException("Invalid Value")
+                                        }
+                                    }
+                                }
+
+                                @JsonSerialize(
+                                    using = UnnamedSchemaWithArrayParent5.Serializer::class
+                                )
+                                class UnnamedSchemaWithArrayParent5
+                                private constructor(
+                                    private val string: String? = null,
+                                    private val number: Double? = null,
+                                    private val bool: Boolean? = null,
+                                    private val _json: JsonValue? = null,
+                                ) {
+
+                                    fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                    fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                    fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                    fun isString(): Boolean = string != null
+
+                                    fun isNumber(): Boolean = number != null
+
+                                    fun isBool(): Boolean = bool != null
+
+                                    fun asString(): String = string.getOrThrow("string")
+
+                                    fun asNumber(): Double = number.getOrThrow("number")
+
+                                    fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                    fun <T> accept(visitor: Visitor<T>): T =
+                                        when {
+                                            string != null -> visitor.visitString(string)
+                                            number != null -> visitor.visitNumber(number)
+                                            bool != null -> visitor.visitBool(bool)
+                                            else -> visitor.unknown(_json)
+                                        }
+
+                                    private var validated: Boolean = false
+
+                                    fun validate(): UnnamedSchemaWithArrayParent5 = apply {
+                                        if (validated) {
+                                            return@apply
+                                        }
+
+                                        accept(
+                                            object : Visitor<Unit> {
+                                                override fun visitString(string: String) {}
+
+                                                override fun visitNumber(number: Double) {}
+
+                                                override fun visitBool(bool: Boolean) {}
+                                            }
+                                        )
+                                        validated = true
+                                    }
+
+                                    fun isValid(): Boolean =
+                                        try {
+                                            validate()
+                                            true
+                                        } catch (e: ImageKitInvalidDataException) {
+                                            false
+                                        }
+
+                                    override fun equals(other: Any?): Boolean {
+                                        if (this === other) {
+                                            return true
+                                        }
+
+                                        return other is UnnamedSchemaWithArrayParent5 &&
+                                            string == other.string &&
+                                            number == other.number &&
+                                            bool == other.bool
+                                    }
+
+                                    override fun hashCode(): Int =
+                                        Objects.hash(string, number, bool)
+
+                                    override fun toString(): String =
+                                        when {
+                                            string != null ->
+                                                "UnnamedSchemaWithArrayParent5{string=$string}"
+                                            number != null ->
+                                                "UnnamedSchemaWithArrayParent5{number=$number}"
+                                            bool != null ->
+                                                "UnnamedSchemaWithArrayParent5{bool=$bool}"
+                                            _json != null ->
+                                                "UnnamedSchemaWithArrayParent5{_unknown=$_json}"
+                                            else ->
+                                                throw IllegalStateException(
+                                                    "Invalid UnnamedSchemaWithArrayParent5"
+                                                )
+                                        }
+
+                                    companion object {
+
+                                        @JvmStatic
+                                        fun ofString(string: String) =
+                                            UnnamedSchemaWithArrayParent5(string = string)
+
+                                        @JvmStatic
+                                        fun ofNumber(number: Double) =
+                                            UnnamedSchemaWithArrayParent5(number = number)
+
+                                        @JvmStatic
+                                        fun ofBool(bool: Boolean) =
+                                            UnnamedSchemaWithArrayParent5(bool = bool)
+                                    }
+
+                                    /**
+                                     * An interface that defines how to map each variant of
+                                     * [UnnamedSchemaWithArrayParent5] to a value of type [T].
+                                     */
+                                    interface Visitor<out T> {
+
+                                        fun visitString(string: String): T
+
+                                        fun visitNumber(number: Double): T
+
+                                        fun visitBool(bool: Boolean): T
+
+                                        /**
+                                         * Maps an unknown variant of
+                                         * [UnnamedSchemaWithArrayParent5] to a value of type [T].
+                                         *
+                                         * An instance of [UnnamedSchemaWithArrayParent5] can
+                                         * contain an unknown variant if it was deserialized from
+                                         * data that doesn't match any known variant. For example,
+                                         * if the SDK is on an older version than the API, then the
+                                         * API may respond with new variants that the SDK is unaware
+                                         * of.
+                                         *
+                                         * @throws ImageKitInvalidDataException in the default
+                                         *   implementation.
+                                         */
+                                        fun unknown(json: JsonValue?): T {
+                                            throw ImageKitInvalidDataException(
+                                                "Unknown UnnamedSchemaWithArrayParent5: $json"
+                                            )
+                                        }
+                                    }
+
+                                    internal class Serializer :
+                                        BaseSerializer<UnnamedSchemaWithArrayParent5>(
+                                            UnnamedSchemaWithArrayParent5::class
+                                        ) {
+
+                                        override fun serialize(
+                                            value: UnnamedSchemaWithArrayParent5,
+                                            generator: JsonGenerator,
+                                            provider: SerializerProvider,
+                                        ) {
+                                            when {
+                                                value.string != null ->
+                                                    generator.writeObject(value.string)
+                                                value.number != null ->
+                                                    generator.writeObject(value.number)
+                                                value.bool != null ->
+                                                    generator.writeObject(value.bool)
+                                                value._json != null ->
+                                                    generator.writeObject(value._json)
+                                                else ->
+                                                    throw IllegalStateException(
+                                                        "Invalid UnnamedSchemaWithArrayParent5"
+                                                    )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is SetMetadata &&
+                                    field == other.field &&
+                                    value == other.value &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, value, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "SetMetadata{field=$field, value=$value, additionalProperties=$additionalProperties}"
+                        }
+
+                        class UnsetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to remove.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [UnsetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [UnsetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(unsetMetadata: UnsetMetadata) = apply {
+                                    field = unsetMetadata.field
+                                    additionalProperties =
+                                        unsetMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to remove. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [UnsetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): UnsetMetadata =
+                                    UnsetMetadata(
+                                        checkRequired("field", field),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): UnsetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is UnsetMetadata &&
+                                    field == other.field &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "UnsetMetadata{field=$field, additionalProperties=$additionalProperties}"
+                        }
+
+                        override fun equals(other: Any?): Boolean {
+                            if (this === other) {
+                                return true
+                            }
+
+                            return other is OnNo &&
+                                addTags == other.addTags &&
+                                removeTags == other.removeTags &&
+                                setMetadata == other.setMetadata &&
+                                unsetMetadata == other.unsetMetadata &&
+                                additionalProperties == other.additionalProperties
+                        }
+
+                        private val hashCode: Int by lazy {
+                            Objects.hash(
+                                addTags,
+                                removeTags,
+                                setMetadata,
+                                unsetMetadata,
+                                additionalProperties,
+                            )
+                        }
+
+                        override fun hashCode(): Int = hashCode
+
+                        override fun toString() =
+                            "OnNo{addTags=$addTags, removeTags=$removeTags, setMetadata=$setMetadata, unsetMetadata=$unsetMetadata, additionalProperties=$additionalProperties}"
+                    }
+
+                    /** Actions to execute if the AI cannot determine the answer. */
+                    class OnUnknown
+                    private constructor(
+                        private val addTags: JsonField<List<String>>,
+                        private val removeTags: JsonField<List<String>>,
+                        private val setMetadata: JsonField<List<SetMetadata>>,
+                        private val unsetMetadata: JsonField<List<UnsetMetadata>>,
+                        private val additionalProperties: MutableMap<String, JsonValue>,
+                    ) {
+
+                        /**
+                         * Array of tag strings to add to the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun addTags(): Optional<List<String>> = addTags.getOptional("add_tags")
+
+                        /**
+                         * Array of tag strings to remove from the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun removeTags(): Optional<List<String>> =
+                            removeTags.getOptional("remove_tags")
+
+                        /**
+                         * Array of custom metadata field updates.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun setMetadata(): Optional<List<SetMetadata>> =
+                            setMetadata.getOptional("set_metadata")
+
+                        /**
+                         * Array of custom metadata fields to remove.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun unsetMetadata(): Optional<List<UnsetMetadata>> =
+                            unsetMetadata.getOptional("unset_metadata")
+
+                        /**
+                         * Returns the raw JSON value of [addTags].
+                         *
+                         * Unlike [addTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("add_tags")
+                        @ExcludeMissing
+                        fun _addTags(): JsonField<List<String>> = addTags
+
+                        /**
+                         * Returns the raw JSON value of [removeTags].
+                         *
+                         * Unlike [removeTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("remove_tags")
+                        @ExcludeMissing
+                        fun _removeTags(): JsonField<List<String>> = removeTags
+
+                        /**
+                         * Returns the raw JSON value of [setMetadata].
+                         *
+                         * Unlike [setMetadata], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("set_metadata")
+                        @ExcludeMissing
+                        fun _setMetadata(): JsonField<List<SetMetadata>> = setMetadata
+
+                        /**
+                         * Returns the raw JSON value of [unsetMetadata].
+                         *
+                         * Unlike [unsetMetadata], this method doesn't throw if the JSON field has
+                         * an unexpected type.
+                         */
+                        @JsonProperty("unset_metadata")
+                        @ExcludeMissing
+                        fun _unsetMetadata(): JsonField<List<UnsetMetadata>> = unsetMetadata
+
+                        @JsonAnySetter
+                        private fun putAdditionalProperty(key: String, value: JsonValue) {
+                            additionalProperties.put(key, value)
+                        }
+
+                        @JsonAnyGetter
+                        @ExcludeMissing
+                        fun _additionalProperties(): Map<String, JsonValue> =
+                            Collections.unmodifiableMap(additionalProperties)
+
+                        fun toBuilder() = Builder().from(this)
+
+                        companion object {
+
+                            /**
+                             * Returns a mutable builder for constructing an instance of
+                             * [OnUnknown].
+                             */
+                            @JvmStatic fun builder() = Builder()
+                        }
+
+                        /** A builder for [OnUnknown]. */
+                        class Builder internal constructor() {
+
+                            private var addTags: JsonField<MutableList<String>>? = null
+                            private var removeTags: JsonField<MutableList<String>>? = null
+                            private var setMetadata: JsonField<MutableList<SetMetadata>>? = null
+                            private var unsetMetadata: JsonField<MutableList<UnsetMetadata>>? = null
+                            private var additionalProperties: MutableMap<String, JsonValue> =
+                                mutableMapOf()
+
+                            @JvmSynthetic
+                            internal fun from(onUnknown: OnUnknown) = apply {
+                                addTags = onUnknown.addTags.map { it.toMutableList() }
+                                removeTags = onUnknown.removeTags.map { it.toMutableList() }
+                                setMetadata = onUnknown.setMetadata.map { it.toMutableList() }
+                                unsetMetadata = onUnknown.unsetMetadata.map { it.toMutableList() }
+                                additionalProperties = onUnknown.additionalProperties.toMutableMap()
+                            }
+
+                            /** Array of tag strings to add to the asset. */
+                            fun addTags(addTags: List<String>) = addTags(JsonField.of(addTags))
+
+                            /**
+                             * Sets [Builder.addTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.addTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun addTags(addTags: JsonField<List<String>>) = apply {
+                                this.addTags = addTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [addTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addAddTag(addTag: String) = apply {
+                                addTags =
+                                    (addTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("addTags", it).add(addTag)
+                                    }
+                            }
+
+                            /** Array of tag strings to remove from the asset. */
+                            fun removeTags(removeTags: List<String>) =
+                                removeTags(JsonField.of(removeTags))
+
+                            /**
+                             * Sets [Builder.removeTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.removeTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun removeTags(removeTags: JsonField<List<String>>) = apply {
+                                this.removeTags = removeTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [removeTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addRemoveTag(removeTag: String) = apply {
+                                removeTags =
+                                    (removeTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("removeTags", it).add(removeTag)
+                                    }
+                            }
+
+                            /** Array of custom metadata field updates. */
+                            fun setMetadata(setMetadata: List<SetMetadata>) =
+                                setMetadata(JsonField.of(setMetadata))
+
+                            /**
+                             * Sets [Builder.setMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.setMetadata] with a well-typed
+                             * `List<SetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun setMetadata(setMetadata: JsonField<List<SetMetadata>>) = apply {
+                                this.setMetadata = setMetadata.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [SetMetadata] to [Builder.setMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addSetMetadata(setMetadata: SetMetadata) = apply {
+                                this.setMetadata =
+                                    (this.setMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("setMetadata", it).add(setMetadata)
+                                    }
+                            }
+
+                            /** Array of custom metadata fields to remove. */
+                            fun unsetMetadata(unsetMetadata: List<UnsetMetadata>) =
+                                unsetMetadata(JsonField.of(unsetMetadata))
+
+                            /**
+                             * Sets [Builder.unsetMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.unsetMetadata] with a well-typed
+                             * `List<UnsetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun unsetMetadata(unsetMetadata: JsonField<List<UnsetMetadata>>) =
+                                apply {
+                                    this.unsetMetadata = unsetMetadata.map { it.toMutableList() }
+                                }
+
+                            /**
+                             * Adds a single [UnsetMetadata] to [Builder.unsetMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addUnsetMetadata(unsetMetadata: UnsetMetadata) = apply {
+                                this.unsetMetadata =
+                                    (this.unsetMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("unsetMetadata", it).add(unsetMetadata)
+                                    }
+                            }
+
+                            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                                apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                additionalProperties.put(key, value)
+                            }
+
+                            fun putAllAdditionalProperties(
+                                additionalProperties: Map<String, JsonValue>
+                            ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                            fun removeAdditionalProperty(key: String) = apply {
+                                additionalProperties.remove(key)
+                            }
+
+                            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                keys.forEach(::removeAdditionalProperty)
+                            }
+
+                            /**
+                             * Returns an immutable instance of [OnUnknown].
+                             *
+                             * Further updates to this [Builder] will not mutate the returned
+                             * instance.
+                             */
+                            fun build(): OnUnknown =
+                                OnUnknown(
+                                    (addTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (removeTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (setMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (unsetMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    additionalProperties.toMutableMap(),
+                                )
+                        }
+
+                        private var validated: Boolean = false
+
+                        fun validate(): OnUnknown = apply {
+                            if (validated) {
+                                return@apply
+                            }
+
+                            addTags()
+                            removeTags()
+                            setMetadata().ifPresent { it.forEach { it.validate() } }
+                            unsetMetadata().ifPresent { it.forEach { it.validate() } }
+                            validated = true
+                        }
+
+                        fun isValid(): Boolean =
+                            try {
+                                validate()
+                                true
+                            } catch (e: ImageKitInvalidDataException) {
+                                false
+                            }
+
+                        class SetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val value: JsonField<Value>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to set.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun value(): Value = value.getRequired("value")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            /**
+                             * Returns the raw JSON value of [value].
+                             *
+                             * Unlike [value], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("value")
+                            @ExcludeMissing
+                            fun _value(): JsonField<Value> = value
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [SetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [SetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var value: JsonField<Value>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(setMetadata: SetMetadata) = apply {
+                                    field = setMetadata.field
+                                    value = setMetadata.value
+                                    additionalProperties =
+                                        setMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to set. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                /**
+                                 * Value to set for the custom metadata field. The value type should
+                                 * match the custom metadata field type.
+                                 */
+                                fun value(value: Value) = value(JsonField.of(value))
+
+                                /**
+                                 * Sets [Builder.value] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.value] with a well-typed [Value]
+                                 * value instead. This method is primarily for setting the field to
+                                 * an undocumented or not yet supported value.
+                                 */
+                                fun value(value: JsonField<Value>) = apply { this.value = value }
+
+                                /** Alias for calling [value] with `Value.ofString(string)`. */
+                                fun value(string: String) = value(Value.ofString(string))
+
+                                /** Alias for calling [value] with `Value.ofNumber(number)`. */
+                                fun value(number: Double) = value(Value.ofNumber(number))
+
+                                /** Alias for calling [value] with `Value.ofBool(bool)`. */
+                                fun value(bool: Boolean) = value(Value.ofBool(bool))
+
+                                /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
+                                fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent6>) =
+                                    value(Value.ofMixed(mixed))
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [SetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): SetMetadata =
+                                    SetMetadata(
+                                        checkRequired("field", field),
+                                        checkRequired("value", value),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): SetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                value().validate()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             */
+                            @JsonSerialize(using = Value.Serializer::class)
+                            class Value
+                            private constructor(
+                                private val string: String? = null,
+                                private val number: Double? = null,
+                                private val bool: Boolean? = null,
+                                private val mixed: List<UnnamedSchemaWithArrayParent6>? = null,
+                                private val _json: JsonValue? = null,
+                            ) {
+
+                                fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                fun mixed(): Optional<List<UnnamedSchemaWithArrayParent6>> =
+                                    Optional.ofNullable(mixed)
+
+                                fun isString(): Boolean = string != null
+
+                                fun isNumber(): Boolean = number != null
+
+                                fun isBool(): Boolean = bool != null
+
+                                fun isMixed(): Boolean = mixed != null
+
+                                fun asString(): String = string.getOrThrow("string")
+
+                                fun asNumber(): Double = number.getOrThrow("number")
+
+                                fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                fun asMixed(): List<UnnamedSchemaWithArrayParent6> =
+                                    mixed.getOrThrow("mixed")
+
+                                fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                fun <T> accept(visitor: Visitor<T>): T =
+                                    when {
+                                        string != null -> visitor.visitString(string)
+                                        number != null -> visitor.visitNumber(number)
+                                        bool != null -> visitor.visitBool(bool)
+                                        mixed != null -> visitor.visitMixed(mixed)
+                                        else -> visitor.unknown(_json)
+                                    }
+
+                                private var validated: Boolean = false
+
+                                fun validate(): Value = apply {
+                                    if (validated) {
+                                        return@apply
+                                    }
+
+                                    accept(
+                                        object : Visitor<Unit> {
+                                            override fun visitString(string: String) {}
+
+                                            override fun visitNumber(number: Double) {}
+
+                                            override fun visitBool(bool: Boolean) {}
+
+                                            override fun visitMixed(
+                                                mixed: List<UnnamedSchemaWithArrayParent6>
+                                            ) {
+                                                mixed.forEach { it.validate() }
+                                            }
+                                        }
+                                    )
+                                    validated = true
+                                }
+
+                                fun isValid(): Boolean =
+                                    try {
+                                        validate()
+                                        true
+                                    } catch (e: ImageKitInvalidDataException) {
+                                        false
+                                    }
+
+                                override fun equals(other: Any?): Boolean {
+                                    if (this === other) {
+                                        return true
+                                    }
+
+                                    return other is Value &&
+                                        string == other.string &&
+                                        number == other.number &&
+                                        bool == other.bool &&
+                                        mixed == other.mixed
+                                }
+
+                                override fun hashCode(): Int =
+                                    Objects.hash(string, number, bool, mixed)
+
+                                override fun toString(): String =
+                                    when {
+                                        string != null -> "Value{string=$string}"
+                                        number != null -> "Value{number=$number}"
+                                        bool != null -> "Value{bool=$bool}"
+                                        mixed != null -> "Value{mixed=$mixed}"
+                                        _json != null -> "Value{_unknown=$_json}"
+                                        else -> throw IllegalStateException("Invalid Value")
+                                    }
+
+                                companion object {
+
+                                    @JvmStatic fun ofString(string: String) = Value(string = string)
+
+                                    @JvmStatic fun ofNumber(number: Double) = Value(number = number)
+
+                                    @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
+
+                                    @JvmStatic
+                                    fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent6>) =
+                                        Value(mixed = mixed.toImmutable())
+                                }
+
+                                /**
+                                 * An interface that defines how to map each variant of [Value] to a
+                                 * value of type [T].
+                                 */
+                                interface Visitor<out T> {
+
+                                    fun visitString(string: String): T
+
+                                    fun visitNumber(number: Double): T
+
+                                    fun visitBool(bool: Boolean): T
+
+                                    fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent6>): T
+
+                                    /**
+                                     * Maps an unknown variant of [Value] to a value of type [T].
+                                     *
+                                     * An instance of [Value] can contain an unknown variant if it
+                                     * was deserialized from data that doesn't match any known
+                                     * variant. For example, if the SDK is on an older version than
+                                     * the API, then the API may respond with new variants that the
+                                     * SDK is unaware of.
+                                     *
+                                     * @throws ImageKitInvalidDataException in the default
+                                     *   implementation.
+                                     */
+                                    fun unknown(json: JsonValue?): T {
+                                        throw ImageKitInvalidDataException("Unknown Value: $json")
+                                    }
+                                }
+
+                                internal class Serializer : BaseSerializer<Value>(Value::class) {
+
+                                    override fun serialize(
+                                        value: Value,
+                                        generator: JsonGenerator,
+                                        provider: SerializerProvider,
+                                    ) {
+                                        when {
+                                            value.string != null ->
+                                                generator.writeObject(value.string)
+                                            value.number != null ->
+                                                generator.writeObject(value.number)
+                                            value.bool != null -> generator.writeObject(value.bool)
+                                            value.mixed != null ->
+                                                generator.writeObject(value.mixed)
+                                            value._json != null ->
+                                                generator.writeObject(value._json)
+                                            else -> throw IllegalStateException("Invalid Value")
+                                        }
+                                    }
+                                }
+
+                                @JsonSerialize(
+                                    using = UnnamedSchemaWithArrayParent6.Serializer::class
+                                )
+                                class UnnamedSchemaWithArrayParent6
+                                private constructor(
+                                    private val string: String? = null,
+                                    private val number: Double? = null,
+                                    private val bool: Boolean? = null,
+                                    private val _json: JsonValue? = null,
+                                ) {
+
+                                    fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                    fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                    fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                    fun isString(): Boolean = string != null
+
+                                    fun isNumber(): Boolean = number != null
+
+                                    fun isBool(): Boolean = bool != null
+
+                                    fun asString(): String = string.getOrThrow("string")
+
+                                    fun asNumber(): Double = number.getOrThrow("number")
+
+                                    fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                    fun <T> accept(visitor: Visitor<T>): T =
+                                        when {
+                                            string != null -> visitor.visitString(string)
+                                            number != null -> visitor.visitNumber(number)
+                                            bool != null -> visitor.visitBool(bool)
+                                            else -> visitor.unknown(_json)
+                                        }
+
+                                    private var validated: Boolean = false
+
+                                    fun validate(): UnnamedSchemaWithArrayParent6 = apply {
+                                        if (validated) {
+                                            return@apply
+                                        }
+
+                                        accept(
+                                            object : Visitor<Unit> {
+                                                override fun visitString(string: String) {}
+
+                                                override fun visitNumber(number: Double) {}
+
+                                                override fun visitBool(bool: Boolean) {}
+                                            }
+                                        )
+                                        validated = true
+                                    }
+
+                                    fun isValid(): Boolean =
+                                        try {
+                                            validate()
+                                            true
+                                        } catch (e: ImageKitInvalidDataException) {
+                                            false
+                                        }
+
+                                    override fun equals(other: Any?): Boolean {
+                                        if (this === other) {
+                                            return true
+                                        }
+
+                                        return other is UnnamedSchemaWithArrayParent6 &&
+                                            string == other.string &&
+                                            number == other.number &&
+                                            bool == other.bool
+                                    }
+
+                                    override fun hashCode(): Int =
+                                        Objects.hash(string, number, bool)
+
+                                    override fun toString(): String =
+                                        when {
+                                            string != null ->
+                                                "UnnamedSchemaWithArrayParent6{string=$string}"
+                                            number != null ->
+                                                "UnnamedSchemaWithArrayParent6{number=$number}"
+                                            bool != null ->
+                                                "UnnamedSchemaWithArrayParent6{bool=$bool}"
+                                            _json != null ->
+                                                "UnnamedSchemaWithArrayParent6{_unknown=$_json}"
+                                            else ->
+                                                throw IllegalStateException(
+                                                    "Invalid UnnamedSchemaWithArrayParent6"
+                                                )
+                                        }
+
+                                    companion object {
+
+                                        @JvmStatic
+                                        fun ofString(string: String) =
+                                            UnnamedSchemaWithArrayParent6(string = string)
+
+                                        @JvmStatic
+                                        fun ofNumber(number: Double) =
+                                            UnnamedSchemaWithArrayParent6(number = number)
+
+                                        @JvmStatic
+                                        fun ofBool(bool: Boolean) =
+                                            UnnamedSchemaWithArrayParent6(bool = bool)
+                                    }
+
+                                    /**
+                                     * An interface that defines how to map each variant of
+                                     * [UnnamedSchemaWithArrayParent6] to a value of type [T].
+                                     */
+                                    interface Visitor<out T> {
+
+                                        fun visitString(string: String): T
+
+                                        fun visitNumber(number: Double): T
+
+                                        fun visitBool(bool: Boolean): T
+
+                                        /**
+                                         * Maps an unknown variant of
+                                         * [UnnamedSchemaWithArrayParent6] to a value of type [T].
+                                         *
+                                         * An instance of [UnnamedSchemaWithArrayParent6] can
+                                         * contain an unknown variant if it was deserialized from
+                                         * data that doesn't match any known variant. For example,
+                                         * if the SDK is on an older version than the API, then the
+                                         * API may respond with new variants that the SDK is unaware
+                                         * of.
+                                         *
+                                         * @throws ImageKitInvalidDataException in the default
+                                         *   implementation.
+                                         */
+                                        fun unknown(json: JsonValue?): T {
+                                            throw ImageKitInvalidDataException(
+                                                "Unknown UnnamedSchemaWithArrayParent6: $json"
+                                            )
+                                        }
+                                    }
+
+                                    internal class Serializer :
+                                        BaseSerializer<UnnamedSchemaWithArrayParent6>(
+                                            UnnamedSchemaWithArrayParent6::class
+                                        ) {
+
+                                        override fun serialize(
+                                            value: UnnamedSchemaWithArrayParent6,
+                                            generator: JsonGenerator,
+                                            provider: SerializerProvider,
+                                        ) {
+                                            when {
+                                                value.string != null ->
+                                                    generator.writeObject(value.string)
+                                                value.number != null ->
+                                                    generator.writeObject(value.number)
+                                                value.bool != null ->
+                                                    generator.writeObject(value.bool)
+                                                value._json != null ->
+                                                    generator.writeObject(value._json)
+                                                else ->
+                                                    throw IllegalStateException(
+                                                        "Invalid UnnamedSchemaWithArrayParent6"
+                                                    )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is SetMetadata &&
+                                    field == other.field &&
+                                    value == other.value &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, value, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "SetMetadata{field=$field, value=$value, additionalProperties=$additionalProperties}"
+                        }
+
+                        class UnsetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to remove.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [UnsetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [UnsetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(unsetMetadata: UnsetMetadata) = apply {
+                                    field = unsetMetadata.field
+                                    additionalProperties =
+                                        unsetMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to remove. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [UnsetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): UnsetMetadata =
+                                    UnsetMetadata(
+                                        checkRequired("field", field),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): UnsetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is UnsetMetadata &&
+                                    field == other.field &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "UnsetMetadata{field=$field, additionalProperties=$additionalProperties}"
+                        }
+
+                        override fun equals(other: Any?): Boolean {
+                            if (this === other) {
+                                return true
+                            }
+
+                            return other is OnUnknown &&
+                                addTags == other.addTags &&
+                                removeTags == other.removeTags &&
+                                setMetadata == other.setMetadata &&
+                                unsetMetadata == other.unsetMetadata &&
+                                additionalProperties == other.additionalProperties
+                        }
+
+                        private val hashCode: Int by lazy {
+                            Objects.hash(
+                                addTags,
+                                removeTags,
+                                setMetadata,
+                                unsetMetadata,
+                                additionalProperties,
+                            )
+                        }
+
+                        override fun hashCode(): Int = hashCode
+
+                        override fun toString() =
+                            "OnUnknown{addTags=$addTags, removeTags=$removeTags, setMetadata=$setMetadata, unsetMetadata=$unsetMetadata, additionalProperties=$additionalProperties}"
+                    }
+
+                    /** Actions to execute if the AI answers yes. */
+                    class OnYes
+                    private constructor(
+                        private val addTags: JsonField<List<String>>,
+                        private val removeTags: JsonField<List<String>>,
+                        private val setMetadata: JsonField<List<SetMetadata>>,
+                        private val unsetMetadata: JsonField<List<UnsetMetadata>>,
+                        private val additionalProperties: MutableMap<String, JsonValue>,
+                    ) {
+
+                        /**
+                         * Array of tag strings to add to the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun addTags(): Optional<List<String>> = addTags.getOptional("add_tags")
+
+                        /**
+                         * Array of tag strings to remove from the asset.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun removeTags(): Optional<List<String>> =
+                            removeTags.getOptional("remove_tags")
+
+                        /**
+                         * Array of custom metadata field updates.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun setMetadata(): Optional<List<SetMetadata>> =
+                            setMetadata.getOptional("set_metadata")
+
+                        /**
+                         * Array of custom metadata fields to remove.
+                         *
+                         * @throws ImageKitInvalidDataException if the JSON field has an unexpected
+                         *   type (e.g. if the server responded with an unexpected value).
+                         */
+                        fun unsetMetadata(): Optional<List<UnsetMetadata>> =
+                            unsetMetadata.getOptional("unset_metadata")
+
+                        /**
+                         * Returns the raw JSON value of [addTags].
+                         *
+                         * Unlike [addTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("add_tags")
+                        @ExcludeMissing
+                        fun _addTags(): JsonField<List<String>> = addTags
+
+                        /**
+                         * Returns the raw JSON value of [removeTags].
+                         *
+                         * Unlike [removeTags], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("remove_tags")
+                        @ExcludeMissing
+                        fun _removeTags(): JsonField<List<String>> = removeTags
+
+                        /**
+                         * Returns the raw JSON value of [setMetadata].
+                         *
+                         * Unlike [setMetadata], this method doesn't throw if the JSON field has an
+                         * unexpected type.
+                         */
+                        @JsonProperty("set_metadata")
+                        @ExcludeMissing
+                        fun _setMetadata(): JsonField<List<SetMetadata>> = setMetadata
+
+                        /**
+                         * Returns the raw JSON value of [unsetMetadata].
+                         *
+                         * Unlike [unsetMetadata], this method doesn't throw if the JSON field has
+                         * an unexpected type.
+                         */
+                        @JsonProperty("unset_metadata")
+                        @ExcludeMissing
+                        fun _unsetMetadata(): JsonField<List<UnsetMetadata>> = unsetMetadata
+
+                        @JsonAnySetter
+                        private fun putAdditionalProperty(key: String, value: JsonValue) {
+                            additionalProperties.put(key, value)
+                        }
+
+                        @JsonAnyGetter
+                        @ExcludeMissing
+                        fun _additionalProperties(): Map<String, JsonValue> =
+                            Collections.unmodifiableMap(additionalProperties)
+
+                        fun toBuilder() = Builder().from(this)
+
+                        companion object {
+
+                            /**
+                             * Returns a mutable builder for constructing an instance of [OnYes].
+                             */
+                            @JvmStatic fun builder() = Builder()
+                        }
+
+                        /** A builder for [OnYes]. */
+                        class Builder internal constructor() {
+
+                            private var addTags: JsonField<MutableList<String>>? = null
+                            private var removeTags: JsonField<MutableList<String>>? = null
+                            private var setMetadata: JsonField<MutableList<SetMetadata>>? = null
+                            private var unsetMetadata: JsonField<MutableList<UnsetMetadata>>? = null
+                            private var additionalProperties: MutableMap<String, JsonValue> =
+                                mutableMapOf()
+
+                            @JvmSynthetic
+                            internal fun from(onYes: OnYes) = apply {
+                                addTags = onYes.addTags.map { it.toMutableList() }
+                                removeTags = onYes.removeTags.map { it.toMutableList() }
+                                setMetadata = onYes.setMetadata.map { it.toMutableList() }
+                                unsetMetadata = onYes.unsetMetadata.map { it.toMutableList() }
+                                additionalProperties = onYes.additionalProperties.toMutableMap()
+                            }
+
+                            /** Array of tag strings to add to the asset. */
+                            fun addTags(addTags: List<String>) = addTags(JsonField.of(addTags))
+
+                            /**
+                             * Sets [Builder.addTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.addTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun addTags(addTags: JsonField<List<String>>) = apply {
+                                this.addTags = addTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [addTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addAddTag(addTag: String) = apply {
+                                addTags =
+                                    (addTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("addTags", it).add(addTag)
+                                    }
+                            }
+
+                            /** Array of tag strings to remove from the asset. */
+                            fun removeTags(removeTags: List<String>) =
+                                removeTags(JsonField.of(removeTags))
+
+                            /**
+                             * Sets [Builder.removeTags] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.removeTags] with a well-typed
+                             * `List<String>` value instead. This method is primarily for setting
+                             * the field to an undocumented or not yet supported value.
+                             */
+                            fun removeTags(removeTags: JsonField<List<String>>) = apply {
+                                this.removeTags = removeTags.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [String] to [removeTags].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addRemoveTag(removeTag: String) = apply {
+                                removeTags =
+                                    (removeTags ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("removeTags", it).add(removeTag)
+                                    }
+                            }
+
+                            /** Array of custom metadata field updates. */
+                            fun setMetadata(setMetadata: List<SetMetadata>) =
+                                setMetadata(JsonField.of(setMetadata))
+
+                            /**
+                             * Sets [Builder.setMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.setMetadata] with a well-typed
+                             * `List<SetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun setMetadata(setMetadata: JsonField<List<SetMetadata>>) = apply {
+                                this.setMetadata = setMetadata.map { it.toMutableList() }
+                            }
+
+                            /**
+                             * Adds a single [SetMetadata] to [Builder.setMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addSetMetadata(setMetadata: SetMetadata) = apply {
+                                this.setMetadata =
+                                    (this.setMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("setMetadata", it).add(setMetadata)
+                                    }
+                            }
+
+                            /** Array of custom metadata fields to remove. */
+                            fun unsetMetadata(unsetMetadata: List<UnsetMetadata>) =
+                                unsetMetadata(JsonField.of(unsetMetadata))
+
+                            /**
+                             * Sets [Builder.unsetMetadata] to an arbitrary JSON value.
+                             *
+                             * You should usually call [Builder.unsetMetadata] with a well-typed
+                             * `List<UnsetMetadata>` value instead. This method is primarily for
+                             * setting the field to an undocumented or not yet supported value.
+                             */
+                            fun unsetMetadata(unsetMetadata: JsonField<List<UnsetMetadata>>) =
+                                apply {
+                                    this.unsetMetadata = unsetMetadata.map { it.toMutableList() }
+                                }
+
+                            /**
+                             * Adds a single [UnsetMetadata] to [Builder.unsetMetadata].
+                             *
+                             * @throws IllegalStateException if the field was previously set to a
+                             *   non-list.
+                             */
+                            fun addUnsetMetadata(unsetMetadata: UnsetMetadata) = apply {
+                                this.unsetMetadata =
+                                    (this.unsetMetadata ?: JsonField.of(mutableListOf())).also {
+                                        checkKnown("unsetMetadata", it).add(unsetMetadata)
+                                    }
+                            }
+
+                            fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+                                apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                additionalProperties.put(key, value)
+                            }
+
+                            fun putAllAdditionalProperties(
+                                additionalProperties: Map<String, JsonValue>
+                            ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                            fun removeAdditionalProperty(key: String) = apply {
+                                additionalProperties.remove(key)
+                            }
+
+                            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                keys.forEach(::removeAdditionalProperty)
+                            }
+
+                            /**
+                             * Returns an immutable instance of [OnYes].
+                             *
+                             * Further updates to this [Builder] will not mutate the returned
+                             * instance.
+                             */
+                            fun build(): OnYes =
+                                OnYes(
+                                    (addTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (removeTags ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (setMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    (unsetMetadata ?: JsonMissing.of()).map { it.toImmutable() },
+                                    additionalProperties.toMutableMap(),
+                                )
+                        }
+
+                        private var validated: Boolean = false
+
+                        fun validate(): OnYes = apply {
+                            if (validated) {
+                                return@apply
+                            }
+
+                            addTags()
+                            removeTags()
+                            setMetadata().ifPresent { it.forEach { it.validate() } }
+                            unsetMetadata().ifPresent { it.forEach { it.validate() } }
+                            validated = true
+                        }
+
+                        fun isValid(): Boolean =
+                            try {
+                                validate()
+                                true
+                            } catch (e: ImageKitInvalidDataException) {
+                                false
+                            }
+
+                        class SetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val value: JsonField<Value>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to set.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun value(): Value = value.getRequired("value")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            /**
+                             * Returns the raw JSON value of [value].
+                             *
+                             * Unlike [value], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("value")
+                            @ExcludeMissing
+                            fun _value(): JsonField<Value> = value
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [SetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [SetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var value: JsonField<Value>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(setMetadata: SetMetadata) = apply {
+                                    field = setMetadata.field
+                                    value = setMetadata.value
+                                    additionalProperties =
+                                        setMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to set. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                /**
+                                 * Value to set for the custom metadata field. The value type should
+                                 * match the custom metadata field type.
+                                 */
+                                fun value(value: Value) = value(JsonField.of(value))
+
+                                /**
+                                 * Sets [Builder.value] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.value] with a well-typed [Value]
+                                 * value instead. This method is primarily for setting the field to
+                                 * an undocumented or not yet supported value.
+                                 */
+                                fun value(value: JsonField<Value>) = apply { this.value = value }
+
+                                /** Alias for calling [value] with `Value.ofString(string)`. */
+                                fun value(string: String) = value(Value.ofString(string))
+
+                                /** Alias for calling [value] with `Value.ofNumber(number)`. */
+                                fun value(number: Double) = value(Value.ofNumber(number))
+
+                                /** Alias for calling [value] with `Value.ofBool(bool)`. */
+                                fun value(bool: Boolean) = value(Value.ofBool(bool))
+
+                                /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
+                                fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent7>) =
+                                    value(Value.ofMixed(mixed))
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [SetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * .value()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): SetMetadata =
+                                    SetMetadata(
+                                        checkRequired("field", field),
+                                        checkRequired("value", value),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): SetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                value().validate()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            /**
+                             * Value to set for the custom metadata field. The value type should
+                             * match the custom metadata field type.
+                             */
+                            @JsonSerialize(using = Value.Serializer::class)
+                            class Value
+                            private constructor(
+                                private val string: String? = null,
+                                private val number: Double? = null,
+                                private val bool: Boolean? = null,
+                                private val mixed: List<UnnamedSchemaWithArrayParent7>? = null,
+                                private val _json: JsonValue? = null,
+                            ) {
+
+                                fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                fun mixed(): Optional<List<UnnamedSchemaWithArrayParent7>> =
+                                    Optional.ofNullable(mixed)
+
+                                fun isString(): Boolean = string != null
+
+                                fun isNumber(): Boolean = number != null
+
+                                fun isBool(): Boolean = bool != null
+
+                                fun isMixed(): Boolean = mixed != null
+
+                                fun asString(): String = string.getOrThrow("string")
+
+                                fun asNumber(): Double = number.getOrThrow("number")
+
+                                fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                fun asMixed(): List<UnnamedSchemaWithArrayParent7> =
+                                    mixed.getOrThrow("mixed")
+
+                                fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                fun <T> accept(visitor: Visitor<T>): T =
+                                    when {
+                                        string != null -> visitor.visitString(string)
+                                        number != null -> visitor.visitNumber(number)
+                                        bool != null -> visitor.visitBool(bool)
+                                        mixed != null -> visitor.visitMixed(mixed)
+                                        else -> visitor.unknown(_json)
+                                    }
+
+                                private var validated: Boolean = false
+
+                                fun validate(): Value = apply {
+                                    if (validated) {
+                                        return@apply
+                                    }
+
+                                    accept(
+                                        object : Visitor<Unit> {
+                                            override fun visitString(string: String) {}
+
+                                            override fun visitNumber(number: Double) {}
+
+                                            override fun visitBool(bool: Boolean) {}
+
+                                            override fun visitMixed(
+                                                mixed: List<UnnamedSchemaWithArrayParent7>
+                                            ) {
+                                                mixed.forEach { it.validate() }
+                                            }
+                                        }
+                                    )
+                                    validated = true
+                                }
+
+                                fun isValid(): Boolean =
+                                    try {
+                                        validate()
+                                        true
+                                    } catch (e: ImageKitInvalidDataException) {
+                                        false
+                                    }
+
+                                override fun equals(other: Any?): Boolean {
+                                    if (this === other) {
+                                        return true
+                                    }
+
+                                    return other is Value &&
+                                        string == other.string &&
+                                        number == other.number &&
+                                        bool == other.bool &&
+                                        mixed == other.mixed
+                                }
+
+                                override fun hashCode(): Int =
+                                    Objects.hash(string, number, bool, mixed)
+
+                                override fun toString(): String =
+                                    when {
+                                        string != null -> "Value{string=$string}"
+                                        number != null -> "Value{number=$number}"
+                                        bool != null -> "Value{bool=$bool}"
+                                        mixed != null -> "Value{mixed=$mixed}"
+                                        _json != null -> "Value{_unknown=$_json}"
+                                        else -> throw IllegalStateException("Invalid Value")
+                                    }
+
+                                companion object {
+
+                                    @JvmStatic fun ofString(string: String) = Value(string = string)
+
+                                    @JvmStatic fun ofNumber(number: Double) = Value(number = number)
+
+                                    @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
+
+                                    @JvmStatic
+                                    fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent7>) =
+                                        Value(mixed = mixed.toImmutable())
+                                }
+
+                                /**
+                                 * An interface that defines how to map each variant of [Value] to a
+                                 * value of type [T].
+                                 */
+                                interface Visitor<out T> {
+
+                                    fun visitString(string: String): T
+
+                                    fun visitNumber(number: Double): T
+
+                                    fun visitBool(bool: Boolean): T
+
+                                    fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent7>): T
+
+                                    /**
+                                     * Maps an unknown variant of [Value] to a value of type [T].
+                                     *
+                                     * An instance of [Value] can contain an unknown variant if it
+                                     * was deserialized from data that doesn't match any known
+                                     * variant. For example, if the SDK is on an older version than
+                                     * the API, then the API may respond with new variants that the
+                                     * SDK is unaware of.
+                                     *
+                                     * @throws ImageKitInvalidDataException in the default
+                                     *   implementation.
+                                     */
+                                    fun unknown(json: JsonValue?): T {
+                                        throw ImageKitInvalidDataException("Unknown Value: $json")
+                                    }
+                                }
+
+                                internal class Serializer : BaseSerializer<Value>(Value::class) {
+
+                                    override fun serialize(
+                                        value: Value,
+                                        generator: JsonGenerator,
+                                        provider: SerializerProvider,
+                                    ) {
+                                        when {
+                                            value.string != null ->
+                                                generator.writeObject(value.string)
+                                            value.number != null ->
+                                                generator.writeObject(value.number)
+                                            value.bool != null -> generator.writeObject(value.bool)
+                                            value.mixed != null ->
+                                                generator.writeObject(value.mixed)
+                                            value._json != null ->
+                                                generator.writeObject(value._json)
+                                            else -> throw IllegalStateException("Invalid Value")
+                                        }
+                                    }
+                                }
+
+                                @JsonSerialize(
+                                    using = UnnamedSchemaWithArrayParent7.Serializer::class
+                                )
+                                class UnnamedSchemaWithArrayParent7
+                                private constructor(
+                                    private val string: String? = null,
+                                    private val number: Double? = null,
+                                    private val bool: Boolean? = null,
+                                    private val _json: JsonValue? = null,
+                                ) {
+
+                                    fun string(): Optional<String> = Optional.ofNullable(string)
+
+                                    fun number(): Optional<Double> = Optional.ofNullable(number)
+
+                                    fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
+
+                                    fun isString(): Boolean = string != null
+
+                                    fun isNumber(): Boolean = number != null
+
+                                    fun isBool(): Boolean = bool != null
+
+                                    fun asString(): String = string.getOrThrow("string")
+
+                                    fun asNumber(): Double = number.getOrThrow("number")
+
+                                    fun asBool(): Boolean = bool.getOrThrow("bool")
+
+                                    fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+                                    fun <T> accept(visitor: Visitor<T>): T =
+                                        when {
+                                            string != null -> visitor.visitString(string)
+                                            number != null -> visitor.visitNumber(number)
+                                            bool != null -> visitor.visitBool(bool)
+                                            else -> visitor.unknown(_json)
+                                        }
+
+                                    private var validated: Boolean = false
+
+                                    fun validate(): UnnamedSchemaWithArrayParent7 = apply {
+                                        if (validated) {
+                                            return@apply
+                                        }
+
+                                        accept(
+                                            object : Visitor<Unit> {
+                                                override fun visitString(string: String) {}
+
+                                                override fun visitNumber(number: Double) {}
+
+                                                override fun visitBool(bool: Boolean) {}
+                                            }
+                                        )
+                                        validated = true
+                                    }
+
+                                    fun isValid(): Boolean =
+                                        try {
+                                            validate()
+                                            true
+                                        } catch (e: ImageKitInvalidDataException) {
+                                            false
+                                        }
+
+                                    override fun equals(other: Any?): Boolean {
+                                        if (this === other) {
+                                            return true
+                                        }
+
+                                        return other is UnnamedSchemaWithArrayParent7 &&
+                                            string == other.string &&
+                                            number == other.number &&
+                                            bool == other.bool
+                                    }
+
+                                    override fun hashCode(): Int =
+                                        Objects.hash(string, number, bool)
+
+                                    override fun toString(): String =
+                                        when {
+                                            string != null ->
+                                                "UnnamedSchemaWithArrayParent7{string=$string}"
+                                            number != null ->
+                                                "UnnamedSchemaWithArrayParent7{number=$number}"
+                                            bool != null ->
+                                                "UnnamedSchemaWithArrayParent7{bool=$bool}"
+                                            _json != null ->
+                                                "UnnamedSchemaWithArrayParent7{_unknown=$_json}"
+                                            else ->
+                                                throw IllegalStateException(
+                                                    "Invalid UnnamedSchemaWithArrayParent7"
+                                                )
+                                        }
+
+                                    companion object {
+
+                                        @JvmStatic
+                                        fun ofString(string: String) =
+                                            UnnamedSchemaWithArrayParent7(string = string)
+
+                                        @JvmStatic
+                                        fun ofNumber(number: Double) =
+                                            UnnamedSchemaWithArrayParent7(number = number)
+
+                                        @JvmStatic
+                                        fun ofBool(bool: Boolean) =
+                                            UnnamedSchemaWithArrayParent7(bool = bool)
+                                    }
+
+                                    /**
+                                     * An interface that defines how to map each variant of
+                                     * [UnnamedSchemaWithArrayParent7] to a value of type [T].
+                                     */
+                                    interface Visitor<out T> {
+
+                                        fun visitString(string: String): T
+
+                                        fun visitNumber(number: Double): T
+
+                                        fun visitBool(bool: Boolean): T
+
+                                        /**
+                                         * Maps an unknown variant of
+                                         * [UnnamedSchemaWithArrayParent7] to a value of type [T].
+                                         *
+                                         * An instance of [UnnamedSchemaWithArrayParent7] can
+                                         * contain an unknown variant if it was deserialized from
+                                         * data that doesn't match any known variant. For example,
+                                         * if the SDK is on an older version than the API, then the
+                                         * API may respond with new variants that the SDK is unaware
+                                         * of.
+                                         *
+                                         * @throws ImageKitInvalidDataException in the default
+                                         *   implementation.
+                                         */
+                                        fun unknown(json: JsonValue?): T {
+                                            throw ImageKitInvalidDataException(
+                                                "Unknown UnnamedSchemaWithArrayParent7: $json"
+                                            )
+                                        }
+                                    }
+
+                                    internal class Serializer :
+                                        BaseSerializer<UnnamedSchemaWithArrayParent7>(
+                                            UnnamedSchemaWithArrayParent7::class
+                                        ) {
+
+                                        override fun serialize(
+                                            value: UnnamedSchemaWithArrayParent7,
+                                            generator: JsonGenerator,
+                                            provider: SerializerProvider,
+                                        ) {
+                                            when {
+                                                value.string != null ->
+                                                    generator.writeObject(value.string)
+                                                value.number != null ->
+                                                    generator.writeObject(value.number)
+                                                value.bool != null ->
+                                                    generator.writeObject(value.bool)
+                                                value._json != null ->
+                                                    generator.writeObject(value._json)
+                                                else ->
+                                                    throw IllegalStateException(
+                                                        "Invalid UnnamedSchemaWithArrayParent7"
+                                                    )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is SetMetadata &&
+                                    field == other.field &&
+                                    value == other.value &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, value, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "SetMetadata{field=$field, value=$value, additionalProperties=$additionalProperties}"
+                        }
+
+                        class UnsetMetadata
+                        private constructor(
+                            private val field: JsonField<String>,
+                            private val additionalProperties: MutableMap<String, JsonValue>,
+                        ) {
+
+                            /**
+                             * Name of the custom metadata field to remove.
+                             *
+                             * @throws ImageKitInvalidDataException if the JSON field has an
+                             *   unexpected type or is unexpectedly missing or null (e.g. if the
+                             *   server responded with an unexpected value).
+                             */
+                            fun field(): String = field.getRequired("field")
+
+                            /**
+                             * Returns the raw JSON value of [field].
+                             *
+                             * Unlike [field], this method doesn't throw if the JSON field has an
+                             * unexpected type.
+                             */
+                            @JsonProperty("field")
+                            @ExcludeMissing
+                            fun _field(): JsonField<String> = field
+
+                            @JsonAnySetter
+                            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                                additionalProperties.put(key, value)
+                            }
+
+                            @JsonAnyGetter
+                            @ExcludeMissing
+                            fun _additionalProperties(): Map<String, JsonValue> =
+                                Collections.unmodifiableMap(additionalProperties)
+
+                            fun toBuilder() = Builder().from(this)
+
+                            companion object {
+
+                                /**
+                                 * Returns a mutable builder for constructing an instance of
+                                 * [UnsetMetadata].
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 */
+                                @JvmStatic fun builder() = Builder()
+                            }
+
+                            /** A builder for [UnsetMetadata]. */
+                            class Builder internal constructor() {
+
+                                private var field: JsonField<String>? = null
+                                private var additionalProperties: MutableMap<String, JsonValue> =
+                                    mutableMapOf()
+
+                                @JvmSynthetic
+                                internal fun from(unsetMetadata: UnsetMetadata) = apply {
+                                    field = unsetMetadata.field
+                                    additionalProperties =
+                                        unsetMetadata.additionalProperties.toMutableMap()
+                                }
+
+                                /** Name of the custom metadata field to remove. */
+                                fun field(field: String) = field(JsonField.of(field))
+
+                                /**
+                                 * Sets [Builder.field] to an arbitrary JSON value.
+                                 *
+                                 * You should usually call [Builder.field] with a well-typed
+                                 * [String] value instead. This method is primarily for setting the
+                                 * field to an undocumented or not yet supported value.
+                                 */
+                                fun field(field: JsonField<String>) = apply { this.field = field }
+
+                                fun additionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply {
+                                    this.additionalProperties.clear()
+                                    putAllAdditionalProperties(additionalProperties)
+                                }
+
+                                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                                    additionalProperties.put(key, value)
+                                }
+
+                                fun putAllAdditionalProperties(
+                                    additionalProperties: Map<String, JsonValue>
+                                ) = apply { this.additionalProperties.putAll(additionalProperties) }
+
+                                fun removeAdditionalProperty(key: String) = apply {
+                                    additionalProperties.remove(key)
+                                }
+
+                                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                                    keys.forEach(::removeAdditionalProperty)
+                                }
+
+                                /**
+                                 * Returns an immutable instance of [UnsetMetadata].
+                                 *
+                                 * Further updates to this [Builder] will not mutate the returned
+                                 * instance.
+                                 *
+                                 * The following fields are required:
+                                 * ```java
+                                 * .field()
+                                 * ```
+                                 *
+                                 * @throws IllegalStateException if any required field is unset.
+                                 */
+                                fun build(): UnsetMetadata =
+                                    UnsetMetadata(
+                                        checkRequired("field", field),
+                                        additionalProperties.toMutableMap(),
+                                    )
+                            }
+
+                            private var validated: Boolean = false
+
+                            fun validate(): UnsetMetadata = apply {
+                                if (validated) {
+                                    return@apply
+                                }
+
+                                field()
+                                validated = true
+                            }
+
+                            fun isValid(): Boolean =
+                                try {
+                                    validate()
+                                    true
+                                } catch (e: ImageKitInvalidDataException) {
+                                    false
+                                }
+
+                            override fun equals(other: Any?): Boolean {
+                                if (this === other) {
+                                    return true
+                                }
+
+                                return other is UnsetMetadata &&
+                                    field == other.field &&
+                                    additionalProperties == other.additionalProperties
+                            }
+
+                            private val hashCode: Int by lazy {
+                                Objects.hash(field, additionalProperties)
+                            }
+
+                            override fun hashCode(): Int = hashCode
+
+                            override fun toString() =
+                                "UnsetMetadata{field=$field, additionalProperties=$additionalProperties}"
+                        }
+
+                        override fun equals(other: Any?): Boolean {
+                            if (this === other) {
+                                return true
+                            }
+
+                            return other is OnYes &&
+                                addTags == other.addTags &&
+                                removeTags == other.removeTags &&
+                                setMetadata == other.setMetadata &&
+                                unsetMetadata == other.unsetMetadata &&
+                                additionalProperties == other.additionalProperties
+                        }
+
+                        private val hashCode: Int by lazy {
+                            Objects.hash(
+                                addTags,
+                                removeTags,
+                                setMetadata,
+                                unsetMetadata,
+                                additionalProperties,
+                            )
+                        }
+
+                        override fun hashCode(): Int = hashCode
+
+                        override fun toString() =
+                            "OnYes{addTags=$addTags, removeTags=$removeTags, setMetadata=$setMetadata, unsetMetadata=$unsetMetadata, additionalProperties=$additionalProperties}"
+                    }
+
+                    override fun equals(other: Any?): Boolean {
+                        if (this === other) {
+                            return true
+                        }
+
+                        return other is YesNo &&
+                            instruction == other.instruction &&
+                            type == other.type &&
+                            onNo == other.onNo &&
+                            onUnknown == other.onUnknown &&
+                            onYes == other.onYes &&
+                            additionalProperties == other.additionalProperties
+                    }
+
+                    private val hashCode: Int by lazy {
+                        Objects.hash(
+                            instruction,
+                            type,
+                            onNo,
+                            onUnknown,
+                            onYes,
+                            additionalProperties,
+                        )
+                    }
+
+                    override fun hashCode(): Int = hashCode
+
+                    override fun toString() =
+                        "YesNo{instruction=$instruction, type=$type, onNo=$onNo, onUnknown=$onUnknown, onYes=$onYes, additionalProperties=$additionalProperties}"
+                }
+            }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is AiTasks &&
+                    name == other.name &&
+                    tasks == other.tasks &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(name, tasks, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "AiTasks{name=$name, tasks=$tasks, additionalProperties=$additionalProperties}"
+        }
+
+        class SavedExtension
+        private constructor(
+            private val id: JsonField<String>,
+            private val name: JsonValue,
+            private val additionalProperties: MutableMap<String, JsonValue>,
+        ) {
+
+            /**
+             * The unique ID of the saved extension to apply.
+             *
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
+             *   value).
+             */
+            fun id(): String = id.getRequired("id")
+
+            /**
+             * Indicates this is a reference to a saved extension.
+             *
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("saved-extension")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
+             */
+            @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
+
+            /**
+             * Returns the raw JSON value of [id].
+             *
+             * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
+            @JsonAnyGetter
+            @ExcludeMissing
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
+
+            fun toBuilder() = Builder().from(this)
+
+            companion object {
+
+                /**
+                 * Returns a mutable builder for constructing an instance of [SavedExtension].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * ```
+                 */
+                @JvmStatic fun builder() = Builder()
+            }
+
+            /** A builder for [SavedExtension]. */
+            class Builder internal constructor() {
+
+                private var id: JsonField<String>? = null
+                private var name: JsonValue = JsonValue.from("saved-extension")
+                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+                @JvmSynthetic
+                internal fun from(savedExtension: SavedExtension) = apply {
+                    id = savedExtension.id
+                    name = savedExtension.name
+                    additionalProperties = savedExtension.additionalProperties.toMutableMap()
+                }
+
+                /** The unique ID of the saved extension to apply. */
+                fun id(id: String) = id(JsonField.of(id))
+
+                /**
+                 * Sets [Builder.id] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.id] with a well-typed [String] value instead.
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun id(id: JsonField<String>) = apply { this.id = id }
+
+                /**
+                 * Sets the field to an arbitrary JSON value.
+                 *
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("saved-extension")
+                 * ```
+                 *
+                 * This method is primarily for setting the field to an undocumented or not yet
+                 * supported value.
+                 */
+                fun name(name: JsonValue) = apply { this.name = name }
+
+                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                    this.additionalProperties.clear()
+                    putAllAdditionalProperties(additionalProperties)
+                }
+
+                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                    additionalProperties.put(key, value)
+                }
+
+                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+                    apply {
+                        this.additionalProperties.putAll(additionalProperties)
+                    }
+
+                fun removeAdditionalProperty(key: String) = apply {
+                    additionalProperties.remove(key)
+                }
+
+                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                    keys.forEach(::removeAdditionalProperty)
+                }
+
+                /**
+                 * Returns an immutable instance of [SavedExtension].
+                 *
+                 * Further updates to this [Builder] will not mutate the returned instance.
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .id()
+                 * ```
+                 *
+                 * @throws IllegalStateException if any required field is unset.
+                 */
+                fun build(): SavedExtension =
+                    SavedExtension(
+                        checkRequired("id", id),
+                        name,
+                        additionalProperties.toMutableMap(),
+                    )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): SavedExtension = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                id()
+                _name().let {
+                    if (it != JsonValue.from("saved-extension")) {
+                        throw ImageKitInvalidDataException("'name' is invalid, received $it")
+                    }
+                }
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: ImageKitInvalidDataException) {
+                    false
+                }
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is SavedExtension &&
+                    id == other.id &&
+                    name == other.name &&
+                    additionalProperties == other.additionalProperties
+            }
+
+            private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
+
+            override fun hashCode(): Int = hashCode
+
+            override fun toString() =
+                "SavedExtension{id=$id, name=$name, additionalProperties=$additionalProperties}"
         }
     }
 

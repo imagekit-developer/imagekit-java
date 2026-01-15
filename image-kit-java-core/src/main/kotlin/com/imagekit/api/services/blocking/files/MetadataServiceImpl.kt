@@ -41,7 +41,7 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
         params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions,
     ): Metadata =
-        // get /v1/files/metadata
+        // get /v1/metadata
         withRawResponse().getFromUrl(params, requestOptions).parse()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -97,7 +97,7 @@ class MetadataServiceImpl internal constructor(private val clientOptions: Client
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files", "metadata")
+                    .addPathSegments("v1", "metadata")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

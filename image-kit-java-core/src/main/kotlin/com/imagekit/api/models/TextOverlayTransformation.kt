@@ -107,7 +107,8 @@ private constructor(
     fun background(): Optional<String> = background.getOptional("background")
 
     /**
-     * Flip the text overlay horizontally, vertically, or both.
+     * Flip/mirror the text horizontally, vertically, or in both directions. Acceptable values: `h`
+     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -153,10 +154,8 @@ private constructor(
     fun innerAlignment(): Optional<InnerAlignment> = innerAlignment.getOptional("innerAlignment")
 
     /**
-     * Specifies the line height of the text overlay. Accepts integer values representing line
-     * height in points. It can also accept
-     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
-     * such as `bw_mul_0.2`, or `bh_div_20`.
+     * Specifies the line height for multi-line text overlays. It will come into effect only if the
+     * text wraps over multiple lines. Accepts either an integer value or an arithmetic expression.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -174,8 +173,12 @@ private constructor(
     fun padding(): Optional<Padding> = padding.getOptional("padding")
 
     /**
-     * Specifies the corner radius of the text overlay. Set to `max` to achieve a circular or oval
-     * shape.
+     * Specifies the corner radius:
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -391,7 +394,10 @@ private constructor(
          */
         fun background(background: JsonField<String>) = apply { this.background = background }
 
-        /** Flip the text overlay horizontally, vertically, or both. */
+        /**
+         * Flip/mirror the text horizontally, vertically, or in both directions. Acceptable values:
+         * `h` (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+         */
         fun flip(flip: Flip) = flip(JsonField.of(flip))
 
         /**
@@ -472,10 +478,9 @@ private constructor(
         }
 
         /**
-         * Specifies the line height of the text overlay. Accepts integer values representing line
-         * height in points. It can also accept
-         * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
-         * such as `bw_mul_0.2`, or `bh_div_20`.
+         * Specifies the line height for multi-line text overlays. It will come into effect only if
+         * the text wraps over multiple lines. Accepts either an integer value or an arithmetic
+         * expression.
          */
         fun lineHeight(lineHeight: LineHeight) = lineHeight(JsonField.of(lineHeight))
 
@@ -516,8 +521,12 @@ private constructor(
         fun padding(string: String) = padding(Padding.ofString(string))
 
         /**
-         * Specifies the corner radius of the text overlay. Set to `max` to achieve a circular or
-         * oval shape.
+         * Specifies the corner radius:
+         * - Single value (positive integer): Applied to all corners (e.g., `20`).
+         * - `max`: Creates a circular or oval shape.
+         * - Per-corner array: Provide four underscore-separated values representing top-left,
+         *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`).
+         *   See [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
          */
         fun radius(radius: Radius) = radius(JsonField.of(radius))
 
@@ -534,6 +543,9 @@ private constructor(
 
         /** Alias for calling [radius] with `Radius.ofMax()`. */
         fun radiusMax() = radius(Radius.ofMax())
+
+        /** Alias for calling [radius] with `Radius.ofString(string)`. */
+        fun radius(string: String) = radius(Radius.ofString(string))
 
         /**
          * Specifies the rotation angle of the text overlay. Accepts a numeric value for clockwise
@@ -690,7 +702,10 @@ private constructor(
             (if (typography.asKnown().isPresent) 1 else 0) +
             (width.asKnown().getOrNull()?.validity() ?: 0)
 
-    /** Flip the text overlay horizontally, vertically, or both. */
+    /**
+     * Flip/mirror the text horizontally, vertically, or in both directions. Acceptable values: `h`
+     * (horizontal), `v` (vertical), `h_v` (horizontal and vertical), or `v_h`.
+     */
     class Flip @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
@@ -1142,10 +1157,8 @@ private constructor(
     }
 
     /**
-     * Specifies the line height of the text overlay. Accepts integer values representing line
-     * height in points. It can also accept
-     * [arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations)
-     * such as `bw_mul_0.2`, or `bh_div_20`.
+     * Specifies the line height for multi-line text overlays. It will come into effect only if the
+     * text wraps over multiple lines. Accepts either an integer value or an arithmetic expression.
      */
     @JsonDeserialize(using = LineHeight.Deserializer::class)
     @JsonSerialize(using = LineHeight.Serializer::class)
@@ -1491,8 +1504,12 @@ private constructor(
     }
 
     /**
-     * Specifies the corner radius of the text overlay. Set to `max` to achieve a circular or oval
-     * shape.
+     * Specifies the corner radius:
+     * - Single value (positive integer): Applied to all corners (e.g., `20`).
+     * - `max`: Creates a circular or oval shape.
+     * - Per-corner array: Provide four underscore-separated values representing top-left,
+     *   top-right, bottom-right, and bottom-left corners respectively (e.g., `10_20_30_40`). See
+     *   [Radius](https://imagekit.io/docs/effects-and-enhancements#radius---r).
      */
     @JsonDeserialize(using = Radius.Deserializer::class)
     @JsonSerialize(using = Radius.Serializer::class)
@@ -1500,6 +1517,7 @@ private constructor(
     private constructor(
         private val number: Double? = null,
         private val max: JsonValue? = null,
+        private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
@@ -1507,13 +1525,19 @@ private constructor(
 
         fun max(): Optional<JsonValue> = Optional.ofNullable(max)
 
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
         fun isNumber(): Boolean = number != null
 
         fun isMax(): Boolean = max != null
 
+        fun isString(): Boolean = string != null
+
         fun asNumber(): Double = number.getOrThrow("number")
 
         fun asMax(): JsonValue = max.getOrThrow("max")
+
+        fun asString(): String = string.getOrThrow("string")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1521,6 +1545,7 @@ private constructor(
             when {
                 number != null -> visitor.visitNumber(number)
                 max != null -> visitor.visitMax(max)
+                string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
 
@@ -1542,6 +1567,8 @@ private constructor(
                             }
                         }
                     }
+
+                    override fun visitString(string: String) {}
                 }
             )
             validated = true
@@ -1570,6 +1597,8 @@ private constructor(
                     override fun visitMax(max: JsonValue) =
                         max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
+                    override fun visitString(string: String) = 1
+
                     override fun unknown(json: JsonValue?) = 0
                 }
             )
@@ -1579,15 +1608,19 @@ private constructor(
                 return true
             }
 
-            return other is Radius && number == other.number && max == other.max
+            return other is Radius &&
+                number == other.number &&
+                max == other.max &&
+                string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(number, max)
+        override fun hashCode(): Int = Objects.hash(number, max, string)
 
         override fun toString(): String =
             when {
                 number != null -> "Radius{number=$number}"
                 max != null -> "Radius{max=$max}"
+                string != null -> "Radius{string=$string}"
                 _json != null -> "Radius{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Radius")
             }
@@ -1597,6 +1630,8 @@ private constructor(
             @JvmStatic fun ofNumber(number: Double) = Radius(number = number)
 
             @JvmStatic fun ofMax() = Radius(max = JsonValue.from("max"))
+
+            @JvmStatic fun ofString(string: String) = Radius(string = string)
         }
 
         /** An interface that defines how to map each variant of [Radius] to a value of type [T]. */
@@ -1605,6 +1640,8 @@ private constructor(
             fun visitNumber(number: Double): T
 
             fun visitMax(max: JsonValue): T
+
+            fun visitString(string: String): T
 
             /**
              * Maps an unknown variant of [Radius] to a value of type [T].
@@ -1634,6 +1671,9 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Radius(number = it, _json = json)
                             },
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Radius(string = it, _json = json)
+                            },
                         )
                         .filterNotNull()
                         .allMaxBy { it.validity() }
@@ -1661,6 +1701,7 @@ private constructor(
                 when {
                     value.number != null -> generator.writeObject(value.number)
                     value.max != null -> generator.writeObject(value.max)
+                    value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Radius")
                 }

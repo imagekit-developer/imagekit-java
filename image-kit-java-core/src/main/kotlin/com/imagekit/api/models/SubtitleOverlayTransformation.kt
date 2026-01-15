@@ -90,8 +90,9 @@ private constructor(
     fun color(): Optional<String> = color.getOptional("color")
 
     /**
-     * Font family for subtitles. Refer to the
-     * [supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list).
+     * Sets the font family of subtitle text. Refer to the
+     * [supported fonts documented](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list)
+     * in the ImageKit transformations guide.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -283,8 +284,9 @@ private constructor(
         fun color(color: JsonField<String>) = apply { this.color = color }
 
         /**
-         * Font family for subtitles. Refer to the
-         * [supported fonts](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list).
+         * Sets the font family of subtitle text. Refer to the
+         * [supported fonts documented](https://imagekit.io/docs/add-overlays-on-images#supported-text-font-list)
+         * in the ImageKit transformations guide.
          */
         fun fontFamily(fontFamily: String) = fontFamily(JsonField.of(fontFamily))
 

@@ -45,7 +45,7 @@ class MetadataServiceAsyncImpl internal constructor(private val clientOptions: C
         params: MetadataGetFromUrlParams,
         requestOptions: RequestOptions,
     ): CompletableFuture<Metadata> =
-        // get /v1/files/metadata
+        // get /v1/metadata
         withRawResponse().getFromUrl(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -104,7 +104,7 @@ class MetadataServiceAsyncImpl internal constructor(private val clientOptions: C
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "files", "metadata")
+                    .addPathSegments("v1", "metadata")
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))

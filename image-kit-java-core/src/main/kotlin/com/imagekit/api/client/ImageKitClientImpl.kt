@@ -18,6 +18,8 @@ import com.imagekit.api.services.blocking.FileService
 import com.imagekit.api.services.blocking.FileServiceImpl
 import com.imagekit.api.services.blocking.FolderService
 import com.imagekit.api.services.blocking.FolderServiceImpl
+import com.imagekit.api.services.blocking.SavedExtensionService
+import com.imagekit.api.services.blocking.SavedExtensionServiceImpl
 import com.imagekit.api.services.blocking.WebhookService
 import com.imagekit.api.services.blocking.WebhookServiceImpl
 import java.util.function.Consumer
@@ -45,6 +47,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val files: FileService by lazy { FileServiceImpl(clientOptionsWithUserAgent) }
 
+    private val savedExtensions: SavedExtensionService by lazy {
+        SavedExtensionServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val assets: AssetService by lazy { AssetServiceImpl(clientOptionsWithUserAgent) }
 
     private val cache: CacheService by lazy { CacheServiceImpl(clientOptionsWithUserAgent) }
@@ -67,6 +73,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun customMetadataFields(): CustomMetadataFieldService = customMetadataFields
 
     override fun files(): FileService = files
+
+    override fun savedExtensions(): SavedExtensionService = savedExtensions
 
     override fun assets(): AssetService = assets
 
@@ -91,6 +99,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
         private val files: FileService.WithRawResponse by lazy {
             FileServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val savedExtensions: SavedExtensionService.WithRawResponse by lazy {
+            SavedExtensionServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val assets: AssetService.WithRawResponse by lazy {
@@ -128,6 +140,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
             customMetadataFields
 
         override fun files(): FileService.WithRawResponse = files
+
+        override fun savedExtensions(): SavedExtensionService.WithRawResponse = savedExtensions
 
         override fun assets(): AssetService.WithRawResponse = assets
 
