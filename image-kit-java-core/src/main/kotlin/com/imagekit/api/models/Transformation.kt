@@ -3644,11 +3644,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                AspectRatio(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 AspectRatio(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                AspectRatio(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -4369,11 +4369,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Duration(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Duration(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Duration(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -4543,11 +4543,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                EndOffset(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 EndOffset(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                EndOffset(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -5357,11 +5357,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Height(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Height(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Height(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -5529,11 +5529,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Page(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Page(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Page(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -5734,11 +5734,11 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
                                 ?.let { Radius(max = it, _json = json) }
                                 ?.takeIf { it.isValid() },
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Radius(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Radius(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Radius(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -5911,11 +5911,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Rotation(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Rotation(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Rotation(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -6451,11 +6451,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                StartOffset(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 StartOffset(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                StartOffset(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -7134,11 +7134,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Width(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Width(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Width(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -7304,11 +7304,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                X(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 X(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                X(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -7477,11 +7477,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                XCenter(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 XCenter(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                XCenter(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -7647,11 +7647,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Y(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Y(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Y(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -7820,11 +7820,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                YCenter(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 YCenter(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                YCenter(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
