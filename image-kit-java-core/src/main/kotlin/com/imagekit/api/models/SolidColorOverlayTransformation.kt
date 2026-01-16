@@ -708,11 +708,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Height(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Height(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Height(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -913,11 +913,11 @@ private constructor(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
                                 ?.let { Radius(max = it, _json = json) }
                                 ?.takeIf { it.isValid() },
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Radius(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Radius(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Radius(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -1086,11 +1086,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Width(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Width(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Width(number = it, _json = json)
                             },
                         )
                         .filterNotNull()

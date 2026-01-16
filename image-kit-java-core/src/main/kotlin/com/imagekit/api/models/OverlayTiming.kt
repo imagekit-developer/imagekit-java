@@ -395,11 +395,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Duration(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Duration(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Duration(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -568,11 +568,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                End(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 End(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                End(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
@@ -741,11 +741,11 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Start(number = it, _json = json)
-                            },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Start(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
+                                Start(number = it, _json = json)
                             },
                         )
                         .filterNotNull()
