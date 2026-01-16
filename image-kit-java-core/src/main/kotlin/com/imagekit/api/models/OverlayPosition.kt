@@ -565,7 +565,7 @@ private constructor(
                         .toList()
                 return when (bestMatches.size) {
                     // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from object).
+                    // all the possible variants (e.g. deserializing from boolean).
                     0 -> X(_json = json)
                     1 -> bestMatches.single()
                     // If there's more than one match with the highest validity, then use the first
@@ -737,7 +737,7 @@ private constructor(
                         .toList()
                 return when (bestMatches.size) {
                     // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from object).
+                    // all the possible variants (e.g. deserializing from boolean).
                     0 -> Y(_json = json)
                     1 -> bestMatches.single()
                     // If there's more than one match with the highest validity, then use the first
