@@ -120,6 +120,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -129,8 +131,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -349,6 +349,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -358,8 +360,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -578,6 +578,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -587,8 +589,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -807,6 +807,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -816,8 +818,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -1036,6 +1036,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -1045,8 +1047,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -1265,6 +1265,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -1274,8 +1276,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -1494,6 +1494,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -1503,8 +1505,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -1723,6 +1723,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -1732,8 +1734,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -1952,6 +1952,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -1961,8 +1963,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -2181,6 +2181,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -2190,8 +2192,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -2410,6 +2410,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -2419,8 +2421,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -2639,6 +2639,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -2648,8 +2650,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -2868,6 +2868,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -2877,8 +2879,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -3097,6 +3097,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -3106,8 +3108,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -3326,6 +3326,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -3335,8 +3337,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -3555,6 +3555,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -3564,8 +3566,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(
@@ -3782,6 +3782,8 @@ internal class ErrorHandlingTest {
                                                 .instruction(
                                                     "What types of clothing items are visible in this image?"
                                                 )
+                                                .maxSelections(1L)
+                                                .minSelections(0L)
                                                 .vocabulary(
                                                     listOf(
                                                         "shirt",
@@ -3791,8 +3793,6 @@ internal class ErrorHandlingTest {
                                                         "jacket",
                                                     )
                                                 )
-                                                .maxSelections(1L)
-                                                .minSelections(0L)
                                                 .build()
                                         )
                                         .addTask(

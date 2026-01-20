@@ -73,6 +73,8 @@ internal class FileServiceAsyncTest {
                                             .instruction(
                                                 "What types of clothing items are visible in this image?"
                                             )
+                                            .maxSelections(1L)
+                                            .minSelections(0L)
                                             .vocabulary(
                                                 listOf(
                                                     "shirt",
@@ -82,8 +84,6 @@ internal class FileServiceAsyncTest {
                                                     "jacket",
                                                 )
                                             )
-                                            .maxSelections(1L)
-                                            .minSelections(0L)
                                             .build()
                                     )
                                     .addTask(

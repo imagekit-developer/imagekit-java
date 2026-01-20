@@ -3515,6 +3515,17 @@ private constructor(
                 /** Alias for calling [addTask] with `Task.ofSelectTags(selectTags)`. */
                 fun addTask(selectTags: Task.SelectTags) = addTask(Task.ofSelectTags(selectTags))
 
+                /**
+                 * Alias for calling [addTask] with the following:
+                 * ```java
+                 * Task.SelectTags.builder()
+                 *     .instruction(instruction)
+                 *     .build()
+                 * ```
+                 */
+                fun addSelectTagsTask(instruction: String) =
+                    addTask(Task.SelectTags.builder().instruction(instruction).build())
+
                 /** Alias for calling [addTask] with `Task.ofSelectMetadata(selectMetadata)`. */
                 fun addTask(selectMetadata: Task.SelectMetadata) =
                     addTask(Task.ofSelectMetadata(selectMetadata))
@@ -3752,9 +3763,9 @@ private constructor(
                 private constructor(
                     private val instruction: JsonField<String>,
                     private val type: JsonValue,
-                    private val vocabulary: JsonField<List<String>>,
                     private val maxSelections: JsonField<Long>,
                     private val minSelections: JsonField<Long>,
+                    private val vocabulary: JsonField<List<String>>,
                     private val additionalProperties: MutableMap<String, JsonValue>,
                 ) {
 
@@ -3781,16 +3792,6 @@ private constructor(
                     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
                     /**
-                     * Array of possible tag values. Combined length of all strings must not exceed
-                     * 500 characters. Cannot contain the `%` character.
-                     *
-                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
-                     *   or is unexpectedly missing or null (e.g. if the server responded with an
-                     *   unexpected value).
-                     */
-                    fun vocabulary(): List<String> = vocabulary.getRequired("vocabulary")
-
-                    /**
                      * Maximum number of tags to select from the vocabulary.
                      *
                      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
@@ -3809,6 +3810,15 @@ private constructor(
                         minSelections.getOptional("min_selections")
 
                     /**
+                     * Array of possible tag values. Combined length of all strings must not exceed
+                     * 500 characters. Cannot contain the `%` character.
+                     *
+                     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
+                     *   (e.g. if the server responded with an unexpected value).
+                     */
+                    fun vocabulary(): Optional<List<String>> = vocabulary.getOptional("vocabulary")
+
+                    /**
                      * Returns the raw JSON value of [instruction].
                      *
                      * Unlike [instruction], this method doesn't throw if the JSON field has an
@@ -3817,16 +3827,6 @@ private constructor(
                     @JsonProperty("instruction")
                     @ExcludeMissing
                     fun _instruction(): JsonField<String> = instruction
-
-                    /**
-                     * Returns the raw JSON value of [vocabulary].
-                     *
-                     * Unlike [vocabulary], this method doesn't throw if the JSON field has an
-                     * unexpected type.
-                     */
-                    @JsonProperty("vocabulary")
-                    @ExcludeMissing
-                    fun _vocabulary(): JsonField<List<String>> = vocabulary
 
                     /**
                      * Returns the raw JSON value of [maxSelections].
@@ -3848,6 +3848,16 @@ private constructor(
                     @ExcludeMissing
                     fun _minSelections(): JsonField<Long> = minSelections
 
+                    /**
+                     * Returns the raw JSON value of [vocabulary].
+                     *
+                     * Unlike [vocabulary], this method doesn't throw if the JSON field has an
+                     * unexpected type.
+                     */
+                    @JsonProperty("vocabulary")
+                    @ExcludeMissing
+                    fun _vocabulary(): JsonField<List<String>> = vocabulary
+
                     @JsonAnySetter
                     private fun putAdditionalProperty(key: String, value: JsonValue) {
                         additionalProperties.put(key, value)
@@ -3868,7 +3878,6 @@ private constructor(
                          * The following fields are required:
                          * ```java
                          * .instruction()
-                         * .vocabulary()
                          * ```
                          */
                         @JvmStatic fun builder() = Builder()
@@ -3879,9 +3888,9 @@ private constructor(
 
                         private var instruction: JsonField<String>? = null
                         private var type: JsonValue = JsonValue.from("select_tags")
-                        private var vocabulary: JsonField<MutableList<String>>? = null
                         private var maxSelections: JsonField<Long> = JsonMissing.of()
                         private var minSelections: JsonField<Long> = JsonMissing.of()
+                        private var vocabulary: JsonField<MutableList<String>>? = null
                         private var additionalProperties: MutableMap<String, JsonValue> =
                             mutableMapOf()
 
@@ -3889,9 +3898,9 @@ private constructor(
                         internal fun from(selectTags: SelectTags) = apply {
                             instruction = selectTags.instruction
                             type = selectTags.type
-                            vocabulary = selectTags.vocabulary.map { it.toMutableList() }
                             maxSelections = selectTags.maxSelections
                             minSelections = selectTags.minSelections
+                            vocabulary = selectTags.vocabulary.map { it.toMutableList() }
                             additionalProperties = selectTags.additionalProperties.toMutableMap()
                         }
 
@@ -3924,6 +3933,36 @@ private constructor(
                          */
                         fun type(type: JsonValue) = apply { this.type = type }
 
+                        /** Maximum number of tags to select from the vocabulary. */
+                        fun maxSelections(maxSelections: Long) =
+                            maxSelections(JsonField.of(maxSelections))
+
+                        /**
+                         * Sets [Builder.maxSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.maxSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun maxSelections(maxSelections: JsonField<Long>) = apply {
+                            this.maxSelections = maxSelections
+                        }
+
+                        /** Minimum number of tags to select from the vocabulary. */
+                        fun minSelections(minSelections: Long) =
+                            minSelections(JsonField.of(minSelections))
+
+                        /**
+                         * Sets [Builder.minSelections] to an arbitrary JSON value.
+                         *
+                         * You should usually call [Builder.minSelections] with a well-typed [Long]
+                         * value instead. This method is primarily for setting the field to an
+                         * undocumented or not yet supported value.
+                         */
+                        fun minSelections(minSelections: JsonField<Long>) = apply {
+                            this.minSelections = minSelections
+                        }
+
                         /**
                          * Array of possible tag values. Combined length of all strings must not
                          * exceed 500 characters. Cannot contain the `%` character.
@@ -3953,36 +3992,6 @@ private constructor(
                                 (this.vocabulary ?: JsonField.of(mutableListOf())).also {
                                     checkKnown("vocabulary", it).add(vocabulary)
                                 }
-                        }
-
-                        /** Maximum number of tags to select from the vocabulary. */
-                        fun maxSelections(maxSelections: Long) =
-                            maxSelections(JsonField.of(maxSelections))
-
-                        /**
-                         * Sets [Builder.maxSelections] to an arbitrary JSON value.
-                         *
-                         * You should usually call [Builder.maxSelections] with a well-typed [Long]
-                         * value instead. This method is primarily for setting the field to an
-                         * undocumented or not yet supported value.
-                         */
-                        fun maxSelections(maxSelections: JsonField<Long>) = apply {
-                            this.maxSelections = maxSelections
-                        }
-
-                        /** Minimum number of tags to select from the vocabulary. */
-                        fun minSelections(minSelections: Long) =
-                            minSelections(JsonField.of(minSelections))
-
-                        /**
-                         * Sets [Builder.minSelections] to an arbitrary JSON value.
-                         *
-                         * You should usually call [Builder.minSelections] with a well-typed [Long]
-                         * value instead. This method is primarily for setting the field to an
-                         * undocumented or not yet supported value.
-                         */
-                        fun minSelections(minSelections: JsonField<Long>) = apply {
-                            this.minSelections = minSelections
                         }
 
                         fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
@@ -4015,7 +4024,6 @@ private constructor(
                          * The following fields are required:
                          * ```java
                          * .instruction()
-                         * .vocabulary()
                          * ```
                          *
                          * @throws IllegalStateException if any required field is unset.
@@ -4024,9 +4032,9 @@ private constructor(
                             SelectTags(
                                 checkRequired("instruction", instruction),
                                 type,
-                                checkRequired("vocabulary", vocabulary).map { it.toImmutable() },
                                 maxSelections,
                                 minSelections,
+                                (vocabulary ?: JsonMissing.of()).map { it.toImmutable() },
                                 additionalProperties.toMutableMap(),
                             )
                     }
@@ -4046,9 +4054,9 @@ private constructor(
                                 )
                             }
                         }
-                        vocabulary()
                         maxSelections()
                         minSelections()
+                        vocabulary()
                         validated = true
                     }
 
@@ -4068,9 +4076,9 @@ private constructor(
                         return other is SelectTags &&
                             instruction == other.instruction &&
                             type == other.type &&
-                            vocabulary == other.vocabulary &&
                             maxSelections == other.maxSelections &&
                             minSelections == other.minSelections &&
+                            vocabulary == other.vocabulary &&
                             additionalProperties == other.additionalProperties
                     }
 
@@ -4078,9 +4086,9 @@ private constructor(
                         Objects.hash(
                             instruction,
                             type,
-                            vocabulary,
                             maxSelections,
                             minSelections,
+                            vocabulary,
                             additionalProperties,
                         )
                     }
@@ -4088,7 +4096,7 @@ private constructor(
                     override fun hashCode(): Int = hashCode
 
                     override fun toString() =
-                        "SelectTags{instruction=$instruction, type=$type, vocabulary=$vocabulary, maxSelections=$maxSelections, minSelections=$minSelections, additionalProperties=$additionalProperties}"
+                        "SelectTags{instruction=$instruction, type=$type, maxSelections=$maxSelections, minSelections=$minSelections, vocabulary=$vocabulary, additionalProperties=$additionalProperties}"
                 }
 
                 class SelectMetadata

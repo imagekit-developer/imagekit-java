@@ -132,9 +132,9 @@ internal class ExtensionConfigTest {
                 .addTask(
                     ExtensionConfig.AiTasks.Task.SelectTags.builder()
                         .instruction("What types of clothing items are visible in this image?")
-                        .vocabulary(listOf("shirt", "tshirt", "dress", "trousers", "jacket"))
                         .maxSelections(1L)
                         .minSelections(0L)
+                        .vocabulary(listOf("shirt", "tshirt", "dress", "trousers", "jacket"))
                         .build()
                 )
                 .build()
@@ -156,9 +156,9 @@ internal class ExtensionConfigTest {
                     .addTask(
                         ExtensionConfig.AiTasks.Task.SelectTags.builder()
                             .instruction("What types of clothing items are visible in this image?")
-                            .vocabulary(listOf("shirt", "tshirt", "dress", "trousers", "jacket"))
                             .maxSelections(1L)
                             .minSelections(0L)
+                            .vocabulary(listOf("shirt", "tshirt", "dress", "trousers", "jacket"))
                             .build()
                     )
                     .build()
