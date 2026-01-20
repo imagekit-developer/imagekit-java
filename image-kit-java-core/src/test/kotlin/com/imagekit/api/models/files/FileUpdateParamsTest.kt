@@ -66,9 +66,9 @@ internal class FileUpdateParamsTest {
                                             .instruction(
                                                 "What types of clothing items are visible?"
                                             )
-                                            .vocabulary(listOf("shirt", "dress", "jacket"))
                                             .maxSelections(1L)
                                             .minSelections(0L)
+                                            .vocabulary(listOf("shirt", "dress", "jacket"))
                                             .build()
                                     )
                                     .build()
@@ -160,9 +160,9 @@ internal class FileUpdateParamsTest {
                                                 .instruction(
                                                     "What types of clothing items are visible?"
                                                 )
-                                                .vocabulary(listOf("shirt", "dress", "jacket"))
                                                 .maxSelections(1L)
                                                 .minSelections(0L)
+                                                .vocabulary(listOf("shirt", "dress", "jacket"))
                                                 .build()
                                         )
                                         .build()
@@ -239,9 +239,9 @@ internal class FileUpdateParamsTest {
                                                 .instruction(
                                                     "What types of clothing items are visible?"
                                                 )
-                                                .vocabulary(listOf("shirt", "dress", "jacket"))
                                                 .maxSelections(1L)
                                                 .minSelections(0L)
+                                                .vocabulary(listOf("shirt", "dress", "jacket"))
                                                 .build()
                                         )
                                         .build()
