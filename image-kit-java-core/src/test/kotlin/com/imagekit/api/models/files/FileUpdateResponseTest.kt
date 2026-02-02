@@ -19,6 +19,8 @@ internal class FileUpdateResponseTest {
                 .addAiTag(
                     File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
+                .audioCodec("audioCodec")
+                .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
@@ -27,6 +29,12 @@ internal class FileUpdateResponseTest {
                         .build()
                 )
                 .description("description")
+                .duration(0L)
+                .embeddedMetadata(
+                    File.EmbeddedMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .fileId("fileId")
                 .filePath("filePath")
                 .fileType("fileType")
@@ -65,6 +73,7 @@ internal class FileUpdateResponseTest {
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
                 .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .videoCodec("videoCodec")
                 .width(0.0)
                 .extensionStatus(
                     FileUpdateResponse.ExtensionStatus.builder()
@@ -85,6 +94,8 @@ internal class FileUpdateResponseTest {
             .containsExactly(
                 File.AiTag.builder().confidence(0.0).name("name").source("source").build()
             )
+        assertThat(fileUpdateResponse.audioCodec()).contains("audioCodec")
+        assertThat(fileUpdateResponse.bitRate()).contains(0L)
         assertThat(fileUpdateResponse.createdAt())
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateResponse.customCoordinates()).contains("customCoordinates")
@@ -95,6 +106,13 @@ internal class FileUpdateResponseTest {
                     .build()
             )
         assertThat(fileUpdateResponse.description()).contains("description")
+        assertThat(fileUpdateResponse.duration()).contains(0L)
+        assertThat(fileUpdateResponse.embeddedMetadata())
+            .contains(
+                File.EmbeddedMetadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(fileUpdateResponse.fileId()).contains("fileId")
         assertThat(fileUpdateResponse.filePath()).contains("filePath")
         assertThat(fileUpdateResponse.fileType()).contains("fileType")
@@ -135,6 +153,7 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.url()).contains("https://example.com")
         assertThat(fileUpdateResponse.versionInfo())
             .contains(File.VersionInfo.builder().id("id").name("name").build())
+        assertThat(fileUpdateResponse.videoCodec()).contains("videoCodec")
         assertThat(fileUpdateResponse.width()).contains(0.0)
         assertThat(fileUpdateResponse.extensionStatus())
             .contains(
@@ -156,6 +175,8 @@ internal class FileUpdateResponseTest {
                 .addAiTag(
                     File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
+                .audioCodec("audioCodec")
+                .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
@@ -164,6 +185,12 @@ internal class FileUpdateResponseTest {
                         .build()
                 )
                 .description("description")
+                .duration(0L)
+                .embeddedMetadata(
+                    File.EmbeddedMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .fileId("fileId")
                 .filePath("filePath")
                 .fileType("fileType")
@@ -202,6 +229,7 @@ internal class FileUpdateResponseTest {
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
                 .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .videoCodec("videoCodec")
                 .width(0.0)
                 .extensionStatus(
                     FileUpdateResponse.ExtensionStatus.builder()
