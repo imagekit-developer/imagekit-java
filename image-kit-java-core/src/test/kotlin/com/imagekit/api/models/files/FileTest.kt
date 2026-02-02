@@ -19,6 +19,8 @@ internal class FileTest {
                 .addAiTag(
                     File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
+                .audioCodec("audioCodec")
+                .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
@@ -27,6 +29,12 @@ internal class FileTest {
                         .build()
                 )
                 .description("description")
+                .duration(0L)
+                .embeddedMetadata(
+                    File.EmbeddedMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .fileId("fileId")
                 .filePath("filePath")
                 .fileType("fileType")
@@ -65,6 +73,7 @@ internal class FileTest {
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
                 .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
 
@@ -72,6 +81,8 @@ internal class FileTest {
             .containsExactly(
                 File.AiTag.builder().confidence(0.0).name("name").source("source").build()
             )
+        assertThat(file.audioCodec()).contains("audioCodec")
+        assertThat(file.bitRate()).contains(0L)
         assertThat(file.createdAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(file.customCoordinates()).contains("customCoordinates")
         assertThat(file.customMetadata())
@@ -81,6 +92,13 @@ internal class FileTest {
                     .build()
             )
         assertThat(file.description()).contains("description")
+        assertThat(file.duration()).contains(0L)
+        assertThat(file.embeddedMetadata())
+            .contains(
+                File.EmbeddedMetadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(file.fileId()).contains("fileId")
         assertThat(file.filePath()).contains("filePath")
         assertThat(file.fileType()).contains("fileType")
@@ -120,6 +138,7 @@ internal class FileTest {
         assertThat(file.url()).contains("https://example.com")
         assertThat(file.versionInfo())
             .contains(File.VersionInfo.builder().id("id").name("name").build())
+        assertThat(file.videoCodec()).contains("videoCodec")
         assertThat(file.width()).contains(0.0)
     }
 
@@ -131,6 +150,8 @@ internal class FileTest {
                 .addAiTag(
                     File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
+                .audioCodec("audioCodec")
+                .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
@@ -139,6 +160,12 @@ internal class FileTest {
                         .build()
                 )
                 .description("description")
+                .duration(0L)
+                .embeddedMetadata(
+                    File.EmbeddedMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .fileId("fileId")
                 .filePath("filePath")
                 .fileType("fileType")
@@ -177,6 +204,7 @@ internal class FileTest {
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
                 .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
 

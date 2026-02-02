@@ -75,6 +75,8 @@ internal class ProGuardCompatibilityTest {
                 .addAiTag(
                     File.AiTag.builder().confidence(0.0).name("name").source("source").build()
                 )
+                .audioCodec("audioCodec")
+                .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
@@ -83,6 +85,12 @@ internal class ProGuardCompatibilityTest {
                         .build()
                 )
                 .description("description")
+                .duration(0L)
+                .embeddedMetadata(
+                    File.EmbeddedMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .fileId("fileId")
                 .filePath("filePath")
                 .fileType("fileType")
@@ -121,6 +129,7 @@ internal class ProGuardCompatibilityTest {
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
                 .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
 

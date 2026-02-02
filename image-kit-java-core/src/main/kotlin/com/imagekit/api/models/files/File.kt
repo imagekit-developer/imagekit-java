@@ -25,10 +25,14 @@ class File
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val aiTags: JsonField<List<AiTag>>,
+    private val audioCodec: JsonField<String>,
+    private val bitRate: JsonField<Long>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customCoordinates: JsonField<String>,
     private val customMetadata: JsonField<CustomMetadata>,
     private val description: JsonField<String>,
+    private val duration: JsonField<Long>,
+    private val embeddedMetadata: JsonField<EmbeddedMetadata>,
     private val fileId: JsonField<String>,
     private val filePath: JsonField<String>,
     private val fileType: JsonField<String>,
@@ -46,6 +50,7 @@ private constructor(
     private val updatedAt: JsonField<OffsetDateTime>,
     private val url: JsonField<String>,
     private val versionInfo: JsonField<VersionInfo>,
+    private val videoCodec: JsonField<String>,
     private val width: JsonField<Double>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
@@ -53,6 +58,10 @@ private constructor(
     @JsonCreator
     private constructor(
         @JsonProperty("AITags") @ExcludeMissing aiTags: JsonField<List<AiTag>> = JsonMissing.of(),
+        @JsonProperty("audioCodec")
+        @ExcludeMissing
+        audioCodec: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("bitRate") @ExcludeMissing bitRate: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("createdAt")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
@@ -65,6 +74,10 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("duration") @ExcludeMissing duration: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("embeddedMetadata")
+        @ExcludeMissing
+        embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of(),
         @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("filePath") @ExcludeMissing filePath: JsonField<String> = JsonMissing.of(),
         @JsonProperty("fileType") @ExcludeMissing fileType: JsonField<String> = JsonMissing.of(),
@@ -92,13 +105,20 @@ private constructor(
         @JsonProperty("versionInfo")
         @ExcludeMissing
         versionInfo: JsonField<VersionInfo> = JsonMissing.of(),
+        @JsonProperty("videoCodec")
+        @ExcludeMissing
+        videoCodec: JsonField<String> = JsonMissing.of(),
         @JsonProperty("width") @ExcludeMissing width: JsonField<Double> = JsonMissing.of(),
     ) : this(
         aiTags,
+        audioCodec,
+        bitRate,
         createdAt,
         customCoordinates,
         customMetadata,
         description,
+        duration,
+        embeddedMetadata,
         fileId,
         filePath,
         fileType,
@@ -116,6 +136,7 @@ private constructor(
         updatedAt,
         url,
         versionInfo,
+        videoCodec,
         width,
         mutableMapOf(),
     )
@@ -127,6 +148,22 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun aiTags(): Optional<List<AiTag>> = aiTags.getOptional("AITags")
+
+    /**
+     * The audio codec used in the video (only for video/audio).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun audioCodec(): Optional<String> = audioCodec.getOptional("audioCodec")
+
+    /**
+     * The bit rate of the video in kbps (only for video).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun bitRate(): Optional<Long> = bitRate.getOptional("bitRate")
 
     /**
      * Date and time when the file was uploaded. The date and time is in ISO8601 format.
@@ -160,6 +197,24 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun description(): Optional<String> = description.getOptional("description")
+
+    /**
+     * The duration of the video in seconds (only for video).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun duration(): Optional<Long> = duration.getOptional("duration")
+
+    /**
+     * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
+     * data.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun embeddedMetadata(): Optional<EmbeddedMetadata> =
+        embeddedMetadata.getOptional("embeddedMetadata")
 
     /**
      * Unique identifier of the asset.
@@ -308,6 +363,14 @@ private constructor(
     fun versionInfo(): Optional<VersionInfo> = versionInfo.getOptional("versionInfo")
 
     /**
+     * The video codec used in the video (only for video).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun videoCodec(): Optional<String> = videoCodec.getOptional("videoCodec")
+
+    /**
      * Width of the file.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -321,6 +384,20 @@ private constructor(
      * Unlike [aiTags], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("AITags") @ExcludeMissing fun _aiTags(): JsonField<List<AiTag>> = aiTags
+
+    /**
+     * Returns the raw JSON value of [audioCodec].
+     *
+     * Unlike [audioCodec], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("audioCodec") @ExcludeMissing fun _audioCodec(): JsonField<String> = audioCodec
+
+    /**
+     * Returns the raw JSON value of [bitRate].
+     *
+     * Unlike [bitRate], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("bitRate") @ExcludeMissing fun _bitRate(): JsonField<Long> = bitRate
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -356,6 +433,23 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [duration].
+     *
+     * Unlike [duration], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("duration") @ExcludeMissing fun _duration(): JsonField<Long> = duration
+
+    /**
+     * Returns the raw JSON value of [embeddedMetadata].
+     *
+     * Unlike [embeddedMetadata], this method doesn't throw if the JSON field has an unexpected
+     * type.
+     */
+    @JsonProperty("embeddedMetadata")
+    @ExcludeMissing
+    fun _embeddedMetadata(): JsonField<EmbeddedMetadata> = embeddedMetadata
 
     /**
      * Returns the raw JSON value of [fileId].
@@ -488,6 +582,13 @@ private constructor(
     fun _versionInfo(): JsonField<VersionInfo> = versionInfo
 
     /**
+     * Returns the raw JSON value of [videoCodec].
+     *
+     * Unlike [videoCodec], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("videoCodec") @ExcludeMissing fun _videoCodec(): JsonField<String> = videoCodec
+
+    /**
      * Returns the raw JSON value of [width].
      *
      * Unlike [width], this method doesn't throw if the JSON field has an unexpected type.
@@ -516,10 +617,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var aiTags: JsonField<MutableList<AiTag>>? = null
+        private var audioCodec: JsonField<String> = JsonMissing.of()
+        private var bitRate: JsonField<Long> = JsonMissing.of()
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
         private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
+        private var duration: JsonField<Long> = JsonMissing.of()
+        private var embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of()
         private var fileId: JsonField<String> = JsonMissing.of()
         private var filePath: JsonField<String> = JsonMissing.of()
         private var fileType: JsonField<String> = JsonMissing.of()
@@ -537,16 +642,21 @@ private constructor(
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var url: JsonField<String> = JsonMissing.of()
         private var versionInfo: JsonField<VersionInfo> = JsonMissing.of()
+        private var videoCodec: JsonField<String> = JsonMissing.of()
         private var width: JsonField<Double> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(file: File) = apply {
             aiTags = file.aiTags.map { it.toMutableList() }
+            audioCodec = file.audioCodec
+            bitRate = file.bitRate
             createdAt = file.createdAt
             customCoordinates = file.customCoordinates
             customMetadata = file.customMetadata
             description = file.description
+            duration = file.duration
+            embeddedMetadata = file.embeddedMetadata
             fileId = file.fileId
             filePath = file.filePath
             fileType = file.fileType
@@ -564,6 +674,7 @@ private constructor(
             updatedAt = file.updatedAt
             url = file.url
             versionInfo = file.versionInfo
+            videoCodec = file.videoCodec
             width = file.width
             additionalProperties = file.additionalProperties.toMutableMap()
         }
@@ -596,6 +707,29 @@ private constructor(
                     checkKnown("aiTags", it).add(aiTag)
                 }
         }
+
+        /** The audio codec used in the video (only for video/audio). */
+        fun audioCodec(audioCodec: String) = audioCodec(JsonField.of(audioCodec))
+
+        /**
+         * Sets [Builder.audioCodec] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.audioCodec] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun audioCodec(audioCodec: JsonField<String>) = apply { this.audioCodec = audioCodec }
+
+        /** The bit rate of the video in kbps (only for video). */
+        fun bitRate(bitRate: Long) = bitRate(JsonField.of(bitRate))
+
+        /**
+         * Sets [Builder.bitRate] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.bitRate] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun bitRate(bitRate: JsonField<Long>) = apply { this.bitRate = bitRate }
 
         /** Date and time when the file was uploaded. The date and time is in ISO8601 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -657,6 +791,35 @@ private constructor(
          * value.
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
+
+        /** The duration of the video in seconds (only for video). */
+        fun duration(duration: Long) = duration(JsonField.of(duration))
+
+        /**
+         * Sets [Builder.duration] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.duration] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun duration(duration: JsonField<Long>) = apply { this.duration = duration }
+
+        /**
+         * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
+         * data.
+         */
+        fun embeddedMetadata(embeddedMetadata: EmbeddedMetadata) =
+            embeddedMetadata(JsonField.of(embeddedMetadata))
+
+        /**
+         * Sets [Builder.embeddedMetadata] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.embeddedMetadata] with a well-typed [EmbeddedMetadata]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
+         */
+        fun embeddedMetadata(embeddedMetadata: JsonField<EmbeddedMetadata>) = apply {
+            this.embeddedMetadata = embeddedMetadata
+        }
 
         /** Unique identifier of the asset. */
         fun fileId(fileId: String) = fileId(JsonField.of(fileId))
@@ -892,6 +1055,18 @@ private constructor(
             this.versionInfo = versionInfo
         }
 
+        /** The video codec used in the video (only for video). */
+        fun videoCodec(videoCodec: String) = videoCodec(JsonField.of(videoCodec))
+
+        /**
+         * Sets [Builder.videoCodec] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.videoCodec] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun videoCodec(videoCodec: JsonField<String>) = apply { this.videoCodec = videoCodec }
+
         /** Width of the file. */
         fun width(width: Double) = width(JsonField.of(width))
 
@@ -930,10 +1105,14 @@ private constructor(
         fun build(): File =
             File(
                 (aiTags ?: JsonMissing.of()).map { it.toImmutable() },
+                audioCodec,
+                bitRate,
                 createdAt,
                 customCoordinates,
                 customMetadata,
                 description,
+                duration,
+                embeddedMetadata,
                 fileId,
                 filePath,
                 fileType,
@@ -951,6 +1130,7 @@ private constructor(
                 updatedAt,
                 url,
                 versionInfo,
+                videoCodec,
                 width,
                 additionalProperties.toMutableMap(),
             )
@@ -964,10 +1144,14 @@ private constructor(
         }
 
         aiTags().ifPresent { it.forEach { it.validate() } }
+        audioCodec()
+        bitRate()
         createdAt()
         customCoordinates()
         customMetadata().ifPresent { it.validate() }
         description()
+        duration()
+        embeddedMetadata().ifPresent { it.validate() }
         fileId()
         filePath()
         fileType()
@@ -985,6 +1169,7 @@ private constructor(
         updatedAt()
         url()
         versionInfo().ifPresent { it.validate() }
+        videoCodec()
         width()
         validated = true
     }
@@ -1005,10 +1190,14 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (aiTags.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (audioCodec.asKnown().isPresent) 1 else 0) +
+            (if (bitRate.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (if (customCoordinates.asKnown().isPresent) 1 else 0) +
             (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (description.asKnown().isPresent) 1 else 0) +
+            (if (duration.asKnown().isPresent) 1 else 0) +
+            (embeddedMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (fileId.asKnown().isPresent) 1 else 0) +
             (if (filePath.asKnown().isPresent) 1 else 0) +
             (if (fileType.asKnown().isPresent) 1 else 0) +
@@ -1026,6 +1215,7 @@ private constructor(
             (if (updatedAt.asKnown().isPresent) 1 else 0) +
             (if (url.asKnown().isPresent) 1 else 0) +
             (versionInfo.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (videoCodec.asKnown().isPresent) 1 else 0) +
             (if (width.asKnown().isPresent) 1 else 0)
 
     class AiTag
@@ -1346,6 +1536,109 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
+    }
+
+    /**
+     * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
+     * data.
+     */
+    class EmbeddedMetadata
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [EmbeddedMetadata]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [EmbeddedMetadata]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(embeddedMetadata: EmbeddedMetadata) = apply {
+                additionalProperties = embeddedMetadata.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [EmbeddedMetadata].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): EmbeddedMetadata = EmbeddedMetadata(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): EmbeddedMetadata = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is EmbeddedMetadata && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "EmbeddedMetadata{additionalProperties=$additionalProperties}"
     }
 
     /**
@@ -1770,10 +2063,14 @@ private constructor(
 
         return other is File &&
             aiTags == other.aiTags &&
+            audioCodec == other.audioCodec &&
+            bitRate == other.bitRate &&
             createdAt == other.createdAt &&
             customCoordinates == other.customCoordinates &&
             customMetadata == other.customMetadata &&
             description == other.description &&
+            duration == other.duration &&
+            embeddedMetadata == other.embeddedMetadata &&
             fileId == other.fileId &&
             filePath == other.filePath &&
             fileType == other.fileType &&
@@ -1791,6 +2088,7 @@ private constructor(
             updatedAt == other.updatedAt &&
             url == other.url &&
             versionInfo == other.versionInfo &&
+            videoCodec == other.videoCodec &&
             width == other.width &&
             additionalProperties == other.additionalProperties
     }
@@ -1798,10 +2096,14 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             aiTags,
+            audioCodec,
+            bitRate,
             createdAt,
             customCoordinates,
             customMetadata,
             description,
+            duration,
+            embeddedMetadata,
             fileId,
             filePath,
             fileType,
@@ -1819,6 +2121,7 @@ private constructor(
             updatedAt,
             url,
             versionInfo,
+            videoCodec,
             width,
             additionalProperties,
         )
@@ -1827,5 +2130,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "File{aiTags=$aiTags, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, selectedFieldsSchema=$selectedFieldsSchema, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, width=$width, additionalProperties=$additionalProperties}"
+        "File{aiTags=$aiTags, audioCodec=$audioCodec, bitRate=$bitRate, createdAt=$createdAt, customCoordinates=$customCoordinates, customMetadata=$customMetadata, description=$description, duration=$duration, embeddedMetadata=$embeddedMetadata, fileId=$fileId, filePath=$filePath, fileType=$fileType, hasAlpha=$hasAlpha, height=$height, isPrivateFile=$isPrivateFile, isPublished=$isPublished, mime=$mime, name=$name, selectedFieldsSchema=$selectedFieldsSchema, size=$size, tags=$tags, thumbnail=$thumbnail, type=$type, updatedAt=$updatedAt, url=$url, versionInfo=$versionInfo, videoCodec=$videoCodec, width=$width, additionalProperties=$additionalProperties}"
 }
