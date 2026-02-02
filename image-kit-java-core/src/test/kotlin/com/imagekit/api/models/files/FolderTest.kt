@@ -3,6 +3,7 @@
 package com.imagekit.api.models.files
 
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -15,6 +16,11 @@ internal class FolderTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .customMetadata(
+                    Folder.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .folderId("folderId")
                 .folderPath("folderPath")
                 .name("name")
@@ -23,6 +29,12 @@ internal class FolderTest {
                 .build()
 
         assertThat(folder.createdAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(folder.customMetadata())
+            .contains(
+                Folder.CustomMetadata.builder()
+                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                    .build()
+            )
         assertThat(folder.folderId()).contains("folderId")
         assertThat(folder.folderPath()).contains("folderPath")
         assertThat(folder.name()).contains("name")
@@ -36,6 +48,11 @@ internal class FolderTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .customMetadata(
+                    Folder.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .folderId("folderId")
                 .folderPath("folderPath")
                 .name("name")
