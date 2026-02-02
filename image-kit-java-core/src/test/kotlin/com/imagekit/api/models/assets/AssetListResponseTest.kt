@@ -170,6 +170,11 @@ internal class AssetListResponseTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .customMetadata(
+                    Folder.CustomMetadata.builder()
+                        .putAdditionalProperty("foo", JsonValue.from("bar"))
+                        .build()
+                )
                 .folderId("folderId")
                 .folderPath("folderPath")
                 .name("name")
@@ -190,6 +195,11 @@ internal class AssetListResponseTest {
             AssetListResponse.ofFolder(
                 Folder.builder()
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .customMetadata(
+                        Folder.CustomMetadata.builder()
+                            .putAdditionalProperty("foo", JsonValue.from("bar"))
+                            .build()
+                    )
                     .folderId("folderId")
                     .folderPath("folderPath")
                     .name("name")

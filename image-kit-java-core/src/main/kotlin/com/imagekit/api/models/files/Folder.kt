@@ -11,6 +11,7 @@ import com.imagekit.api.core.ExcludeMissing
 import com.imagekit.api.core.JsonField
 import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
+import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
@@ -22,6 +23,7 @@ class Folder
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
+    private val customMetadata: JsonField<CustomMetadata>,
     private val folderId: JsonField<String>,
     private val folderPath: JsonField<String>,
     private val name: JsonField<String>,
@@ -35,6 +37,9 @@ private constructor(
         @JsonProperty("createdAt")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("customMetadata")
+        @ExcludeMissing
+        customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
         @JsonProperty("folderId") @ExcludeMissing folderId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("folderPath")
         @ExcludeMissing
@@ -44,7 +49,7 @@ private constructor(
         @JsonProperty("updatedAt")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(createdAt, folderId, folderPath, name, type, updatedAt, mutableMapOf())
+    ) : this(createdAt, customMetadata, folderId, folderPath, name, type, updatedAt, mutableMapOf())
 
     /**
      * Date and time when the folder was created. The date and time is in ISO8601 format.
@@ -53,6 +58,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("createdAt")
+
+    /**
+     * An object with custom metadata for the folder. Returns empty object if no custom metadata is
+     * set.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun customMetadata(): Optional<CustomMetadata> = customMetadata.getOptional("customMetadata")
 
     /**
      * Unique identifier of the asset.
@@ -104,6 +118,15 @@ private constructor(
     @JsonProperty("createdAt")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [customMetadata].
+     *
+     * Unlike [customMetadata], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("customMetadata")
+    @ExcludeMissing
+    fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
 
     /**
      * Returns the raw JSON value of [folderId].
@@ -164,6 +187,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
         private var folderId: JsonField<String> = JsonMissing.of()
         private var folderPath: JsonField<String> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
@@ -174,6 +198,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(folder: Folder) = apply {
             createdAt = folder.createdAt
+            customMetadata = folder.customMetadata
             folderId = folder.folderId
             folderPath = folder.folderPath
             name = folder.name
@@ -193,6 +218,24 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /**
+         * An object with custom metadata for the folder. Returns empty object if no custom metadata
+         * is set.
+         */
+        fun customMetadata(customMetadata: CustomMetadata) =
+            customMetadata(JsonField.of(customMetadata))
+
+        /**
+         * Sets [Builder.customMetadata] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.customMetadata] with a well-typed [CustomMetadata] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
+         */
+        fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
+            this.customMetadata = customMetadata
+        }
 
         /** Unique identifier of the asset. */
         fun folderId(folderId: String) = folderId(JsonField.of(folderId))
@@ -284,6 +327,7 @@ private constructor(
         fun build(): Folder =
             Folder(
                 createdAt,
+                customMetadata,
                 folderId,
                 folderPath,
                 name,
@@ -301,6 +345,7 @@ private constructor(
         }
 
         createdAt()
+        customMetadata().ifPresent { it.validate() }
         folderId()
         folderPath()
         name()
@@ -325,11 +370,115 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (folderId.asKnown().isPresent) 1 else 0) +
             (if (folderPath.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
+
+    /**
+     * An object with custom metadata for the folder. Returns empty object if no custom metadata is
+     * set.
+     */
+    class CustomMetadata
+    @JsonCreator
+    private constructor(
+        @com.fasterxml.jackson.annotation.JsonValue
+        private val additionalProperties: Map<String, JsonValue>
+    ) {
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [CustomMetadata]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [CustomMetadata]. */
+        class Builder internal constructor() {
+
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(customMetadata: CustomMetadata) = apply {
+                additionalProperties = customMetadata.additionalProperties.toMutableMap()
+            }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [CustomMetadata].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): CustomMetadata = CustomMetadata(additionalProperties.toImmutable())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): CustomMetadata = apply {
+            if (validated) {
+                return@apply
+            }
+
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CustomMetadata && additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() = "CustomMetadata{additionalProperties=$additionalProperties}"
+    }
 
     /** Type of the asset. */
     class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
@@ -460,6 +609,7 @@ private constructor(
 
         return other is Folder &&
             createdAt == other.createdAt &&
+            customMetadata == other.customMetadata &&
             folderId == other.folderId &&
             folderPath == other.folderPath &&
             name == other.name &&
@@ -469,11 +619,20 @@ private constructor(
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(createdAt, folderId, folderPath, name, type, updatedAt, additionalProperties)
+        Objects.hash(
+            createdAt,
+            customMetadata,
+            folderId,
+            folderPath,
+            name,
+            type,
+            updatedAt,
+            additionalProperties,
+        )
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Folder{createdAt=$createdAt, folderId=$folderId, folderPath=$folderPath, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Folder{createdAt=$createdAt, customMetadata=$customMetadata, folderId=$folderId, folderPath=$folderPath, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }
