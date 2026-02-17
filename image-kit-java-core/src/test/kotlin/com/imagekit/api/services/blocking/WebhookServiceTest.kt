@@ -20,7 +20,6 @@ internal class WebhookServiceTest {
     fun unsafeUnwrap() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -38,7 +37,6 @@ internal class WebhookServiceTest {
     fun unwrap() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
