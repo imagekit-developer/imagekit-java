@@ -26,17 +26,15 @@ internal class OriginServiceTest {
 
         val originResponse =
             originService.create(
-                OriginRequest.ofS3(
-                    OriginRequest.S3.builder()
-                        .accessKey("AKIATEST123")
-                        .bucket("test-bucket")
-                        .name("My S3 Origin")
-                        .secretKey("secrettest123")
-                        .baseUrlForCanonicalHeader("https://cdn.example.com")
-                        .includeCanonicalHeader(false)
-                        .prefix("images")
-                        .build()
-                )
+                OriginRequest.S3.builder()
+                    .accessKey("AKIATEST123")
+                    .bucket("test-bucket")
+                    .name("My S3 Origin")
+                    .secretKey("secrettest123")
+                    .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .includeCanonicalHeader(false)
+                    .prefix("images")
+                    .build()
             )
 
         originResponse.validate()

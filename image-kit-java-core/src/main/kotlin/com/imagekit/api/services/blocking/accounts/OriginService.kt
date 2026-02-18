@@ -52,6 +52,84 @@ interface OriginService {
     fun create(originRequest: OriginRequest): OriginResponse =
         create(originRequest, RequestOptions.none())
 
+    /** @see create */
+    fun create(
+        s3: OriginRequest.S3,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofS3(s3), requestOptions)
+
+    /** @see create */
+    fun create(s3: OriginRequest.S3): OriginResponse = create(s3, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        s3Compatible: OriginRequest.S3Compatible,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofS3Compatible(s3Compatible), requestOptions)
+
+    /** @see create */
+    fun create(s3Compatible: OriginRequest.S3Compatible): OriginResponse =
+        create(s3Compatible, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        cloudinaryBackup: OriginRequest.CloudinaryBackup,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofCloudinaryBackup(cloudinaryBackup), requestOptions)
+
+    /** @see create */
+    fun create(cloudinaryBackup: OriginRequest.CloudinaryBackup): OriginResponse =
+        create(cloudinaryBackup, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        webFolder: OriginRequest.WebFolder,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofWebFolder(webFolder), requestOptions)
+
+    /** @see create */
+    fun create(webFolder: OriginRequest.WebFolder): OriginResponse =
+        create(webFolder, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        webProxy: OriginRequest.WebProxy,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofWebProxy(webProxy), requestOptions)
+
+    /** @see create */
+    fun create(webProxy: OriginRequest.WebProxy): OriginResponse =
+        create(webProxy, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        gcs: OriginRequest.Gcs,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofGcs(gcs), requestOptions)
+
+    /** @see create */
+    fun create(gcs: OriginRequest.Gcs): OriginResponse = create(gcs, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        azureBlob: OriginRequest.AzureBlob,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofAzureBlob(azureBlob), requestOptions)
+
+    /** @see create */
+    fun create(azureBlob: OriginRequest.AzureBlob): OriginResponse =
+        create(azureBlob, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        akeneoPim: OriginRequest.AkeneoPim,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): OriginResponse = create(OriginRequest.ofAkeneoPim(akeneoPim), requestOptions)
+
+    /** @see create */
+    fun create(akeneoPim: OriginRequest.AkeneoPim): OriginResponse =
+        create(akeneoPim, RequestOptions.none())
+
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
      * the updated origin object.
@@ -189,6 +267,109 @@ interface OriginService {
         @MustBeClosed
         fun create(originRequest: OriginRequest): HttpResponseFor<OriginResponse> =
             create(originRequest, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            s3: OriginRequest.S3,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> = create(OriginRequest.ofS3(s3), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(s3: OriginRequest.S3): HttpResponseFor<OriginResponse> =
+            create(s3, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            s3Compatible: OriginRequest.S3Compatible,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofS3Compatible(s3Compatible), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(s3Compatible: OriginRequest.S3Compatible): HttpResponseFor<OriginResponse> =
+            create(s3Compatible, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            cloudinaryBackup: OriginRequest.CloudinaryBackup,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofCloudinaryBackup(cloudinaryBackup), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            cloudinaryBackup: OriginRequest.CloudinaryBackup
+        ): HttpResponseFor<OriginResponse> = create(cloudinaryBackup, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            webFolder: OriginRequest.WebFolder,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofWebFolder(webFolder), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(webFolder: OriginRequest.WebFolder): HttpResponseFor<OriginResponse> =
+            create(webFolder, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            webProxy: OriginRequest.WebProxy,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofWebProxy(webProxy), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(webProxy: OriginRequest.WebProxy): HttpResponseFor<OriginResponse> =
+            create(webProxy, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            gcs: OriginRequest.Gcs,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> = create(OriginRequest.ofGcs(gcs), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(gcs: OriginRequest.Gcs): HttpResponseFor<OriginResponse> =
+            create(gcs, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            azureBlob: OriginRequest.AzureBlob,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofAzureBlob(azureBlob), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(azureBlob: OriginRequest.AzureBlob): HttpResponseFor<OriginResponse> =
+            create(azureBlob, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            akeneoPim: OriginRequest.AkeneoPim,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<OriginResponse> =
+            create(OriginRequest.ofAkeneoPim(akeneoPim), requestOptions)
+
+        /** @see create */
+        @MustBeClosed
+        fun create(akeneoPim: OriginRequest.AkeneoPim): HttpResponseFor<OriginResponse> =
+            create(akeneoPim, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the
