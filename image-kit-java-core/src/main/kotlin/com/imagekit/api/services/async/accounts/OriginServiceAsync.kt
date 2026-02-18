@@ -53,6 +53,93 @@ interface OriginServiceAsync {
     fun create(originRequest: OriginRequest): CompletableFuture<OriginResponse> =
         create(originRequest, RequestOptions.none())
 
+    /** @see create */
+    fun create(
+        s3: OriginRequest.S3,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> = create(OriginRequest.ofS3(s3), requestOptions)
+
+    /** @see create */
+    fun create(s3: OriginRequest.S3): CompletableFuture<OriginResponse> =
+        create(s3, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        s3Compatible: OriginRequest.S3Compatible,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofS3Compatible(s3Compatible), requestOptions)
+
+    /** @see create */
+    fun create(s3Compatible: OriginRequest.S3Compatible): CompletableFuture<OriginResponse> =
+        create(s3Compatible, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        cloudinaryBackup: OriginRequest.CloudinaryBackup,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofCloudinaryBackup(cloudinaryBackup), requestOptions)
+
+    /** @see create */
+    fun create(
+        cloudinaryBackup: OriginRequest.CloudinaryBackup
+    ): CompletableFuture<OriginResponse> = create(cloudinaryBackup, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        webFolder: OriginRequest.WebFolder,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofWebFolder(webFolder), requestOptions)
+
+    /** @see create */
+    fun create(webFolder: OriginRequest.WebFolder): CompletableFuture<OriginResponse> =
+        create(webFolder, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        webProxy: OriginRequest.WebProxy,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofWebProxy(webProxy), requestOptions)
+
+    /** @see create */
+    fun create(webProxy: OriginRequest.WebProxy): CompletableFuture<OriginResponse> =
+        create(webProxy, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        gcs: OriginRequest.Gcs,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> = create(OriginRequest.ofGcs(gcs), requestOptions)
+
+    /** @see create */
+    fun create(gcs: OriginRequest.Gcs): CompletableFuture<OriginResponse> =
+        create(gcs, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        azureBlob: OriginRequest.AzureBlob,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofAzureBlob(azureBlob), requestOptions)
+
+    /** @see create */
+    fun create(azureBlob: OriginRequest.AzureBlob): CompletableFuture<OriginResponse> =
+        create(azureBlob, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        akeneoPim: OriginRequest.AkeneoPim,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OriginResponse> =
+        create(OriginRequest.ofAkeneoPim(akeneoPim), requestOptions)
+
+    /** @see create */
+    fun create(akeneoPim: OriginRequest.AkeneoPim): CompletableFuture<OriginResponse> =
+        create(akeneoPim, RequestOptions.none())
+
     /**
      * **Note:** This API is currently in beta. Updates the origin identified by `id` and returns
      * the updated origin object.
@@ -203,6 +290,106 @@ interface OriginServiceAsync {
             originRequest: OriginRequest
         ): CompletableFuture<HttpResponseFor<OriginResponse>> =
             create(originRequest, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            s3: OriginRequest.S3,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofS3(s3), requestOptions)
+
+        /** @see create */
+        fun create(s3: OriginRequest.S3): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(s3, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            s3Compatible: OriginRequest.S3Compatible,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofS3Compatible(s3Compatible), requestOptions)
+
+        /** @see create */
+        fun create(
+            s3Compatible: OriginRequest.S3Compatible
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(s3Compatible, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            cloudinaryBackup: OriginRequest.CloudinaryBackup,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofCloudinaryBackup(cloudinaryBackup), requestOptions)
+
+        /** @see create */
+        fun create(
+            cloudinaryBackup: OriginRequest.CloudinaryBackup
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(cloudinaryBackup, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            webFolder: OriginRequest.WebFolder,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofWebFolder(webFolder), requestOptions)
+
+        /** @see create */
+        fun create(
+            webFolder: OriginRequest.WebFolder
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(webFolder, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            webProxy: OriginRequest.WebProxy,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofWebProxy(webProxy), requestOptions)
+
+        /** @see create */
+        fun create(
+            webProxy: OriginRequest.WebProxy
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(webProxy, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            gcs: OriginRequest.Gcs,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofGcs(gcs), requestOptions)
+
+        /** @see create */
+        fun create(gcs: OriginRequest.Gcs): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(gcs, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            azureBlob: OriginRequest.AzureBlob,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofAzureBlob(azureBlob), requestOptions)
+
+        /** @see create */
+        fun create(
+            azureBlob: OriginRequest.AzureBlob
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(azureBlob, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            akeneoPim: OriginRequest.AkeneoPim,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(OriginRequest.ofAkeneoPim(akeneoPim), requestOptions)
+
+        /** @see create */
+        fun create(
+            akeneoPim: OriginRequest.AkeneoPim
+        ): CompletableFuture<HttpResponseFor<OriginResponse>> =
+            create(akeneoPim, RequestOptions.none())
 
         /**
          * Returns a raw HTTP response for `put /v1/accounts/origins/{id}`, but is otherwise the
