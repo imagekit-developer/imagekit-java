@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test
 
 internal class FolderServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
@@ -34,7 +34,7 @@ internal class FolderServiceTest {
         folder.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
@@ -52,7 +52,7 @@ internal class FolderServiceTest {
         folder.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun copy() {
         val client =
@@ -74,7 +74,7 @@ internal class FolderServiceTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun move() {
         val client =
@@ -95,7 +95,7 @@ internal class FolderServiceTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun rename() {
         val client =

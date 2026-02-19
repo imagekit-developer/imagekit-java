@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 internal class MetadataServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client =
@@ -25,7 +25,7 @@ internal class MetadataServiceAsyncTest {
         metadata.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun getFromUrl() {
         val client =

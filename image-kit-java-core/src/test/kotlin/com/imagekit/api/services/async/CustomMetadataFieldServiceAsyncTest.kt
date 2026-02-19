@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 internal class CustomMetadataFieldServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
@@ -64,7 +64,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
         customMetadataField.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
         val client =
@@ -116,7 +116,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
         customMetadataField.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
@@ -138,7 +138,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
         customMetadataFields.forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =

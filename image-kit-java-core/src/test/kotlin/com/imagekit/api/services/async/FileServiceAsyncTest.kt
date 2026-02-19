@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 
 internal class FileServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
         val client =
@@ -114,7 +114,7 @@ internal class FileServiceAsyncTest {
         file.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
@@ -129,7 +129,7 @@ internal class FileServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun copy() {
         val client =
@@ -152,7 +152,7 @@ internal class FileServiceAsyncTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client =
@@ -168,7 +168,7 @@ internal class FileServiceAsyncTest {
         file.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun move() {
         val client =
@@ -190,7 +190,7 @@ internal class FileServiceAsyncTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun rename() {
         val client =
@@ -213,7 +213,7 @@ internal class FileServiceAsyncTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun upload() {
         val client =

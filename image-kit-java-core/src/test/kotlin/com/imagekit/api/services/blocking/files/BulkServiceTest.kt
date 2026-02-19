@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 
 internal class BulkServiceTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
@@ -33,7 +33,7 @@ internal class BulkServiceTest {
         bulk.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun addTags() {
         val client =
@@ -55,7 +55,7 @@ internal class BulkServiceTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun removeAiTags() {
         val client =
@@ -77,7 +77,7 @@ internal class BulkServiceTest {
         response.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun removeTags() {
         val client =
