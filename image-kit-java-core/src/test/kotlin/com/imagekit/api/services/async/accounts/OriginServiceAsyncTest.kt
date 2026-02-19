@@ -2,15 +2,12 @@
 
 package com.imagekit.api.services.async.accounts
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.accounts.origins.OriginRequest
 import com.imagekit.api.models.accounts.origins.OriginUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class OriginServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -18,7 +15,6 @@ internal class OriginServiceAsyncTest {
     fun create() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -46,7 +42,6 @@ internal class OriginServiceAsyncTest {
     fun update() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -79,7 +74,6 @@ internal class OriginServiceAsyncTest {
     fun list() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -96,7 +90,6 @@ internal class OriginServiceAsyncTest {
     fun delete() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -112,7 +105,6 @@ internal class OriginServiceAsyncTest {
     fun get() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

@@ -2,14 +2,11 @@
 
 package com.imagekit.api.services.blocking.cache
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.models.cache.invalidation.InvalidationCreateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class InvalidationServiceTest {
 
     @Disabled("Prism tests are disabled")
@@ -17,7 +14,6 @@ internal class InvalidationServiceTest {
     fun create() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -38,7 +34,6 @@ internal class InvalidationServiceTest {
     fun get() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

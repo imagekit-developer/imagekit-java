@@ -2,15 +2,12 @@
 
 package com.imagekit.api.services.async.accounts
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointRequest
 import com.imagekit.api.models.accounts.urlendpoints.UrlEndpointUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class UrlEndpointServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -18,7 +15,6 @@ internal class UrlEndpointServiceAsyncTest {
     fun create() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -47,7 +43,6 @@ internal class UrlEndpointServiceAsyncTest {
     fun update() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -81,7 +76,6 @@ internal class UrlEndpointServiceAsyncTest {
     fun list() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -98,7 +92,6 @@ internal class UrlEndpointServiceAsyncTest {
     fun delete() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -114,7 +107,6 @@ internal class UrlEndpointServiceAsyncTest {
     fun get() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

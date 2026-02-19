@@ -2,16 +2,13 @@
 
 package com.imagekit.api.services.async.beta.v2
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
 import com.imagekit.api.models.beta.v2.files.FileUploadParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class FileServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -19,7 +16,6 @@ internal class FileServiceAsyncTest {
     fun upload() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

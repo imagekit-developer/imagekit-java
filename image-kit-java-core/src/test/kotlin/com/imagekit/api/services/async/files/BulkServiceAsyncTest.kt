@@ -2,7 +2,6 @@
 
 package com.imagekit.api.services.async.files
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.files.bulk.BulkAddTagsParams
 import com.imagekit.api.models.files.bulk.BulkDeleteParams
@@ -10,9 +9,7 @@ import com.imagekit.api.models.files.bulk.BulkRemoveAiTagsParams
 import com.imagekit.api.models.files.bulk.BulkRemoveTagsParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class BulkServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -20,7 +17,6 @@ internal class BulkServiceAsyncTest {
     fun delete() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -43,7 +39,6 @@ internal class BulkServiceAsyncTest {
     fun addTags() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -67,7 +62,6 @@ internal class BulkServiceAsyncTest {
     fun removeAiTags() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -91,7 +85,6 @@ internal class BulkServiceAsyncTest {
     fun removeTags() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

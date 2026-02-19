@@ -2,15 +2,12 @@
 
 package com.imagekit.api.services.async.accounts
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.accounts.usage.UsageGetParams
 import java.time.LocalDate
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class UsageServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -18,7 +15,6 @@ internal class UsageServiceAsyncTest {
     fun get() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

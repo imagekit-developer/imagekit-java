@@ -2,7 +2,6 @@
 
 package com.imagekit.api.services.async
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.folders.FolderCopyParams
 import com.imagekit.api.models.folders.FolderCreateParams
@@ -11,9 +10,7 @@ import com.imagekit.api.models.folders.FolderMoveParams
 import com.imagekit.api.models.folders.FolderRenameParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class FolderServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -21,7 +18,6 @@ internal class FolderServiceAsyncTest {
     fun create() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -44,7 +40,6 @@ internal class FolderServiceAsyncTest {
     fun delete() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -64,7 +59,6 @@ internal class FolderServiceAsyncTest {
     fun copy() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -88,7 +82,6 @@ internal class FolderServiceAsyncTest {
     fun move() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -111,7 +104,6 @@ internal class FolderServiceAsyncTest {
     fun rename() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
