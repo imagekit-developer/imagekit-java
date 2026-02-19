@@ -2,7 +2,6 @@
 
 package com.imagekit.api.services.blocking
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
@@ -14,9 +13,7 @@ import com.imagekit.api.models.files.FileUploadParams
 import com.imagekit.api.models.files.UpdateFileRequest
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class FileServiceTest {
 
     @Disabled("Prism tests are disabled")
@@ -24,7 +21,6 @@ internal class FileServiceTest {
     fun update() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -122,7 +118,6 @@ internal class FileServiceTest {
     fun delete() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -136,7 +131,6 @@ internal class FileServiceTest {
     fun copy() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -159,7 +153,6 @@ internal class FileServiceTest {
     fun get() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -175,7 +168,6 @@ internal class FileServiceTest {
     fun move() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -197,7 +189,6 @@ internal class FileServiceTest {
     fun rename() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -220,7 +211,6 @@ internal class FileServiceTest {
     fun upload() {
         val client =
             ImageKitOkHttpClient.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()

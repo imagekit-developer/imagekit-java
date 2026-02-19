@@ -2,7 +2,6 @@
 
 package com.imagekit.api.services.async
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.core.UnwrapWebhookParams
 import com.imagekit.api.core.http.Headers
@@ -11,9 +10,7 @@ import com.standardwebhooks.Webhook
 import java.time.Instant
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class WebhookServiceAsyncTest {
 
     @Test

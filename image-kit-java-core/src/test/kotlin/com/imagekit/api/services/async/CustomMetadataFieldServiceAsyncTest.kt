@@ -2,16 +2,13 @@
 
 package com.imagekit.api.services.async
 
-import com.imagekit.api.TestServerExtension
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldCreateParams
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldListParams
 import com.imagekit.api.models.custommetadatafields.CustomMetadataFieldUpdateParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
-@ExtendWith(TestServerExtension::class)
 internal class CustomMetadataFieldServiceAsyncTest {
 
     @Disabled("Prism tests are disabled")
@@ -19,7 +16,6 @@ internal class CustomMetadataFieldServiceAsyncTest {
     fun create() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -73,7 +69,6 @@ internal class CustomMetadataFieldServiceAsyncTest {
     fun update() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -126,7 +121,6 @@ internal class CustomMetadataFieldServiceAsyncTest {
     fun list() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
@@ -149,7 +143,6 @@ internal class CustomMetadataFieldServiceAsyncTest {
     fun delete() {
         val client =
             ImageKitOkHttpClientAsync.builder()
-                .baseUrl(TestServerExtension.BASE_URL)
                 .privateKey("My Private Key")
                 .password("My Password")
                 .build()
