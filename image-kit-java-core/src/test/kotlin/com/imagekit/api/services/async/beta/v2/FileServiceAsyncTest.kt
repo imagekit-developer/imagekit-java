@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 internal class FileServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun upload() {
         val client =

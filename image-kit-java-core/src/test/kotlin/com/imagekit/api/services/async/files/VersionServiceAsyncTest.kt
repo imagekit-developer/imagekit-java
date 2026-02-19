@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 
 internal class VersionServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
@@ -27,7 +27,7 @@ internal class VersionServiceAsyncTest {
         files.forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
@@ -46,7 +46,7 @@ internal class VersionServiceAsyncTest {
         version.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client =
@@ -65,7 +65,7 @@ internal class VersionServiceAsyncTest {
         file.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun restore() {
         val client =

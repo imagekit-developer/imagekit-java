@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 
 internal class UrlEndpointServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
@@ -38,7 +38,7 @@ internal class UrlEndpointServiceAsyncTest {
         urlEndpointResponse.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
         val client =
@@ -71,7 +71,7 @@ internal class UrlEndpointServiceAsyncTest {
         urlEndpointResponse.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
         val client =
@@ -87,7 +87,7 @@ internal class UrlEndpointServiceAsyncTest {
         urlEndpointResponses.forEach { it.validate() }
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
         val client =
@@ -102,7 +102,7 @@ internal class UrlEndpointServiceAsyncTest {
         val response = future.get()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client =

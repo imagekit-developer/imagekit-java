@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 internal class InvalidationServiceAsyncTest {
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
         val client =
@@ -30,7 +30,7 @@ internal class InvalidationServiceAsyncTest {
         invalidation.validate()
     }
 
-    @Disabled("Prism tests are disabled")
+    @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
         val client =
