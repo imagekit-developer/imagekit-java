@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec by Stainless.
+
 package com.imagekit.api.core.http
 
 import com.imagekit.api.core.DefaultSleeper
