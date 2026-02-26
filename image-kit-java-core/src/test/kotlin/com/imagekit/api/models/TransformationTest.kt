@@ -124,7 +124,7 @@ internal class TransformationTest {
         assertThat(transformation.cropMode()).contains(Transformation.CropMode.PAD_RESIZE)
         assertThat(transformation.defaultImage()).contains("defaultImage")
         assertThat(transformation.distort()).contains("distort")
-        assertThat(transformation.dpr()).contains(2.0)
+        assertThat(transformation.dpr()).contains(Transformation.Dpr.ofNumber(2.0))
         assertThat(transformation.duration()).contains(Transformation.Duration.ofNumber(0.0))
         assertThat(transformation.endOffset()).contains(Transformation.EndOffset.ofNumber(0.0))
         assertThat(transformation.flip()).contains(Transformation.Flip.H)
