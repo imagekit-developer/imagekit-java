@@ -60,7 +60,7 @@ private constructor(
     private val cropMode: JsonField<CropMode>,
     private val defaultImage: JsonField<String>,
     private val distort: JsonField<String>,
-    private val dpr: JsonField<Dpr>,
+    private val dpr: JsonField<Double>,
     private val duration: JsonField<Duration>,
     private val endOffset: JsonField<EndOffset>,
     private val flip: JsonField<Flip>,
@@ -147,7 +147,7 @@ private constructor(
         @ExcludeMissing
         defaultImage: JsonField<String> = JsonMissing.of(),
         @JsonProperty("distort") @ExcludeMissing distort: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("dpr") @ExcludeMissing dpr: JsonField<Dpr> = JsonMissing.of(),
+        @JsonProperty("dpr") @ExcludeMissing dpr: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Duration> = JsonMissing.of(),
         @JsonProperty("endOffset")
         @ExcludeMissing
@@ -481,7 +481,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun dpr(): Optional<Dpr> = dpr.getOptional("dpr")
+    fun dpr(): Optional<Double> = dpr.getOptional("dpr")
 
     /**
      * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically used
@@ -994,7 +994,7 @@ private constructor(
      *
      * Unlike [dpr], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("dpr") @ExcludeMissing fun _dpr(): JsonField<Dpr> = dpr
+    @JsonProperty("dpr") @ExcludeMissing fun _dpr(): JsonField<Double> = dpr
 
     /**
      * Returns the raw JSON value of [duration].
@@ -1280,7 +1280,7 @@ private constructor(
         private var cropMode: JsonField<CropMode> = JsonMissing.of()
         private var defaultImage: JsonField<String> = JsonMissing.of()
         private var distort: JsonField<String> = JsonMissing.of()
-        private var dpr: JsonField<Dpr> = JsonMissing.of()
+        private var dpr: JsonField<Double> = JsonMissing.of()
         private var duration: JsonField<Duration> = JsonMissing.of()
         private var endOffset: JsonField<EndOffset> = JsonMissing.of()
         private var flip: JsonField<Flip> = JsonMissing.of()
@@ -1752,21 +1752,15 @@ private constructor(
          *   [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
          * - See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
          */
-        fun dpr(dpr: Dpr) = dpr(JsonField.of(dpr))
+        fun dpr(dpr: Double) = dpr(JsonField.of(dpr))
 
         /**
          * Sets [Builder.dpr] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.dpr] with a well-typed [Dpr] value instead. This method
-         * is primarily for setting the field to an undocumented or not yet supported value.
+         * You should usually call [Builder.dpr] with a well-typed [Double] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun dpr(dpr: JsonField<Dpr>) = apply { this.dpr = dpr }
-
-        /** Alias for calling [dpr] with `Dpr.ofNumber(number)`. */
-        fun dpr(number: Double) = dpr(Dpr.ofNumber(number))
-
-        /** Alias for calling [dpr] with `Dpr.ofString(string)`. */
-        fun dpr(string: String) = dpr(Dpr.ofString(string))
+        fun dpr(dpr: JsonField<Double>) = apply { this.dpr = dpr }
 
         /**
          * Specifies the duration (in seconds) for trimming videos, e.g., `5` or `10.5`. Typically
@@ -2588,7 +2582,7 @@ private constructor(
         cropMode().ifPresent { it.validate() }
         defaultImage()
         distort()
-        dpr().ifPresent { it.validate() }
+        dpr()
         duration().ifPresent { it.validate() }
         endOffset().ifPresent { it.validate() }
         flip().ifPresent { it.validate() }
@@ -2660,7 +2654,7 @@ private constructor(
             (cropMode.asKnown().getOrNull()?.validity() ?: 0) +
             (if (defaultImage.asKnown().isPresent) 1 else 0) +
             (if (distort.asKnown().isPresent) 1 else 0) +
-            (dpr.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (dpr.asKnown().isPresent) 1 else 0) +
             (duration.asKnown().getOrNull()?.validity() ?: 0) +
             (endOffset.asKnown().getOrNull()?.validity() ?: 0) +
             (flip.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4239,179 +4233,6 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
-    }
-
-    /**
-     * Accepts values between 0.1 and 5, or `auto` for automatic device pixel ratio (DPR)
-     * calculation. Also accepts arithmetic expressions.
-     * - Learn about
-     *   [Arithmetic expressions](https://imagekit.io/docs/arithmetic-expressions-in-transformations).
-     * - See [DPR](https://imagekit.io/docs/image-resize-and-crop#dpr---dpr).
-     */
-    @JsonDeserialize(using = Dpr.Deserializer::class)
-    @JsonSerialize(using = Dpr.Serializer::class)
-    class Dpr
-    private constructor(
-        private val number: Double? = null,
-        private val string: String? = null,
-        private val _json: JsonValue? = null,
-    ) {
-
-        fun number(): Optional<Double> = Optional.ofNullable(number)
-
-        fun string(): Optional<String> = Optional.ofNullable(string)
-
-        fun isNumber(): Boolean = number != null
-
-        fun isString(): Boolean = string != null
-
-        fun asNumber(): Double = number.getOrThrow("number")
-
-        fun asString(): String = string.getOrThrow("string")
-
-        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
-
-        fun <T> accept(visitor: Visitor<T>): T =
-            when {
-                number != null -> visitor.visitNumber(number)
-                string != null -> visitor.visitString(string)
-                else -> visitor.unknown(_json)
-            }
-
-        private var validated: Boolean = false
-
-        fun validate(): Dpr = apply {
-            if (validated) {
-                return@apply
-            }
-
-            accept(
-                object : Visitor<Unit> {
-                    override fun visitNumber(number: Double) {}
-
-                    override fun visitString(string: String) {}
-                }
-            )
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic
-        internal fun validity(): Int =
-            accept(
-                object : Visitor<Int> {
-                    override fun visitNumber(number: Double) = 1
-
-                    override fun visitString(string: String) = 1
-
-                    override fun unknown(json: JsonValue?) = 0
-                }
-            )
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Dpr && number == other.number && string == other.string
-        }
-
-        override fun hashCode(): Int = Objects.hash(number, string)
-
-        override fun toString(): String =
-            when {
-                number != null -> "Dpr{number=$number}"
-                string != null -> "Dpr{string=$string}"
-                _json != null -> "Dpr{_unknown=$_json}"
-                else -> throw IllegalStateException("Invalid Dpr")
-            }
-
-        companion object {
-
-            @JvmStatic fun ofNumber(number: Double) = Dpr(number = number)
-
-            @JvmStatic fun ofString(string: String) = Dpr(string = string)
-        }
-
-        /** An interface that defines how to map each variant of [Dpr] to a value of type [T]. */
-        interface Visitor<out T> {
-
-            fun visitNumber(number: Double): T
-
-            fun visitString(string: String): T
-
-            /**
-             * Maps an unknown variant of [Dpr] to a value of type [T].
-             *
-             * An instance of [Dpr] can contain an unknown variant if it was deserialized from data
-             * that doesn't match any known variant. For example, if the SDK is on an older version
-             * than the API, then the API may respond with new variants that the SDK is unaware of.
-             *
-             * @throws ImageKitInvalidDataException in the default implementation.
-             */
-            fun unknown(json: JsonValue?): T {
-                throw ImageKitInvalidDataException("Unknown Dpr: $json")
-            }
-        }
-
-        internal class Deserializer : BaseDeserializer<Dpr>(Dpr::class) {
-
-            override fun ObjectCodec.deserialize(node: JsonNode): Dpr {
-                val json = JsonValue.fromJsonNode(node)
-
-                val bestMatches =
-                    sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                Dpr(string = it, _json = json)
-                            },
-                            tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                Dpr(number = it, _json = json)
-                            },
-                        )
-                        .filterNotNull()
-                        .allMaxBy { it.validity() }
-                        .toList()
-                return when (bestMatches.size) {
-                    // This can happen if what we're deserializing is completely incompatible with
-                    // all the possible variants (e.g. deserializing from boolean).
-                    0 -> Dpr(_json = json)
-                    1 -> bestMatches.single()
-                    // If there's more than one match with the highest validity, then use the first
-                    // completely valid match, or simply the first match if none are completely
-                    // valid.
-                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
-                }
-            }
-        }
-
-        internal class Serializer : BaseSerializer<Dpr>(Dpr::class) {
-
-            override fun serialize(
-                value: Dpr,
-                generator: JsonGenerator,
-                provider: SerializerProvider,
-            ) {
-                when {
-                    value.number != null -> generator.writeObject(value.number)
-                    value.string != null -> generator.writeObject(value.string)
-                    value._json != null -> generator.writeObject(value._json)
-                    else -> throw IllegalStateException("Invalid Dpr")
-                }
-            }
-        }
     }
 
     /**
