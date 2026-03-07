@@ -46,7 +46,7 @@ internal class ServiceParamsTest {
 
         fileService.upload(
             FileUploadParams.builder()
-                .file("some content".byteInputStream())
+                .file("Example data".byteInputStream())
                 .fileName("fileName")
                 .token("token")
                 .checks("\"request.folder\" : \"marketing/\"\n")
