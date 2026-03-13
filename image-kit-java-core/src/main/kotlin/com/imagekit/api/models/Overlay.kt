@@ -12,11 +12,11 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.BaseDeserializer
 import com.imagekit.api.core.BaseSerializer
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.core.allMaxBy
 import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Specifies an overlay to be applied on the parent image or video. ImageKit supports overlays
@@ -212,37 +212,37 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): Overlay {
             val json = JsonValue.fromJsonNode(node)
+            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<TextOverlay>())?.let {
-                            Overlay(text = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<ImageOverlay>())?.let {
-                            Overlay(image = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<VideoOverlay>())?.let {
-                            Overlay(video = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<SubtitleOverlay>())?.let {
-                            Overlay(subtitle = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<SolidColorOverlay>())?.let {
-                            Overlay(solidColor = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> Overlay(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+            when (type) {
+                "text" -> {
+                    return tryDeserialize(node, jacksonTypeRef<TextOverlay>())?.let {
+                        Overlay(text = it, _json = json)
+                    } ?: Overlay(_json = json)
+                }
+                "image" -> {
+                    return tryDeserialize(node, jacksonTypeRef<ImageOverlay>())?.let {
+                        Overlay(image = it, _json = json)
+                    } ?: Overlay(_json = json)
+                }
+                "video" -> {
+                    return tryDeserialize(node, jacksonTypeRef<VideoOverlay>())?.let {
+                        Overlay(video = it, _json = json)
+                    } ?: Overlay(_json = json)
+                }
+                "subtitle" -> {
+                    return tryDeserialize(node, jacksonTypeRef<SubtitleOverlay>())?.let {
+                        Overlay(subtitle = it, _json = json)
+                    } ?: Overlay(_json = json)
+                }
+                "solidColor" -> {
+                    return tryDeserialize(node, jacksonTypeRef<SolidColorOverlay>())?.let {
+                        Overlay(solidColor = it, _json = json)
+                    } ?: Overlay(_json = json)
+                }
             }
+
+            return Overlay(_json = json)
         }
     }
 

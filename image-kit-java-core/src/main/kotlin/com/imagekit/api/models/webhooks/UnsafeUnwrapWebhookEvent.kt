@@ -17,6 +17,7 @@ import com.imagekit.api.core.getOrThrow
 import com.imagekit.api.errors.ImageKitInvalidDataException
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 
 /**
  * Triggered when a new video transformation request is accepted for processing. This event confirms
@@ -477,6 +478,9 @@ private constructor(
 
         override fun ObjectCodec.deserialize(node: JsonNode): UnsafeUnwrapWebhookEvent {
             val json = JsonValue.fromJsonNode(node)
+            val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
+
+            when (type) {}
 
             val bestMatches =
                 sequenceOf(
