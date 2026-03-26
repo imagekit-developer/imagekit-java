@@ -52,7 +52,7 @@ import java.io.ByteArrayInputStream;
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 FileUploadResponse response = client.files().upload(params);
@@ -158,7 +158,7 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
@@ -179,7 +179,7 @@ import java.util.concurrent.CompletableFuture;
 ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.files().upload(params);
@@ -265,7 +265,7 @@ import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
+    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
     .fileName("file-name.jpg")
     .build();
 HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
