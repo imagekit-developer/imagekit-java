@@ -158,7 +158,7 @@ internal class UpdateFileRequestTest {
                         ),
                     )
                 )
-                .removeAiTagsOfStrings(listOf("string"))
+                .removeAiTagsAll()
                 .addTag("tag1")
                 .addTag("tag2")
                 .webhookUrl("https://example.com")
@@ -332,7 +332,7 @@ internal class UpdateFileRequestTest {
                             ),
                         )
                     )
-                    .removeAiTagsOfStrings(listOf("string"))
+                    .removeAiTagsAll()
                     .addTag("tag1")
                     .addTag("tag2")
                     .webhookUrl("https://example.com")

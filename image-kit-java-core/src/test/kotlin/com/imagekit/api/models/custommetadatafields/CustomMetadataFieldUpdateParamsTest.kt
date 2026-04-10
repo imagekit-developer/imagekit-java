@@ -14,7 +14,19 @@ internal class CustomMetadataFieldUpdateParamsTest {
             .label("price")
             .schema(
                 CustomMetadataFieldUpdateParams.Schema.builder()
-                    .defaultValue("string")
+                    .defaultValueOfMixed(
+                        listOf(
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofBool(true),
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofNumber(10.0),
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofString("Hello"),
+                        )
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
@@ -52,7 +64,19 @@ internal class CustomMetadataFieldUpdateParamsTest {
                 .label("price")
                 .schema(
                     CustomMetadataFieldUpdateParams.Schema.builder()
-                        .defaultValue("string")
+                        .defaultValueOfMixed(
+                            listOf(
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent9
+                                    .ofBool(true),
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent9
+                                    .ofNumber(10.0),
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent9
+                                    .ofString("Hello"),
+                            )
+                        )
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue(3000.0)
@@ -84,7 +108,19 @@ internal class CustomMetadataFieldUpdateParamsTest {
         assertThat(body.schema())
             .contains(
                 CustomMetadataFieldUpdateParams.Schema.builder()
-                    .defaultValue("string")
+                    .defaultValueOfMixed(
+                        listOf(
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofBool(true),
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofNumber(10.0),
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent9
+                                .ofString("Hello"),
+                        )
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)

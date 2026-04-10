@@ -29,7 +29,19 @@ internal class CustomMetadataFieldServiceAsyncTest {
                     .schema(
                         CustomMetadataFieldCreateParams.Schema.builder()
                             .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                            .defaultValue("string")
+                            .defaultValueOfMixed(
+                                listOf(
+                                    CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent8
+                                        .ofBool(true),
+                                    CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent8
+                                        .ofNumber(10.0),
+                                    CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent8
+                                        .ofString("Hello"),
+                                )
+                            )
                             .isValueRequired(true)
                             .maxLength(0.0)
                             .maxValue(3000.0)
@@ -81,7 +93,19 @@ internal class CustomMetadataFieldServiceAsyncTest {
                     .label("price")
                     .schema(
                         CustomMetadataFieldUpdateParams.Schema.builder()
-                            .defaultValue("string")
+                            .defaultValueOfMixed(
+                                listOf(
+                                    CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent9
+                                        .ofBool(true),
+                                    CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent9
+                                        .ofNumber(10.0),
+                                    CustomMetadataFieldUpdateParams.Schema.DefaultValue
+                                        .UnnamedSchemaWithArrayParent9
+                                        .ofString("Hello"),
+                                )
+                            )
                             .isValueRequired(true)
                             .maxLength(0.0)
                             .maxValue(3000.0)

@@ -15,7 +15,19 @@ internal class CustomMetadataFieldCreateParamsTest {
             .schema(
                 CustomMetadataFieldCreateParams.Schema.builder()
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                    .defaultValue("string")
+                    .defaultValueOfMixed(
+                        listOf(
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofBool(true),
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofNumber(10.0),
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofString("Hello"),
+                        )
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)
@@ -45,7 +57,19 @@ internal class CustomMetadataFieldCreateParamsTest {
                 .schema(
                     CustomMetadataFieldCreateParams.Schema.builder()
                         .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                        .defaultValue("string")
+                        .defaultValueOfMixed(
+                            listOf(
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent8
+                                    .ofBool(true),
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent8
+                                    .ofNumber(10.0),
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent8
+                                    .ofString("Hello"),
+                            )
+                        )
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue(3000.0)
@@ -79,7 +103,19 @@ internal class CustomMetadataFieldCreateParamsTest {
             .isEqualTo(
                 CustomMetadataFieldCreateParams.Schema.builder()
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                    .defaultValue("string")
+                    .defaultValueOfMixed(
+                        listOf(
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofBool(true),
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofNumber(10.0),
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue
+                                .UnnamedSchemaWithArrayParent8
+                                .ofString("Hello"),
+                        )
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue(3000.0)

@@ -19,7 +19,19 @@ internal class CustomMetadataFieldTest {
                 .schema(
                     CustomMetadataField.Schema.builder()
                         .type(CustomMetadataField.Schema.Type.TEXT)
-                        .defaultValue("string")
+                        .defaultValueOfMixed(
+                            listOf(
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofBool(true),
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofNumber(10.0),
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofString("Hello"),
+                            )
+                        )
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue("string")
@@ -46,7 +58,16 @@ internal class CustomMetadataFieldTest {
             .isEqualTo(
                 CustomMetadataField.Schema.builder()
                     .type(CustomMetadataField.Schema.Type.TEXT)
-                    .defaultValue("string")
+                    .defaultValueOfMixed(
+                        listOf(
+                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
+                                .ofBool(true),
+                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
+                                .ofNumber(10.0),
+                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
+                                .ofString("Hello"),
+                        )
+                    )
                     .isValueRequired(true)
                     .maxLength(0.0)
                     .maxValue("string")
@@ -77,7 +98,19 @@ internal class CustomMetadataFieldTest {
                 .schema(
                     CustomMetadataField.Schema.builder()
                         .type(CustomMetadataField.Schema.Type.TEXT)
-                        .defaultValue("string")
+                        .defaultValueOfMixed(
+                            listOf(
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofBool(true),
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofNumber(10.0),
+                                CustomMetadataField.Schema.DefaultValue
+                                    .UnnamedSchemaWithArrayParent3
+                                    .ofString("Hello"),
+                            )
+                        )
                         .isValueRequired(true)
                         .maxLength(0.0)
                         .maxValue("string")
