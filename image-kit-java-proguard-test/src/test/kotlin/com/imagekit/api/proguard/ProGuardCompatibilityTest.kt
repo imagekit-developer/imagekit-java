@@ -107,7 +107,7 @@ internal class ProGuardCompatibilityTest {
                             JsonValue.from(
                                 mapOf(
                                     "type" to "Text",
-                                    "defaultValue" to "string",
+                                    "defaultValue" to listOf(true, 10, "Hello"),
                                     "isValueRequired" to true,
                                     "maxLength" to 0,
                                     "maxValue" to "string",
