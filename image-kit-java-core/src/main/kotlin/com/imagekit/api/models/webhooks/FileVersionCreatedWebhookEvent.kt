@@ -12,19 +12,20 @@ import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Triggered when a file is deleted. */
-class DamFileDeleteEvent
+/** Triggered when a file version is created. */
+class FileVersionCreatedWebhookEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
-    private val data: JsonField<Data>,
+    private val data: JsonField<File>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -35,7 +36,7 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
+        @JsonProperty("data") @ExcludeMissing data: JsonField<File> = JsonMissing.of(),
     ) : this(id, type, createdAt, data, mutableMapOf())
 
     fun toBaseWebhookEvent(): BaseWebhookEvent =
@@ -66,10 +67,12 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
+     * Object containing details of a file or file version.
+     *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    fun data(): Data = data.getRequired("data")
+    fun data(): File = data.getRequired("data")
 
     /**
      * Returns the raw JSON value of [id].
@@ -99,7 +102,7 @@ private constructor(
      *
      * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Data> = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<File> = data
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -116,7 +119,8 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [DamFileDeleteEvent].
+         * Returns a mutable builder for constructing an instance of
+         * [FileVersionCreatedWebhookEvent].
          *
          * The following fields are required:
          * ```java
@@ -129,22 +133,23 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [DamFileDeleteEvent]. */
+    /** A builder for [FileVersionCreatedWebhookEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
         private var type: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
-        private var data: JsonField<Data>? = null
+        private var data: JsonField<File>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(damFileDeleteEvent: DamFileDeleteEvent) = apply {
-            id = damFileDeleteEvent.id
-            type = damFileDeleteEvent.type
-            createdAt = damFileDeleteEvent.createdAt
-            data = damFileDeleteEvent.data
-            additionalProperties = damFileDeleteEvent.additionalProperties.toMutableMap()
+        internal fun from(fileVersionCreatedWebhookEvent: FileVersionCreatedWebhookEvent) = apply {
+            id = fileVersionCreatedWebhookEvent.id
+            type = fileVersionCreatedWebhookEvent.type
+            createdAt = fileVersionCreatedWebhookEvent.createdAt
+            data = fileVersionCreatedWebhookEvent.data
+            additionalProperties =
+                fileVersionCreatedWebhookEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -181,15 +186,16 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        fun data(data: Data) = data(JsonField.of(data))
+        /** Object containing details of a file or file version. */
+        fun data(data: File) = data(JsonField.of(data))
 
         /**
          * Sets [Builder.data] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.data] with a well-typed [Data] value instead. This
+         * You should usually call [Builder.data] with a well-typed [File] value instead. This
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun data(data: JsonField<Data>) = apply { this.data = data }
+        fun data(data: JsonField<File>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -211,7 +217,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [DamFileDeleteEvent].
+         * Returns an immutable instance of [FileVersionCreatedWebhookEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -225,8 +231,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): DamFileDeleteEvent =
-            DamFileDeleteEvent(
+        fun build(): FileVersionCreatedWebhookEvent =
+            FileVersionCreatedWebhookEvent(
                 checkRequired("id", id),
                 checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
@@ -237,7 +243,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): DamFileDeleteEvent = apply {
+    fun validate(): FileVersionCreatedWebhookEvent = apply {
         if (validated) {
             return@apply
         }
@@ -269,167 +275,12 @@ private constructor(
             (if (createdAt.asKnown().isPresent) 1 else 0) +
             (data.asKnown().getOrNull()?.validity() ?: 0)
 
-    class Data
-    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
-    private constructor(
-        private val fileId: JsonField<String>,
-        private val additionalProperties: MutableMap<String, JsonValue>,
-    ) {
-
-        @JsonCreator
-        private constructor(
-            @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of()
-        ) : this(fileId, mutableMapOf())
-
-        /**
-         * The unique `fileId` of the deleted file.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun fileId(): String = fileId.getRequired("fileId")
-
-        /**
-         * Returns the raw JSON value of [fileId].
-         *
-         * Unlike [fileId], this method doesn't throw if the JSON field has an unexpected type.
-         */
-        @JsonProperty("fileId") @ExcludeMissing fun _fileId(): JsonField<String> = fileId
-
-        @JsonAnySetter
-        private fun putAdditionalProperty(key: String, value: JsonValue) {
-            additionalProperties.put(key, value)
-        }
-
-        @JsonAnyGetter
-        @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> =
-            Collections.unmodifiableMap(additionalProperties)
-
-        fun toBuilder() = Builder().from(this)
-
-        companion object {
-
-            /**
-             * Returns a mutable builder for constructing an instance of [Data].
-             *
-             * The following fields are required:
-             * ```java
-             * .fileId()
-             * ```
-             */
-            @JvmStatic fun builder() = Builder()
-        }
-
-        /** A builder for [Data]. */
-        class Builder internal constructor() {
-
-            private var fileId: JsonField<String>? = null
-            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-            @JvmSynthetic
-            internal fun from(data: Data) = apply {
-                fileId = data.fileId
-                additionalProperties = data.additionalProperties.toMutableMap()
-            }
-
-            /** The unique `fileId` of the deleted file. */
-            fun fileId(fileId: String) = fileId(JsonField.of(fileId))
-
-            /**
-             * Sets [Builder.fileId] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.fileId] with a well-typed [String] value instead.
-             * This method is primarily for setting the field to an undocumented or not yet
-             * supported value.
-             */
-            fun fileId(fileId: JsonField<String>) = apply { this.fileId = fileId }
-
-            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
-            }
-
-            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
-            }
-
-            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
-            }
-
-            /**
-             * Returns an immutable instance of [Data].
-             *
-             * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .fileId()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
-             */
-            fun build(): Data =
-                Data(checkRequired("fileId", fileId), additionalProperties.toMutableMap())
-        }
-
-        private var validated: Boolean = false
-
-        fun validate(): Data = apply {
-            if (validated) {
-                return@apply
-            }
-
-            fileId()
-            validated = true
-        }
-
-        fun isValid(): Boolean =
-            try {
-                validate()
-                true
-            } catch (e: ImageKitInvalidDataException) {
-                false
-            }
-
-        /**
-         * Returns a score indicating how many valid values are contained in this object
-         * recursively.
-         *
-         * Used for best match union deserialization.
-         */
-        @JvmSynthetic internal fun validity(): Int = (if (fileId.asKnown().isPresent) 1 else 0)
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) {
-                return true
-            }
-
-            return other is Data &&
-                fileId == other.fileId &&
-                additionalProperties == other.additionalProperties
-        }
-
-        private val hashCode: Int by lazy { Objects.hash(fileId, additionalProperties) }
-
-        override fun hashCode(): Int = hashCode
-
-        override fun toString() = "Data{fileId=$fileId, additionalProperties=$additionalProperties}"
-    }
-
     override fun equals(other: Any?): Boolean {
         if (this === other) {
             return true
         }
 
-        return other is DamFileDeleteEvent &&
+        return other is FileVersionCreatedWebhookEvent &&
             id == other.id &&
             type == other.type &&
             createdAt == other.createdAt &&
@@ -444,5 +295,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "DamFileDeleteEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
+        "FileVersionCreatedWebhookEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
 }
