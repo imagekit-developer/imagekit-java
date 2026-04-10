@@ -12,9 +12,11 @@ import com.imagekit.api.core.JsonMissing
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.checkRequired
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 
 /** Triggered when a file version is created. */
 class DamFileVersionCreateEvent
@@ -23,7 +25,7 @@ private constructor(
     private val id: JsonField<String>,
     private val type: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
-    private val data: JsonValue,
+    private val data: JsonField<File>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -34,7 +36,7 @@ private constructor(
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-        @JsonProperty("data") @ExcludeMissing data: JsonValue = JsonMissing.of(),
+        @JsonProperty("data") @ExcludeMissing data: JsonField<File> = JsonMissing.of(),
     ) : this(id, type, createdAt, data, mutableMapOf())
 
     fun toBaseWebhookEvent(): BaseWebhookEvent =
@@ -65,12 +67,12 @@ private constructor(
     fun createdAt(): OffsetDateTime = createdAt.getRequired("created_at")
 
     /**
-     * This arbitrary value can be deserialized into a custom type using the `convert` method:
-     * ```java
-     * MyClass myObject = damFileVersionCreateEvent.data().convert(MyClass.class);
-     * ```
+     * Object containing details of a file or file version.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonValue = data
+    fun data(): File = data.getRequired("data")
 
     /**
      * Returns the raw JSON value of [id].
@@ -94,6 +96,13 @@ private constructor(
     @JsonProperty("created_at")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [data].
+     *
+     * Unlike [data], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<File> = data
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -129,7 +138,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var type: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
-        private var data: JsonValue? = null
+        private var data: JsonField<File>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -175,7 +184,16 @@ private constructor(
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
-        fun data(data: JsonValue) = apply { this.data = data }
+        /** Object containing details of a file or file version. */
+        fun data(data: File) = data(JsonField.of(data))
+
+        /**
+         * Sets [Builder.data] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.data] with a well-typed [File] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun data(data: JsonField<File>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -231,6 +249,7 @@ private constructor(
         id()
         type()
         createdAt()
+        data().validate()
         validated = true
     }
 
@@ -251,7 +270,8 @@ private constructor(
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (type.asKnown().isPresent) 1 else 0) +
-            (if (createdAt.asKnown().isPresent) 1 else 0)
+            (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (data.asKnown().getOrNull()?.validity() ?: 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
