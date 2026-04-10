@@ -12,11 +12,7 @@ internal class InvalidationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val invalidationService = client.cache().invalidation()
 
         val invalidation =
@@ -32,11 +28,7 @@ internal class InvalidationServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val invalidationService = client.cache().invalidation()
 
         val invalidation = invalidationService.get("requestId")

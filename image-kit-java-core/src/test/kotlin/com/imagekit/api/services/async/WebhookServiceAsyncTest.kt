@@ -15,11 +15,7 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun unsafeUnwrap() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val webhookServiceAsync = client.webhooks()
 
         val payload =
@@ -32,11 +28,7 @@ internal class WebhookServiceAsyncTest {
 
     @Test
     fun unwrap() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val webhookServiceAsync = client.webhooks()
 
         val payload =

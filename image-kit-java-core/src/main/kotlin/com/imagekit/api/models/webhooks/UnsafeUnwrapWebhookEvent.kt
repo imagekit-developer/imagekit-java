@@ -35,6 +35,11 @@ private constructor(
     private val uploadPreTransformError: UploadPreTransformErrorEvent? = null,
     private val uploadPostTransformSuccess: UploadPostTransformSuccessEvent? = null,
     private val uploadPostTransformError: UploadPostTransformErrorEvent? = null,
+    private val damFileCreate: DamFileCreateEvent? = null,
+    private val damFileUpdate: DamFileUpdateEvent? = null,
+    private val damFileDelete: DamFileDeleteEvent? = null,
+    private val damFileVersionCreate: DamFileVersionCreateEvent? = null,
+    private val damFileVersionDelete: DamFileVersionDeleteEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -91,6 +96,23 @@ private constructor(
     fun uploadPostTransformError(): Optional<UploadPostTransformErrorEvent> =
         Optional.ofNullable(uploadPostTransformError)
 
+    /** Triggered when a file is created. */
+    fun damFileCreate(): Optional<DamFileCreateEvent> = Optional.ofNullable(damFileCreate)
+
+    /** Triggered when a file is updated. */
+    fun damFileUpdate(): Optional<DamFileUpdateEvent> = Optional.ofNullable(damFileUpdate)
+
+    /** Triggered when a file is deleted. */
+    fun damFileDelete(): Optional<DamFileDeleteEvent> = Optional.ofNullable(damFileDelete)
+
+    /** Triggered when a file version is created. */
+    fun damFileVersionCreate(): Optional<DamFileVersionCreateEvent> =
+        Optional.ofNullable(damFileVersionCreate)
+
+    /** Triggered when a file version is deleted. */
+    fun damFileVersionDelete(): Optional<DamFileVersionDeleteEvent> =
+        Optional.ofNullable(damFileVersionDelete)
+
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
 
     fun isVideoTransformationReady(): Boolean = videoTransformationReady != null
@@ -104,6 +126,16 @@ private constructor(
     fun isUploadPostTransformSuccess(): Boolean = uploadPostTransformSuccess != null
 
     fun isUploadPostTransformError(): Boolean = uploadPostTransformError != null
+
+    fun isDamFileCreate(): Boolean = damFileCreate != null
+
+    fun isDamFileUpdate(): Boolean = damFileUpdate != null
+
+    fun isDamFileDelete(): Boolean = damFileDelete != null
+
+    fun isDamFileVersionCreate(): Boolean = damFileVersionCreate != null
+
+    fun isDamFileVersionDelete(): Boolean = damFileVersionDelete != null
 
     /**
      * Triggered when a new video transformation request is accepted for processing. This event
@@ -158,6 +190,23 @@ private constructor(
     fun asUploadPostTransformError(): UploadPostTransformErrorEvent =
         uploadPostTransformError.getOrThrow("uploadPostTransformError")
 
+    /** Triggered when a file is created. */
+    fun asDamFileCreate(): DamFileCreateEvent = damFileCreate.getOrThrow("damFileCreate")
+
+    /** Triggered when a file is updated. */
+    fun asDamFileUpdate(): DamFileUpdateEvent = damFileUpdate.getOrThrow("damFileUpdate")
+
+    /** Triggered when a file is deleted. */
+    fun asDamFileDelete(): DamFileDeleteEvent = damFileDelete.getOrThrow("damFileDelete")
+
+    /** Triggered when a file version is created. */
+    fun asDamFileVersionCreate(): DamFileVersionCreateEvent =
+        damFileVersionCreate.getOrThrow("damFileVersionCreate")
+
+    /** Triggered when a file version is deleted. */
+    fun asDamFileVersionDelete(): DamFileVersionDeleteEvent =
+        damFileVersionDelete.getOrThrow("damFileVersionDelete")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -176,6 +225,11 @@ private constructor(
                 visitor.visitUploadPostTransformSuccess(uploadPostTransformSuccess)
             uploadPostTransformError != null ->
                 visitor.visitUploadPostTransformError(uploadPostTransformError)
+            damFileCreate != null -> visitor.visitDamFileCreate(damFileCreate)
+            damFileUpdate != null -> visitor.visitDamFileUpdate(damFileUpdate)
+            damFileDelete != null -> visitor.visitDamFileDelete(damFileDelete)
+            damFileVersionCreate != null -> visitor.visitDamFileVersionCreate(damFileVersionCreate)
+            damFileVersionDelete != null -> visitor.visitDamFileVersionDelete(damFileVersionDelete)
             else -> visitor.unknown(_json)
         }
 
@@ -229,6 +283,30 @@ private constructor(
                 ) {
                     uploadPostTransformError.validate()
                 }
+
+                override fun visitDamFileCreate(damFileCreate: DamFileCreateEvent) {
+                    damFileCreate.validate()
+                }
+
+                override fun visitDamFileUpdate(damFileUpdate: DamFileUpdateEvent) {
+                    damFileUpdate.validate()
+                }
+
+                override fun visitDamFileDelete(damFileDelete: DamFileDeleteEvent) {
+                    damFileDelete.validate()
+                }
+
+                override fun visitDamFileVersionCreate(
+                    damFileVersionCreate: DamFileVersionCreateEvent
+                ) {
+                    damFileVersionCreate.validate()
+                }
+
+                override fun visitDamFileVersionDelete(
+                    damFileVersionDelete: DamFileVersionDeleteEvent
+                ) {
+                    damFileVersionDelete.validate()
+                }
             }
         )
         validated = true
@@ -279,6 +357,23 @@ private constructor(
                     uploadPostTransformError: UploadPostTransformErrorEvent
                 ) = uploadPostTransformError.validity()
 
+                override fun visitDamFileCreate(damFileCreate: DamFileCreateEvent) =
+                    damFileCreate.validity()
+
+                override fun visitDamFileUpdate(damFileUpdate: DamFileUpdateEvent) =
+                    damFileUpdate.validity()
+
+                override fun visitDamFileDelete(damFileDelete: DamFileDeleteEvent) =
+                    damFileDelete.validity()
+
+                override fun visitDamFileVersionCreate(
+                    damFileVersionCreate: DamFileVersionCreateEvent
+                ) = damFileVersionCreate.validity()
+
+                override fun visitDamFileVersionDelete(
+                    damFileVersionDelete: DamFileVersionDeleteEvent
+                ) = damFileVersionDelete.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -295,7 +390,12 @@ private constructor(
             uploadPreTransformSuccess == other.uploadPreTransformSuccess &&
             uploadPreTransformError == other.uploadPreTransformError &&
             uploadPostTransformSuccess == other.uploadPostTransformSuccess &&
-            uploadPostTransformError == other.uploadPostTransformError
+            uploadPostTransformError == other.uploadPostTransformError &&
+            damFileCreate == other.damFileCreate &&
+            damFileUpdate == other.damFileUpdate &&
+            damFileDelete == other.damFileDelete &&
+            damFileVersionCreate == other.damFileVersionCreate &&
+            damFileVersionDelete == other.damFileVersionDelete
     }
 
     override fun hashCode(): Int =
@@ -307,6 +407,11 @@ private constructor(
             uploadPreTransformError,
             uploadPostTransformSuccess,
             uploadPostTransformError,
+            damFileCreate,
+            damFileUpdate,
+            damFileDelete,
+            damFileVersionCreate,
+            damFileVersionDelete,
         )
 
     override fun toString(): String =
@@ -325,6 +430,13 @@ private constructor(
                 "UnsafeUnwrapWebhookEvent{uploadPostTransformSuccess=$uploadPostTransformSuccess}"
             uploadPostTransformError != null ->
                 "UnsafeUnwrapWebhookEvent{uploadPostTransformError=$uploadPostTransformError}"
+            damFileCreate != null -> "UnsafeUnwrapWebhookEvent{damFileCreate=$damFileCreate}"
+            damFileUpdate != null -> "UnsafeUnwrapWebhookEvent{damFileUpdate=$damFileUpdate}"
+            damFileDelete != null -> "UnsafeUnwrapWebhookEvent{damFileDelete=$damFileDelete}"
+            damFileVersionCreate != null ->
+                "UnsafeUnwrapWebhookEvent{damFileVersionCreate=$damFileVersionCreate}"
+            damFileVersionDelete != null ->
+                "UnsafeUnwrapWebhookEvent{damFileVersionDelete=$damFileVersionDelete}"
             _json != null -> "UnsafeUnwrapWebhookEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid UnsafeUnwrapWebhookEvent")
         }
@@ -392,6 +504,31 @@ private constructor(
         @JvmStatic
         fun ofUploadPostTransformError(uploadPostTransformError: UploadPostTransformErrorEvent) =
             UnsafeUnwrapWebhookEvent(uploadPostTransformError = uploadPostTransformError)
+
+        /** Triggered when a file is created. */
+        @JvmStatic
+        fun ofDamFileCreate(damFileCreate: DamFileCreateEvent) =
+            UnsafeUnwrapWebhookEvent(damFileCreate = damFileCreate)
+
+        /** Triggered when a file is updated. */
+        @JvmStatic
+        fun ofDamFileUpdate(damFileUpdate: DamFileUpdateEvent) =
+            UnsafeUnwrapWebhookEvent(damFileUpdate = damFileUpdate)
+
+        /** Triggered when a file is deleted. */
+        @JvmStatic
+        fun ofDamFileDelete(damFileDelete: DamFileDeleteEvent) =
+            UnsafeUnwrapWebhookEvent(damFileDelete = damFileDelete)
+
+        /** Triggered when a file version is created. */
+        @JvmStatic
+        fun ofDamFileVersionCreate(damFileVersionCreate: DamFileVersionCreateEvent) =
+            UnsafeUnwrapWebhookEvent(damFileVersionCreate = damFileVersionCreate)
+
+        /** Triggered when a file version is deleted. */
+        @JvmStatic
+        fun ofDamFileVersionDelete(damFileVersionDelete: DamFileVersionDeleteEvent) =
+            UnsafeUnwrapWebhookEvent(damFileVersionDelete = damFileVersionDelete)
     }
 
     /**
@@ -458,6 +595,21 @@ private constructor(
             uploadPostTransformError: UploadPostTransformErrorEvent
         ): T
 
+        /** Triggered when a file is created. */
+        fun visitDamFileCreate(damFileCreate: DamFileCreateEvent): T
+
+        /** Triggered when a file is updated. */
+        fun visitDamFileUpdate(damFileUpdate: DamFileUpdateEvent): T
+
+        /** Triggered when a file is deleted. */
+        fun visitDamFileDelete(damFileDelete: DamFileDeleteEvent): T
+
+        /** Triggered when a file version is created. */
+        fun visitDamFileVersionCreate(damFileVersionCreate: DamFileVersionCreateEvent): T
+
+        /** Triggered when a file version is deleted. */
+        fun visitDamFileVersionDelete(damFileVersionDelete: DamFileVersionDeleteEvent): T
+
         /**
          * Maps an unknown variant of [UnsafeUnwrapWebhookEvent] to a value of type [T].
          *
@@ -517,6 +669,21 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(uploadPostTransformError = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<DamFileCreateEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(damFileCreate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DamFileUpdateEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(damFileUpdate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DamFileDeleteEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(damFileDelete = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DamFileVersionCreateEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(damFileVersionCreate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<DamFileVersionDeleteEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(damFileVersionDelete = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -556,6 +723,13 @@ private constructor(
                     generator.writeObject(value.uploadPostTransformSuccess)
                 value.uploadPostTransformError != null ->
                     generator.writeObject(value.uploadPostTransformError)
+                value.damFileCreate != null -> generator.writeObject(value.damFileCreate)
+                value.damFileUpdate != null -> generator.writeObject(value.damFileUpdate)
+                value.damFileDelete != null -> generator.writeObject(value.damFileDelete)
+                value.damFileVersionCreate != null ->
+                    generator.writeObject(value.damFileVersionCreate)
+                value.damFileVersionDelete != null ->
+                    generator.writeObject(value.damFileVersionDelete)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid UnsafeUnwrapWebhookEvent")
             }

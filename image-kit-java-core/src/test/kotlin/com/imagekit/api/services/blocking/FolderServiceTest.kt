@@ -16,11 +16,7 @@ internal class FolderServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val folderService = client.folders()
 
         val folder =
@@ -37,11 +33,7 @@ internal class FolderServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val folderService = client.folders()
 
         val folder =
@@ -55,11 +47,7 @@ internal class FolderServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun copy() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val folderService = client.folders()
 
         val response =
@@ -77,11 +65,7 @@ internal class FolderServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun move() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val folderService = client.folders()
 
         val response =
@@ -98,11 +82,7 @@ internal class FolderServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun rename() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val folderService = client.folders()
 
         val response =

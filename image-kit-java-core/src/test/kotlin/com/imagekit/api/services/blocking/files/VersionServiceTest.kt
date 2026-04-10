@@ -14,11 +14,7 @@ internal class VersionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val versionService = client.files().versions()
 
         val files = versionService.list("fileId")
@@ -29,11 +25,7 @@ internal class VersionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val versionService = client.files().versions()
 
         val version =
@@ -47,11 +39,7 @@ internal class VersionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val versionService = client.files().versions()
 
         val file =
@@ -65,11 +53,7 @@ internal class VersionServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun restore() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val versionService = client.files().versions()
 
         val file =

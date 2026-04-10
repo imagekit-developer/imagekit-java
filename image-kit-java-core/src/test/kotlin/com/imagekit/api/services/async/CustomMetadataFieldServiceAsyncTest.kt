@@ -14,11 +14,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val customMetadataFieldServiceAsync = client.customMetadataFields()
 
         val customMetadataFieldFuture =
@@ -67,11 +63,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val customMetadataFieldServiceAsync = client.customMetadataFields()
 
         val customMetadataFieldFuture =
@@ -119,11 +111,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val customMetadataFieldServiceAsync = client.customMetadataFields()
 
         val customMetadataFieldsFuture =
@@ -141,11 +129,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val customMetadataFieldServiceAsync = client.customMetadataFields()
 
         val customMetadataFieldFuture = customMetadataFieldServiceAsync.delete("id")
