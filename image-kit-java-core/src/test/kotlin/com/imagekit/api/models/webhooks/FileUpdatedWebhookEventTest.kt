@@ -10,14 +10,14 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class DamFileVersionCreateEventTest {
+internal class FileUpdatedWebhookEventTest {
 
     @Test
     fun create() {
-        val damFileVersionCreateEvent =
-            DamFileVersionCreateEvent.builder()
+        val fileUpdatedWebhookEvent =
+            FileUpdatedWebhookEvent.builder()
                 .id("id")
-                .type("file-version.created")
+                .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -88,11 +88,11 @@ internal class DamFileVersionCreateEventTest {
                 )
                 .build()
 
-        assertThat(damFileVersionCreateEvent.id()).isEqualTo("id")
-        assertThat(damFileVersionCreateEvent.type()).isEqualTo("file-version.created")
-        assertThat(damFileVersionCreateEvent.createdAt())
+        assertThat(fileUpdatedWebhookEvent.id()).isEqualTo("id")
+        assertThat(fileUpdatedWebhookEvent.type()).isEqualTo("file.updated")
+        assertThat(fileUpdatedWebhookEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(damFileVersionCreateEvent.data())
+        assertThat(fileUpdatedWebhookEvent.data())
             .isEqualTo(
                 File.builder()
                     .addAiTag(
@@ -161,10 +161,10 @@ internal class DamFileVersionCreateEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val damFileVersionCreateEvent =
-            DamFileVersionCreateEvent.builder()
+        val fileUpdatedWebhookEvent =
+            FileUpdatedWebhookEvent.builder()
                 .id("id")
-                .type("file-version.created")
+                .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -235,12 +235,12 @@ internal class DamFileVersionCreateEventTest {
                 )
                 .build()
 
-        val roundtrippedDamFileVersionCreateEvent =
+        val roundtrippedFileUpdatedWebhookEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(damFileVersionCreateEvent),
-                jacksonTypeRef<DamFileVersionCreateEvent>(),
+                jsonMapper.writeValueAsString(fileUpdatedWebhookEvent),
+                jacksonTypeRef<FileUpdatedWebhookEvent>(),
             )
 
-        assertThat(roundtrippedDamFileVersionCreateEvent).isEqualTo(damFileVersionCreateEvent)
+        assertThat(roundtrippedFileUpdatedWebhookEvent).isEqualTo(fileUpdatedWebhookEvent)
     }
 }

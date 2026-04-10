@@ -8,30 +8,30 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class DamFileVersionDeleteEventTest {
+internal class FileVersionDeletedWebhookEventTest {
 
     @Test
     fun create() {
-        val damFileVersionDeleteEvent =
-            DamFileVersionDeleteEvent.builder()
+        val fileVersionDeletedWebhookEvent =
+            FileVersionDeletedWebhookEvent.builder()
                 .id("id")
                 .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    DamFileVersionDeleteEvent.Data.builder()
+                    FileVersionDeletedWebhookEvent.Data.builder()
                         .fileId("fileId")
                         .versionId("versionId")
                         .build()
                 )
                 .build()
 
-        assertThat(damFileVersionDeleteEvent.id()).isEqualTo("id")
-        assertThat(damFileVersionDeleteEvent.type()).isEqualTo("file-version.deleted")
-        assertThat(damFileVersionDeleteEvent.createdAt())
+        assertThat(fileVersionDeletedWebhookEvent.id()).isEqualTo("id")
+        assertThat(fileVersionDeletedWebhookEvent.type()).isEqualTo("file-version.deleted")
+        assertThat(fileVersionDeletedWebhookEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-        assertThat(damFileVersionDeleteEvent.data())
+        assertThat(fileVersionDeletedWebhookEvent.data())
             .isEqualTo(
-                DamFileVersionDeleteEvent.Data.builder()
+                FileVersionDeletedWebhookEvent.Data.builder()
                     .fileId("fileId")
                     .versionId("versionId")
                     .build()
@@ -41,25 +41,26 @@ internal class DamFileVersionDeleteEventTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val damFileVersionDeleteEvent =
-            DamFileVersionDeleteEvent.builder()
+        val fileVersionDeletedWebhookEvent =
+            FileVersionDeletedWebhookEvent.builder()
                 .id("id")
                 .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    DamFileVersionDeleteEvent.Data.builder()
+                    FileVersionDeletedWebhookEvent.Data.builder()
                         .fileId("fileId")
                         .versionId("versionId")
                         .build()
                 )
                 .build()
 
-        val roundtrippedDamFileVersionDeleteEvent =
+        val roundtrippedFileVersionDeletedWebhookEvent =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(damFileVersionDeleteEvent),
-                jacksonTypeRef<DamFileVersionDeleteEvent>(),
+                jsonMapper.writeValueAsString(fileVersionDeletedWebhookEvent),
+                jacksonTypeRef<FileVersionDeletedWebhookEvent>(),
             )
 
-        assertThat(roundtrippedDamFileVersionDeleteEvent).isEqualTo(damFileVersionDeleteEvent)
+        assertThat(roundtrippedFileVersionDeletedWebhookEvent)
+            .isEqualTo(fileVersionDeletedWebhookEvent)
     }
 }

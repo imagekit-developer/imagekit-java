@@ -18,8 +18,8 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Triggered when a file is created. */
-class DamFileCreateEvent
+/** Triggered when a file is updated. */
+class FileUpdatedWebhookEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
@@ -119,7 +119,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [DamFileCreateEvent].
+         * Returns a mutable builder for constructing an instance of [FileUpdatedWebhookEvent].
          *
          * The following fields are required:
          * ```java
@@ -132,7 +132,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [DamFileCreateEvent]. */
+    /** A builder for [FileUpdatedWebhookEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -142,12 +142,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(damFileCreateEvent: DamFileCreateEvent) = apply {
-            id = damFileCreateEvent.id
-            type = damFileCreateEvent.type
-            createdAt = damFileCreateEvent.createdAt
-            data = damFileCreateEvent.data
-            additionalProperties = damFileCreateEvent.additionalProperties.toMutableMap()
+        internal fun from(fileUpdatedWebhookEvent: FileUpdatedWebhookEvent) = apply {
+            id = fileUpdatedWebhookEvent.id
+            type = fileUpdatedWebhookEvent.type
+            createdAt = fileUpdatedWebhookEvent.createdAt
+            data = fileUpdatedWebhookEvent.data
+            additionalProperties = fileUpdatedWebhookEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -215,7 +215,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [DamFileCreateEvent].
+         * Returns an immutable instance of [FileUpdatedWebhookEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -229,8 +229,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): DamFileCreateEvent =
-            DamFileCreateEvent(
+        fun build(): FileUpdatedWebhookEvent =
+            FileUpdatedWebhookEvent(
                 checkRequired("id", id),
                 checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
@@ -241,7 +241,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): DamFileCreateEvent = apply {
+    fun validate(): FileUpdatedWebhookEvent = apply {
         if (validated) {
             return@apply
         }
@@ -278,7 +278,7 @@ private constructor(
             return true
         }
 
-        return other is DamFileCreateEvent &&
+        return other is FileUpdatedWebhookEvent &&
             id == other.id &&
             type == other.type &&
             createdAt == other.createdAt &&
@@ -293,5 +293,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "DamFileCreateEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
+        "FileUpdatedWebhookEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
 }
