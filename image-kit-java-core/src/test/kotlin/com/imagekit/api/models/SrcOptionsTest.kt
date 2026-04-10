@@ -65,9 +65,12 @@ internal class SrcOptionsTest {
                                 .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
+                                        .anchorPoint(OverlayPosition.AnchorPoint.TOP)
                                         .focus(OverlayPosition.Focus.CENTER)
                                         .x(0.0)
+                                        .xCenter(0.0)
                                         .y(0.0)
+                                        .yCenter(0.0)
                                         .build()
                                 )
                                 .timing(
@@ -176,9 +179,12 @@ internal class SrcOptionsTest {
                             .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                             .position(
                                 OverlayPosition.builder()
+                                    .anchorPoint(OverlayPosition.AnchorPoint.TOP)
                                     .focus(OverlayPosition.Focus.CENTER)
                                     .x(0.0)
+                                    .xCenter(0.0)
                                     .y(0.0)
+                                    .yCenter(0.0)
                                     .build()
                             )
                             .timing(
@@ -284,9 +290,12 @@ internal class SrcOptionsTest {
                                 .layerMode(BaseOverlay.LayerMode.MULTIPLY)
                                 .position(
                                     OverlayPosition.builder()
+                                        .anchorPoint(OverlayPosition.AnchorPoint.TOP)
                                         .focus(OverlayPosition.Focus.CENTER)
                                         .x(0.0)
+                                        .xCenter(0.0)
                                         .y(0.0)
+                                        .yCenter(0.0)
                                         .build()
                                 )
                                 .timing(
