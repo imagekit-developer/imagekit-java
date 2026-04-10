@@ -19,7 +19,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /** Triggered when a file version is created. */
-class FileVersionCreatedWebhookEvent
+class FileVersionCreateEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
@@ -119,8 +119,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [FileVersionCreatedWebhookEvent].
+         * Returns a mutable builder for constructing an instance of [FileVersionCreateEvent].
          *
          * The following fields are required:
          * ```java
@@ -133,7 +132,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [FileVersionCreatedWebhookEvent]. */
+    /** A builder for [FileVersionCreateEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -143,13 +142,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(fileVersionCreatedWebhookEvent: FileVersionCreatedWebhookEvent) = apply {
-            id = fileVersionCreatedWebhookEvent.id
-            type = fileVersionCreatedWebhookEvent.type
-            createdAt = fileVersionCreatedWebhookEvent.createdAt
-            data = fileVersionCreatedWebhookEvent.data
-            additionalProperties =
-                fileVersionCreatedWebhookEvent.additionalProperties.toMutableMap()
+        internal fun from(fileVersionCreateEvent: FileVersionCreateEvent) = apply {
+            id = fileVersionCreateEvent.id
+            type = fileVersionCreateEvent.type
+            createdAt = fileVersionCreateEvent.createdAt
+            data = fileVersionCreateEvent.data
+            additionalProperties = fileVersionCreateEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -217,7 +215,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [FileVersionCreatedWebhookEvent].
+         * Returns an immutable instance of [FileVersionCreateEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -231,8 +229,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): FileVersionCreatedWebhookEvent =
-            FileVersionCreatedWebhookEvent(
+        fun build(): FileVersionCreateEvent =
+            FileVersionCreateEvent(
                 checkRequired("id", id),
                 checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
@@ -243,7 +241,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): FileVersionCreatedWebhookEvent = apply {
+    fun validate(): FileVersionCreateEvent = apply {
         if (validated) {
             return@apply
         }
@@ -280,7 +278,7 @@ private constructor(
             return true
         }
 
-        return other is FileVersionCreatedWebhookEvent &&
+        return other is FileVersionCreateEvent &&
             id == other.id &&
             type == other.type &&
             createdAt == other.createdAt &&
@@ -295,5 +293,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileVersionCreatedWebhookEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
+        "FileVersionCreateEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
 }

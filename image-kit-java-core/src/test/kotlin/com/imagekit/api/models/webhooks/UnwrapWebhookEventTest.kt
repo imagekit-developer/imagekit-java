@@ -93,11 +93,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -274,11 +274,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -466,11 +466,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -771,11 +771,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1041,11 +1041,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).contains(uploadPreTransformError)
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1136,11 +1136,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess())
             .contains(uploadPostTransformSuccess)
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1245,11 +1245,11 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).contains(uploadPostTransformError)
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1311,9 +1311,9 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
-    fun ofFileCreated() {
-        val fileCreated =
-            FileCreatedWebhookEvent.builder()
+    fun ofFileCreate() {
+        val fileCreate =
+            FileCreateEvent.builder()
                 .id("id")
                 .type("file.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1386,7 +1386,7 @@ internal class UnwrapWebhookEventTest {
                 )
                 .build()
 
-        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileCreated(fileCreated)
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileCreate(fileCreate)
 
         assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
@@ -1395,19 +1395,19 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).contains(fileCreated)
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).contains(fileCreate)
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
-    fun ofFileCreatedRoundtrip() {
+    fun ofFileCreateRoundtrip() {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
-            UnwrapWebhookEvent.ofFileCreated(
-                FileCreatedWebhookEvent.builder()
+            UnwrapWebhookEvent.ofFileCreate(
+                FileCreateEvent.builder()
                     .id("id")
                     .type("file.created")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1498,9 +1498,9 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
-    fun ofFileUpdated() {
-        val fileUpdated =
-            FileUpdatedWebhookEvent.builder()
+    fun ofFileUpdate() {
+        val fileUpdate =
+            FileUpdateEvent.builder()
                 .id("id")
                 .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1573,7 +1573,7 @@ internal class UnwrapWebhookEventTest {
                 )
                 .build()
 
-        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileUpdated(fileUpdated)
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileUpdate(fileUpdate)
 
         assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
@@ -1582,19 +1582,19 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).contains(fileUpdated)
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).contains(fileUpdate)
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
-    fun ofFileUpdatedRoundtrip() {
+    fun ofFileUpdateRoundtrip() {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
-            UnwrapWebhookEvent.ofFileUpdated(
-                FileUpdatedWebhookEvent.builder()
+            UnwrapWebhookEvent.ofFileUpdate(
+                FileUpdateEvent.builder()
                     .id("id")
                     .type("file.updated")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1685,16 +1685,16 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
-    fun ofFileDeleted() {
-        val fileDeleted =
-            FileDeletedWebhookEvent.builder()
+    fun ofFileDelete() {
+        val fileDelete =
+            FileDeleteEvent.builder()
                 .id("id")
                 .type("file.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FileDeletedWebhookEvent.Data.builder().fileId("fileId").build())
+                .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                 .build()
 
-        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileDeleted(fileDeleted)
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileDelete(fileDelete)
 
         assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
@@ -1703,23 +1703,23 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).contains(fileDeleted)
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).contains(fileDelete)
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
-    fun ofFileDeletedRoundtrip() {
+    fun ofFileDeleteRoundtrip() {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
-            UnwrapWebhookEvent.ofFileDeleted(
-                FileDeletedWebhookEvent.builder()
+            UnwrapWebhookEvent.ofFileDelete(
+                FileDeleteEvent.builder()
                     .id("id")
                     .type("file.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .data(FileDeletedWebhookEvent.Data.builder().fileId("fileId").build())
+                    .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                     .build()
             )
 
@@ -1733,9 +1733,9 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
-    fun ofFileVersionCreated() {
-        val fileVersionCreated =
-            FileVersionCreatedWebhookEvent.builder()
+    fun ofFileVersionCreate() {
+        val fileVersionCreate =
+            FileVersionCreateEvent.builder()
                 .id("id")
                 .type("file-version.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1808,7 +1808,7 @@ internal class UnwrapWebhookEventTest {
                 )
                 .build()
 
-        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileVersionCreated(fileVersionCreated)
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileVersionCreate(fileVersionCreate)
 
         assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
@@ -1817,19 +1817,19 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).contains(fileVersionCreated)
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).contains(fileVersionCreate)
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
     }
 
     @Test
-    fun ofFileVersionCreatedRoundtrip() {
+    fun ofFileVersionCreateRoundtrip() {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
-            UnwrapWebhookEvent.ofFileVersionCreated(
-                FileVersionCreatedWebhookEvent.builder()
+            UnwrapWebhookEvent.ofFileVersionCreate(
+                FileVersionCreateEvent.builder()
                     .id("id")
                     .type("file-version.created")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
@@ -1920,21 +1920,21 @@ internal class UnwrapWebhookEventTest {
     }
 
     @Test
-    fun ofFileVersionDeleted() {
-        val fileVersionDeleted =
-            FileVersionDeletedWebhookEvent.builder()
+    fun ofFileVersionDelete() {
+        val fileVersionDelete =
+            FileVersionDeleteEvent.builder()
                 .id("id")
                 .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
-                    FileVersionDeletedWebhookEvent.Data.builder()
+                    FileVersionDeleteEvent.Data.builder()
                         .fileId("fileId")
                         .versionId("versionId")
                         .build()
                 )
                 .build()
 
-        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileVersionDeleted(fileVersionDeleted)
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFileVersionDelete(fileVersionDelete)
 
         assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
@@ -1943,24 +1943,24 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
-        assertThat(unwrapWebhookEvent.fileCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileUpdated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileDeleted()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionCreated()).isEmpty
-        assertThat(unwrapWebhookEvent.fileVersionDeleted()).contains(fileVersionDeleted)
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).contains(fileVersionDelete)
     }
 
     @Test
-    fun ofFileVersionDeletedRoundtrip() {
+    fun ofFileVersionDeleteRoundtrip() {
         val jsonMapper = jsonMapper()
         val unwrapWebhookEvent =
-            UnwrapWebhookEvent.ofFileVersionDeleted(
-                FileVersionDeletedWebhookEvent.builder()
+            UnwrapWebhookEvent.ofFileVersionDelete(
+                FileVersionDeleteEvent.builder()
                     .id("id")
                     .type("file-version.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
-                        FileVersionDeletedWebhookEvent.Data.builder()
+                        FileVersionDeleteEvent.Data.builder()
                             .fileId("fileId")
                             .versionId("versionId")
                             .build()

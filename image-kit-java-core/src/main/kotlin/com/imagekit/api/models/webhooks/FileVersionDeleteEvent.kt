@@ -18,7 +18,7 @@ import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
 /** Triggered when a file version is deleted. */
-class FileVersionDeletedWebhookEvent
+class FileVersionDeleteEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
@@ -116,8 +116,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of
-         * [FileVersionDeletedWebhookEvent].
+         * Returns a mutable builder for constructing an instance of [FileVersionDeleteEvent].
          *
          * The following fields are required:
          * ```java
@@ -130,7 +129,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [FileVersionDeletedWebhookEvent]. */
+    /** A builder for [FileVersionDeleteEvent]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -140,13 +139,12 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(fileVersionDeletedWebhookEvent: FileVersionDeletedWebhookEvent) = apply {
-            id = fileVersionDeletedWebhookEvent.id
-            type = fileVersionDeletedWebhookEvent.type
-            createdAt = fileVersionDeletedWebhookEvent.createdAt
-            data = fileVersionDeletedWebhookEvent.data
-            additionalProperties =
-                fileVersionDeletedWebhookEvent.additionalProperties.toMutableMap()
+        internal fun from(fileVersionDeleteEvent: FileVersionDeleteEvent) = apply {
+            id = fileVersionDeleteEvent.id
+            type = fileVersionDeleteEvent.type
+            createdAt = fileVersionDeleteEvent.createdAt
+            data = fileVersionDeleteEvent.data
+            additionalProperties = fileVersionDeleteEvent.additionalProperties.toMutableMap()
         }
 
         /** Unique identifier for the event. */
@@ -213,7 +211,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [FileVersionDeletedWebhookEvent].
+         * Returns an immutable instance of [FileVersionDeleteEvent].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -227,8 +225,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): FileVersionDeletedWebhookEvent =
-            FileVersionDeletedWebhookEvent(
+        fun build(): FileVersionDeleteEvent =
+            FileVersionDeleteEvent(
                 checkRequired("id", id),
                 checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
@@ -239,7 +237,7 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): FileVersionDeletedWebhookEvent = apply {
+    fun validate(): FileVersionDeleteEvent = apply {
         if (validated) {
             return@apply
         }
@@ -476,7 +474,7 @@ private constructor(
             return true
         }
 
-        return other is FileVersionDeletedWebhookEvent &&
+        return other is FileVersionDeleteEvent &&
             id == other.id &&
             type == other.type &&
             createdAt == other.createdAt &&
@@ -491,5 +489,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FileVersionDeletedWebhookEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
+        "FileVersionDeleteEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
 }
