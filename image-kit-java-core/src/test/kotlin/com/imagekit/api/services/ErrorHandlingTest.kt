@@ -56,6 +56,7 @@ internal class ErrorHandlingTest {
             ImageKitOkHttpClient.builder()
                 .baseUrl(wmRuntimeInfo.httpBaseUrl)
                 .privateKey("My Private Key")
+                .password("My Password")
                 .build()
     }
 

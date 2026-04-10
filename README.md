@@ -79,6 +79,7 @@ import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     .privateKey("My Private Key")
+    .password("My Password")
     .build();
 ```
 

@@ -14,7 +14,11 @@ internal class SavedExtensionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val savedExtensionServiceAsync = client.savedExtensions()
 
         val savedExtensionFuture =
@@ -46,7 +50,11 @@ internal class SavedExtensionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val savedExtensionServiceAsync = client.savedExtensions()
 
         val savedExtensionFuture =
@@ -77,7 +85,11 @@ internal class SavedExtensionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val savedExtensionServiceAsync = client.savedExtensions()
 
         val savedExtensionsFuture = savedExtensionServiceAsync.list()
@@ -89,7 +101,11 @@ internal class SavedExtensionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val savedExtensionServiceAsync = client.savedExtensions()
 
         val future = savedExtensionServiceAsync.delete("id")
@@ -100,7 +116,11 @@ internal class SavedExtensionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val savedExtensionServiceAsync = client.savedExtensions()
 
         val savedExtensionFuture = savedExtensionServiceAsync.get("id")

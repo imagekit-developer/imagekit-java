@@ -49,7 +49,11 @@ internal class ProGuardCompatibilityTest {
 
     @Test
     fun client() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
 
         assertThat(client).isNotNull()
         assertThat(client.customMetadataFields()).isNotNull()

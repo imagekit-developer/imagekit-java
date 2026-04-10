@@ -16,7 +16,11 @@ internal class FolderServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val folderServiceAsync = client.folders()
 
         val folderFuture =
@@ -34,7 +38,11 @@ internal class FolderServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val folderServiceAsync = client.folders()
 
         val folderFuture =
@@ -49,7 +57,11 @@ internal class FolderServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun copy() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val folderServiceAsync = client.folders()
 
         val responseFuture =
@@ -68,7 +80,11 @@ internal class FolderServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun move() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val folderServiceAsync = client.folders()
 
         val responseFuture =
@@ -86,7 +102,11 @@ internal class FolderServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun rename() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val folderServiceAsync = client.folders()
 
         val responseFuture =
