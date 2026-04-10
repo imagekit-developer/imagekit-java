@@ -14,11 +14,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun upload() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.beta().v2().files()
 
         val response =

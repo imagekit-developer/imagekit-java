@@ -14,11 +14,7 @@ internal class VersionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val versionServiceAsync = client.files().versions()
 
         val filesFuture = versionServiceAsync.list("fileId")
@@ -30,11 +26,7 @@ internal class VersionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val versionServiceAsync = client.files().versions()
 
         val versionFuture =
@@ -49,11 +41,7 @@ internal class VersionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val versionServiceAsync = client.files().versions()
 
         val fileFuture =
@@ -68,11 +56,7 @@ internal class VersionServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun restore() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val versionServiceAsync = client.files().versions()
 
         val fileFuture =

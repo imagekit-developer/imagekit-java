@@ -19,11 +19,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val file =
@@ -116,11 +112,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         fileService.delete("fileId")
@@ -129,11 +121,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun copy() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val response =
@@ -151,11 +139,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val file = fileService.get("fileId")
@@ -166,11 +150,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun move() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val response =
@@ -187,11 +167,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun rename() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val response =
@@ -209,11 +185,7 @@ internal class FileServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun upload() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val fileService = client.files()
 
         val response =

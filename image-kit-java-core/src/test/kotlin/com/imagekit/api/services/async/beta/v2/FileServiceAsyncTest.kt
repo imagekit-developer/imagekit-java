@@ -14,11 +14,7 @@ internal class FileServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun upload() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val fileServiceAsync = client.beta().v2().files()
 
         val responseFuture =

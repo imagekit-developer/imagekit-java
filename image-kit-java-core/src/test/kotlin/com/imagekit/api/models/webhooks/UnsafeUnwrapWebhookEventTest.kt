@@ -6,6 +6,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.Metadata
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -92,6 +93,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -269,6 +275,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -457,6 +468,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -757,6 +773,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1023,6 +1044,11 @@ internal class UnsafeUnwrapWebhookEventTest {
             .contains(uploadPreTransformError)
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1113,6 +1139,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess())
             .contains(uploadPostTransformSuccess)
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1218,6 +1249,11 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError())
             .contains(uploadPostTransformError)
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
     }
 
     @Test
@@ -1264,6 +1300,536 @@ internal class UnsafeUnwrapWebhookEventTest {
                                     .build()
                             )
                             .xRequestId("x_request_id")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDamFileCreate() {
+        val damFileCreate =
+            DamFileCreateEvent.builder()
+                .id("id")
+                .type("file.created")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    File.builder()
+                        .addAiTag(
+                            File.AiTag.builder()
+                                .confidence(0.0)
+                                .name("name")
+                                .source("source")
+                                .build()
+                        )
+                        .audioCodec("audioCodec")
+                        .bitRate(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customCoordinates("customCoordinates")
+                        .customMetadata(
+                            File.CustomMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .description("description")
+                        .duration(0L)
+                        .embeddedMetadata(
+                            File.EmbeddedMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .fileId("fileId")
+                        .filePath("filePath")
+                        .fileType("fileType")
+                        .hasAlpha(true)
+                        .height(0.0)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .mime("mime")
+                        .name("name")
+                        .selectedFieldsSchema(
+                            File.SelectedFieldsSchema.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "type" to "Text",
+                                            "defaultValue" to "string",
+                                            "isValueRequired" to true,
+                                            "maxLength" to 0,
+                                            "maxValue" to "string",
+                                            "minLength" to 0,
+                                            "minValue" to "string",
+                                            "readOnly" to true,
+                                            "selectOptions" to
+                                                listOf("small", "medium", "large", 30, 40, true),
+                                            "selectOptionsTruncated" to true,
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
+                        .size(0.0)
+                        .addTag("string")
+                        .thumbnail("https://example.com")
+                        .type(File.Type.FILE)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .url("https://example.com")
+                        .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                        .videoCodec("videoCodec")
+                        .width(0.0)
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDamFileCreate(damFileCreate)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).contains(damFileCreate)
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
+    }
+
+    @Test
+    fun ofDamFileCreateRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileCreate(
+                DamFileCreateEvent.builder()
+                    .id("id")
+                    .type("file.created")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        File.builder()
+                            .addAiTag(
+                                File.AiTag.builder()
+                                    .confidence(0.0)
+                                    .name("name")
+                                    .source("source")
+                                    .build()
+                            )
+                            .audioCodec("audioCodec")
+                            .bitRate(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customCoordinates("customCoordinates")
+                            .customMetadata(
+                                File.CustomMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .description("description")
+                            .duration(0L)
+                            .embeddedMetadata(
+                                File.EmbeddedMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .fileId("fileId")
+                            .filePath("filePath")
+                            .fileType("fileType")
+                            .hasAlpha(true)
+                            .height(0.0)
+                            .isPrivateFile(true)
+                            .isPublished(true)
+                            .mime("mime")
+                            .name("name")
+                            .selectedFieldsSchema(
+                                File.SelectedFieldsSchema.builder()
+                                    .putAdditionalProperty(
+                                        "foo",
+                                        JsonValue.from(
+                                            mapOf(
+                                                "type" to "Text",
+                                                "defaultValue" to "string",
+                                                "isValueRequired" to true,
+                                                "maxLength" to 0,
+                                                "maxValue" to "string",
+                                                "minLength" to 0,
+                                                "minValue" to "string",
+                                                "readOnly" to true,
+                                                "selectOptions" to
+                                                    listOf(
+                                                        "small",
+                                                        "medium",
+                                                        "large",
+                                                        30,
+                                                        40,
+                                                        true,
+                                                    ),
+                                                "selectOptionsTruncated" to true,
+                                            )
+                                        ),
+                                    )
+                                    .build()
+                            )
+                            .size(0.0)
+                            .addTag("string")
+                            .thumbnail("https://example.com")
+                            .type(File.Type.FILE)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .url("https://example.com")
+                            .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                            .videoCodec("videoCodec")
+                            .width(0.0)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDamFileUpdate() {
+        val damFileUpdate =
+            DamFileUpdateEvent.builder()
+                .id("id")
+                .type("file.updated")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    File.builder()
+                        .addAiTag(
+                            File.AiTag.builder()
+                                .confidence(0.0)
+                                .name("name")
+                                .source("source")
+                                .build()
+                        )
+                        .audioCodec("audioCodec")
+                        .bitRate(0L)
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customCoordinates("customCoordinates")
+                        .customMetadata(
+                            File.CustomMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .description("description")
+                        .duration(0L)
+                        .embeddedMetadata(
+                            File.EmbeddedMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .fileId("fileId")
+                        .filePath("filePath")
+                        .fileType("fileType")
+                        .hasAlpha(true)
+                        .height(0.0)
+                        .isPrivateFile(true)
+                        .isPublished(true)
+                        .mime("mime")
+                        .name("name")
+                        .selectedFieldsSchema(
+                            File.SelectedFieldsSchema.builder()
+                                .putAdditionalProperty(
+                                    "foo",
+                                    JsonValue.from(
+                                        mapOf(
+                                            "type" to "Text",
+                                            "defaultValue" to "string",
+                                            "isValueRequired" to true,
+                                            "maxLength" to 0,
+                                            "maxValue" to "string",
+                                            "minLength" to 0,
+                                            "minValue" to "string",
+                                            "readOnly" to true,
+                                            "selectOptions" to
+                                                listOf("small", "medium", "large", 30, 40, true),
+                                            "selectOptionsTruncated" to true,
+                                        )
+                                    ),
+                                )
+                                .build()
+                        )
+                        .size(0.0)
+                        .addTag("string")
+                        .thumbnail("https://example.com")
+                        .type(File.Type.FILE)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .url("https://example.com")
+                        .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                        .videoCodec("videoCodec")
+                        .width(0.0)
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDamFileUpdate(damFileUpdate)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).contains(damFileUpdate)
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
+    }
+
+    @Test
+    fun ofDamFileUpdateRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileUpdate(
+                DamFileUpdateEvent.builder()
+                    .id("id")
+                    .type("file.updated")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        File.builder()
+                            .addAiTag(
+                                File.AiTag.builder()
+                                    .confidence(0.0)
+                                    .name("name")
+                                    .source("source")
+                                    .build()
+                            )
+                            .audioCodec("audioCodec")
+                            .bitRate(0L)
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customCoordinates("customCoordinates")
+                            .customMetadata(
+                                File.CustomMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .description("description")
+                            .duration(0L)
+                            .embeddedMetadata(
+                                File.EmbeddedMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .fileId("fileId")
+                            .filePath("filePath")
+                            .fileType("fileType")
+                            .hasAlpha(true)
+                            .height(0.0)
+                            .isPrivateFile(true)
+                            .isPublished(true)
+                            .mime("mime")
+                            .name("name")
+                            .selectedFieldsSchema(
+                                File.SelectedFieldsSchema.builder()
+                                    .putAdditionalProperty(
+                                        "foo",
+                                        JsonValue.from(
+                                            mapOf(
+                                                "type" to "Text",
+                                                "defaultValue" to "string",
+                                                "isValueRequired" to true,
+                                                "maxLength" to 0,
+                                                "maxValue" to "string",
+                                                "minLength" to 0,
+                                                "minValue" to "string",
+                                                "readOnly" to true,
+                                                "selectOptions" to
+                                                    listOf(
+                                                        "small",
+                                                        "medium",
+                                                        "large",
+                                                        30,
+                                                        40,
+                                                        true,
+                                                    ),
+                                                "selectOptionsTruncated" to true,
+                                            )
+                                        ),
+                                    )
+                                    .build()
+                            )
+                            .size(0.0)
+                            .addTag("string")
+                            .thumbnail("https://example.com")
+                            .type(File.Type.FILE)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .url("https://example.com")
+                            .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                            .videoCodec("videoCodec")
+                            .width(0.0)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDamFileDelete() {
+        val damFileDelete =
+            DamFileDeleteEvent.builder()
+                .id("id")
+                .type("file.deleted")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(DamFileDeleteEvent.Data.builder().fileId("fileId").build())
+                .build()
+
+        val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofDamFileDelete(damFileDelete)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).contains(damFileDelete)
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
+    }
+
+    @Test
+    fun ofDamFileDeleteRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileDelete(
+                DamFileDeleteEvent.builder()
+                    .id("id")
+                    .type("file.deleted")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(DamFileDeleteEvent.Data.builder().fileId("fileId").build())
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDamFileVersionCreate() {
+        val damFileVersionCreate =
+            DamFileVersionCreateEvent.builder()
+                .id("id")
+                .type("file-version.created")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(JsonValue.from(mapOf<String, Any>()))
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileVersionCreate(damFileVersionCreate)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).contains(damFileVersionCreate)
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).isEmpty
+    }
+
+    @Test
+    fun ofDamFileVersionCreateRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileVersionCreate(
+                DamFileVersionCreateEvent.builder()
+                    .id("id")
+                    .type("file-version.created")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(JsonValue.from(mapOf<String, Any>()))
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofDamFileVersionDelete() {
+        val damFileVersionDelete =
+            DamFileVersionDeleteEvent.builder()
+                .id("id")
+                .type("file-version.deleted")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    DamFileVersionDeleteEvent.Data.builder()
+                        .fileId("fileId")
+                        .versionId("versionId")
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileVersionDelete(damFileVersionDelete)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileUpdate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileDelete()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionCreate()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.damFileVersionDelete()).contains(damFileVersionDelete)
+    }
+
+    @Test
+    fun ofDamFileVersionDeleteRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofDamFileVersionDelete(
+                DamFileVersionDeleteEvent.builder()
+                    .id("id")
+                    .type("file-version.deleted")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        DamFileVersionDeleteEvent.Data.builder()
+                            .fileId("fileId")
+                            .versionId("versionId")
                             .build()
                     )
                     .build()

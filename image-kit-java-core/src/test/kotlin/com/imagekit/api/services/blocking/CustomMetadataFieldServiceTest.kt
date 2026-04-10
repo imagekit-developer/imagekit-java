@@ -14,11 +14,7 @@ internal class CustomMetadataFieldServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val customMetadataFieldService = client.customMetadataFields()
 
         val customMetadataField =
@@ -66,11 +62,7 @@ internal class CustomMetadataFieldServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val customMetadataFieldService = client.customMetadataFields()
 
         val customMetadataField =
@@ -117,11 +109,7 @@ internal class CustomMetadataFieldServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val customMetadataFieldService = client.customMetadataFields()
 
         val customMetadataFields =
@@ -138,11 +126,7 @@ internal class CustomMetadataFieldServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val customMetadataFieldService = client.customMetadataFields()
 
         val customMetadataField = customMetadataFieldService.delete("id")

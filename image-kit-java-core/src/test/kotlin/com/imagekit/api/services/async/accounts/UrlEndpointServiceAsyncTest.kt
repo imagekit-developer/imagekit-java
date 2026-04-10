@@ -13,11 +13,7 @@ internal class UrlEndpointServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
         val urlEndpointResponseFuture =
@@ -41,11 +37,7 @@ internal class UrlEndpointServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
         val urlEndpointResponseFuture =
@@ -74,11 +66,7 @@ internal class UrlEndpointServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
         val urlEndpointResponsesFuture = urlEndpointServiceAsync.list()
@@ -90,11 +78,7 @@ internal class UrlEndpointServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
         val future = urlEndpointServiceAsync.delete("id")
@@ -105,11 +89,7 @@ internal class UrlEndpointServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val urlEndpointServiceAsync = client.accounts().urlEndpoints()
 
         val urlEndpointResponseFuture = urlEndpointServiceAsync.get("id")

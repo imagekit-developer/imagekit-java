@@ -3811,10 +3811,8 @@ private constructor(
                         minSelections.getOptional("min_selections")
 
                     /**
-                     * Array of possible tag values. The combined length of all strings must not
-                     * exceed 500 characters, and values cannot include the `%` character. When
-                     * providing large vocabularies (more than 30 items), the AI may not follow the
-                     * list strictly.
+                     * Array of possible tag values. Combined length of all strings must not exceed
+                     * 500 characters. Cannot contain the `%` character.
                      *
                      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                      *   (e.g. if the server responded with an unexpected value).
@@ -3967,10 +3965,8 @@ private constructor(
                         }
 
                         /**
-                         * Array of possible tag values. The combined length of all strings must not
-                         * exceed 500 characters, and values cannot include the `%` character. When
-                         * providing large vocabularies (more than 30 items), the AI may not follow
-                         * the list strictly.
+                         * Array of possible tag values. Combined length of all strings must not
+                         * exceed 500 characters. Cannot contain the `%` character.
                          */
                         fun vocabulary(vocabulary: List<String>) =
                             vocabulary(JsonField.of(vocabulary))
@@ -4167,10 +4163,7 @@ private constructor(
                         minSelections.getOptional("min_selections")
 
                     /**
-                     * An array of possible values matching the custom metadata field type. If not
-                     * provided for SingleSelect or MultiSelect field types, all values from the
-                     * custom metadata field definition will be used. When providing large
-                     * vocabularies (above 30 items), the AI may not strictly adhere to the list.
+                     * Array of possible values matching the custom metadata field type.
                      *
                      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type
                      *   (e.g. if the server responded with an unexpected value).
@@ -4351,13 +4344,7 @@ private constructor(
                             this.minSelections = minSelections
                         }
 
-                        /**
-                         * An array of possible values matching the custom metadata field type. If
-                         * not provided for SingleSelect or MultiSelect field types, all values from
-                         * the custom metadata field definition will be used. When providing large
-                         * vocabularies (above 30 items), the AI may not strictly adhere to the
-                         * list.
-                         */
+                        /** Array of possible values matching the custom metadata field type. */
                         fun vocabulary(vocabulary: List<Vocabulary>) =
                             vocabulary(JsonField.of(vocabulary))
 

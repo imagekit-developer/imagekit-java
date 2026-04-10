@@ -13,11 +13,7 @@ internal class UsageServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClientAsync.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
         val usageServiceAsync = client.accounts().usage()
 
         val usageFuture =

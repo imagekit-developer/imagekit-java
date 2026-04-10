@@ -15,11 +15,7 @@ internal class BulkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val bulkService = client.files().bulk()
 
         val bulk =
@@ -36,11 +32,7 @@ internal class BulkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun addTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val bulkService = client.files().bulk()
 
         val response =
@@ -58,11 +50,7 @@ internal class BulkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun removeAiTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val bulkService = client.files().bulk()
 
         val response =
@@ -80,11 +68,7 @@ internal class BulkServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun removeTags() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val bulkService = client.files().bulk()
 
         val response =

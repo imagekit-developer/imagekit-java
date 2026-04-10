@@ -10,7 +10,6 @@ import com.imagekit.api.core.http.QueryParams
 import com.imagekit.api.core.http.RetryingHttpClient
 import java.time.Clock
 import java.time.Duration
-import java.util.Base64
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
@@ -469,16 +468,6 @@ private constructor(
             // We replace after all the default headers to allow end-users to overwrite them.
             headers.replaceAll(this.headers.build())
             queryParams.replaceAll(this.queryParams.build())
-            privateKey.let { username ->
-                password?.let { password ->
-                    if (!username.isEmpty() && !password.isEmpty()) {
-                        headers.replace(
-                            "Authorization",
-                            "Basic ${Base64.getEncoder().encodeToString("$username:$password".toByteArray())}",
-                        )
-                    }
-                }
-            }
 
             return ClientOptions(
                 httpClient,

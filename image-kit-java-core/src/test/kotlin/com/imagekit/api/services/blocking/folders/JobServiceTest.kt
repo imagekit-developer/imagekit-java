@@ -11,11 +11,7 @@ internal class JobServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client =
-            ImageKitOkHttpClient.builder()
-                .privateKey("My Private Key")
-                .password("My Password")
-                .build()
+        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
         val jobService = client.folders().job()
 
         val job = jobService.get("jobId")
