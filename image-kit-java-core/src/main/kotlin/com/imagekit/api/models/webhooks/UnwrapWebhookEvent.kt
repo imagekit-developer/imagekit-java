@@ -35,11 +35,11 @@ private constructor(
     private val uploadPreTransformError: UploadPreTransformErrorEvent? = null,
     private val uploadPostTransformSuccess: UploadPostTransformSuccessEvent? = null,
     private val uploadPostTransformError: UploadPostTransformErrorEvent? = null,
-    private val fileCreated: FileCreatedWebhookEvent? = null,
-    private val fileUpdated: FileUpdatedWebhookEvent? = null,
-    private val fileDeleted: FileDeletedWebhookEvent? = null,
-    private val fileVersionCreated: FileVersionCreatedWebhookEvent? = null,
-    private val fileVersionDeleted: FileVersionDeletedWebhookEvent? = null,
+    private val fileCreate: FileCreateEvent? = null,
+    private val fileUpdate: FileUpdateEvent? = null,
+    private val fileDelete: FileDeleteEvent? = null,
+    private val fileVersionCreate: FileVersionCreateEvent? = null,
+    private val fileVersionDelete: FileVersionDeleteEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -97,21 +97,21 @@ private constructor(
         Optional.ofNullable(uploadPostTransformError)
 
     /** Triggered when a file is created. */
-    fun fileCreated(): Optional<FileCreatedWebhookEvent> = Optional.ofNullable(fileCreated)
+    fun fileCreate(): Optional<FileCreateEvent> = Optional.ofNullable(fileCreate)
 
     /** Triggered when a file is updated. */
-    fun fileUpdated(): Optional<FileUpdatedWebhookEvent> = Optional.ofNullable(fileUpdated)
+    fun fileUpdate(): Optional<FileUpdateEvent> = Optional.ofNullable(fileUpdate)
 
     /** Triggered when a file is deleted. */
-    fun fileDeleted(): Optional<FileDeletedWebhookEvent> = Optional.ofNullable(fileDeleted)
+    fun fileDelete(): Optional<FileDeleteEvent> = Optional.ofNullable(fileDelete)
 
     /** Triggered when a file version is created. */
-    fun fileVersionCreated(): Optional<FileVersionCreatedWebhookEvent> =
-        Optional.ofNullable(fileVersionCreated)
+    fun fileVersionCreate(): Optional<FileVersionCreateEvent> =
+        Optional.ofNullable(fileVersionCreate)
 
     /** Triggered when a file version is deleted. */
-    fun fileVersionDeleted(): Optional<FileVersionDeletedWebhookEvent> =
-        Optional.ofNullable(fileVersionDeleted)
+    fun fileVersionDelete(): Optional<FileVersionDeleteEvent> =
+        Optional.ofNullable(fileVersionDelete)
 
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
 
@@ -127,15 +127,15 @@ private constructor(
 
     fun isUploadPostTransformError(): Boolean = uploadPostTransformError != null
 
-    fun isFileCreated(): Boolean = fileCreated != null
+    fun isFileCreate(): Boolean = fileCreate != null
 
-    fun isFileUpdated(): Boolean = fileUpdated != null
+    fun isFileUpdate(): Boolean = fileUpdate != null
 
-    fun isFileDeleted(): Boolean = fileDeleted != null
+    fun isFileDelete(): Boolean = fileDelete != null
 
-    fun isFileVersionCreated(): Boolean = fileVersionCreated != null
+    fun isFileVersionCreate(): Boolean = fileVersionCreate != null
 
-    fun isFileVersionDeleted(): Boolean = fileVersionDeleted != null
+    fun isFileVersionDelete(): Boolean = fileVersionDelete != null
 
     /**
      * Triggered when a new video transformation request is accepted for processing. This event
@@ -191,21 +191,21 @@ private constructor(
         uploadPostTransformError.getOrThrow("uploadPostTransformError")
 
     /** Triggered when a file is created. */
-    fun asFileCreated(): FileCreatedWebhookEvent = fileCreated.getOrThrow("fileCreated")
+    fun asFileCreate(): FileCreateEvent = fileCreate.getOrThrow("fileCreate")
 
     /** Triggered when a file is updated. */
-    fun asFileUpdated(): FileUpdatedWebhookEvent = fileUpdated.getOrThrow("fileUpdated")
+    fun asFileUpdate(): FileUpdateEvent = fileUpdate.getOrThrow("fileUpdate")
 
     /** Triggered when a file is deleted. */
-    fun asFileDeleted(): FileDeletedWebhookEvent = fileDeleted.getOrThrow("fileDeleted")
+    fun asFileDelete(): FileDeleteEvent = fileDelete.getOrThrow("fileDelete")
 
     /** Triggered when a file version is created. */
-    fun asFileVersionCreated(): FileVersionCreatedWebhookEvent =
-        fileVersionCreated.getOrThrow("fileVersionCreated")
+    fun asFileVersionCreate(): FileVersionCreateEvent =
+        fileVersionCreate.getOrThrow("fileVersionCreate")
 
     /** Triggered when a file version is deleted. */
-    fun asFileVersionDeleted(): FileVersionDeletedWebhookEvent =
-        fileVersionDeleted.getOrThrow("fileVersionDeleted")
+    fun asFileVersionDelete(): FileVersionDeleteEvent =
+        fileVersionDelete.getOrThrow("fileVersionDelete")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -225,11 +225,11 @@ private constructor(
                 visitor.visitUploadPostTransformSuccess(uploadPostTransformSuccess)
             uploadPostTransformError != null ->
                 visitor.visitUploadPostTransformError(uploadPostTransformError)
-            fileCreated != null -> visitor.visitFileCreated(fileCreated)
-            fileUpdated != null -> visitor.visitFileUpdated(fileUpdated)
-            fileDeleted != null -> visitor.visitFileDeleted(fileDeleted)
-            fileVersionCreated != null -> visitor.visitFileVersionCreated(fileVersionCreated)
-            fileVersionDeleted != null -> visitor.visitFileVersionDeleted(fileVersionDeleted)
+            fileCreate != null -> visitor.visitFileCreate(fileCreate)
+            fileUpdate != null -> visitor.visitFileUpdate(fileUpdate)
+            fileDelete != null -> visitor.visitFileDelete(fileDelete)
+            fileVersionCreate != null -> visitor.visitFileVersionCreate(fileVersionCreate)
+            fileVersionDelete != null -> visitor.visitFileVersionDelete(fileVersionDelete)
             else -> visitor.unknown(_json)
         }
 
@@ -284,28 +284,24 @@ private constructor(
                     uploadPostTransformError.validate()
                 }
 
-                override fun visitFileCreated(fileCreated: FileCreatedWebhookEvent) {
-                    fileCreated.validate()
+                override fun visitFileCreate(fileCreate: FileCreateEvent) {
+                    fileCreate.validate()
                 }
 
-                override fun visitFileUpdated(fileUpdated: FileUpdatedWebhookEvent) {
-                    fileUpdated.validate()
+                override fun visitFileUpdate(fileUpdate: FileUpdateEvent) {
+                    fileUpdate.validate()
                 }
 
-                override fun visitFileDeleted(fileDeleted: FileDeletedWebhookEvent) {
-                    fileDeleted.validate()
+                override fun visitFileDelete(fileDelete: FileDeleteEvent) {
+                    fileDelete.validate()
                 }
 
-                override fun visitFileVersionCreated(
-                    fileVersionCreated: FileVersionCreatedWebhookEvent
-                ) {
-                    fileVersionCreated.validate()
+                override fun visitFileVersionCreate(fileVersionCreate: FileVersionCreateEvent) {
+                    fileVersionCreate.validate()
                 }
 
-                override fun visitFileVersionDeleted(
-                    fileVersionDeleted: FileVersionDeletedWebhookEvent
-                ) {
-                    fileVersionDeleted.validate()
+                override fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) {
+                    fileVersionDelete.validate()
                 }
             }
         )
@@ -357,22 +353,17 @@ private constructor(
                     uploadPostTransformError: UploadPostTransformErrorEvent
                 ) = uploadPostTransformError.validity()
 
-                override fun visitFileCreated(fileCreated: FileCreatedWebhookEvent) =
-                    fileCreated.validity()
+                override fun visitFileCreate(fileCreate: FileCreateEvent) = fileCreate.validity()
 
-                override fun visitFileUpdated(fileUpdated: FileUpdatedWebhookEvent) =
-                    fileUpdated.validity()
+                override fun visitFileUpdate(fileUpdate: FileUpdateEvent) = fileUpdate.validity()
 
-                override fun visitFileDeleted(fileDeleted: FileDeletedWebhookEvent) =
-                    fileDeleted.validity()
+                override fun visitFileDelete(fileDelete: FileDeleteEvent) = fileDelete.validity()
 
-                override fun visitFileVersionCreated(
-                    fileVersionCreated: FileVersionCreatedWebhookEvent
-                ) = fileVersionCreated.validity()
+                override fun visitFileVersionCreate(fileVersionCreate: FileVersionCreateEvent) =
+                    fileVersionCreate.validity()
 
-                override fun visitFileVersionDeleted(
-                    fileVersionDeleted: FileVersionDeletedWebhookEvent
-                ) = fileVersionDeleted.validity()
+                override fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) =
+                    fileVersionDelete.validity()
 
                 override fun unknown(json: JsonValue?) = 0
             }
@@ -391,11 +382,11 @@ private constructor(
             uploadPreTransformError == other.uploadPreTransformError &&
             uploadPostTransformSuccess == other.uploadPostTransformSuccess &&
             uploadPostTransformError == other.uploadPostTransformError &&
-            fileCreated == other.fileCreated &&
-            fileUpdated == other.fileUpdated &&
-            fileDeleted == other.fileDeleted &&
-            fileVersionCreated == other.fileVersionCreated &&
-            fileVersionDeleted == other.fileVersionDeleted
+            fileCreate == other.fileCreate &&
+            fileUpdate == other.fileUpdate &&
+            fileDelete == other.fileDelete &&
+            fileVersionCreate == other.fileVersionCreate &&
+            fileVersionDelete == other.fileVersionDelete
     }
 
     override fun hashCode(): Int =
@@ -407,11 +398,11 @@ private constructor(
             uploadPreTransformError,
             uploadPostTransformSuccess,
             uploadPostTransformError,
-            fileCreated,
-            fileUpdated,
-            fileDeleted,
-            fileVersionCreated,
-            fileVersionDeleted,
+            fileCreate,
+            fileUpdate,
+            fileDelete,
+            fileVersionCreate,
+            fileVersionDelete,
         )
 
     override fun toString(): String =
@@ -430,13 +421,11 @@ private constructor(
                 "UnwrapWebhookEvent{uploadPostTransformSuccess=$uploadPostTransformSuccess}"
             uploadPostTransformError != null ->
                 "UnwrapWebhookEvent{uploadPostTransformError=$uploadPostTransformError}"
-            fileCreated != null -> "UnwrapWebhookEvent{fileCreated=$fileCreated}"
-            fileUpdated != null -> "UnwrapWebhookEvent{fileUpdated=$fileUpdated}"
-            fileDeleted != null -> "UnwrapWebhookEvent{fileDeleted=$fileDeleted}"
-            fileVersionCreated != null ->
-                "UnwrapWebhookEvent{fileVersionCreated=$fileVersionCreated}"
-            fileVersionDeleted != null ->
-                "UnwrapWebhookEvent{fileVersionDeleted=$fileVersionDeleted}"
+            fileCreate != null -> "UnwrapWebhookEvent{fileCreate=$fileCreate}"
+            fileUpdate != null -> "UnwrapWebhookEvent{fileUpdate=$fileUpdate}"
+            fileDelete != null -> "UnwrapWebhookEvent{fileDelete=$fileDelete}"
+            fileVersionCreate != null -> "UnwrapWebhookEvent{fileVersionCreate=$fileVersionCreate}"
+            fileVersionDelete != null -> "UnwrapWebhookEvent{fileVersionDelete=$fileVersionDelete}"
             _json != null -> "UnwrapWebhookEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid UnwrapWebhookEvent")
         }
@@ -507,28 +496,25 @@ private constructor(
 
         /** Triggered when a file is created. */
         @JvmStatic
-        fun ofFileCreated(fileCreated: FileCreatedWebhookEvent) =
-            UnwrapWebhookEvent(fileCreated = fileCreated)
+        fun ofFileCreate(fileCreate: FileCreateEvent) = UnwrapWebhookEvent(fileCreate = fileCreate)
 
         /** Triggered when a file is updated. */
         @JvmStatic
-        fun ofFileUpdated(fileUpdated: FileUpdatedWebhookEvent) =
-            UnwrapWebhookEvent(fileUpdated = fileUpdated)
+        fun ofFileUpdate(fileUpdate: FileUpdateEvent) = UnwrapWebhookEvent(fileUpdate = fileUpdate)
 
         /** Triggered when a file is deleted. */
         @JvmStatic
-        fun ofFileDeleted(fileDeleted: FileDeletedWebhookEvent) =
-            UnwrapWebhookEvent(fileDeleted = fileDeleted)
+        fun ofFileDelete(fileDelete: FileDeleteEvent) = UnwrapWebhookEvent(fileDelete = fileDelete)
 
         /** Triggered when a file version is created. */
         @JvmStatic
-        fun ofFileVersionCreated(fileVersionCreated: FileVersionCreatedWebhookEvent) =
-            UnwrapWebhookEvent(fileVersionCreated = fileVersionCreated)
+        fun ofFileVersionCreate(fileVersionCreate: FileVersionCreateEvent) =
+            UnwrapWebhookEvent(fileVersionCreate = fileVersionCreate)
 
         /** Triggered when a file version is deleted. */
         @JvmStatic
-        fun ofFileVersionDeleted(fileVersionDeleted: FileVersionDeletedWebhookEvent) =
-            UnwrapWebhookEvent(fileVersionDeleted = fileVersionDeleted)
+        fun ofFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) =
+            UnwrapWebhookEvent(fileVersionDelete = fileVersionDelete)
     }
 
     /**
@@ -596,19 +582,19 @@ private constructor(
         ): T
 
         /** Triggered when a file is created. */
-        fun visitFileCreated(fileCreated: FileCreatedWebhookEvent): T
+        fun visitFileCreate(fileCreate: FileCreateEvent): T
 
         /** Triggered when a file is updated. */
-        fun visitFileUpdated(fileUpdated: FileUpdatedWebhookEvent): T
+        fun visitFileUpdate(fileUpdate: FileUpdateEvent): T
 
         /** Triggered when a file is deleted. */
-        fun visitFileDeleted(fileDeleted: FileDeletedWebhookEvent): T
+        fun visitFileDelete(fileDelete: FileDeleteEvent): T
 
         /** Triggered when a file version is created. */
-        fun visitFileVersionCreated(fileVersionCreated: FileVersionCreatedWebhookEvent): T
+        fun visitFileVersionCreate(fileVersionCreate: FileVersionCreateEvent): T
 
         /** Triggered when a file version is deleted. */
-        fun visitFileVersionDeleted(fileVersionDeleted: FileVersionDeletedWebhookEvent): T
+        fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent): T
 
         /**
          * Maps an unknown variant of [UnwrapWebhookEvent] to a value of type [T].
@@ -659,19 +645,21 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorEvent>())?.let {
                             UnwrapWebhookEvent(uploadPostTransformError = it, _json = json)
                         },
-                        tryDeserialize(node, jacksonTypeRef<FileCreatedWebhookEvent>())?.let {
-                            UnwrapWebhookEvent(fileCreated = it, _json = json)
+                        tryDeserialize(node, jacksonTypeRef<FileCreateEvent>())?.let {
+                            UnwrapWebhookEvent(fileCreate = it, _json = json)
                         },
-                        tryDeserialize(node, jacksonTypeRef<FileUpdatedWebhookEvent>())?.let {
-                            UnwrapWebhookEvent(fileUpdated = it, _json = json)
+                        tryDeserialize(node, jacksonTypeRef<FileUpdateEvent>())?.let {
+                            UnwrapWebhookEvent(fileUpdate = it, _json = json)
                         },
-                        tryDeserialize(node, jacksonTypeRef<FileDeletedWebhookEvent>())?.let {
-                            UnwrapWebhookEvent(fileDeleted = it, _json = json)
+                        tryDeserialize(node, jacksonTypeRef<FileDeleteEvent>())?.let {
+                            UnwrapWebhookEvent(fileDelete = it, _json = json)
                         },
-                        tryDeserialize(node, jacksonTypeRef<FileVersionCreatedWebhookEvent>())
-                            ?.let { UnwrapWebhookEvent(fileVersionCreated = it, _json = json) },
-                        tryDeserialize(node, jacksonTypeRef<FileVersionDeletedWebhookEvent>())
-                            ?.let { UnwrapWebhookEvent(fileVersionDeleted = it, _json = json) },
+                        tryDeserialize(node, jacksonTypeRef<FileVersionCreateEvent>())?.let {
+                            UnwrapWebhookEvent(fileVersionCreate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<FileVersionDeleteEvent>())?.let {
+                            UnwrapWebhookEvent(fileVersionDelete = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -710,11 +698,11 @@ private constructor(
                     generator.writeObject(value.uploadPostTransformSuccess)
                 value.uploadPostTransformError != null ->
                     generator.writeObject(value.uploadPostTransformError)
-                value.fileCreated != null -> generator.writeObject(value.fileCreated)
-                value.fileUpdated != null -> generator.writeObject(value.fileUpdated)
-                value.fileDeleted != null -> generator.writeObject(value.fileDeleted)
-                value.fileVersionCreated != null -> generator.writeObject(value.fileVersionCreated)
-                value.fileVersionDeleted != null -> generator.writeObject(value.fileVersionDeleted)
+                value.fileCreate != null -> generator.writeObject(value.fileCreate)
+                value.fileUpdate != null -> generator.writeObject(value.fileUpdate)
+                value.fileDelete != null -> generator.writeObject(value.fileDelete)
+                value.fileVersionCreate != null -> generator.writeObject(value.fileVersionCreate)
+                value.fileVersionDelete != null -> generator.writeObject(value.fileVersionDelete)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid UnwrapWebhookEvent")
             }
