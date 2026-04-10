@@ -15,7 +15,11 @@ internal class BulkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val bulkServiceAsync = client.files().bulk()
 
         val bulkFuture =
@@ -33,7 +37,11 @@ internal class BulkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun addTags() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val bulkServiceAsync = client.files().bulk()
 
         val responseFuture =
@@ -52,7 +60,11 @@ internal class BulkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun removeAiTags() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val bulkServiceAsync = client.files().bulk()
 
         val responseFuture =
@@ -71,7 +83,11 @@ internal class BulkServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun removeTags() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val bulkServiceAsync = client.files().bulk()
 
         val responseFuture =

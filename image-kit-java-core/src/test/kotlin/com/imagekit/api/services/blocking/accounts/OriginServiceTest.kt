@@ -13,7 +13,11 @@ internal class OriginServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val originService = client.accounts().origins()
 
         val originResponse =
@@ -35,7 +39,11 @@ internal class OriginServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val originService = client.accounts().origins()
 
         val originResponse =
@@ -62,7 +70,11 @@ internal class OriginServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val originService = client.accounts().origins()
 
         val originResponses = originService.list()
@@ -73,7 +85,11 @@ internal class OriginServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val originService = client.accounts().origins()
 
         originService.delete("id")
@@ -82,7 +98,11 @@ internal class OriginServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val originService = client.accounts().origins()
 
         val originResponse = originService.get("id")

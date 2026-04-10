@@ -11,7 +11,11 @@ internal class JobServiceAsyncTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client = ImageKitOkHttpClientAsync.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClientAsync.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val jobServiceAsync = client.folders().job()
 
         val jobFuture = jobServiceAsync.get("jobId")

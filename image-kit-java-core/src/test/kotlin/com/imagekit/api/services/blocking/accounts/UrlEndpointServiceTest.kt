@@ -13,7 +13,11 @@ internal class UrlEndpointServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun create() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
         val urlEndpointResponse =
@@ -36,7 +40,11 @@ internal class UrlEndpointServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun update() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
         val urlEndpointResponse =
@@ -64,7 +72,11 @@ internal class UrlEndpointServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun list() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
         val urlEndpointResponses = urlEndpointService.list()
@@ -75,7 +87,11 @@ internal class UrlEndpointServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun delete() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
         urlEndpointService.delete("id")
@@ -84,7 +100,11 @@ internal class UrlEndpointServiceTest {
     @Disabled("Mock server tests are disabled")
     @Test
     fun get() {
-        val client = ImageKitOkHttpClient.builder().privateKey("My Private Key").build()
+        val client =
+            ImageKitOkHttpClient.builder()
+                .privateKey("My Private Key")
+                .password("My Password")
+                .build()
         val urlEndpointService = client.accounts().urlEndpoints()
 
         val urlEndpointResponse = urlEndpointService.get("id")
