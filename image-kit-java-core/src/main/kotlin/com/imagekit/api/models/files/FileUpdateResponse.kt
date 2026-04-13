@@ -181,8 +181,7 @@ private constructor(
             .build()
 
     /**
-     * Array of `AITags` associated with the image. If no `AITags` are set, it will be null. These
-     * tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
+     * Array of AI-generated tags associated with the image. If no AITags are set, it will be null.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -222,10 +221,7 @@ private constructor(
     fun customCoordinates(): Optional<String> = customCoordinates.getOptional("customCoordinates")
 
     /**
-     * A key-value data associated with the asset. Use `responseField` in API request to get
-     * `customMetadata` in the upload API response. Before setting any custom metadata on an asset,
-     * you have to create the field using custom metadata fields API. Send `customMetadata` in
-     * `responseFields` in API request to get the value of this field.
+     * An object with custom metadata for the file.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -252,8 +248,7 @@ private constructor(
 
     /**
      * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
-     * data. Send `embeddedMetadata` in `responseFields` in API request to get embeddedMetadata in
-     * the upload API response.
+     * data.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -400,7 +395,7 @@ private constructor(
     fun url(): Optional<String> = url.getOptional("url")
 
     /**
-     * An object containing the file or file version's `id` (versionId) and `name`.
+     * An object with details of the file version.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -743,8 +738,8 @@ private constructor(
         }
 
         /**
-         * Array of `AITags` associated with the image. If no `AITags` are set, it will be null.
-         * These tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
+         * Array of AI-generated tags associated with the image. If no AITags are set, it will be
+         * null.
          */
         fun aiTags(aiTags: List<File.AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
 
@@ -828,12 +823,7 @@ private constructor(
             this.customCoordinates = customCoordinates
         }
 
-        /**
-         * A key-value data associated with the asset. Use `responseField` in API request to get
-         * `customMetadata` in the upload API response. Before setting any custom metadata on an
-         * asset, you have to create the field using custom metadata fields API. Send
-         * `customMetadata` in `responseFields` in API request to get the value of this field.
-         */
+        /** An object with custom metadata for the file. */
         fun customMetadata(customMetadata: File.CustomMetadata) =
             customMetadata(JsonField.of(customMetadata))
 
@@ -876,8 +866,7 @@ private constructor(
 
         /**
          * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
-         * data. Send `embeddedMetadata` in `responseFields` in API request to get embeddedMetadata
-         * in the upload API response.
+         * data.
          */
         fun embeddedMetadata(embeddedMetadata: File.EmbeddedMetadata) =
             embeddedMetadata(JsonField.of(embeddedMetadata))
@@ -1114,7 +1103,7 @@ private constructor(
          */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
-        /** An object containing the file or file version's `id` (versionId) and `name`. */
+        /** An object with details of the file version. */
         fun versionInfo(versionInfo: File.VersionInfo) = versionInfo(JsonField.of(versionInfo))
 
         /**
