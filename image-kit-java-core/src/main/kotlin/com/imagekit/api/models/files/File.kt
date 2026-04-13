@@ -142,7 +142,8 @@ private constructor(
     )
 
     /**
-     * An array of tags assigned to the file by auto tagging.
+     * Array of `AITags` associated with the image. If no `AITags` are set, it will be null. These
+     * tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -182,7 +183,10 @@ private constructor(
     fun customCoordinates(): Optional<String> = customCoordinates.getOptional("customCoordinates")
 
     /**
-     * An object with custom metadata for the file.
+     * A key-value data associated with the asset. Use `responseField` in API request to get
+     * `customMetadata` in the upload API response. Before setting any custom metadata on an asset,
+     * you have to create the field using custom metadata fields API. Send `customMetadata` in
+     * `responseFields` in API request to get the value of this field.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -208,7 +212,8 @@ private constructor(
 
     /**
      * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
-     * data.
+     * data. Send `embeddedMetadata` in `responseFields` in API request to get embeddedMetadata in
+     * the upload API response.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -355,7 +360,7 @@ private constructor(
     fun url(): Optional<String> = url.getOptional("url")
 
     /**
-     * An object with details of the file version.
+     * An object containing the file or file version's `id` (versionId) and `name`.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -679,7 +684,10 @@ private constructor(
             additionalProperties = file.additionalProperties.toMutableMap()
         }
 
-        /** An array of tags assigned to the file by auto tagging. */
+        /**
+         * Array of `AITags` associated with the image. If no `AITags` are set, it will be null.
+         * These tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
+         */
         fun aiTags(aiTags: List<AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
 
         /** Alias for calling [Builder.aiTags] with `aiTags.orElse(null)`. */
@@ -762,7 +770,12 @@ private constructor(
             this.customCoordinates = customCoordinates
         }
 
-        /** An object with custom metadata for the file. */
+        /**
+         * A key-value data associated with the asset. Use `responseField` in API request to get
+         * `customMetadata` in the upload API response. Before setting any custom metadata on an
+         * asset, you have to create the field using custom metadata fields API. Send
+         * `customMetadata` in `responseFields` in API request to get the value of this field.
+         */
         fun customMetadata(customMetadata: CustomMetadata) =
             customMetadata(JsonField.of(customMetadata))
 
@@ -805,7 +818,8 @@ private constructor(
 
         /**
          * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
-         * data.
+         * data. Send `embeddedMetadata` in `responseFields` in API request to get embeddedMetadata
+         * in the upload API response.
          */
         fun embeddedMetadata(embeddedMetadata: EmbeddedMetadata) =
             embeddedMetadata(JsonField.of(embeddedMetadata))
@@ -1041,7 +1055,7 @@ private constructor(
          */
         fun url(url: JsonField<String>) = apply { this.url = url }
 
-        /** An object with details of the file version. */
+        /** An object containing the file or file version's `id` (versionId) and `name`. */
         fun versionInfo(versionInfo: VersionInfo) = versionInfo(JsonField.of(versionInfo))
 
         /**
@@ -1438,7 +1452,12 @@ private constructor(
             "AiTag{confidence=$confidence, name=$name, source=$source, additionalProperties=$additionalProperties}"
     }
 
-    /** An object with custom metadata for the file. */
+    /**
+     * A key-value data associated with the asset. Use `responseField` in API request to get
+     * `customMetadata` in the upload API response. Before setting any custom metadata on an asset,
+     * you have to create the field using custom metadata fields API. Send `customMetadata` in
+     * `responseFields` in API request to get the value of this field.
+     */
     class CustomMetadata
     @JsonCreator
     private constructor(
@@ -1540,7 +1559,8 @@ private constructor(
 
     /**
      * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
-     * data.
+     * data. Send `embeddedMetadata` in `responseFields` in API request to get embeddedMetadata in
+     * the upload API response.
      */
     class EmbeddedMetadata
     @JsonCreator
@@ -1879,7 +1899,7 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** An object with details of the file version. */
+    /** An object containing the file or file version's `id` (versionId) and `name`. */
     class VersionInfo
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(

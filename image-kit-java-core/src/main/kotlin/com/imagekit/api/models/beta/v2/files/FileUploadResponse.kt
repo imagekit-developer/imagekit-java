@@ -133,7 +133,8 @@ private constructor(
     )
 
     /**
-     * An array of tags assigned to the uploaded file by auto tagging.
+     * Array of `AITags` associated with the image. If no `AITags` are set, it will be null. These
+     * tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -635,7 +636,10 @@ private constructor(
             additionalProperties = fileUploadResponse.additionalProperties.toMutableMap()
         }
 
-        /** An array of tags assigned to the uploaded file by auto tagging. */
+        /**
+         * Array of `AITags` associated with the image. If no `AITags` are set, it will be null.
+         * These tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
+         */
         fun aiTags(aiTags: List<AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
 
         /** Alias for calling [Builder.aiTags] with `aiTags.orElse(null)`. */
@@ -1199,8 +1203,7 @@ private constructor(
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
-         * Array of `AITags` associated with the image. If no `AITags` are set, it will be null.
-         * These tags can be added using the `google-auto-tagging` or `aws-auto-tagging` extensions.
+         * Source of the tag. Possible values are `google-auto-tagging` and `aws-auto-tagging`.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1289,9 +1292,7 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /**
-             * Array of `AITags` associated with the image. If no `AITags` are set, it will be null.
-             * These tags can be added using the `google-auto-tagging` or `aws-auto-tagging`
-             * extensions.
+             * Source of the tag. Possible values are `google-auto-tagging` and `aws-auto-tagging`.
              */
             fun source(source: String) = source(JsonField.of(source))
 
