@@ -5,6 +5,11 @@ package com.imagekit.api.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -16,22 +21,20 @@ internal class FileTest {
     fun create() {
         val file =
             File.builder()
-                .addAiTag(
-                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    File.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    File.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -45,7 +48,7 @@ internal class FileTest {
                 .mime("mime")
                 .name("name")
                 .selectedFieldsSchema(
-                    File.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -72,30 +75,26 @@ internal class FileTest {
                 .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
 
         assertThat(file.aiTags().getOrNull())
-            .containsExactly(
-                File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-            )
+            .containsExactly(AiTag.builder().confidence(0.0).name("name").source("source").build())
         assertThat(file.audioCodec()).contains("audioCodec")
         assertThat(file.bitRate()).contains(0L)
         assertThat(file.createdAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(file.customCoordinates()).contains("customCoordinates")
         assertThat(file.customMetadata())
             .contains(
-                File.CustomMetadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
+                CustomMetadata.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
             )
         assertThat(file.description()).contains("description")
         assertThat(file.duration()).contains(0L)
         assertThat(file.embeddedMetadata())
             .contains(
-                File.EmbeddedMetadata.builder()
+                EmbeddedMetadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
@@ -110,7 +109,7 @@ internal class FileTest {
         assertThat(file.name()).contains("name")
         assertThat(file.selectedFieldsSchema())
             .contains(
-                File.SelectedFieldsSchema.builder()
+                SelectedFieldsSchema.builder()
                     .putAdditionalProperty(
                         "foo",
                         JsonValue.from(
@@ -136,8 +135,7 @@ internal class FileTest {
         assertThat(file.type()).contains(File.Type.FILE)
         assertThat(file.updatedAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(file.url()).contains("https://example.com")
-        assertThat(file.versionInfo())
-            .contains(File.VersionInfo.builder().id("id").name("name").build())
+        assertThat(file.versionInfo()).contains(VersionInfo.builder().id("id").name("name").build())
         assertThat(file.videoCodec()).contains("videoCodec")
         assertThat(file.width()).contains(0.0)
     }
@@ -147,22 +145,20 @@ internal class FileTest {
         val jsonMapper = jsonMapper()
         val file =
             File.builder()
-                .addAiTag(
-                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    File.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    File.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -176,7 +172,7 @@ internal class FileTest {
                 .mime("mime")
                 .name("name")
                 .selectedFieldsSchema(
-                    File.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -203,7 +199,7 @@ internal class FileTest {
                 .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .build()

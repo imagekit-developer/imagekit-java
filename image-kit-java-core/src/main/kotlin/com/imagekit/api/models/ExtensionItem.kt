@@ -31,15 +31,15 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** Configuration object for an extension (base extensions only, not saved extension references). */
-@JsonDeserialize(using = ExtensionConfig.Deserializer::class)
-@JsonSerialize(using = ExtensionConfig.Serializer::class)
-class ExtensionConfig
+@JsonDeserialize(using = ExtensionItem.Deserializer::class)
+@JsonSerialize(using = ExtensionItem.Serializer::class)
+class ExtensionItem
 private constructor(
     private val removeBg: RemoveBg? = null,
     private val autoTaggingExtension: AutoTaggingExtension? = null,
     private val aiAutoDescription: JsonValue? = null,
     private val aiTasks: AiTasks? = null,
+    private val savedExtension: SavedExtension? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -52,6 +52,8 @@ private constructor(
 
     fun aiTasks(): Optional<AiTasks> = Optional.ofNullable(aiTasks)
 
+    fun savedExtension(): Optional<SavedExtension> = Optional.ofNullable(savedExtension)
+
     fun isRemoveBg(): Boolean = removeBg != null
 
     fun isAutoTaggingExtension(): Boolean = autoTaggingExtension != null
@@ -59,6 +61,8 @@ private constructor(
     fun isAiAutoDescription(): Boolean = aiAutoDescription != null
 
     fun isAiTasks(): Boolean = aiTasks != null
+
+    fun isSavedExtension(): Boolean = savedExtension != null
 
     fun asRemoveBg(): RemoveBg = removeBg.getOrThrow("removeBg")
 
@@ -69,6 +73,8 @@ private constructor(
 
     fun asAiTasks(): AiTasks = aiTasks.getOrThrow("aiTasks")
 
+    fun asSavedExtension(): SavedExtension = savedExtension.getOrThrow("savedExtension")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     fun <T> accept(visitor: Visitor<T>): T =
@@ -77,12 +83,13 @@ private constructor(
             autoTaggingExtension != null -> visitor.visitAutoTaggingExtension(autoTaggingExtension)
             aiAutoDescription != null -> visitor.visitAiAutoDescription(aiAutoDescription)
             aiTasks != null -> visitor.visitAiTasks(aiTasks)
+            savedExtension != null -> visitor.visitSavedExtension(savedExtension)
             else -> visitor.unknown(_json)
         }
 
     private var validated: Boolean = false
 
-    fun validate(): ExtensionConfig = apply {
+    fun validate(): ExtensionItem = apply {
         if (validated) {
             return@apply
         }
@@ -109,6 +116,10 @@ private constructor(
 
                 override fun visitAiTasks(aiTasks: AiTasks) {
                     aiTasks.validate()
+                }
+
+                override fun visitSavedExtension(savedExtension: SavedExtension) {
+                    savedExtension.validate()
                 }
             }
         )
@@ -144,6 +155,9 @@ private constructor(
 
                 override fun visitAiTasks(aiTasks: AiTasks) = aiTasks.validity()
 
+                override fun visitSavedExtension(savedExtension: SavedExtension) =
+                    savedExtension.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -153,47 +167,52 @@ private constructor(
             return true
         }
 
-        return other is ExtensionConfig &&
+        return other is ExtensionItem &&
             removeBg == other.removeBg &&
             autoTaggingExtension == other.autoTaggingExtension &&
             aiAutoDescription == other.aiAutoDescription &&
-            aiTasks == other.aiTasks
+            aiTasks == other.aiTasks &&
+            savedExtension == other.savedExtension
     }
 
     override fun hashCode(): Int =
-        Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription, aiTasks)
+        Objects.hash(removeBg, autoTaggingExtension, aiAutoDescription, aiTasks, savedExtension)
 
     override fun toString(): String =
         when {
-            removeBg != null -> "ExtensionConfig{removeBg=$removeBg}"
+            removeBg != null -> "ExtensionItem{removeBg=$removeBg}"
             autoTaggingExtension != null ->
-                "ExtensionConfig{autoTaggingExtension=$autoTaggingExtension}"
-            aiAutoDescription != null -> "ExtensionConfig{aiAutoDescription=$aiAutoDescription}"
-            aiTasks != null -> "ExtensionConfig{aiTasks=$aiTasks}"
-            _json != null -> "ExtensionConfig{_unknown=$_json}"
-            else -> throw IllegalStateException("Invalid ExtensionConfig")
+                "ExtensionItem{autoTaggingExtension=$autoTaggingExtension}"
+            aiAutoDescription != null -> "ExtensionItem{aiAutoDescription=$aiAutoDescription}"
+            aiTasks != null -> "ExtensionItem{aiTasks=$aiTasks}"
+            savedExtension != null -> "ExtensionItem{savedExtension=$savedExtension}"
+            _json != null -> "ExtensionItem{_unknown=$_json}"
+            else -> throw IllegalStateException("Invalid ExtensionItem")
         }
 
     companion object {
 
-        @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = ExtensionConfig(removeBg = removeBg)
+        @JvmStatic fun ofRemoveBg(removeBg: RemoveBg) = ExtensionItem(removeBg = removeBg)
 
         @JvmStatic
         fun ofAutoTaggingExtension(autoTaggingExtension: AutoTaggingExtension) =
-            ExtensionConfig(autoTaggingExtension = autoTaggingExtension)
+            ExtensionItem(autoTaggingExtension = autoTaggingExtension)
 
         @JvmStatic
         fun ofAiAutoDescription() =
-            ExtensionConfig(
+            ExtensionItem(
                 aiAutoDescription = JsonValue.from(mapOf("name" to "ai-auto-description"))
             )
 
-        @JvmStatic fun ofAiTasks(aiTasks: AiTasks) = ExtensionConfig(aiTasks = aiTasks)
+        @JvmStatic fun ofAiTasks(aiTasks: AiTasks) = ExtensionItem(aiTasks = aiTasks)
+
+        @JvmStatic
+        fun ofSavedExtension(savedExtension: SavedExtension) =
+            ExtensionItem(savedExtension = savedExtension)
     }
 
     /**
-     * An interface that defines how to map each variant of [ExtensionConfig] to a value of type
-     * [T].
+     * An interface that defines how to map each variant of [ExtensionItem] to a value of type [T].
      */
     interface Visitor<out T> {
 
@@ -205,55 +224,61 @@ private constructor(
 
         fun visitAiTasks(aiTasks: AiTasks): T
 
+        fun visitSavedExtension(savedExtension: SavedExtension): T
+
         /**
-         * Maps an unknown variant of [ExtensionConfig] to a value of type [T].
+         * Maps an unknown variant of [ExtensionItem] to a value of type [T].
          *
-         * An instance of [ExtensionConfig] can contain an unknown variant if it was deserialized
-         * from data that doesn't match any known variant. For example, if the SDK is on an older
-         * version than the API, then the API may respond with new variants that the SDK is unaware
-         * of.
+         * An instance of [ExtensionItem] can contain an unknown variant if it was deserialized from
+         * data that doesn't match any known variant. For example, if the SDK is on an older version
+         * than the API, then the API may respond with new variants that the SDK is unaware of.
          *
          * @throws ImageKitInvalidDataException in the default implementation.
          */
         fun unknown(json: JsonValue?): T {
-            throw ImageKitInvalidDataException("Unknown ExtensionConfig: $json")
+            throw ImageKitInvalidDataException("Unknown ExtensionItem: $json")
         }
     }
 
-    internal class Deserializer : BaseDeserializer<ExtensionConfig>(ExtensionConfig::class) {
+    internal class Deserializer : BaseDeserializer<ExtensionItem>(ExtensionItem::class) {
 
-        override fun ObjectCodec.deserialize(node: JsonNode): ExtensionConfig {
+        override fun ObjectCodec.deserialize(node: JsonNode): ExtensionItem {
             val json = JsonValue.fromJsonNode(node)
             val name = json.asObject().getOrNull()?.get("name")?.asString()?.getOrNull()
 
             when (name) {
                 "remove-bg" -> {
                     return tryDeserialize(node, jacksonTypeRef<RemoveBg>())?.let {
-                        ExtensionConfig(removeBg = it, _json = json)
-                    } ?: ExtensionConfig(_json = json)
+                        ExtensionItem(removeBg = it, _json = json)
+                    } ?: ExtensionItem(_json = json)
                 }
                 "ai-auto-description" -> {
                     return tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                        ?.let { ExtensionConfig(aiAutoDescription = it, _json = json) }
-                        ?.takeIf { it.isValid() } ?: ExtensionConfig(_json = json)
+                        ?.let { ExtensionItem(aiAutoDescription = it, _json = json) }
+                        ?.takeIf { it.isValid() } ?: ExtensionItem(_json = json)
                 }
                 "ai-tasks" -> {
                     return tryDeserialize(node, jacksonTypeRef<AiTasks>())?.let {
-                        ExtensionConfig(aiTasks = it, _json = json)
-                    } ?: ExtensionConfig(_json = json)
+                        ExtensionItem(aiTasks = it, _json = json)
+                    } ?: ExtensionItem(_json = json)
+                }
+                "saved-extension" -> {
+                    return tryDeserialize(node, jacksonTypeRef<SavedExtension>())?.let {
+                        ExtensionItem(savedExtension = it, _json = json)
+                    } ?: ExtensionItem(_json = json)
                 }
             }
 
             return tryDeserialize(node, jacksonTypeRef<AutoTaggingExtension>())?.let {
-                ExtensionConfig(autoTaggingExtension = it, _json = json)
-            } ?: ExtensionConfig(_json = json)
+                ExtensionItem(autoTaggingExtension = it, _json = json)
+            } ?: ExtensionItem(_json = json)
         }
     }
 
-    internal class Serializer : BaseSerializer<ExtensionConfig>(ExtensionConfig::class) {
+    internal class Serializer : BaseSerializer<ExtensionItem>(ExtensionItem::class) {
 
         override fun serialize(
-            value: ExtensionConfig,
+            value: ExtensionItem,
             generator: JsonGenerator,
             provider: SerializerProvider,
         ) {
@@ -263,8 +288,9 @@ private constructor(
                     generator.writeObject(value.autoTaggingExtension)
                 value.aiAutoDescription != null -> generator.writeObject(value.aiAutoDescription)
                 value.aiTasks != null -> generator.writeObject(value.aiTasks)
+                value.savedExtension != null -> generator.writeObject(value.savedExtension)
                 value._json != null -> generator.writeObject(value._json)
-                else -> throw IllegalStateException("Invalid ExtensionConfig")
+                else -> throw IllegalStateException("Invalid ExtensionItem")
             }
         }
     }
@@ -6559,5 +6585,201 @@ private constructor(
 
         override fun toString() =
             "AiTasks{name=$name, tasks=$tasks, additionalProperties=$additionalProperties}"
+    }
+
+    class SavedExtension
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val id: JsonField<String>,
+        private val name: JsonValue,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonValue = JsonMissing.of(),
+        ) : this(id, name, mutableMapOf())
+
+        /**
+         * The unique ID of the saved extension to apply.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+         */
+        fun id(): String = id.getRequired("id")
+
+        /**
+         * Indicates this is a reference to a saved extension.
+         *
+         * Expected to always return the following:
+         * ```java
+         * JsonValue.from("saved-extension")
+         * ```
+         *
+         * However, this method can be useful for debugging and logging (e.g. if the server
+         * responded with an unexpected value).
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonValue = name
+
+        /**
+         * Returns the raw JSON value of [id].
+         *
+         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /**
+             * Returns a mutable builder for constructing an instance of [SavedExtension].
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * ```
+             */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [SavedExtension]. */
+        class Builder internal constructor() {
+
+            private var id: JsonField<String>? = null
+            private var name: JsonValue = JsonValue.from("saved-extension")
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(savedExtension: SavedExtension) = apply {
+                id = savedExtension.id
+                name = savedExtension.name
+                additionalProperties = savedExtension.additionalProperties.toMutableMap()
+            }
+
+            /** The unique ID of the saved extension to apply. */
+            fun id(id: String) = id(JsonField.of(id))
+
+            /**
+             * Sets [Builder.id] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.id] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun id(id: JsonField<String>) = apply { this.id = id }
+
+            /**
+             * Sets the field to an arbitrary JSON value.
+             *
+             * It is usually unnecessary to call this method because the field defaults to the
+             * following:
+             * ```java
+             * JsonValue.from("saved-extension")
+             * ```
+             *
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun name(name: JsonValue) = apply { this.name = name }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [SavedExtension].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
+             */
+            fun build(): SavedExtension =
+                SavedExtension(checkRequired("id", id), name, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        fun validate(): SavedExtension = apply {
+            if (validated) {
+                return@apply
+            }
+
+            id()
+            _name().let {
+                if (it != JsonValue.from("saved-extension")) {
+                    throw ImageKitInvalidDataException("'name' is invalid, received $it")
+                }
+            }
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (id.asKnown().isPresent) 1 else 0) +
+                name.let { if (it == JsonValue.from("saved-extension")) 1 else 0 }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is SavedExtension &&
+                id == other.id &&
+                name == other.name &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(id, name, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "SavedExtension{id=$id, name=$name, additionalProperties=$additionalProperties}"
     }
 }

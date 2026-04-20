@@ -5,6 +5,11 @@ package com.imagekit.api.models.webhooks
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import com.imagekit.api.models.files.File
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -22,25 +27,21 @@ internal class FileVersionCreateEventTest {
                 .data(
                     File.builder()
                         .addAiTag(
-                            File.AiTag.builder()
-                                .confidence(0.0)
-                                .name("name")
-                                .source("source")
-                                .build()
+                            AiTag.builder().confidence(0.0).name("name").source("source").build()
                         )
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            File.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            File.EmbeddedMetadata.builder()
+                            EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -54,7 +55,7 @@ internal class FileVersionCreateEventTest {
                         .mime("mime")
                         .name("name")
                         .selectedFieldsSchema(
-                            File.SelectedFieldsSchema.builder()
+                            SelectedFieldsSchema.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -81,7 +82,7 @@ internal class FileVersionCreateEventTest {
                         .type(File.Type.FILE)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .url("https://example.com")
-                        .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                        .versionInfo(VersionInfo.builder().id("id").name("name").build())
                         .videoCodec("videoCodec")
                         .width(0.0)
                         .build()
@@ -95,22 +96,20 @@ internal class FileVersionCreateEventTest {
         assertThat(fileVersionCreateEvent.data())
             .isEqualTo(
                 File.builder()
-                    .addAiTag(
-                        File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                    )
+                    .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                     .audioCodec("audioCodec")
                     .bitRate(0L)
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        File.CustomMetadata.builder()
+                        CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .description("description")
                     .duration(0L)
                     .embeddedMetadata(
-                        File.EmbeddedMetadata.builder()
+                        EmbeddedMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -124,7 +123,7 @@ internal class FileVersionCreateEventTest {
                     .mime("mime")
                     .name("name")
                     .selectedFieldsSchema(
-                        File.SelectedFieldsSchema.builder()
+                        SelectedFieldsSchema.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -151,7 +150,7 @@ internal class FileVersionCreateEventTest {
                     .type(File.Type.FILE)
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .url("https://example.com")
-                    .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                    .versionInfo(VersionInfo.builder().id("id").name("name").build())
                     .videoCodec("videoCodec")
                     .width(0.0)
                     .build()
@@ -169,25 +168,21 @@ internal class FileVersionCreateEventTest {
                 .data(
                     File.builder()
                         .addAiTag(
-                            File.AiTag.builder()
-                                .confidence(0.0)
-                                .name("name")
-                                .source("source")
-                                .build()
+                            AiTag.builder().confidence(0.0).name("name").source("source").build()
                         )
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            File.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            File.EmbeddedMetadata.builder()
+                            EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -201,7 +196,7 @@ internal class FileVersionCreateEventTest {
                         .mime("mime")
                         .name("name")
                         .selectedFieldsSchema(
-                            File.SelectedFieldsSchema.builder()
+                            SelectedFieldsSchema.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -228,7 +223,7 @@ internal class FileVersionCreateEventTest {
                         .type(File.Type.FILE)
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .url("https://example.com")
-                        .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                        .versionInfo(VersionInfo.builder().id("id").name("name").build())
                         .videoCodec("videoCodec")
                         .width(0.0)
                         .build()

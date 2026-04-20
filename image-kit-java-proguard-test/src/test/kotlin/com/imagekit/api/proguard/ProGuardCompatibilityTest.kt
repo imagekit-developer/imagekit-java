@@ -6,8 +6,13 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.ExtensionItem
+import com.imagekit.api.models.SelectedFieldsSchema
 import com.imagekit.api.models.StreamingResolution
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
+import com.imagekit.api.models.VersionInfo
 import com.imagekit.api.models.files.File
 import com.imagekit.api.models.files.UpdateFileRequest
 import java.time.OffsetDateTime
@@ -72,22 +77,20 @@ internal class ProGuardCompatibilityTest {
         val jsonMapper = jsonMapper()
         val file =
             File.builder()
-                .addAiTag(
-                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    File.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    File.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -101,7 +104,7 @@ internal class ProGuardCompatibilityTest {
                 .mime("mime")
                 .name("name")
                 .selectedFieldsSchema(
-                    File.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -128,7 +131,7 @@ internal class ProGuardCompatibilityTest {
                 .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
@@ -155,10 +158,10 @@ internal class ProGuardCompatibilityTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent4.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent4.RemoveBg.builder()
+                            ExtensionItem.ofRemoveBg(
+                                ExtensionItem.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
+                                        ExtensionItem.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -167,32 +170,27 @@ internal class ProGuardCompatibilityTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                            ExtensionItem.ofAutoTaggingExtension(
+                                ExtensionItem.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                            .GOOGLE_AUTO_TAGGING
+                                        ExtensionItem.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                            ExtensionItem.ofAutoTaggingExtension(
+                                ExtensionItem.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
-                                    .name(
-                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                            .AWS_AUTO_TAGGING
-                                    )
+                                    .name(ExtensionItem.AutoTaggingExtension.Name.AWS_AUTO_TAGGING)
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
-                            UnnamedSchemaWithArrayParent4.ofAiTasks(
-                                UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                            ExtensionItem.ofAiAutoDescription(),
+                            ExtensionItem.ofAiTasks(
+                                ExtensionItem.AiTasks.builder()
                                     .addTask(
-                                        UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
-                                            .builder()
+                                        ExtensionItem.AiTasks.Task.SelectTags.builder()
                                             .instruction(
                                                 "What types of clothing items are visible?"
                                             )
@@ -203,10 +201,8 @@ internal class ProGuardCompatibilityTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofSavedExtension(
-                                UnnamedSchemaWithArrayParent4.SavedExtension.builder()
-                                    .id("ext_abc123")
-                                    .build()
+                            ExtensionItem.ofSavedExtension(
+                                ExtensionItem.SavedExtension.builder().id("ext_abc123").build()
                             ),
                         )
                     )

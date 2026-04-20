@@ -17,14 +17,11 @@ internal class CustomMetadataFieldCreateParamsTest {
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .defaultValueOfMixed(
                         listOf(
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofBool(true),
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofNumber(10.0),
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofString("Hello"),
                         )
                     )
@@ -59,14 +56,11 @@ internal class CustomMetadataFieldCreateParamsTest {
                         .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                         .defaultValueOfMixed(
                             listOf(
-                                CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent8
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofBool(true),
-                                CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent8
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofNumber(10.0),
-                                CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent8
+                                CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofString("Hello"),
                             )
                         )
@@ -105,14 +99,11 @@ internal class CustomMetadataFieldCreateParamsTest {
                     .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .defaultValueOfMixed(
                         listOf(
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofBool(true),
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofNumber(10.0),
-                            CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent8
+                            CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofString("Hello"),
                         )
                     )

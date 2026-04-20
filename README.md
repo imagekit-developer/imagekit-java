@@ -521,7 +521,7 @@ import com.imagekit.api.core.JsonValue;
 import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
-    .transformation(FileUploadParams.Transformation.builder()
+    .transformation(FileUploadParams.UploadTransformation.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
     .build();

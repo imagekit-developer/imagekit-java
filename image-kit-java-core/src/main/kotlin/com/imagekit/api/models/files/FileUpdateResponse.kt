@@ -14,6 +14,11 @@ import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.checkKnown
 import com.imagekit.api.core.toImmutable
 import com.imagekit.api.errors.ImageKitInvalidDataException
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
@@ -24,15 +29,15 @@ import kotlin.jvm.optionals.getOrNull
 class FileUpdateResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
-    private val aiTags: JsonField<List<File.AiTag>>,
+    private val aiTags: JsonField<List<AiTag>>,
     private val audioCodec: JsonField<String>,
     private val bitRate: JsonField<Long>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val customCoordinates: JsonField<String>,
-    private val customMetadata: JsonField<File.CustomMetadata>,
+    private val customMetadata: JsonField<CustomMetadata>,
     private val description: JsonField<String>,
     private val duration: JsonField<Long>,
-    private val embeddedMetadata: JsonField<File.EmbeddedMetadata>,
+    private val embeddedMetadata: JsonField<EmbeddedMetadata>,
     private val fileId: JsonField<String>,
     private val filePath: JsonField<String>,
     private val fileType: JsonField<String>,
@@ -42,14 +47,14 @@ private constructor(
     private val isPublished: JsonField<Boolean>,
     private val mime: JsonField<String>,
     private val name: JsonField<String>,
-    private val selectedFieldsSchema: JsonField<File.SelectedFieldsSchema>,
+    private val selectedFieldsSchema: JsonField<SelectedFieldsSchema>,
     private val size: JsonField<Double>,
     private val tags: JsonField<List<String>>,
     private val thumbnail: JsonField<String>,
     private val type: JsonField<File.Type>,
     private val updatedAt: JsonField<OffsetDateTime>,
     private val url: JsonField<String>,
-    private val versionInfo: JsonField<File.VersionInfo>,
+    private val versionInfo: JsonField<VersionInfo>,
     private val videoCodec: JsonField<String>,
     private val width: JsonField<Double>,
     private val extensionStatus: JsonField<ExtensionStatus>,
@@ -58,9 +63,7 @@ private constructor(
 
     @JsonCreator
     private constructor(
-        @JsonProperty("AITags")
-        @ExcludeMissing
-        aiTags: JsonField<List<File.AiTag>> = JsonMissing.of(),
+        @JsonProperty("AITags") @ExcludeMissing aiTags: JsonField<List<AiTag>> = JsonMissing.of(),
         @JsonProperty("audioCodec")
         @ExcludeMissing
         audioCodec: JsonField<String> = JsonMissing.of(),
@@ -73,14 +76,14 @@ private constructor(
         customCoordinates: JsonField<String> = JsonMissing.of(),
         @JsonProperty("customMetadata")
         @ExcludeMissing
-        customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of(),
+        customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("embeddedMetadata")
         @ExcludeMissing
-        embeddedMetadata: JsonField<File.EmbeddedMetadata> = JsonMissing.of(),
+        embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of(),
         @JsonProperty("fileId") @ExcludeMissing fileId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("filePath") @ExcludeMissing filePath: JsonField<String> = JsonMissing.of(),
         @JsonProperty("fileType") @ExcludeMissing fileType: JsonField<String> = JsonMissing.of(),
@@ -96,7 +99,7 @@ private constructor(
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("selectedFieldsSchema")
         @ExcludeMissing
-        selectedFieldsSchema: JsonField<File.SelectedFieldsSchema> = JsonMissing.of(),
+        selectedFieldsSchema: JsonField<SelectedFieldsSchema> = JsonMissing.of(),
         @JsonProperty("size") @ExcludeMissing size: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("tags") @ExcludeMissing tags: JsonField<List<String>> = JsonMissing.of(),
         @JsonProperty("thumbnail") @ExcludeMissing thumbnail: JsonField<String> = JsonMissing.of(),
@@ -107,7 +110,7 @@ private constructor(
         @JsonProperty("url") @ExcludeMissing url: JsonField<String> = JsonMissing.of(),
         @JsonProperty("versionInfo")
         @ExcludeMissing
-        versionInfo: JsonField<File.VersionInfo> = JsonMissing.of(),
+        versionInfo: JsonField<VersionInfo> = JsonMissing.of(),
         @JsonProperty("videoCodec")
         @ExcludeMissing
         videoCodec: JsonField<String> = JsonMissing.of(),
@@ -186,7 +189,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun aiTags(): Optional<List<File.AiTag>> = aiTags.getOptional("AITags")
+    fun aiTags(): Optional<List<AiTag>> = aiTags.getOptional("AITags")
 
     /**
      * The audio codec used in the video (only for video/audio).
@@ -226,8 +229,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun customMetadata(): Optional<File.CustomMetadata> =
-        customMetadata.getOptional("customMetadata")
+    fun customMetadata(): Optional<CustomMetadata> = customMetadata.getOptional("customMetadata")
 
     /**
      * Optional text to describe the contents of the file. Can be set by the user or the
@@ -253,7 +255,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun embeddedMetadata(): Optional<File.EmbeddedMetadata> =
+    fun embeddedMetadata(): Optional<EmbeddedMetadata> =
         embeddedMetadata.getOptional("embeddedMetadata")
 
     /**
@@ -342,7 +344,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun selectedFieldsSchema(): Optional<File.SelectedFieldsSchema> =
+    fun selectedFieldsSchema(): Optional<SelectedFieldsSchema> =
         selectedFieldsSchema.getOptional("selectedFieldsSchema")
 
     /**
@@ -400,7 +402,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun versionInfo(): Optional<File.VersionInfo> = versionInfo.getOptional("versionInfo")
+    fun versionInfo(): Optional<VersionInfo> = versionInfo.getOptional("versionInfo")
 
     /**
      * The video codec used in the video (only for video).
@@ -430,7 +432,7 @@ private constructor(
      *
      * Unlike [aiTags], this method doesn't throw if the JSON field has an unexpected type.
      */
-    @JsonProperty("AITags") @ExcludeMissing fun _aiTags(): JsonField<List<File.AiTag>> = aiTags
+    @JsonProperty("AITags") @ExcludeMissing fun _aiTags(): JsonField<List<AiTag>> = aiTags
 
     /**
      * Returns the raw JSON value of [audioCodec].
@@ -472,7 +474,7 @@ private constructor(
      */
     @JsonProperty("customMetadata")
     @ExcludeMissing
-    fun _customMetadata(): JsonField<File.CustomMetadata> = customMetadata
+    fun _customMetadata(): JsonField<CustomMetadata> = customMetadata
 
     /**
      * Returns the raw JSON value of [description].
@@ -496,7 +498,7 @@ private constructor(
      */
     @JsonProperty("embeddedMetadata")
     @ExcludeMissing
-    fun _embeddedMetadata(): JsonField<File.EmbeddedMetadata> = embeddedMetadata
+    fun _embeddedMetadata(): JsonField<EmbeddedMetadata> = embeddedMetadata
 
     /**
      * Returns the raw JSON value of [fileId].
@@ -573,7 +575,7 @@ private constructor(
      */
     @JsonProperty("selectedFieldsSchema")
     @ExcludeMissing
-    fun _selectedFieldsSchema(): JsonField<File.SelectedFieldsSchema> = selectedFieldsSchema
+    fun _selectedFieldsSchema(): JsonField<SelectedFieldsSchema> = selectedFieldsSchema
 
     /**
      * Returns the raw JSON value of [size].
@@ -626,7 +628,7 @@ private constructor(
      */
     @JsonProperty("versionInfo")
     @ExcludeMissing
-    fun _versionInfo(): JsonField<File.VersionInfo> = versionInfo
+    fun _versionInfo(): JsonField<VersionInfo> = versionInfo
 
     /**
      * Returns the raw JSON value of [videoCodec].
@@ -672,15 +674,15 @@ private constructor(
     /** A builder for [FileUpdateResponse]. */
     class Builder internal constructor() {
 
-        private var aiTags: JsonField<MutableList<File.AiTag>>? = null
+        private var aiTags: JsonField<MutableList<AiTag>>? = null
         private var audioCodec: JsonField<String> = JsonMissing.of()
         private var bitRate: JsonField<Long> = JsonMissing.of()
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var customCoordinates: JsonField<String> = JsonMissing.of()
-        private var customMetadata: JsonField<File.CustomMetadata> = JsonMissing.of()
+        private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
         private var description: JsonField<String> = JsonMissing.of()
         private var duration: JsonField<Long> = JsonMissing.of()
-        private var embeddedMetadata: JsonField<File.EmbeddedMetadata> = JsonMissing.of()
+        private var embeddedMetadata: JsonField<EmbeddedMetadata> = JsonMissing.of()
         private var fileId: JsonField<String> = JsonMissing.of()
         private var filePath: JsonField<String> = JsonMissing.of()
         private var fileType: JsonField<String> = JsonMissing.of()
@@ -690,14 +692,14 @@ private constructor(
         private var isPublished: JsonField<Boolean> = JsonMissing.of()
         private var mime: JsonField<String> = JsonMissing.of()
         private var name: JsonField<String> = JsonMissing.of()
-        private var selectedFieldsSchema: JsonField<File.SelectedFieldsSchema> = JsonMissing.of()
+        private var selectedFieldsSchema: JsonField<SelectedFieldsSchema> = JsonMissing.of()
         private var size: JsonField<Double> = JsonMissing.of()
         private var tags: JsonField<MutableList<String>>? = null
         private var thumbnail: JsonField<String> = JsonMissing.of()
         private var type: JsonField<File.Type> = JsonMissing.of()
         private var updatedAt: JsonField<OffsetDateTime> = JsonMissing.of()
         private var url: JsonField<String> = JsonMissing.of()
-        private var versionInfo: JsonField<File.VersionInfo> = JsonMissing.of()
+        private var versionInfo: JsonField<VersionInfo> = JsonMissing.of()
         private var videoCodec: JsonField<String> = JsonMissing.of()
         private var width: JsonField<Double> = JsonMissing.of()
         private var extensionStatus: JsonField<ExtensionStatus> = JsonMissing.of()
@@ -741,28 +743,28 @@ private constructor(
          * Array of AI-generated tags associated with the image. If no AITags are set, it will be
          * null.
          */
-        fun aiTags(aiTags: List<File.AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
+        fun aiTags(aiTags: List<AiTag>?) = aiTags(JsonField.ofNullable(aiTags))
 
         /** Alias for calling [Builder.aiTags] with `aiTags.orElse(null)`. */
-        fun aiTags(aiTags: Optional<List<File.AiTag>>) = aiTags(aiTags.getOrNull())
+        fun aiTags(aiTags: Optional<List<AiTag>>) = aiTags(aiTags.getOrNull())
 
         /**
          * Sets [Builder.aiTags] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.aiTags] with a well-typed `List<File.AiTag>` value
-         * instead. This method is primarily for setting the field to an undocumented or not yet
-         * supported value.
+         * You should usually call [Builder.aiTags] with a well-typed `List<AiTag>` value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
          */
-        fun aiTags(aiTags: JsonField<List<File.AiTag>>) = apply {
+        fun aiTags(aiTags: JsonField<List<AiTag>>) = apply {
             this.aiTags = aiTags.map { it.toMutableList() }
         }
 
         /**
-         * Adds a single [File.AiTag] to [aiTags].
+         * Adds a single [AiTag] to [aiTags].
          *
          * @throws IllegalStateException if the field was previously set to a non-list.
          */
-        fun addAiTag(aiTag: File.AiTag) = apply {
+        fun addAiTag(aiTag: AiTag) = apply {
             aiTags =
                 (aiTags ?: JsonField.of(mutableListOf())).also {
                     checkKnown("aiTags", it).add(aiTag)
@@ -824,17 +826,17 @@ private constructor(
         }
 
         /** An object with custom metadata for the file. */
-        fun customMetadata(customMetadata: File.CustomMetadata) =
+        fun customMetadata(customMetadata: CustomMetadata) =
             customMetadata(JsonField.of(customMetadata))
 
         /**
          * Sets [Builder.customMetadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.customMetadata] with a well-typed [File.CustomMetadata]
-         * value instead. This method is primarily for setting the field to an undocumented or not
-         * yet supported value.
+         * You should usually call [Builder.customMetadata] with a well-typed [CustomMetadata] value
+         * instead. This method is primarily for setting the field to an undocumented or not yet
+         * supported value.
          */
-        fun customMetadata(customMetadata: JsonField<File.CustomMetadata>) = apply {
+        fun customMetadata(customMetadata: JsonField<CustomMetadata>) = apply {
             this.customMetadata = customMetadata
         }
 
@@ -868,17 +870,17 @@ private constructor(
          * Consolidated embedded metadata associated with the file. It includes exif, iptc, and xmp
          * data.
          */
-        fun embeddedMetadata(embeddedMetadata: File.EmbeddedMetadata) =
+        fun embeddedMetadata(embeddedMetadata: EmbeddedMetadata) =
             embeddedMetadata(JsonField.of(embeddedMetadata))
 
         /**
          * Sets [Builder.embeddedMetadata] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.embeddedMetadata] with a well-typed
-         * [File.EmbeddedMetadata] value instead. This method is primarily for setting the field to
-         * an undocumented or not yet supported value.
+         * You should usually call [Builder.embeddedMetadata] with a well-typed [EmbeddedMetadata]
+         * value instead. This method is primarily for setting the field to an undocumented or not
+         * yet supported value.
          */
-        fun embeddedMetadata(embeddedMetadata: JsonField<File.EmbeddedMetadata>) = apply {
+        fun embeddedMetadata(embeddedMetadata: JsonField<EmbeddedMetadata>) = apply {
             this.embeddedMetadata = embeddedMetadata
         }
 
@@ -999,20 +1001,19 @@ private constructor(
          * Keys are the names of the custom metadata fields; the value object has details about the
          * custom metadata schema.
          */
-        fun selectedFieldsSchema(selectedFieldsSchema: File.SelectedFieldsSchema) =
+        fun selectedFieldsSchema(selectedFieldsSchema: SelectedFieldsSchema) =
             selectedFieldsSchema(JsonField.of(selectedFieldsSchema))
 
         /**
          * Sets [Builder.selectedFieldsSchema] to an arbitrary JSON value.
          *
          * You should usually call [Builder.selectedFieldsSchema] with a well-typed
-         * [File.SelectedFieldsSchema] value instead. This method is primarily for setting the field
-         * to an undocumented or not yet supported value.
+         * [SelectedFieldsSchema] value instead. This method is primarily for setting the field to
+         * an undocumented or not yet supported value.
          */
-        fun selectedFieldsSchema(selectedFieldsSchema: JsonField<File.SelectedFieldsSchema>) =
-            apply {
-                this.selectedFieldsSchema = selectedFieldsSchema
-            }
+        fun selectedFieldsSchema(selectedFieldsSchema: JsonField<SelectedFieldsSchema>) = apply {
+            this.selectedFieldsSchema = selectedFieldsSchema
+        }
 
         /** Size of the file in bytes. */
         fun size(size: Double) = size(JsonField.of(size))
@@ -1104,16 +1105,16 @@ private constructor(
         fun url(url: JsonField<String>) = apply { this.url = url }
 
         /** An object with details of the file version. */
-        fun versionInfo(versionInfo: File.VersionInfo) = versionInfo(JsonField.of(versionInfo))
+        fun versionInfo(versionInfo: VersionInfo) = versionInfo(JsonField.of(versionInfo))
 
         /**
          * Sets [Builder.versionInfo] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.versionInfo] with a well-typed [File.VersionInfo] value
+         * You should usually call [Builder.versionInfo] with a well-typed [VersionInfo] value
          * instead. This method is primarily for setting the field to an undocumented or not yet
          * supported value.
          */
-        fun versionInfo(versionInfo: JsonField<File.VersionInfo>) = apply {
+        fun versionInfo(versionInfo: JsonField<VersionInfo>) = apply {
             this.versionInfo = versionInfo
         }
 

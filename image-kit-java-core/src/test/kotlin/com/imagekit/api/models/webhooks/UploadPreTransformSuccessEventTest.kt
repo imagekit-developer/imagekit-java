@@ -5,6 +5,11 @@ package com.imagekit.api.models.webhooks
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import com.imagekit.api.models.files.Metadata
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -22,24 +27,20 @@ internal class UploadPreTransformSuccessEventTest {
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
                         .addAiTag(
-                            UploadPreTransformSuccessEvent.Data.AiTag.builder()
-                                .confidence(0.0)
-                                .name("name")
-                                .source("source")
-                                .build()
+                            AiTag.builder().confidence(0.0).name("name").source("source").build()
                         )
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
+                            EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -85,7 +86,7 @@ internal class UploadPreTransformSuccessEventTest {
                                 .exif(
                                     Metadata.Exif.builder()
                                         .exif(
-                                            Metadata.Exif.InnerExif.builder()
+                                            Metadata.Exif.ExifDetails.builder()
                                                 .apertureValue(0.0)
                                                 .colorSpace(0L)
                                                 .createDate("CreateDate")
@@ -168,7 +169,7 @@ internal class UploadPreTransformSuccessEventTest {
                         )
                         .name("name")
                         .selectedFieldsSchema(
-                            UploadPreTransformSuccessEvent.Data.SelectedFieldsSchema.builder()
+                            SelectedFieldsSchema.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -193,12 +194,7 @@ internal class UploadPreTransformSuccessEventTest {
                         .addTag("string")
                         .thumbnailUrl("thumbnailUrl")
                         .url("url")
-                        .versionInfo(
-                            UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
+                        .versionInfo(VersionInfo.builder().id("id").name("name").build())
                         .videoCodec("videoCodec")
                         .width(0.0)
                         .build()
@@ -218,25 +214,19 @@ internal class UploadPreTransformSuccessEventTest {
         assertThat(uploadPreTransformSuccessEvent.data())
             .isEqualTo(
                 UploadPreTransformSuccessEvent.Data.builder()
-                    .addAiTag(
-                        UploadPreTransformSuccessEvent.Data.AiTag.builder()
-                            .confidence(0.0)
-                            .name("name")
-                            .source("source")
-                            .build()
-                    )
+                    .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                     .audioCodec("audioCodec")
                     .bitRate(0L)
                     .customCoordinates("customCoordinates")
                     .customMetadata(
-                        UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
+                        CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
                     .description("description")
                     .duration(0L)
                     .embeddedMetadata(
-                        UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
+                        EmbeddedMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -279,7 +269,7 @@ internal class UploadPreTransformSuccessEventTest {
                             .exif(
                                 Metadata.Exif.builder()
                                     .exif(
-                                        Metadata.Exif.InnerExif.builder()
+                                        Metadata.Exif.ExifDetails.builder()
                                             .apertureValue(0.0)
                                             .colorSpace(0L)
                                             .createDate("CreateDate")
@@ -360,7 +350,7 @@ internal class UploadPreTransformSuccessEventTest {
                     )
                     .name("name")
                     .selectedFieldsSchema(
-                        UploadPreTransformSuccessEvent.Data.SelectedFieldsSchema.builder()
+                        SelectedFieldsSchema.builder()
                             .putAdditionalProperty(
                                 "foo",
                                 JsonValue.from(
@@ -385,12 +375,7 @@ internal class UploadPreTransformSuccessEventTest {
                     .addTag("string")
                     .thumbnailUrl("thumbnailUrl")
                     .url("url")
-                    .versionInfo(
-                        UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
-                            .id("id")
-                            .name("name")
-                            .build()
-                    )
+                    .versionInfo(VersionInfo.builder().id("id").name("name").build())
                     .videoCodec("videoCodec")
                     .width(0.0)
                     .build()
@@ -415,24 +400,20 @@ internal class UploadPreTransformSuccessEventTest {
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
                         .addAiTag(
-                            UploadPreTransformSuccessEvent.Data.AiTag.builder()
-                                .confidence(0.0)
-                                .name("name")
-                                .source("source")
-                                .build()
+                            AiTag.builder().confidence(0.0).name("name").source("source").build()
                         )
                         .audioCodec("audioCodec")
                         .bitRate(0L)
                         .customCoordinates("customCoordinates")
                         .customMetadata(
-                            UploadPreTransformSuccessEvent.Data.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
                         .description("description")
                         .duration(0L)
                         .embeddedMetadata(
-                            UploadPreTransformSuccessEvent.Data.EmbeddedMetadata.builder()
+                            EmbeddedMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -478,7 +459,7 @@ internal class UploadPreTransformSuccessEventTest {
                                 .exif(
                                     Metadata.Exif.builder()
                                         .exif(
-                                            Metadata.Exif.InnerExif.builder()
+                                            Metadata.Exif.ExifDetails.builder()
                                                 .apertureValue(0.0)
                                                 .colorSpace(0L)
                                                 .createDate("CreateDate")
@@ -561,7 +542,7 @@ internal class UploadPreTransformSuccessEventTest {
                         )
                         .name("name")
                         .selectedFieldsSchema(
-                            UploadPreTransformSuccessEvent.Data.SelectedFieldsSchema.builder()
+                            SelectedFieldsSchema.builder()
                                 .putAdditionalProperty(
                                     "foo",
                                     JsonValue.from(
@@ -586,12 +567,7 @@ internal class UploadPreTransformSuccessEventTest {
                         .addTag("string")
                         .thumbnailUrl("thumbnailUrl")
                         .url("url")
-                        .versionInfo(
-                            UploadPreTransformSuccessEvent.Data.VersionInfo.builder()
-                                .id("id")
-                                .name("name")
-                                .build()
-                        )
+                        .versionInfo(VersionInfo.builder().id("id").name("name").build())
                         .videoCodec("videoCodec")
                         .width(0.0)
                         .build()

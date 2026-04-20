@@ -3,7 +3,7 @@
 package com.imagekit.api.models.files
 
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
+import com.imagekit.api.models.ExtensionItem
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -25,10 +25,10 @@ internal class FileUpdateParamsTest {
                     .description("description")
                     .extensions(
                         listOf(
-                            UnnamedSchemaWithArrayParent4.ofRemoveBg(
-                                UnnamedSchemaWithArrayParent4.RemoveBg.builder()
+                            ExtensionItem.ofRemoveBg(
+                                ExtensionItem.RemoveBg.builder()
                                     .options(
-                                        UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
+                                        ExtensionItem.RemoveBg.Options.builder()
                                             .addShadow(true)
                                             .bgColor("bg_color")
                                             .bgImageUrl("bg_image_url")
@@ -37,32 +37,27 @@ internal class FileUpdateParamsTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                            ExtensionItem.ofAutoTaggingExtension(
+                                ExtensionItem.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
                                     .name(
-                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                            .GOOGLE_AUTO_TAGGING
+                                        ExtensionItem.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                            ExtensionItem.ofAutoTaggingExtension(
+                                ExtensionItem.AutoTaggingExtension.builder()
                                     .maxTags(10L)
                                     .minConfidence(80L)
-                                    .name(
-                                        UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                            .AWS_AUTO_TAGGING
-                                    )
+                                    .name(ExtensionItem.AutoTaggingExtension.Name.AWS_AUTO_TAGGING)
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
-                            UnnamedSchemaWithArrayParent4.ofAiTasks(
-                                UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                            ExtensionItem.ofAiAutoDescription(),
+                            ExtensionItem.ofAiTasks(
+                                ExtensionItem.AiTasks.builder()
                                     .addTask(
-                                        UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
-                                            .builder()
+                                        ExtensionItem.AiTasks.Task.SelectTags.builder()
                                             .instruction(
                                                 "What types of clothing items are visible?"
                                             )
@@ -73,10 +68,8 @@ internal class FileUpdateParamsTest {
                                     )
                                     .build()
                             ),
-                            UnnamedSchemaWithArrayParent4.ofSavedExtension(
-                                UnnamedSchemaWithArrayParent4.SavedExtension.builder()
-                                    .id("ext_abc123")
-                                    .build()
+                            ExtensionItem.ofSavedExtension(
+                                ExtensionItem.SavedExtension.builder().id("ext_abc123").build()
                             ),
                         )
                     )
@@ -119,10 +112,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
+                                ExtensionItem.ofRemoveBg(
+                                    ExtensionItem.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
+                                            ExtensionItem.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -131,32 +124,30 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                                ExtensionItem.ofAutoTaggingExtension(
+                                    ExtensionItem.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
+                                            ExtensionItem.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                                ExtensionItem.ofAutoTaggingExtension(
+                                    ExtensionItem.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                                .AWS_AUTO_TAGGING
+                                            ExtensionItem.AutoTaggingExtension.Name.AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
-                                UnnamedSchemaWithArrayParent4.ofAiTasks(
-                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                ExtensionItem.ofAiAutoDescription(),
+                                ExtensionItem.ofAiTasks(
+                                    ExtensionItem.AiTasks.builder()
                                         .addTask(
-                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
-                                                .builder()
+                                            ExtensionItem.AiTasks.Task.SelectTags.builder()
                                                 .instruction(
                                                     "What types of clothing items are visible?"
                                                 )
@@ -167,10 +158,8 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
-                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
-                                        .id("ext_abc123")
-                                        .build()
+                                ExtensionItem.ofSavedExtension(
+                                    ExtensionItem.SavedExtension.builder().id("ext_abc123").build()
                                 ),
                             )
                         )
@@ -198,10 +187,10 @@ internal class FileUpdateParamsTest {
                         .description("description")
                         .extensions(
                             listOf(
-                                UnnamedSchemaWithArrayParent4.ofRemoveBg(
-                                    UnnamedSchemaWithArrayParent4.RemoveBg.builder()
+                                ExtensionItem.ofRemoveBg(
+                                    ExtensionItem.RemoveBg.builder()
                                         .options(
-                                            UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
+                                            ExtensionItem.RemoveBg.Options.builder()
                                                 .addShadow(true)
                                                 .bgColor("bg_color")
                                                 .bgImageUrl("bg_image_url")
@@ -210,32 +199,30 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                                ExtensionItem.ofAutoTaggingExtension(
+                                    ExtensionItem.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
+                                            ExtensionItem.AutoTaggingExtension.Name
                                                 .GOOGLE_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                                ExtensionItem.ofAutoTaggingExtension(
+                                    ExtensionItem.AutoTaggingExtension.builder()
                                         .maxTags(10L)
                                         .minConfidence(80L)
                                         .name(
-                                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                                .AWS_AUTO_TAGGING
+                                            ExtensionItem.AutoTaggingExtension.Name.AWS_AUTO_TAGGING
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
-                                UnnamedSchemaWithArrayParent4.ofAiTasks(
-                                    UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                                ExtensionItem.ofAiAutoDescription(),
+                                ExtensionItem.ofAiTasks(
+                                    ExtensionItem.AiTasks.builder()
                                         .addTask(
-                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags
-                                                .builder()
+                                            ExtensionItem.AiTasks.Task.SelectTags.builder()
                                                 .instruction(
                                                     "What types of clothing items are visible?"
                                                 )
@@ -246,10 +233,8 @@ internal class FileUpdateParamsTest {
                                         )
                                         .build()
                                 ),
-                                UnnamedSchemaWithArrayParent4.ofSavedExtension(
-                                    UnnamedSchemaWithArrayParent4.SavedExtension.builder()
-                                        .id("ext_abc123")
-                                        .build()
+                                ExtensionItem.ofSavedExtension(
+                                    ExtensionItem.SavedExtension.builder().id("ext_abc123").build()
                                 ),
                             )
                         )

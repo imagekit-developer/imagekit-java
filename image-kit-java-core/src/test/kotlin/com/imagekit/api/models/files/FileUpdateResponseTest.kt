@@ -5,6 +5,11 @@ package com.imagekit.api.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import java.time.OffsetDateTime
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -16,22 +21,20 @@ internal class FileUpdateResponseTest {
     fun create() {
         val fileUpdateResponse =
             FileUpdateResponse.builder()
-                .addAiTag(
-                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    File.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    File.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -45,7 +48,7 @@ internal class FileUpdateResponseTest {
                 .mime("mime")
                 .name("name")
                 .selectedFieldsSchema(
-                    File.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -72,7 +75,7 @@ internal class FileUpdateResponseTest {
                 .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .extensionStatus(
@@ -91,9 +94,7 @@ internal class FileUpdateResponseTest {
                 .build()
 
         assertThat(fileUpdateResponse.aiTags().getOrNull())
-            .containsExactly(
-                File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-            )
+            .containsExactly(AiTag.builder().confidence(0.0).name("name").source("source").build())
         assertThat(fileUpdateResponse.audioCodec()).contains("audioCodec")
         assertThat(fileUpdateResponse.bitRate()).contains(0L)
         assertThat(fileUpdateResponse.createdAt())
@@ -101,15 +102,13 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.customCoordinates()).contains("customCoordinates")
         assertThat(fileUpdateResponse.customMetadata())
             .contains(
-                File.CustomMetadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
+                CustomMetadata.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
             )
         assertThat(fileUpdateResponse.description()).contains("description")
         assertThat(fileUpdateResponse.duration()).contains(0L)
         assertThat(fileUpdateResponse.embeddedMetadata())
             .contains(
-                File.EmbeddedMetadata.builder()
+                EmbeddedMetadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
@@ -124,7 +123,7 @@ internal class FileUpdateResponseTest {
         assertThat(fileUpdateResponse.name()).contains("name")
         assertThat(fileUpdateResponse.selectedFieldsSchema())
             .contains(
-                File.SelectedFieldsSchema.builder()
+                SelectedFieldsSchema.builder()
                     .putAdditionalProperty(
                         "foo",
                         JsonValue.from(
@@ -152,7 +151,7 @@ internal class FileUpdateResponseTest {
             .contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateResponse.url()).contains("https://example.com")
         assertThat(fileUpdateResponse.versionInfo())
-            .contains(File.VersionInfo.builder().id("id").name("name").build())
+            .contains(VersionInfo.builder().id("id").name("name").build())
         assertThat(fileUpdateResponse.videoCodec()).contains("videoCodec")
         assertThat(fileUpdateResponse.width()).contains(0.0)
         assertThat(fileUpdateResponse.extensionStatus())
@@ -172,22 +171,20 @@ internal class FileUpdateResponseTest {
         val jsonMapper = jsonMapper()
         val fileUpdateResponse =
             FileUpdateResponse.builder()
-                .addAiTag(
-                    File.AiTag.builder().confidence(0.0).name("name").source("source").build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    File.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    File.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -201,7 +198,7 @@ internal class FileUpdateResponseTest {
                 .mime("mime")
                 .name("name")
                 .selectedFieldsSchema(
-                    File.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -228,7 +225,7 @@ internal class FileUpdateResponseTest {
                 .type(File.Type.FILE)
                 .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .url("https://example.com")
-                .versionInfo(File.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .extensionStatus(

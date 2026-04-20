@@ -21,7 +21,7 @@ internal class MetadataTest {
                 .exif(
                     Metadata.Exif.builder()
                         .exif(
-                            Metadata.Exif.InnerExif.builder()
+                            Metadata.Exif.ExifDetails.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")
@@ -108,7 +108,7 @@ internal class MetadataTest {
             .contains(
                 Metadata.Exif.builder()
                     .exif(
-                        Metadata.Exif.InnerExif.builder()
+                        Metadata.Exif.ExifDetails.builder()
                             .apertureValue(0.0)
                             .colorSpace(0L)
                             .createDate("CreateDate")
@@ -199,7 +199,7 @@ internal class MetadataTest {
                 .exif(
                     Metadata.Exif.builder()
                         .exif(
-                            Metadata.Exif.InnerExif.builder()
+                            Metadata.Exif.ExifDetails.builder()
                                 .apertureValue(0.0)
                                 .colorSpace(0L)
                                 .createDate("CreateDate")

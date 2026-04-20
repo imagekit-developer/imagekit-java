@@ -32,13 +32,13 @@ internal class CustomMetadataFieldServiceTest {
                             .defaultValueOfMixed(
                                 listOf(
                                     CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent8
+                                        .DefaultValueItem
                                         .ofBool(true),
                                     CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent8
+                                        .DefaultValueItem
                                         .ofNumber(10.0),
                                     CustomMetadataFieldCreateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent8
+                                        .DefaultValueItem
                                         .ofString("Hello"),
                                 )
                             )
@@ -95,13 +95,13 @@ internal class CustomMetadataFieldServiceTest {
                             .defaultValueOfMixed(
                                 listOf(
                                     CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent9
+                                        .DefaultValueItem
                                         .ofBool(true),
                                     CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent9
+                                        .DefaultValueItem
                                         .ofNumber(10.0),
                                     CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                        .UnnamedSchemaWithArrayParent9
+                                        .DefaultValueItem
                                         .ofString("Hello"),
                                 )
                             )
