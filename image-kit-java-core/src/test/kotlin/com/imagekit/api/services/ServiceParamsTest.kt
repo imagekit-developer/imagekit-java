@@ -15,7 +15,7 @@ import com.github.tomakehurst.wiremock.junit5.WireMockTest
 import com.imagekit.api.client.ImageKitClient
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient
 import com.imagekit.api.core.JsonValue
-import com.imagekit.api.models.UnnamedSchemaWithArrayParent4
+import com.imagekit.api.models.ExtensionItem
 import com.imagekit.api.models.files.FileUploadParams
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
@@ -61,10 +61,10 @@ internal class ServiceParamsTest {
                 .expire(0L)
                 .extensions(
                     listOf(
-                        UnnamedSchemaWithArrayParent4.ofRemoveBg(
-                            UnnamedSchemaWithArrayParent4.RemoveBg.builder()
+                        ExtensionItem.ofRemoveBg(
+                            ExtensionItem.RemoveBg.builder()
                                 .options(
-                                    UnnamedSchemaWithArrayParent4.RemoveBg.Options.builder()
+                                    ExtensionItem.RemoveBg.Options.builder()
                                         .addShadow(true)
                                         .bgColor("bg_color")
                                         .bgImageUrl("bg_image_url")
@@ -73,21 +73,18 @@ internal class ServiceParamsTest {
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent4.ofAutoTaggingExtension(
-                            UnnamedSchemaWithArrayParent4.AutoTaggingExtension.builder()
+                        ExtensionItem.ofAutoTaggingExtension(
+                            ExtensionItem.AutoTaggingExtension.builder()
                                 .maxTags(5L)
                                 .minConfidence(95L)
-                                .name(
-                                    UnnamedSchemaWithArrayParent4.AutoTaggingExtension.Name
-                                        .GOOGLE_AUTO_TAGGING
-                                )
+                                .name(ExtensionItem.AutoTaggingExtension.Name.GOOGLE_AUTO_TAGGING)
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent4.ofAiAutoDescription(),
-                        UnnamedSchemaWithArrayParent4.ofAiTasks(
-                            UnnamedSchemaWithArrayParent4.AiTasks.builder()
+                        ExtensionItem.ofAiAutoDescription(),
+                        ExtensionItem.ofAiTasks(
+                            ExtensionItem.AiTasks.builder()
                                 .addTask(
-                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.SelectTags.builder()
+                                    ExtensionItem.AiTasks.Task.SelectTags.builder()
                                         .instruction(
                                             "What types of clothing items are visible in this image?"
                                         )
@@ -99,18 +96,16 @@ internal class ServiceParamsTest {
                                         .build()
                                 )
                                 .addTask(
-                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo.builder()
+                                    ExtensionItem.AiTasks.Task.YesNo.builder()
                                         .instruction("Is this a luxury or high-end fashion item?")
                                         .onNo(
-                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo.OnNo
-                                                .builder()
+                                            ExtensionItem.AiTasks.Task.YesNo.OnNo.builder()
                                                 .addAddTag("luxury")
                                                 .addAddTag("premium")
                                                 .addRemoveTag("budget")
                                                 .addRemoveTag("affordable")
                                                 .addSetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnNo
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnNo
                                                         .SetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -118,8 +113,7 @@ internal class ServiceParamsTest {
                                                         .build()
                                                 )
                                                 .addUnsetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnNo
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnNo
                                                         .UnsetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -128,16 +122,13 @@ internal class ServiceParamsTest {
                                                 .build()
                                         )
                                         .onUnknown(
-                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                .OnUnknown
-                                                .builder()
+                                            ExtensionItem.AiTasks.Task.YesNo.OnUnknown.builder()
                                                 .addAddTag("luxury")
                                                 .addAddTag("premium")
                                                 .addRemoveTag("budget")
                                                 .addRemoveTag("affordable")
                                                 .addSetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnUnknown
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnUnknown
                                                         .SetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -145,8 +136,7 @@ internal class ServiceParamsTest {
                                                         .build()
                                                 )
                                                 .addUnsetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnUnknown
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnUnknown
                                                         .UnsetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -155,15 +145,13 @@ internal class ServiceParamsTest {
                                                 .build()
                                         )
                                         .onYes(
-                                            UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo.OnYes
-                                                .builder()
+                                            ExtensionItem.AiTasks.Task.YesNo.OnYes.builder()
                                                 .addAddTag("luxury")
                                                 .addAddTag("premium")
                                                 .addRemoveTag("budget")
                                                 .addRemoveTag("affordable")
                                                 .addSetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnYes
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnYes
                                                         .SetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -171,8 +159,7 @@ internal class ServiceParamsTest {
                                                         .build()
                                                 )
                                                 .addUnsetMetadata(
-                                                    UnnamedSchemaWithArrayParent4.AiTasks.Task.YesNo
-                                                        .OnYes
+                                                    ExtensionItem.AiTasks.Task.YesNo.OnYes
                                                         .UnsetMetadata
                                                         .builder()
                                                         .field("price_range")
@@ -184,10 +171,8 @@ internal class ServiceParamsTest {
                                 )
                                 .build()
                         ),
-                        UnnamedSchemaWithArrayParent4.ofSavedExtension(
-                            UnnamedSchemaWithArrayParent4.SavedExtension.builder()
-                                .id("ext_abc123")
-                                .build()
+                        ExtensionItem.ofSavedExtension(
+                            ExtensionItem.SavedExtension.builder().id("ext_abc123").build()
                         ),
                     )
                 )
@@ -209,15 +194,17 @@ internal class ServiceParamsTest {
                 .signature("signature")
                 .tags(listOf("t-shirt", "round-neck", "men"))
                 .transformation(
-                    FileUploadParams.Transformation.builder()
+                    FileUploadParams.UploadTransformation.builder()
                         .addPost(
-                            FileUploadParams.Transformation.Post.Thumbnail.builder()
+                            FileUploadParams.UploadTransformation.Post.Thumbnail.builder()
                                 .value("w-150,h-150")
                                 .build()
                         )
                         .addPost(
-                            FileUploadParams.Transformation.Post.Abs.builder()
-                                .protocol(FileUploadParams.Transformation.Post.Abs.Protocol.DASH)
+                            FileUploadParams.UploadTransformation.Post.Abs.builder()
+                                .protocol(
+                                    FileUploadParams.UploadTransformation.Post.Abs.Protocol.DASH
+                                )
                                 .value("sr-240_360_480_720_1080")
                                 .build()
                         )

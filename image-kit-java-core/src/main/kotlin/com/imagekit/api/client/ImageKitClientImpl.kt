@@ -4,6 +4,8 @@ package com.imagekit.api.client
 
 import com.imagekit.api.core.ClientOptions
 import com.imagekit.api.core.getPackageVersion
+import com.imagekit.api.lib.Helper
+import com.imagekit.api.lib.HelperService
 import com.imagekit.api.services.blocking.AccountService
 import com.imagekit.api.services.blocking.AccountServiceImpl
 import com.imagekit.api.services.blocking.AssetService
@@ -63,6 +65,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptionsWithUserAgent) }
 
+    private val helper: Helper by lazy { Helper.create(clientOptions) }
+
     override fun async(): ImageKitClientAsync = async
 
     override fun withRawResponse(): ImageKitClient.WithRawResponse = withRawResponse
@@ -87,6 +91,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun beta(): BetaService = beta
 
     override fun webhooks(): WebhookService = webhooks
+
+    override fun helper(): HelperService = helper
 
     override fun close() = clientOptions.close()
 

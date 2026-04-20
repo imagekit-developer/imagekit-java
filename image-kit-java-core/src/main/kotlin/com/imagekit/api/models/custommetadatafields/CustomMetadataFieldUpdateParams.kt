@@ -746,7 +746,7 @@ private constructor(
             fun defaultValue(bool: Boolean) = defaultValue(DefaultValue.ofBool(bool))
 
             /** Alias for calling [defaultValue] with `DefaultValue.ofMixed(mixed)`. */
-            fun defaultValueOfMixed(mixed: List<DefaultValue.UnnamedSchemaWithArrayParent9>) =
+            fun defaultValueOfMixed(mixed: List<DefaultValue.DefaultValueItem>) =
                 defaultValue(DefaultValue.ofMixed(mixed))
 
             /**
@@ -971,7 +971,7 @@ private constructor(
             private val string: String? = null,
             private val number: Double? = null,
             private val bool: Boolean? = null,
-            private val mixed: List<UnnamedSchemaWithArrayParent9>? = null,
+            private val mixed: List<DefaultValueItem>? = null,
             private val _json: JsonValue? = null,
         ) {
 
@@ -985,7 +985,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent9>> = Optional.ofNullable(mixed)
+            fun mixed(): Optional<List<DefaultValueItem>> = Optional.ofNullable(mixed)
 
             fun isString(): Boolean = string != null
 
@@ -1005,7 +1005,7 @@ private constructor(
              * Default value should be of type array when custom metadata field type is set to
              * `MultiSelect`.
              */
-            fun asMixed(): List<UnnamedSchemaWithArrayParent9> = mixed.getOrThrow("mixed")
+            fun asMixed(): List<DefaultValueItem> = mixed.getOrThrow("mixed")
 
             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -1033,7 +1033,7 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) {}
 
-                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent9>) {
+                        override fun visitMixed(mixed: List<DefaultValueItem>) {
                             mixed.forEach { it.validate() }
                         }
                     }
@@ -1065,7 +1065,7 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) = 1
 
-                        override fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent9>) =
+                        override fun visitMixed(mixed: List<DefaultValueItem>) =
                             mixed.sumOf { it.validity().toInt() }
 
                         override fun unknown(json: JsonValue?) = 0
@@ -1109,7 +1109,7 @@ private constructor(
                  * `MultiSelect`.
                  */
                 @JvmStatic
-                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent9>) =
+                fun ofMixed(mixed: List<DefaultValueItem>) =
                     DefaultValue(mixed = mixed.toImmutable())
             }
 
@@ -1129,7 +1129,7 @@ private constructor(
                  * Default value should be of type array when custom metadata field type is set to
                  * `MultiSelect`.
                  */
-                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent9>): T
+                fun visitMixed(mixed: List<DefaultValueItem>): T
 
                 /**
                  * Maps an unknown variant of [DefaultValue] to a value of type [T].
@@ -1162,10 +1162,7 @@ private constructor(
                                 tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
                                     DefaultValue(bool = it, _json = json)
                                 },
-                                tryDeserialize(
-                                        node,
-                                        jacksonTypeRef<List<UnnamedSchemaWithArrayParent9>>(),
-                                    )
+                                tryDeserialize(node, jacksonTypeRef<List<DefaultValueItem>>())
                                     ?.let { DefaultValue(mixed = it, _json = json) },
                             )
                             .filterNotNull()
@@ -1202,9 +1199,9 @@ private constructor(
                 }
             }
 
-            @JsonDeserialize(using = UnnamedSchemaWithArrayParent9.Deserializer::class)
-            @JsonSerialize(using = UnnamedSchemaWithArrayParent9.Serializer::class)
-            class UnnamedSchemaWithArrayParent9
+            @JsonDeserialize(using = DefaultValueItem.Deserializer::class)
+            @JsonSerialize(using = DefaultValueItem.Serializer::class)
+            class DefaultValueItem
             private constructor(
                 private val string: String? = null,
                 private val number: Double? = null,
@@ -1242,7 +1239,7 @@ private constructor(
 
                 private var validated: Boolean = false
 
-                fun validate(): UnnamedSchemaWithArrayParent9 = apply {
+                fun validate(): DefaultValueItem = apply {
                     if (validated) {
                         return@apply
                     }
@@ -1292,7 +1289,7 @@ private constructor(
                         return true
                     }
 
-                    return other is UnnamedSchemaWithArrayParent9 &&
+                    return other is DefaultValueItem &&
                         string == other.string &&
                         number == other.number &&
                         bool == other.bool
@@ -1302,28 +1299,25 @@ private constructor(
 
                 override fun toString(): String =
                     when {
-                        string != null -> "UnnamedSchemaWithArrayParent9{string=$string}"
-                        number != null -> "UnnamedSchemaWithArrayParent9{number=$number}"
-                        bool != null -> "UnnamedSchemaWithArrayParent9{bool=$bool}"
-                        _json != null -> "UnnamedSchemaWithArrayParent9{_unknown=$_json}"
-                        else -> throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent9")
+                        string != null -> "DefaultValueItem{string=$string}"
+                        number != null -> "DefaultValueItem{number=$number}"
+                        bool != null -> "DefaultValueItem{bool=$bool}"
+                        _json != null -> "DefaultValueItem{_unknown=$_json}"
+                        else -> throw IllegalStateException("Invalid DefaultValueItem")
                     }
 
                 companion object {
 
-                    @JvmStatic
-                    fun ofString(string: String) = UnnamedSchemaWithArrayParent9(string = string)
+                    @JvmStatic fun ofString(string: String) = DefaultValueItem(string = string)
 
-                    @JvmStatic
-                    fun ofNumber(number: Double) = UnnamedSchemaWithArrayParent9(number = number)
+                    @JvmStatic fun ofNumber(number: Double) = DefaultValueItem(number = number)
 
-                    @JvmStatic
-                    fun ofBool(bool: Boolean) = UnnamedSchemaWithArrayParent9(bool = bool)
+                    @JvmStatic fun ofBool(bool: Boolean) = DefaultValueItem(bool = bool)
                 }
 
                 /**
-                 * An interface that defines how to map each variant of
-                 * [UnnamedSchemaWithArrayParent9] to a value of type [T].
+                 * An interface that defines how to map each variant of [DefaultValueItem] to a
+                 * value of type [T].
                  */
                 interface Visitor<out T> {
 
@@ -1334,43 +1328,36 @@ private constructor(
                     fun visitBool(bool: Boolean): T
 
                     /**
-                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent9] to a value of type
-                     * [T].
+                     * Maps an unknown variant of [DefaultValueItem] to a value of type [T].
                      *
-                     * An instance of [UnnamedSchemaWithArrayParent9] can contain an unknown variant
-                     * if it was deserialized from data that doesn't match any known variant. For
-                     * example, if the SDK is on an older version than the API, then the API may
-                     * respond with new variants that the SDK is unaware of.
+                     * An instance of [DefaultValueItem] can contain an unknown variant if it was
+                     * deserialized from data that doesn't match any known variant. For example, if
+                     * the SDK is on an older version than the API, then the API may respond with
+                     * new variants that the SDK is unaware of.
                      *
                      * @throws ImageKitInvalidDataException in the default implementation.
                      */
                     fun unknown(json: JsonValue?): T {
-                        throw ImageKitInvalidDataException(
-                            "Unknown UnnamedSchemaWithArrayParent9: $json"
-                        )
+                        throw ImageKitInvalidDataException("Unknown DefaultValueItem: $json")
                     }
                 }
 
                 internal class Deserializer :
-                    BaseDeserializer<UnnamedSchemaWithArrayParent9>(
-                        UnnamedSchemaWithArrayParent9::class
-                    ) {
+                    BaseDeserializer<DefaultValueItem>(DefaultValueItem::class) {
 
-                    override fun ObjectCodec.deserialize(
-                        node: JsonNode
-                    ): UnnamedSchemaWithArrayParent9 {
+                    override fun ObjectCodec.deserialize(node: JsonNode): DefaultValueItem {
                         val json = JsonValue.fromJsonNode(node)
 
                         val bestMatches =
                             sequenceOf(
                                     tryDeserialize(node, jacksonTypeRef<String>())?.let {
-                                        UnnamedSchemaWithArrayParent9(string = it, _json = json)
+                                        DefaultValueItem(string = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Double>())?.let {
-                                        UnnamedSchemaWithArrayParent9(number = it, _json = json)
+                                        DefaultValueItem(number = it, _json = json)
                                     },
                                     tryDeserialize(node, jacksonTypeRef<Boolean>())?.let {
-                                        UnnamedSchemaWithArrayParent9(bool = it, _json = json)
+                                        DefaultValueItem(bool = it, _json = json)
                                     },
                                 )
                                 .filterNotNull()
@@ -1380,7 +1367,7 @@ private constructor(
                             // This can happen if what we're deserializing is completely
                             // incompatible with all the possible variants (e.g. deserializing from
                             // object).
-                            0 -> UnnamedSchemaWithArrayParent9(_json = json)
+                            0 -> DefaultValueItem(_json = json)
                             1 -> bestMatches.single()
                             // If there's more than one match with the highest validity, then use
                             // the first completely valid match, or simply the first match if none
@@ -1391,12 +1378,10 @@ private constructor(
                 }
 
                 internal class Serializer :
-                    BaseSerializer<UnnamedSchemaWithArrayParent9>(
-                        UnnamedSchemaWithArrayParent9::class
-                    ) {
+                    BaseSerializer<DefaultValueItem>(DefaultValueItem::class) {
 
                     override fun serialize(
-                        value: UnnamedSchemaWithArrayParent9,
+                        value: DefaultValueItem,
                         generator: JsonGenerator,
                         provider: SerializerProvider,
                     ) {
@@ -1405,8 +1390,7 @@ private constructor(
                             value.number != null -> generator.writeObject(value.number)
                             value.bool != null -> generator.writeObject(value.bool)
                             value._json != null -> generator.writeObject(value._json)
-                            else ->
-                                throw IllegalStateException("Invalid UnnamedSchemaWithArrayParent9")
+                            else -> throw IllegalStateException("Invalid DefaultValueItem")
                         }
                     }
                 }

@@ -613,7 +613,7 @@ private constructor(
     class Exif
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val exif: JsonField<InnerExif>,
+        private val exif: JsonField<ExifDetails>,
         private val gps: JsonField<Gps>,
         private val image: JsonField<Image>,
         private val interoperability: JsonField<Interoperability>,
@@ -624,7 +624,7 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("exif") @ExcludeMissing exif: JsonField<InnerExif> = JsonMissing.of(),
+            @JsonProperty("exif") @ExcludeMissing exif: JsonField<ExifDetails> = JsonMissing.of(),
             @JsonProperty("gps") @ExcludeMissing gps: JsonField<Gps> = JsonMissing.of(),
             @JsonProperty("image") @ExcludeMissing image: JsonField<Image> = JsonMissing.of(),
             @JsonProperty("interoperability")
@@ -644,7 +644,7 @@ private constructor(
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun exif(): Optional<InnerExif> = exif.getOptional("exif")
+        fun exif(): Optional<ExifDetails> = exif.getOptional("exif")
 
         /**
          * Object containing GPS information.
@@ -690,7 +690,7 @@ private constructor(
          *
          * Unlike [exif], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("exif") @ExcludeMissing fun _exif(): JsonField<InnerExif> = exif
+        @JsonProperty("exif") @ExcludeMissing fun _exif(): JsonField<ExifDetails> = exif
 
         /**
          * Returns the raw JSON value of [gps].
@@ -755,7 +755,7 @@ private constructor(
         /** A builder for [Exif]. */
         class Builder internal constructor() {
 
-            private var exif: JsonField<InnerExif> = JsonMissing.of()
+            private var exif: JsonField<ExifDetails> = JsonMissing.of()
             private var gps: JsonField<Gps> = JsonMissing.of()
             private var image: JsonField<Image> = JsonMissing.of()
             private var interoperability: JsonField<Interoperability> = JsonMissing.of()
@@ -775,16 +775,16 @@ private constructor(
             }
 
             /** Object containing Exif details. */
-            fun exif(exif: InnerExif) = exif(JsonField.of(exif))
+            fun exif(exif: ExifDetails) = exif(JsonField.of(exif))
 
             /**
              * Sets [Builder.exif] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.exif] with a well-typed [InnerExif] value instead.
+             * You should usually call [Builder.exif] with a well-typed [ExifDetails] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun exif(exif: JsonField<InnerExif>) = apply { this.exif = exif }
+            fun exif(exif: JsonField<ExifDetails>) = apply { this.exif = exif }
 
             /** Object containing GPS information. */
             fun gps(gps: Gps) = gps(JsonField.of(gps))
@@ -924,7 +924,7 @@ private constructor(
                 (thumbnail.asKnown().getOrNull()?.validity() ?: 0)
 
         /** Object containing Exif details. */
-        class InnerExif
+        class ExifDetails
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val apertureValue: JsonField<Double>,
@@ -1490,11 +1490,11 @@ private constructor(
 
             companion object {
 
-                /** Returns a mutable builder for constructing an instance of [InnerExif]. */
+                /** Returns a mutable builder for constructing an instance of [ExifDetails]. */
                 @JvmStatic fun builder() = Builder()
             }
 
-            /** A builder for [InnerExif]. */
+            /** A builder for [ExifDetails]. */
             class Builder internal constructor() {
 
                 private var apertureValue: JsonField<Double> = JsonMissing.of()
@@ -1526,34 +1526,34 @@ private constructor(
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
-                internal fun from(innerExif: InnerExif) = apply {
-                    apertureValue = innerExif.apertureValue
-                    colorSpace = innerExif.colorSpace
-                    createDate = innerExif.createDate
-                    customRendered = innerExif.customRendered
-                    dateTimeOriginal = innerExif.dateTimeOriginal
-                    exifImageHeight = innerExif.exifImageHeight
-                    exifImageWidth = innerExif.exifImageWidth
-                    exifVersion = innerExif.exifVersion
-                    exposureCompensation = innerExif.exposureCompensation
-                    exposureMode = innerExif.exposureMode
-                    exposureProgram = innerExif.exposureProgram
-                    exposureTime = innerExif.exposureTime
-                    flash = innerExif.flash
-                    flashpixVersion = innerExif.flashpixVersion
-                    fNumber = innerExif.fNumber
-                    focalLength = innerExif.focalLength
-                    focalPlaneResolutionUnit = innerExif.focalPlaneResolutionUnit
-                    focalPlaneXResolution = innerExif.focalPlaneXResolution
-                    focalPlaneYResolution = innerExif.focalPlaneYResolution
-                    interopOffset = innerExif.interopOffset
-                    iso = innerExif.iso
-                    meteringMode = innerExif.meteringMode
-                    sceneCaptureType = innerExif.sceneCaptureType
-                    shutterSpeedValue = innerExif.shutterSpeedValue
-                    subSecTime = innerExif.subSecTime
-                    whiteBalance = innerExif.whiteBalance
-                    additionalProperties = innerExif.additionalProperties.toMutableMap()
+                internal fun from(exifDetails: ExifDetails) = apply {
+                    apertureValue = exifDetails.apertureValue
+                    colorSpace = exifDetails.colorSpace
+                    createDate = exifDetails.createDate
+                    customRendered = exifDetails.customRendered
+                    dateTimeOriginal = exifDetails.dateTimeOriginal
+                    exifImageHeight = exifDetails.exifImageHeight
+                    exifImageWidth = exifDetails.exifImageWidth
+                    exifVersion = exifDetails.exifVersion
+                    exposureCompensation = exifDetails.exposureCompensation
+                    exposureMode = exifDetails.exposureMode
+                    exposureProgram = exifDetails.exposureProgram
+                    exposureTime = exifDetails.exposureTime
+                    flash = exifDetails.flash
+                    flashpixVersion = exifDetails.flashpixVersion
+                    fNumber = exifDetails.fNumber
+                    focalLength = exifDetails.focalLength
+                    focalPlaneResolutionUnit = exifDetails.focalPlaneResolutionUnit
+                    focalPlaneXResolution = exifDetails.focalPlaneXResolution
+                    focalPlaneYResolution = exifDetails.focalPlaneYResolution
+                    interopOffset = exifDetails.interopOffset
+                    iso = exifDetails.iso
+                    meteringMode = exifDetails.meteringMode
+                    sceneCaptureType = exifDetails.sceneCaptureType
+                    shutterSpeedValue = exifDetails.shutterSpeedValue
+                    subSecTime = exifDetails.subSecTime
+                    whiteBalance = exifDetails.whiteBalance
+                    additionalProperties = exifDetails.additionalProperties.toMutableMap()
                 }
 
                 fun apertureValue(apertureValue: Double) =
@@ -1922,12 +1922,12 @@ private constructor(
                 }
 
                 /**
-                 * Returns an immutable instance of [InnerExif].
+                 * Returns an immutable instance of [ExifDetails].
                  *
                  * Further updates to this [Builder] will not mutate the returned instance.
                  */
-                fun build(): InnerExif =
-                    InnerExif(
+                fun build(): ExifDetails =
+                    ExifDetails(
                         apertureValue,
                         colorSpace,
                         createDate,
@@ -1960,7 +1960,7 @@ private constructor(
 
             private var validated: Boolean = false
 
-            fun validate(): InnerExif = apply {
+            fun validate(): ExifDetails = apply {
                 if (validated) {
                     return@apply
                 }
@@ -2042,7 +2042,7 @@ private constructor(
                     return true
                 }
 
-                return other is InnerExif &&
+                return other is ExifDetails &&
                     apertureValue == other.apertureValue &&
                     colorSpace == other.colorSpace &&
                     createDate == other.createDate &&
@@ -2107,7 +2107,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "InnerExif{apertureValue=$apertureValue, colorSpace=$colorSpace, createDate=$createDate, customRendered=$customRendered, dateTimeOriginal=$dateTimeOriginal, exifImageHeight=$exifImageHeight, exifImageWidth=$exifImageWidth, exifVersion=$exifVersion, exposureCompensation=$exposureCompensation, exposureMode=$exposureMode, exposureProgram=$exposureProgram, exposureTime=$exposureTime, flash=$flash, flashpixVersion=$flashpixVersion, fNumber=$fNumber, focalLength=$focalLength, focalPlaneResolutionUnit=$focalPlaneResolutionUnit, focalPlaneXResolution=$focalPlaneXResolution, focalPlaneYResolution=$focalPlaneYResolution, interopOffset=$interopOffset, iso=$iso, meteringMode=$meteringMode, sceneCaptureType=$sceneCaptureType, shutterSpeedValue=$shutterSpeedValue, subSecTime=$subSecTime, whiteBalance=$whiteBalance, additionalProperties=$additionalProperties}"
+                "ExifDetails{apertureValue=$apertureValue, colorSpace=$colorSpace, createDate=$createDate, customRendered=$customRendered, dateTimeOriginal=$dateTimeOriginal, exifImageHeight=$exifImageHeight, exifImageWidth=$exifImageWidth, exifVersion=$exifVersion, exposureCompensation=$exposureCompensation, exposureMode=$exposureMode, exposureProgram=$exposureProgram, exposureTime=$exposureTime, flash=$flash, flashpixVersion=$flashpixVersion, fNumber=$fNumber, focalLength=$focalLength, focalPlaneResolutionUnit=$focalPlaneResolutionUnit, focalPlaneXResolution=$focalPlaneXResolution, focalPlaneYResolution=$focalPlaneYResolution, interopOffset=$interopOffset, iso=$iso, meteringMode=$meteringMode, sceneCaptureType=$sceneCaptureType, shutterSpeedValue=$shutterSpeedValue, subSecTime=$subSecTime, whiteBalance=$whiteBalance, additionalProperties=$additionalProperties}"
         }
 
         /** Object containing GPS information. */

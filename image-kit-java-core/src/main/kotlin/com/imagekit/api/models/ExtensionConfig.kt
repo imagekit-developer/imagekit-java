@@ -3306,7 +3306,7 @@ private constructor(
                             fun value(bool: Boolean) = value(Value.ofBool(bool))
 
                             /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
-                            fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent0>) =
+                            fun valueOfMixed(mixed: List<Value.MetadataValueItem>) =
                                 value(Value.ofMixed(mixed))
 
                             fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
@@ -3395,7 +3395,7 @@ private constructor(
                             private val string: String? = null,
                             private val number: Double? = null,
                             private val bool: Boolean? = null,
-                            private val mixed: List<UnnamedSchemaWithArrayParent0>? = null,
+                            private val mixed: List<MetadataValueItem>? = null,
                             private val _json: JsonValue? = null,
                         ) {
 
@@ -3405,7 +3405,7 @@ private constructor(
 
                             fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
 
-                            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent0>> =
+                            fun mixed(): Optional<List<MetadataValueItem>> =
                                 Optional.ofNullable(mixed)
 
                             fun isString(): Boolean = string != null
@@ -3422,8 +3422,7 @@ private constructor(
 
                             fun asBool(): Boolean = bool.getOrThrow("bool")
 
-                            fun asMixed(): List<UnnamedSchemaWithArrayParent0> =
-                                mixed.getOrThrow("mixed")
+                            fun asMixed(): List<MetadataValueItem> = mixed.getOrThrow("mixed")
 
                             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -3451,9 +3450,7 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) {}
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent0>
-                                        ) {
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) {
                                             mixed.forEach { it.validate() }
                                         }
                                     }
@@ -3485,9 +3482,8 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) = 1
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent0>
-                                        ) = mixed.sumOf { it.validity().toInt() }
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) =
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
@@ -3526,7 +3522,7 @@ private constructor(
                                 @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
 
                                 @JvmStatic
-                                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent0>) =
+                                fun ofMixed(mixed: List<MetadataValueItem>) =
                                     Value(mixed = mixed.toImmutable())
                             }
 
@@ -3542,7 +3538,7 @@ private constructor(
 
                                 fun visitBool(bool: Boolean): T
 
-                                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent0>): T
+                                fun visitMixed(mixed: List<MetadataValueItem>): T
 
                                 /**
                                  * Maps an unknown variant of [Value] to a value of type [T].
@@ -3575,9 +3571,7 @@ private constructor(
                                                     ?.let { Value(bool = it, _json = json) },
                                                 tryDeserialize(
                                                         node,
-                                                        jacksonTypeRef<
-                                                            List<UnnamedSchemaWithArrayParent0>
-                                                        >(),
+                                                        jacksonTypeRef<List<MetadataValueItem>>(),
                                                     )
                                                     ?.let { Value(mixed = it, _json = json) },
                                             )
@@ -3618,11 +3612,9 @@ private constructor(
                                 }
                             }
 
-                            @JsonDeserialize(
-                                using = UnnamedSchemaWithArrayParent0.Deserializer::class
-                            )
-                            @JsonSerialize(using = UnnamedSchemaWithArrayParent0.Serializer::class)
-                            class UnnamedSchemaWithArrayParent0
+                            @JsonDeserialize(using = MetadataValueItem.Deserializer::class)
+                            @JsonSerialize(using = MetadataValueItem.Serializer::class)
+                            class MetadataValueItem
                             private constructor(
                                 private val string: String? = null,
                                 private val number: Double? = null,
@@ -3660,7 +3652,7 @@ private constructor(
 
                                 private var validated: Boolean = false
 
-                                fun validate(): UnnamedSchemaWithArrayParent0 = apply {
+                                fun validate(): MetadataValueItem = apply {
                                     if (validated) {
                                         return@apply
                                     }
@@ -3710,7 +3702,7 @@ private constructor(
                                         return true
                                     }
 
-                                    return other is UnnamedSchemaWithArrayParent0 &&
+                                    return other is MetadataValueItem &&
                                         string == other.string &&
                                         number == other.number &&
                                         bool == other.bool
@@ -3720,37 +3712,31 @@ private constructor(
 
                                 override fun toString(): String =
                                     when {
-                                        string != null ->
-                                            "UnnamedSchemaWithArrayParent0{string=$string}"
-                                        number != null ->
-                                            "UnnamedSchemaWithArrayParent0{number=$number}"
-                                        bool != null -> "UnnamedSchemaWithArrayParent0{bool=$bool}"
-                                        _json != null ->
-                                            "UnnamedSchemaWithArrayParent0{_unknown=$_json}"
+                                        string != null -> "MetadataValueItem{string=$string}"
+                                        number != null -> "MetadataValueItem{number=$number}"
+                                        bool != null -> "MetadataValueItem{bool=$bool}"
+                                        _json != null -> "MetadataValueItem{_unknown=$_json}"
                                         else ->
-                                            throw IllegalStateException(
-                                                "Invalid UnnamedSchemaWithArrayParent0"
-                                            )
+                                            throw IllegalStateException("Invalid MetadataValueItem")
                                     }
 
                                 companion object {
 
                                     @JvmStatic
                                     fun ofString(string: String) =
-                                        UnnamedSchemaWithArrayParent0(string = string)
+                                        MetadataValueItem(string = string)
 
                                     @JvmStatic
                                     fun ofNumber(number: Double) =
-                                        UnnamedSchemaWithArrayParent0(number = number)
+                                        MetadataValueItem(number = number)
 
                                     @JvmStatic
-                                    fun ofBool(bool: Boolean) =
-                                        UnnamedSchemaWithArrayParent0(bool = bool)
+                                    fun ofBool(bool: Boolean) = MetadataValueItem(bool = bool)
                                 }
 
                                 /**
                                  * An interface that defines how to map each variant of
-                                 * [UnnamedSchemaWithArrayParent0] to a value of type [T].
+                                 * [MetadataValueItem] to a value of type [T].
                                  */
                                 interface Visitor<out T> {
 
@@ -3761,13 +3747,13 @@ private constructor(
                                     fun visitBool(bool: Boolean): T
 
                                     /**
-                                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent0] to
-                                     * a value of type [T].
+                                     * Maps an unknown variant of [MetadataValueItem] to a value of
+                                     * type [T].
                                      *
-                                     * An instance of [UnnamedSchemaWithArrayParent0] can contain an
-                                     * unknown variant if it was deserialized from data that doesn't
-                                     * match any known variant. For example, if the SDK is on an
-                                     * older version than the API, then the API may respond with new
+                                     * An instance of [MetadataValueItem] can contain an unknown
+                                     * variant if it was deserialized from data that doesn't match
+                                     * any known variant. For example, if the SDK is on an older
+                                     * version than the API, then the API may respond with new
                                      * variants that the SDK is unaware of.
                                      *
                                      * @throws ImageKitInvalidDataException in the default
@@ -3775,40 +3761,38 @@ private constructor(
                                      */
                                     fun unknown(json: JsonValue?): T {
                                         throw ImageKitInvalidDataException(
-                                            "Unknown UnnamedSchemaWithArrayParent0: $json"
+                                            "Unknown MetadataValueItem: $json"
                                         )
                                     }
                                 }
 
                                 internal class Deserializer :
-                                    BaseDeserializer<UnnamedSchemaWithArrayParent0>(
-                                        UnnamedSchemaWithArrayParent0::class
-                                    ) {
+                                    BaseDeserializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun ObjectCodec.deserialize(
                                         node: JsonNode
-                                    ): UnnamedSchemaWithArrayParent0 {
+                                    ): MetadataValueItem {
                                         val json = JsonValue.fromJsonNode(node)
 
                                         val bestMatches =
                                             sequenceOf(
                                                     tryDeserialize(node, jacksonTypeRef<String>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent0(
+                                                            MetadataValueItem(
                                                                 string = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Double>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent0(
+                                                            MetadataValueItem(
                                                                 number = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Boolean>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent0(
+                                                            MetadataValueItem(
                                                                 bool = it,
                                                                 _json = json,
                                                             )
@@ -3821,7 +3805,7 @@ private constructor(
                                             // This can happen if what we're deserializing is
                                             // completely incompatible with all the possible
                                             // variants (e.g. deserializing from object).
-                                            0 -> UnnamedSchemaWithArrayParent0(_json = json)
+                                            0 -> MetadataValueItem(_json = json)
                                             1 -> bestMatches.single()
                                             // If there's more than one match with the highest
                                             // validity, then use the first completely valid match,
@@ -3835,12 +3819,10 @@ private constructor(
                                 }
 
                                 internal class Serializer :
-                                    BaseSerializer<UnnamedSchemaWithArrayParent0>(
-                                        UnnamedSchemaWithArrayParent0::class
-                                    ) {
+                                    BaseSerializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun serialize(
-                                        value: UnnamedSchemaWithArrayParent0,
+                                        value: MetadataValueItem,
                                         generator: JsonGenerator,
                                         provider: SerializerProvider,
                                     ) {
@@ -3854,7 +3836,7 @@ private constructor(
                                                 generator.writeObject(value._json)
                                             else ->
                                                 throw IllegalStateException(
-                                                    "Invalid UnnamedSchemaWithArrayParent0"
+                                                    "Invalid MetadataValueItem"
                                                 )
                                         }
                                     }
@@ -4549,7 +4531,7 @@ private constructor(
                             fun value(bool: Boolean) = value(Value.ofBool(bool))
 
                             /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
-                            fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent1>) =
+                            fun valueOfMixed(mixed: List<Value.MetadataValueItem>) =
                                 value(Value.ofMixed(mixed))
 
                             fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
@@ -4638,7 +4620,7 @@ private constructor(
                             private val string: String? = null,
                             private val number: Double? = null,
                             private val bool: Boolean? = null,
-                            private val mixed: List<UnnamedSchemaWithArrayParent1>? = null,
+                            private val mixed: List<MetadataValueItem>? = null,
                             private val _json: JsonValue? = null,
                         ) {
 
@@ -4648,7 +4630,7 @@ private constructor(
 
                             fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
 
-                            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent1>> =
+                            fun mixed(): Optional<List<MetadataValueItem>> =
                                 Optional.ofNullable(mixed)
 
                             fun isString(): Boolean = string != null
@@ -4665,8 +4647,7 @@ private constructor(
 
                             fun asBool(): Boolean = bool.getOrThrow("bool")
 
-                            fun asMixed(): List<UnnamedSchemaWithArrayParent1> =
-                                mixed.getOrThrow("mixed")
+                            fun asMixed(): List<MetadataValueItem> = mixed.getOrThrow("mixed")
 
                             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -4694,9 +4675,7 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) {}
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent1>
-                                        ) {
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) {
                                             mixed.forEach { it.validate() }
                                         }
                                     }
@@ -4728,9 +4707,8 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) = 1
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent1>
-                                        ) = mixed.sumOf { it.validity().toInt() }
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) =
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
@@ -4769,7 +4747,7 @@ private constructor(
                                 @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
 
                                 @JvmStatic
-                                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent1>) =
+                                fun ofMixed(mixed: List<MetadataValueItem>) =
                                     Value(mixed = mixed.toImmutable())
                             }
 
@@ -4785,7 +4763,7 @@ private constructor(
 
                                 fun visitBool(bool: Boolean): T
 
-                                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent1>): T
+                                fun visitMixed(mixed: List<MetadataValueItem>): T
 
                                 /**
                                  * Maps an unknown variant of [Value] to a value of type [T].
@@ -4818,9 +4796,7 @@ private constructor(
                                                     ?.let { Value(bool = it, _json = json) },
                                                 tryDeserialize(
                                                         node,
-                                                        jacksonTypeRef<
-                                                            List<UnnamedSchemaWithArrayParent1>
-                                                        >(),
+                                                        jacksonTypeRef<List<MetadataValueItem>>(),
                                                     )
                                                     ?.let { Value(mixed = it, _json = json) },
                                             )
@@ -4861,11 +4837,9 @@ private constructor(
                                 }
                             }
 
-                            @JsonDeserialize(
-                                using = UnnamedSchemaWithArrayParent1.Deserializer::class
-                            )
-                            @JsonSerialize(using = UnnamedSchemaWithArrayParent1.Serializer::class)
-                            class UnnamedSchemaWithArrayParent1
+                            @JsonDeserialize(using = MetadataValueItem.Deserializer::class)
+                            @JsonSerialize(using = MetadataValueItem.Serializer::class)
+                            class MetadataValueItem
                             private constructor(
                                 private val string: String? = null,
                                 private val number: Double? = null,
@@ -4903,7 +4877,7 @@ private constructor(
 
                                 private var validated: Boolean = false
 
-                                fun validate(): UnnamedSchemaWithArrayParent1 = apply {
+                                fun validate(): MetadataValueItem = apply {
                                     if (validated) {
                                         return@apply
                                     }
@@ -4953,7 +4927,7 @@ private constructor(
                                         return true
                                     }
 
-                                    return other is UnnamedSchemaWithArrayParent1 &&
+                                    return other is MetadataValueItem &&
                                         string == other.string &&
                                         number == other.number &&
                                         bool == other.bool
@@ -4963,37 +4937,31 @@ private constructor(
 
                                 override fun toString(): String =
                                     when {
-                                        string != null ->
-                                            "UnnamedSchemaWithArrayParent1{string=$string}"
-                                        number != null ->
-                                            "UnnamedSchemaWithArrayParent1{number=$number}"
-                                        bool != null -> "UnnamedSchemaWithArrayParent1{bool=$bool}"
-                                        _json != null ->
-                                            "UnnamedSchemaWithArrayParent1{_unknown=$_json}"
+                                        string != null -> "MetadataValueItem{string=$string}"
+                                        number != null -> "MetadataValueItem{number=$number}"
+                                        bool != null -> "MetadataValueItem{bool=$bool}"
+                                        _json != null -> "MetadataValueItem{_unknown=$_json}"
                                         else ->
-                                            throw IllegalStateException(
-                                                "Invalid UnnamedSchemaWithArrayParent1"
-                                            )
+                                            throw IllegalStateException("Invalid MetadataValueItem")
                                     }
 
                                 companion object {
 
                                     @JvmStatic
                                     fun ofString(string: String) =
-                                        UnnamedSchemaWithArrayParent1(string = string)
+                                        MetadataValueItem(string = string)
 
                                     @JvmStatic
                                     fun ofNumber(number: Double) =
-                                        UnnamedSchemaWithArrayParent1(number = number)
+                                        MetadataValueItem(number = number)
 
                                     @JvmStatic
-                                    fun ofBool(bool: Boolean) =
-                                        UnnamedSchemaWithArrayParent1(bool = bool)
+                                    fun ofBool(bool: Boolean) = MetadataValueItem(bool = bool)
                                 }
 
                                 /**
                                  * An interface that defines how to map each variant of
-                                 * [UnnamedSchemaWithArrayParent1] to a value of type [T].
+                                 * [MetadataValueItem] to a value of type [T].
                                  */
                                 interface Visitor<out T> {
 
@@ -5004,13 +4972,13 @@ private constructor(
                                     fun visitBool(bool: Boolean): T
 
                                     /**
-                                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent1] to
-                                     * a value of type [T].
+                                     * Maps an unknown variant of [MetadataValueItem] to a value of
+                                     * type [T].
                                      *
-                                     * An instance of [UnnamedSchemaWithArrayParent1] can contain an
-                                     * unknown variant if it was deserialized from data that doesn't
-                                     * match any known variant. For example, if the SDK is on an
-                                     * older version than the API, then the API may respond with new
+                                     * An instance of [MetadataValueItem] can contain an unknown
+                                     * variant if it was deserialized from data that doesn't match
+                                     * any known variant. For example, if the SDK is on an older
+                                     * version than the API, then the API may respond with new
                                      * variants that the SDK is unaware of.
                                      *
                                      * @throws ImageKitInvalidDataException in the default
@@ -5018,40 +4986,38 @@ private constructor(
                                      */
                                     fun unknown(json: JsonValue?): T {
                                         throw ImageKitInvalidDataException(
-                                            "Unknown UnnamedSchemaWithArrayParent1: $json"
+                                            "Unknown MetadataValueItem: $json"
                                         )
                                     }
                                 }
 
                                 internal class Deserializer :
-                                    BaseDeserializer<UnnamedSchemaWithArrayParent1>(
-                                        UnnamedSchemaWithArrayParent1::class
-                                    ) {
+                                    BaseDeserializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun ObjectCodec.deserialize(
                                         node: JsonNode
-                                    ): UnnamedSchemaWithArrayParent1 {
+                                    ): MetadataValueItem {
                                         val json = JsonValue.fromJsonNode(node)
 
                                         val bestMatches =
                                             sequenceOf(
                                                     tryDeserialize(node, jacksonTypeRef<String>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent1(
+                                                            MetadataValueItem(
                                                                 string = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Double>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent1(
+                                                            MetadataValueItem(
                                                                 number = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Boolean>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent1(
+                                                            MetadataValueItem(
                                                                 bool = it,
                                                                 _json = json,
                                                             )
@@ -5064,7 +5030,7 @@ private constructor(
                                             // This can happen if what we're deserializing is
                                             // completely incompatible with all the possible
                                             // variants (e.g. deserializing from object).
-                                            0 -> UnnamedSchemaWithArrayParent1(_json = json)
+                                            0 -> MetadataValueItem(_json = json)
                                             1 -> bestMatches.single()
                                             // If there's more than one match with the highest
                                             // validity, then use the first completely valid match,
@@ -5078,12 +5044,10 @@ private constructor(
                                 }
 
                                 internal class Serializer :
-                                    BaseSerializer<UnnamedSchemaWithArrayParent1>(
-                                        UnnamedSchemaWithArrayParent1::class
-                                    ) {
+                                    BaseSerializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun serialize(
-                                        value: UnnamedSchemaWithArrayParent1,
+                                        value: MetadataValueItem,
                                         generator: JsonGenerator,
                                         provider: SerializerProvider,
                                     ) {
@@ -5097,7 +5061,7 @@ private constructor(
                                                 generator.writeObject(value._json)
                                             else ->
                                                 throw IllegalStateException(
-                                                    "Invalid UnnamedSchemaWithArrayParent1"
+                                                    "Invalid MetadataValueItem"
                                                 )
                                         }
                                     }
@@ -5790,7 +5754,7 @@ private constructor(
                             fun value(bool: Boolean) = value(Value.ofBool(bool))
 
                             /** Alias for calling [value] with `Value.ofMixed(mixed)`. */
-                            fun valueOfMixed(mixed: List<Value.UnnamedSchemaWithArrayParent2>) =
+                            fun valueOfMixed(mixed: List<Value.MetadataValueItem>) =
                                 value(Value.ofMixed(mixed))
 
                             fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
@@ -5879,7 +5843,7 @@ private constructor(
                             private val string: String? = null,
                             private val number: Double? = null,
                             private val bool: Boolean? = null,
-                            private val mixed: List<UnnamedSchemaWithArrayParent2>? = null,
+                            private val mixed: List<MetadataValueItem>? = null,
                             private val _json: JsonValue? = null,
                         ) {
 
@@ -5889,7 +5853,7 @@ private constructor(
 
                             fun bool(): Optional<Boolean> = Optional.ofNullable(bool)
 
-                            fun mixed(): Optional<List<UnnamedSchemaWithArrayParent2>> =
+                            fun mixed(): Optional<List<MetadataValueItem>> =
                                 Optional.ofNullable(mixed)
 
                             fun isString(): Boolean = string != null
@@ -5906,8 +5870,7 @@ private constructor(
 
                             fun asBool(): Boolean = bool.getOrThrow("bool")
 
-                            fun asMixed(): List<UnnamedSchemaWithArrayParent2> =
-                                mixed.getOrThrow("mixed")
+                            fun asMixed(): List<MetadataValueItem> = mixed.getOrThrow("mixed")
 
                             fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
@@ -5935,9 +5898,7 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) {}
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent2>
-                                        ) {
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) {
                                             mixed.forEach { it.validate() }
                                         }
                                     }
@@ -5969,9 +5930,8 @@ private constructor(
 
                                         override fun visitBool(bool: Boolean) = 1
 
-                                        override fun visitMixed(
-                                            mixed: List<UnnamedSchemaWithArrayParent2>
-                                        ) = mixed.sumOf { it.validity().toInt() }
+                                        override fun visitMixed(mixed: List<MetadataValueItem>) =
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
@@ -6010,7 +5970,7 @@ private constructor(
                                 @JvmStatic fun ofBool(bool: Boolean) = Value(bool = bool)
 
                                 @JvmStatic
-                                fun ofMixed(mixed: List<UnnamedSchemaWithArrayParent2>) =
+                                fun ofMixed(mixed: List<MetadataValueItem>) =
                                     Value(mixed = mixed.toImmutable())
                             }
 
@@ -6026,7 +5986,7 @@ private constructor(
 
                                 fun visitBool(bool: Boolean): T
 
-                                fun visitMixed(mixed: List<UnnamedSchemaWithArrayParent2>): T
+                                fun visitMixed(mixed: List<MetadataValueItem>): T
 
                                 /**
                                  * Maps an unknown variant of [Value] to a value of type [T].
@@ -6059,9 +6019,7 @@ private constructor(
                                                     ?.let { Value(bool = it, _json = json) },
                                                 tryDeserialize(
                                                         node,
-                                                        jacksonTypeRef<
-                                                            List<UnnamedSchemaWithArrayParent2>
-                                                        >(),
+                                                        jacksonTypeRef<List<MetadataValueItem>>(),
                                                     )
                                                     ?.let { Value(mixed = it, _json = json) },
                                             )
@@ -6102,11 +6060,9 @@ private constructor(
                                 }
                             }
 
-                            @JsonDeserialize(
-                                using = UnnamedSchemaWithArrayParent2.Deserializer::class
-                            )
-                            @JsonSerialize(using = UnnamedSchemaWithArrayParent2.Serializer::class)
-                            class UnnamedSchemaWithArrayParent2
+                            @JsonDeserialize(using = MetadataValueItem.Deserializer::class)
+                            @JsonSerialize(using = MetadataValueItem.Serializer::class)
+                            class MetadataValueItem
                             private constructor(
                                 private val string: String? = null,
                                 private val number: Double? = null,
@@ -6144,7 +6100,7 @@ private constructor(
 
                                 private var validated: Boolean = false
 
-                                fun validate(): UnnamedSchemaWithArrayParent2 = apply {
+                                fun validate(): MetadataValueItem = apply {
                                     if (validated) {
                                         return@apply
                                     }
@@ -6194,7 +6150,7 @@ private constructor(
                                         return true
                                     }
 
-                                    return other is UnnamedSchemaWithArrayParent2 &&
+                                    return other is MetadataValueItem &&
                                         string == other.string &&
                                         number == other.number &&
                                         bool == other.bool
@@ -6204,37 +6160,31 @@ private constructor(
 
                                 override fun toString(): String =
                                     when {
-                                        string != null ->
-                                            "UnnamedSchemaWithArrayParent2{string=$string}"
-                                        number != null ->
-                                            "UnnamedSchemaWithArrayParent2{number=$number}"
-                                        bool != null -> "UnnamedSchemaWithArrayParent2{bool=$bool}"
-                                        _json != null ->
-                                            "UnnamedSchemaWithArrayParent2{_unknown=$_json}"
+                                        string != null -> "MetadataValueItem{string=$string}"
+                                        number != null -> "MetadataValueItem{number=$number}"
+                                        bool != null -> "MetadataValueItem{bool=$bool}"
+                                        _json != null -> "MetadataValueItem{_unknown=$_json}"
                                         else ->
-                                            throw IllegalStateException(
-                                                "Invalid UnnamedSchemaWithArrayParent2"
-                                            )
+                                            throw IllegalStateException("Invalid MetadataValueItem")
                                     }
 
                                 companion object {
 
                                     @JvmStatic
                                     fun ofString(string: String) =
-                                        UnnamedSchemaWithArrayParent2(string = string)
+                                        MetadataValueItem(string = string)
 
                                     @JvmStatic
                                     fun ofNumber(number: Double) =
-                                        UnnamedSchemaWithArrayParent2(number = number)
+                                        MetadataValueItem(number = number)
 
                                     @JvmStatic
-                                    fun ofBool(bool: Boolean) =
-                                        UnnamedSchemaWithArrayParent2(bool = bool)
+                                    fun ofBool(bool: Boolean) = MetadataValueItem(bool = bool)
                                 }
 
                                 /**
                                  * An interface that defines how to map each variant of
-                                 * [UnnamedSchemaWithArrayParent2] to a value of type [T].
+                                 * [MetadataValueItem] to a value of type [T].
                                  */
                                 interface Visitor<out T> {
 
@@ -6245,13 +6195,13 @@ private constructor(
                                     fun visitBool(bool: Boolean): T
 
                                     /**
-                                     * Maps an unknown variant of [UnnamedSchemaWithArrayParent2] to
-                                     * a value of type [T].
+                                     * Maps an unknown variant of [MetadataValueItem] to a value of
+                                     * type [T].
                                      *
-                                     * An instance of [UnnamedSchemaWithArrayParent2] can contain an
-                                     * unknown variant if it was deserialized from data that doesn't
-                                     * match any known variant. For example, if the SDK is on an
-                                     * older version than the API, then the API may respond with new
+                                     * An instance of [MetadataValueItem] can contain an unknown
+                                     * variant if it was deserialized from data that doesn't match
+                                     * any known variant. For example, if the SDK is on an older
+                                     * version than the API, then the API may respond with new
                                      * variants that the SDK is unaware of.
                                      *
                                      * @throws ImageKitInvalidDataException in the default
@@ -6259,40 +6209,38 @@ private constructor(
                                      */
                                     fun unknown(json: JsonValue?): T {
                                         throw ImageKitInvalidDataException(
-                                            "Unknown UnnamedSchemaWithArrayParent2: $json"
+                                            "Unknown MetadataValueItem: $json"
                                         )
                                     }
                                 }
 
                                 internal class Deserializer :
-                                    BaseDeserializer<UnnamedSchemaWithArrayParent2>(
-                                        UnnamedSchemaWithArrayParent2::class
-                                    ) {
+                                    BaseDeserializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun ObjectCodec.deserialize(
                                         node: JsonNode
-                                    ): UnnamedSchemaWithArrayParent2 {
+                                    ): MetadataValueItem {
                                         val json = JsonValue.fromJsonNode(node)
 
                                         val bestMatches =
                                             sequenceOf(
                                                     tryDeserialize(node, jacksonTypeRef<String>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent2(
+                                                            MetadataValueItem(
                                                                 string = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Double>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent2(
+                                                            MetadataValueItem(
                                                                 number = it,
                                                                 _json = json,
                                                             )
                                                         },
                                                     tryDeserialize(node, jacksonTypeRef<Boolean>())
                                                         ?.let {
-                                                            UnnamedSchemaWithArrayParent2(
+                                                            MetadataValueItem(
                                                                 bool = it,
                                                                 _json = json,
                                                             )
@@ -6305,7 +6253,7 @@ private constructor(
                                             // This can happen if what we're deserializing is
                                             // completely incompatible with all the possible
                                             // variants (e.g. deserializing from object).
-                                            0 -> UnnamedSchemaWithArrayParent2(_json = json)
+                                            0 -> MetadataValueItem(_json = json)
                                             1 -> bestMatches.single()
                                             // If there's more than one match with the highest
                                             // validity, then use the first completely valid match,
@@ -6319,12 +6267,10 @@ private constructor(
                                 }
 
                                 internal class Serializer :
-                                    BaseSerializer<UnnamedSchemaWithArrayParent2>(
-                                        UnnamedSchemaWithArrayParent2::class
-                                    ) {
+                                    BaseSerializer<MetadataValueItem>(MetadataValueItem::class) {
 
                                     override fun serialize(
-                                        value: UnnamedSchemaWithArrayParent2,
+                                        value: MetadataValueItem,
                                         generator: JsonGenerator,
                                         provider: SerializerProvider,
                                     ) {
@@ -6338,7 +6284,7 @@ private constructor(
                                                 generator.writeObject(value._json)
                                             else ->
                                                 throw IllegalStateException(
-                                                    "Invalid UnnamedSchemaWithArrayParent2"
+                                                    "Invalid MetadataValueItem"
                                                 )
                                         }
                                     }

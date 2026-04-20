@@ -16,14 +16,11 @@ internal class CustomMetadataFieldUpdateParamsTest {
                 CustomMetadataFieldUpdateParams.Schema.builder()
                     .defaultValueOfMixed(
                         listOf(
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofBool(true),
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofNumber(10.0),
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofString("Hello"),
                         )
                     )
@@ -66,14 +63,11 @@ internal class CustomMetadataFieldUpdateParamsTest {
                     CustomMetadataFieldUpdateParams.Schema.builder()
                         .defaultValueOfMixed(
                             listOf(
-                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent9
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofBool(true),
-                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent9
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofNumber(10.0),
-                                CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent9
+                                CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                     .ofString("Hello"),
                             )
                         )
@@ -110,14 +104,11 @@ internal class CustomMetadataFieldUpdateParamsTest {
                 CustomMetadataFieldUpdateParams.Schema.builder()
                     .defaultValueOfMixed(
                         listOf(
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofBool(true),
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofNumber(10.0),
-                            CustomMetadataFieldUpdateParams.Schema.DefaultValue
-                                .UnnamedSchemaWithArrayParent9
+                            CustomMetadataFieldUpdateParams.Schema.DefaultValue.DefaultValueItem
                                 .ofString("Hello"),
                         )
                     )

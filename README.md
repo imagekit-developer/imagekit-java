@@ -1,20 +1,37 @@
-# Image Kit Java API Library
+# ImageKit.io Java SDK
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.imagekit.api/image-kit-java)](https://central.sonatype.com/artifact/com.imagekit.api/image-kit-java/0.0.1)
 [![javadoc](https://javadoc.io/badge2/com.imagekit.api/image-kit-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1)
 
-The Image Kit Java SDK provides convenient access to the [Image Kit REST API](https://imagekit.io/docs/api-reference) from applications written in Java.
+The ImageKit Java SDK is a comprehensive library designed to simplify the integration of ImageKit into your server-side applications. It provides powerful tools for working with the ImageKit REST API, including building and transforming URLs, generating signed URLs for secure content delivery, verifying webhooks, and handling file uploads.
 
-## MCP Server
+The full API of this library can be found in [api.md](api.md).
 
-Use the Image Kit MCP Server to enable AI assistants to interact with this API, allowing them to explore endpoints, make test requests, and use documentation to help integrate this SDK into your application.
+For additional details, refer to the [ImageKit REST API documentation](https://imagekit.io/docs/api-reference) or the [javadoc](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
 
-[![Add to Cursor](https://cursor.com/deeplink/mcp-install-dark.svg)](https://cursor.com/en-US/install-mcp?name=%40imagekit%2Fnodejs-mcp&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyIteSIsIkBpbWFnZWtpdC9ub2RlanMtbWNwIl0sImVudiI6eyJJTUFHRUtJVF9QUklWQVRFX0tFWSI6Ik15IFByaXZhdGUgS2V5IiwiT1BUSU9OQUxfSU1BR0VLSVRfSUdOT1JFU19USElTIjoiTXkgUGFzc3dvcmQiLCJJTUFHRUtJVF9XRUJIT09LX1NFQ1JFVCI6Ik15IFdlYmhvb2sgU2VjcmV0In19)
-[![Install in VS Code](https://img.shields.io/badge/_-Add_to_VS_Code-blue?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA0MCA0MCI+PHBhdGggZmlsbD0iI0VFRSIgZmlsbC1ydWxlPSJldmVub2RkIiBkPSJNMzAuMjM1IDM5Ljg4NGEyLjQ5MSAyLjQ5MSAwIDAgMS0xLjc4MS0uNzNMMTIuNyAyNC43OGwtMy40NiAyLjYyNC0zLjQwNiAyLjU4MmExLjY2NSAxLjY2NSAwIDAgMS0xLjA4Mi4zMzggMS42NjQgMS42NjQgMCAwIDEtMS4wNDYtLjQzMWwtMi4yLTJhMS42NjYgMS42NjYgMCAwIDEgMC0yLjQ2M0w3LjQ1OCAyMCA0LjY3IDE3LjQ1MyAxLjUwNyAxNC41N2ExLjY2NSAxLjY2NSAwIDAgMSAwLTIuNDYzbDIuMi0yYTEuNjY1IDEuNjY1IDAgMCAxIDIuMTMtLjA5N2w2Ljg2MyA1LjIwOUwyOC40NTIuODQ0YTIuNDg4IDIuNDg4IDAgMCAxIDEuODQxLS43MjljLjM1MS4wMDkuNjk5LjA5MSAxLjAxOS4yNDVsOC4yMzYgMy45NjFhMi41IDIuNSAwIDAgMSAxLjQxNSAyLjI1M3YuMDk5LS4wNDVWMzMuMzd2LS4wNDUuMDk1YTIuNTAxIDIuNTAxIDAgMCAxLTEuNDE2IDIuMjU3bC04LjIzNSAzLjk2MWEyLjQ5MiAyLjQ5MiAwIDAgMS0xLjA3Ny4yNDZabS43MTYtMjguOTQ3LTExLjk0OCA5LjA2MiAxMS45NTIgOS4wNjUtLjAwNC0xOC4xMjdaIi8+PC9zdmc+)](https://vscode.stainless.com/mcp/%7B%22name%22%3A%22%40imagekit%2Fnodejs-mcp%22%2C%22command%22%3A%22npx%22%2C%22args%22%3A%5B%22-y%22%2C%22%40imagekit%2Fnodejs-mcp%22%5D%2C%22env%22%3A%7B%22IMAGEKIT_PRIVATE_KEY%22%3A%22My%20Private%20Key%22%2C%22OPTIONAL_IMAGEKIT_IGNORES_THIS%22%3A%22My%20Password%22%2C%22IMAGEKIT_WEBHOOK_SECRET%22%3A%22My%20Webhook%20Secret%22%7D%7D)
+## Table of Contents
 
-> Note: You may need to set environment variables in your MCP client.
-
-The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [URL generation](#url-generation)
+  - [Basic URL generation](#basic-url-generation)
+  - [URL generation with transformations](#url-generation-with-transformations)
+  - [URL generation with image overlay](#url-generation-with-image-overlay)
+  - [URL generation with text overlay](#url-generation-with-text-overlay)
+  - [URL generation with multiple overlays](#url-generation-with-multiple-overlays)
+  - [Signed URLs for secure delivery](#signed-urls-for-secure-delivery)
+- [Authentication parameters for client-side uploads](#authentication-parameters-for-client-side-uploads)
+- [Webhook verification](#webhook-verification)
+- [Advanced Usage](#advanced-usage)
+  - [Client configuration](#client-configuration)
+  - [File uploads](#file-uploads)
+  - [Error handling](#error-handling)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Proxies](#proxies)
+  - [Logging](#logging)
+- [Semantic versioning](#semantic-versioning)
 
 ## Installation
 
@@ -45,29 +62,29 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 
-// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
-// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
-ImageKitClient client = ImageKitOkHttpClient.fromEnv();
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx") // defaults to IMAGEKIT_PRIVATE_KEY env var
+    .build();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
-    .fileName("file-name.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
     .build();
 FileUploadResponse response = client.files().upload(params);
+System.out.println(response);
 ```
 
 ## Client configuration
 
-Configure the client using system properties or environment variables:
+Configure the client using environment variables:
 
 ```java
 import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
-// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
-// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+// Configures using the `IMAGEKIT_PRIVATE_KEY` and `IMAGEKIT_WEBHOOK_SECRET` environment variables
 ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 ```
 
@@ -78,8 +95,7 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
-    .privateKey("My Private Key")
-    .password("My Password")
+    .privateKey("private_key_xxx")
     .build();
 ```
 
@@ -90,23 +106,18 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
-    // Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
-    // Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
     .fromEnv()
-    .privateKey("My Private Key")
+    .privateKey("private_key_xxx")
     .build();
 ```
 
 See this table for the available options:
 
-| Setter          | System property                        | Environment variable             | Required | Default value               |
-| --------------- | -------------------------------------- | -------------------------------- | -------- | --------------------------- |
-| `privateKey`    | `imagekit.imagekitPrivateKey`          | `IMAGEKIT_PRIVATE_KEY`           | true     | -                           |
-| `password`      | `imagekit.optionalImagekitIgnoresThis` | `OPTIONAL_IMAGEKIT_IGNORES_THIS` | false    | `"do_not_set"`              |
-| `webhookSecret` | `imagekit.imagekitWebhookSecret`       | `IMAGEKIT_WEBHOOK_SECRET`        | false    | -                           |
-| `baseUrl`       | `imagekit.baseUrl`                     | `IMAGE_KIT_BASE_URL`             | true     | `"https://api.imagekit.io"` |
-
-System properties take precedence over environment variables.
+| Setter          | Environment variable             | Required | Default value               |
+| --------------- | -------------------------------- | -------- | --------------------------- |
+| `privateKey`    | `IMAGEKIT_PRIVATE_KEY`           | true     | -                           |
+| `webhookSecret` | `IMAGEKIT_WEBHOOK_SECRET`        | false    | -                           |
+| `baseUrl`       | `IMAGE_KIT_BASE_URL`             | false    | `"https://api.imagekit.io"` |
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -126,6 +137,284 @@ ImageKitClient clientWithOptions = client.withOptions(optionsBuilder -> {
 ```
 
 The `withOptions()` method does not affect the original client or service.
+
+## URL generation
+
+The ImageKit SDK provides a powerful `client.helper().buildUrl()` method for generating optimized image and video URLs with transformations.
+
+### Basic URL generation
+
+Generate a simple URL without any transformations:
+
+```java
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.models.SrcOptions;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
+
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/image.jpg")
+        .build()
+);
+System.out.println(url);
+// Result: https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg
+```
+
+### URL generation with transformations
+
+Apply common transformations like resizing, quality, and format conversion:
+
+```java
+import com.imagekit.api.models.SrcOptions;
+import com.imagekit.api.models.Transformation;
+
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(400.0)
+                .height(300.0)
+                .crop(Transformation.Crop.MAINTAIN_RATIO)
+                .quality(80.0)
+                .format(Transformation.Format.WEBP)
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg?tr=w-400,h-300,c-maintain_ratio,q-80,f-webp
+```
+
+### URL generation with image overlay
+
+Add image overlays to your base image:
+
+```java
+import com.imagekit.api.models.ImageOverlay;
+import com.imagekit.api.models.Overlay;
+import com.imagekit.api.models.OverlayPosition;
+import com.imagekit.api.models.SrcOptions;
+import com.imagekit.api.models.Transformation;
+
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(500.0)
+                .height(400.0)
+                .overlay(Overlay.ofImage(
+                    ImageOverlay.builder()
+                        .input("/path/to/overlay-logo.png")
+                        .position(OverlayPosition.builder()
+                            .x(10.0)
+                            .y(10.0)
+                            .build())
+                        .addTransformation(
+                            Transformation.builder()
+                                .width(100.0)
+                                .height(50.0)
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with image overlay positioned at x:10, y:10
+```
+
+### URL generation with text overlay
+
+Add customized text overlays:
+
+```java
+import com.imagekit.api.models.Overlay;
+import com.imagekit.api.models.OverlayPosition;
+import com.imagekit.api.models.SrcOptions;
+import com.imagekit.api.models.TextOverlay;
+import com.imagekit.api.models.TextOverlayTransformation;
+import com.imagekit.api.models.Transformation;
+
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(600.0)
+                .height(400.0)
+                .overlay(Overlay.ofText(
+                    TextOverlay.builder()
+                        .text("Sample Text Overlay")
+                        .position(OverlayPosition.builder()
+                            .x(50.0)
+                            .y(50.0)
+                            .focus(OverlayPosition.Focus.CENTER)
+                            .build())
+                        .addTransformation(
+                            TextOverlayTransformation.builder()
+                                .fontSize(40.0)
+                                .fontFamily("Arial")
+                                .fontColor("FFFFFF")
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with white Arial text overlay at center position
+```
+
+### URL generation with multiple overlays
+
+Combine multiple overlays for complex compositions:
+
+```java
+import com.imagekit.api.models.ImageOverlay;
+import com.imagekit.api.models.Overlay;
+import com.imagekit.api.models.OverlayPosition;
+import com.imagekit.api.models.SrcOptions;
+import com.imagekit.api.models.TextOverlay;
+import com.imagekit.api.models.TextOverlayTransformation;
+import com.imagekit.api.models.Transformation;
+import java.util.Arrays;
+
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            // First transformation step: text overlay
+            Transformation.builder()
+                .width(800.0)
+                .height(600.0)
+                .overlay(Overlay.ofText(
+                    TextOverlay.builder()
+                        .text("Header Text")
+                        .position(OverlayPosition.builder()
+                            .x(20.0)
+                            .y(20.0)
+                            .build())
+                        .addTransformation(
+                            TextOverlayTransformation.builder()
+                                .fontSize(30.0)
+                                .fontColor("000000")
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .addTransformation(
+            // Second transformation step: image watermark overlay
+            Transformation.builder()
+                .overlay(Overlay.ofImage(
+                    ImageOverlay.builder()
+                        .input("/watermark.png")
+                        .position(OverlayPosition.builder()
+                            .focus(OverlayPosition.Focus.BOTTOM_RIGHT)
+                            .build())
+                        .addTransformation(
+                            Transformation.builder()
+                                .width(100.0)
+                                .opacity(70.0)
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with text overlay at top-left and semi-transparent watermark at bottom-right
+```
+
+### Signed URLs for secure delivery
+
+Generate signed URLs that expire after a specified time for secure content delivery:
+
+```java
+import com.imagekit.api.models.SrcOptions;
+import com.imagekit.api.models.Transformation;
+
+// Generate a signed URL that expires in 1 hour (3600 seconds)
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/private/secure-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(400.0)
+                .height(300.0)
+                .quality(90.0)
+                .build()
+        )
+        .signed(true)
+        .expiresIn(3600.0) // URL expires in 1 hour
+        .build()
+);
+System.out.println(url);
+// Result: URL with signature parameters (?ik-t=timestamp&ik-s=signature)
+
+// Generate a signed URL that doesn't expire
+String permanentSignedUrl = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/private/secure-image.jpg")
+        .signed(true)
+        // No expiresIn means the URL won't expire
+        .build()
+);
+System.out.println(permanentSignedUrl);
+// Result: URL with signature parameter (?ik-s=signature)
+```
+
+## Authentication parameters for client-side uploads
+
+Generate authentication parameters for secure client-side file uploads:
+
+```java
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
+import java.util.Map;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
+
+// Generate authentication parameters with auto-generated token and default expiry
+Map<String, Object> authParams = client.helper().getAuthenticationParameters(null, null);
+System.out.println(authParams);
+// Result: {token=<uuid>, expire=<timestamp>, signature=<hmac-signature>}
+
+// Generate with custom token and expiry
+Map<String, Object> customAuthParams = client.helper().getAuthenticationParameters("my-custom-token", 1800L);
+System.out.println(customAuthParams);
+// Result: {token=my-custom-token, expire=1800, signature=<hmac-signature>}
+```
+
+These authentication parameters can be used in client-side upload forms to securely upload files without exposing your private API key.
+
+## Webhook verification
+
+The ImageKit SDK provides utilities to verify webhook signatures for secure event handling. This ensures that webhook requests are actually coming from ImageKit and haven't been tampered with.
+
+For detailed information about webhook setup, signature verification, and handling different webhook events, refer to the [ImageKit webhook documentation](https://imagekit.io/docs/webhooks#verify-webhook-signature).
 
 ## Requests and responses
 
@@ -150,16 +439,16 @@ import com.imagekit.api.client.ImageKitClient;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
-// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
-ImageKitClient client = ImageKitOkHttpClient.fromEnv();
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
-    .fileName("file-name.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
 ```
@@ -171,16 +460,16 @@ import com.imagekit.api.client.ImageKitClientAsync;
 import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.util.concurrent.CompletableFuture;
 
-// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
-// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
-ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
+ImageKitClientAsync client = ImageKitOkHttpClientAsync.builder()
+    .privateKey("private_key_xxx")
+    .build();
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
-    .fileName("file-name.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
     .build();
 CompletableFuture<FileUploadResponse> response = client.files().upload(params);
 ```
@@ -199,8 +488,8 @@ import com.imagekit.api.models.files.FileUploadResponse;
 import java.nio.file.Paths;
 
 FileUploadParams params = FileUploadParams.builder()
-    .fileName("fileName")
-    .file(Paths.get("/path/to/file"))
+    .fileName("uploaded-image.jpg")
+    .file(Paths.get("/path/to/your/image.jpg"))
     .build();
 FileUploadResponse response = client.files().upload(params);
 ```
@@ -210,11 +499,11 @@ Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/i
 ```java
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
-import java.net.URL;
+import java.io.FileInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .fileName("fileName")
-    .file(new URL("https://example.com//path/to/file").openStream())
+    .fileName("uploaded-image.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
     .build();
 FileUploadResponse response = client.files().upload(params);
 ```
@@ -225,9 +514,10 @@ Or a `byte[]` array:
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
 
+byte[] imageData = /* your binary data */;
 FileUploadParams params = FileUploadParams.builder()
-    .fileName("fileName")
-    .file("content".getBytes())
+    .fileName("binary-upload.jpg")
+    .file(imageData)
     .build();
 FileUploadResponse response = client.files().upload(params);
 ```
@@ -238,14 +528,15 @@ Note that when passing a non-`Path` its filename is unknown so it will not be in
 import com.imagekit.api.core.MultipartField;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
+import java.io.FileInputStream;
 import java.io.InputStream;
-import java.net.URL;
 
 FileUploadParams params = FileUploadParams.builder()
-    .fileName("fileName")
+    .fileName("custom-upload.jpg")
     .file(MultipartField.<InputStream>builder()
-        .value(new URL("https://example.com//path/to/file").openStream())
-        .filename("/path/to/file")
+        .value(new FileInputStream("/path/to/your/image.jpg"))
+        .filename("image.jpg")
+        .contentType("image/jpeg")
         .build())
     .build();
 FileUploadResponse response = client.files().upload(params);
@@ -262,11 +553,11 @@ import com.imagekit.api.core.http.Headers;
 import com.imagekit.api.core.http.HttpResponseFor;
 import com.imagekit.api.models.files.FileUploadParams;
 import com.imagekit.api.models.files.FileUploadResponse;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
-    .file(new ByteArrayInputStream("https://www.example.com/public-url.jpg".getBytes()))
-    .fileName("file-name.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
     .build();
 HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
 
@@ -521,7 +812,7 @@ import com.imagekit.api.core.JsonValue;
 import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
-    .transformation(FileUploadParams.Transformation.builder()
+    .transformation(FileUploadParams.UploadTransformation.builder()
         .putAdditionalProperty("secretProperty", JsonValue.from("42"))
         .build())
     .build();

@@ -5,6 +5,11 @@ package com.imagekit.api.models.beta.v2.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import com.imagekit.api.core.JsonValue
 import com.imagekit.api.core.jsonMapper
+import com.imagekit.api.models.AiTag
+import com.imagekit.api.models.CustomMetadata
+import com.imagekit.api.models.EmbeddedMetadata
+import com.imagekit.api.models.SelectedFieldsSchema
+import com.imagekit.api.models.VersionInfo
 import com.imagekit.api.models.files.Metadata
 import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
@@ -16,25 +21,19 @@ internal class FileUploadResponseTest {
     fun create() {
         val fileUploadResponse =
             FileUploadResponse.builder()
-                .addAiTag(
-                    FileUploadResponse.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    FileUploadResponse.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    FileUploadResponse.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -66,7 +65,7 @@ internal class FileUploadResponseTest {
                         .exif(
                             Metadata.Exif.builder()
                                 .exif(
-                                    Metadata.Exif.InnerExif.builder()
+                                    Metadata.Exif.ExifDetails.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -147,7 +146,7 @@ internal class FileUploadResponseTest {
                 )
                 .name("name")
                 .selectedFieldsSchema(
-                    FileUploadResponse.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -172,33 +171,25 @@ internal class FileUploadResponseTest {
                 .addTag("string")
                 .thumbnailUrl("thumbnailUrl")
                 .url("url")
-                .versionInfo(FileUploadResponse.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .build()
 
         assertThat(fileUploadResponse.aiTags().getOrNull())
-            .containsExactly(
-                FileUploadResponse.AiTag.builder()
-                    .confidence(0.0)
-                    .name("name")
-                    .source("source")
-                    .build()
-            )
+            .containsExactly(AiTag.builder().confidence(0.0).name("name").source("source").build())
         assertThat(fileUploadResponse.audioCodec()).contains("audioCodec")
         assertThat(fileUploadResponse.bitRate()).contains(0L)
         assertThat(fileUploadResponse.customCoordinates()).contains("customCoordinates")
         assertThat(fileUploadResponse.customMetadata())
             .contains(
-                FileUploadResponse.CustomMetadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
+                CustomMetadata.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
             )
         assertThat(fileUploadResponse.description()).contains("description")
         assertThat(fileUploadResponse.duration()).contains(0L)
         assertThat(fileUploadResponse.embeddedMetadata())
             .contains(
-                FileUploadResponse.EmbeddedMetadata.builder()
+                EmbeddedMetadata.builder()
                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                     .build()
             )
@@ -228,7 +219,7 @@ internal class FileUploadResponseTest {
                     .exif(
                         Metadata.Exif.builder()
                             .exif(
-                                Metadata.Exif.InnerExif.builder()
+                                Metadata.Exif.ExifDetails.builder()
                                     .apertureValue(0.0)
                                     .colorSpace(0L)
                                     .createDate("CreateDate")
@@ -310,7 +301,7 @@ internal class FileUploadResponseTest {
         assertThat(fileUploadResponse.name()).contains("name")
         assertThat(fileUploadResponse.selectedFieldsSchema())
             .contains(
-                FileUploadResponse.SelectedFieldsSchema.builder()
+                SelectedFieldsSchema.builder()
                     .putAdditionalProperty(
                         "foo",
                         JsonValue.from(
@@ -335,7 +326,7 @@ internal class FileUploadResponseTest {
         assertThat(fileUploadResponse.thumbnailUrl()).contains("thumbnailUrl")
         assertThat(fileUploadResponse.url()).contains("url")
         assertThat(fileUploadResponse.versionInfo())
-            .contains(FileUploadResponse.VersionInfo.builder().id("id").name("name").build())
+            .contains(VersionInfo.builder().id("id").name("name").build())
         assertThat(fileUploadResponse.videoCodec()).contains("videoCodec")
         assertThat(fileUploadResponse.width()).contains(0.0)
     }
@@ -345,25 +336,19 @@ internal class FileUploadResponseTest {
         val jsonMapper = jsonMapper()
         val fileUploadResponse =
             FileUploadResponse.builder()
-                .addAiTag(
-                    FileUploadResponse.AiTag.builder()
-                        .confidence(0.0)
-                        .name("name")
-                        .source("source")
-                        .build()
-                )
+                .addAiTag(AiTag.builder().confidence(0.0).name("name").source("source").build())
                 .audioCodec("audioCodec")
                 .bitRate(0L)
                 .customCoordinates("customCoordinates")
                 .customMetadata(
-                    FileUploadResponse.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
                 .description("description")
                 .duration(0L)
                 .embeddedMetadata(
-                    FileUploadResponse.EmbeddedMetadata.builder()
+                    EmbeddedMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -395,7 +380,7 @@ internal class FileUploadResponseTest {
                         .exif(
                             Metadata.Exif.builder()
                                 .exif(
-                                    Metadata.Exif.InnerExif.builder()
+                                    Metadata.Exif.ExifDetails.builder()
                                         .apertureValue(0.0)
                                         .colorSpace(0L)
                                         .createDate("CreateDate")
@@ -476,7 +461,7 @@ internal class FileUploadResponseTest {
                 )
                 .name("name")
                 .selectedFieldsSchema(
-                    FileUploadResponse.SelectedFieldsSchema.builder()
+                    SelectedFieldsSchema.builder()
                         .putAdditionalProperty(
                             "foo",
                             JsonValue.from(
@@ -501,7 +486,7 @@ internal class FileUploadResponseTest {
                 .addTag("string")
                 .thumbnailUrl("thumbnailUrl")
                 .url("url")
-                .versionInfo(FileUploadResponse.VersionInfo.builder().id("id").name("name").build())
+                .versionInfo(VersionInfo.builder().id("id").name("name").build())
                 .videoCodec("videoCodec")
                 .width(0.0)
                 .build()

@@ -21,15 +21,15 @@ internal class CustomMetadataFieldTest {
                         .type(CustomMetadataField.Schema.Type.TEXT)
                         .defaultValueOfMixed(
                             listOf(
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofBool(true),
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofNumber(10.0),
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofString("Hello"),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofBool(
+                                    true
+                                ),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofNumber(
+                                    10.0
+                                ),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofString(
+                                    "Hello"
+                                ),
                             )
                         )
                         .isValueRequired(true)
@@ -60,12 +60,11 @@ internal class CustomMetadataFieldTest {
                     .type(CustomMetadataField.Schema.Type.TEXT)
                     .defaultValueOfMixed(
                         listOf(
-                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
-                                .ofBool(true),
-                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
-                                .ofNumber(10.0),
-                            CustomMetadataField.Schema.DefaultValue.UnnamedSchemaWithArrayParent3
-                                .ofString("Hello"),
+                            CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofBool(true),
+                            CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofNumber(10.0),
+                            CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofString(
+                                "Hello"
+                            ),
                         )
                     )
                     .isValueRequired(true)
@@ -100,15 +99,15 @@ internal class CustomMetadataFieldTest {
                         .type(CustomMetadataField.Schema.Type.TEXT)
                         .defaultValueOfMixed(
                             listOf(
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofBool(true),
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofNumber(10.0),
-                                CustomMetadataField.Schema.DefaultValue
-                                    .UnnamedSchemaWithArrayParent3
-                                    .ofString("Hello"),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofBool(
+                                    true
+                                ),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofNumber(
+                                    10.0
+                                ),
+                                CustomMetadataField.Schema.DefaultValue.DefaultValueItem.ofString(
+                                    "Hello"
+                                ),
                             )
                         )
                         .isValueRequired(true)

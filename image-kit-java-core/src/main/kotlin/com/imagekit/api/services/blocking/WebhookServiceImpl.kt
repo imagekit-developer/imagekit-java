@@ -12,6 +12,7 @@ import com.imagekit.api.models.webhooks.UnsafeUnwrapWebhookEvent
 import com.imagekit.api.models.webhooks.UnwrapWebhookEvent
 import com.standardwebhooks.Webhook
 import com.standardwebhooks.exceptions.WebhookVerificationException
+import java.util.Base64
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
@@ -55,7 +56,8 @@ class WebhookServiceImpl internal constructor(private val clientOptions: ClientO
                 val headersMap =
                     headers.names().associateWith { name -> headers.values(name) }.toMap()
 
-                val webhook = Webhook(webhookSecret)
+                val encodedKey = Base64.getEncoder().encodeToString(webhookSecret.toByteArray())
+                val webhook = Webhook(encodedKey)
                 webhook.verify(unwrapParams.body(), headersMap)
             } catch (e: WebhookVerificationException) {
                 throw ImageKitWebhookException("Could not verify webhook event signature", e)
