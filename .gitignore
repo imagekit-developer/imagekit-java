@@ -6,7 +6,3 @@
 build/
 codegen.log
 kls_database.db
-
-image-kit-java-example/resources
-image-kit-java-example/src/main/resources/
-temp
