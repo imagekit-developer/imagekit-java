@@ -7,7 +7,7 @@ repositories {
 }
 
 allprojects {
-    group = "io.imagekit.io"
+    group = "com.imagekit.api"
     version = "0.0.1" // x-release-please-version
 }
 

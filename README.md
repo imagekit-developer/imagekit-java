@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit.io/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit.io/image-kit-java/0.0.1)
-[![javadoc](https://javadoc.io/badge2/io.imagekit.io/image-kit-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/io.imagekit.io/image-kit-java/0.0.1)
+[![Maven Central](https://img.shields.io/maven-central/v/com.imagekit.api/image-kit-java)](https://central.sonatype.com/artifact/com.imagekit.api/image-kit-java/0.0.1)
+[![javadoc](https://javadoc.io/badge2/com.imagekit.api/image-kit-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1)
 
 <!-- x-release-please-end -->
 
@@ -20,7 +20,7 @@ Use the Image Kit MCP Server to enable AI assistants to interact with this API, 
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit.io/image-kit-java/0.0.1).
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/com.imagekit.api/image-kit-java/0.0.1).
 
 <!-- x-release-please-end -->
 
@@ -31,14 +31,14 @@ The REST API documentation can be found on [imagekit.io](https://imagekit.io/doc
 ### Gradle
 
 ```kotlin
-implementation("io.imagekit.io:image-kit-java:0.0.1")
+implementation("com.imagekit.api:image-kit-java:0.0.1")
 ```
 
 ### Maven
 
 ```xml
 <dependency>
-  <groupId>io.imagekit.io</groupId>
+  <groupId>com.imagekit.api</groupId>
   <artifactId>image-kit-java</artifactId>
   <version>0.0.1</version>
 </dependency>
@@ -53,10 +53,10 @@ This library requires Java 8 or later.
 ## Usage
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 
 // Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
@@ -75,8 +75,8 @@ FileUploadResponse response = client.files().upload(params);
 Configure the client using system properties or environment variables:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 // Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
 // Or configures using the `IMAGEKIT_PRIVATE_KEY`, `OPTIONAL_IMAGEKIT_IGNORES_THIS`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
@@ -86,8 +86,8 @@ ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 Or manually:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     .privateKey("My Private Key")
@@ -98,8 +98,8 @@ ImageKitClient client = ImageKitOkHttpClient.builder()
 Or using a combination of the two approaches:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     // Configures using the `imagekit.imagekitPrivateKey`, `imagekit.optionalImagekitIgnoresThis`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
@@ -129,7 +129,7 @@ System properties take precedence over environment variables.
 To temporarily use a modified client configuration, while reusing the same connection and thread pools, call `withOptions()` on any client or service:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
+import com.imagekit.api.client.ImageKitClient;
 
 ImageKitClient clientWithOptions = client.withOptions(optionsBuilder -> {
     optionsBuilder.baseUrl("https://example.com");
@@ -158,10 +158,10 @@ Because each class is immutable, builder modification will _never_ affect alread
 The default client is synchronous. To switch to asynchronous execution, call the `async()` method:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
@@ -179,10 +179,10 @@ CompletableFuture<FileUploadResponse> response = client.async().files().upload(p
 Or create an asynchronous client from the beginning:
 
 ```java
-import io.imagekit.io.client.ImageKitClientAsync;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClientAsync;
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.client.ImageKitClientAsync;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClientAsync;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 import java.util.concurrent.CompletableFuture;
 
@@ -206,8 +206,8 @@ The SDK defines methods that accept files.
 To upload a file, pass a [`Path`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html):
 
 ```java
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.nio.file.Paths;
 
 FileUploadParams params = FileUploadParams.builder()
@@ -220,8 +220,8 @@ FileUploadResponse response = client.files().upload(params);
 Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html):
 
 ```java
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.net.URL;
 
 FileUploadParams params = FileUploadParams.builder()
@@ -234,8 +234,8 @@ FileUploadResponse response = client.files().upload(params);
 Or a `byte[]` array:
 
 ```java
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
@@ -244,12 +244,12 @@ FileUploadParams params = FileUploadParams.builder()
 FileUploadResponse response = client.files().upload(params);
 ```
 
-Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](image-kit-java-core/src/main/kotlin/io/imagekit/io/core/Values.kt):
+Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt):
 
 ```java
-import io.imagekit.io.core.MultipartField;
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.core.MultipartField;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -270,10 +270,10 @@ The SDK defines methods that deserialize responses into instances of Java classe
 To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
 
 ```java
-import io.imagekit.io.core.http.Headers;
-import io.imagekit.io.core.http.HttpResponseFor;
-import io.imagekit.io.models.files.FileUploadParams;
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.core.http.Headers;
+import com.imagekit.api.core.http.HttpResponseFor;
+import com.imagekit.api.models.files.FileUploadParams;
+import com.imagekit.api.models.files.FileUploadResponse;
 import java.io.ByteArrayInputStream;
 
 FileUploadParams params = FileUploadParams.builder()
@@ -289,7 +289,7 @@ Headers headers = response.headers();
 You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadResponse parsedResponse = response.parse();
 ```
@@ -298,26 +298,26 @@ FileUploadResponse parsedResponse = response.parse();
 
 The SDK throws custom unchecked exception types:
 
-- [`ImageKitServiceException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+- [`ImageKitServiceException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                                                                                                                     |
-  | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
-  | 400    | [`BadRequestException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/BadRequestException.kt)                     |
-  | 401    | [`UnauthorizedException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/UnauthorizedException.kt)                 |
-  | 403    | [`PermissionDeniedException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/PermissionDeniedException.kt)         |
-  | 404    | [`NotFoundException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/NotFoundException.kt)                         |
-  | 422    | [`UnprocessableEntityException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/UnprocessableEntityException.kt)   |
-  | 429    | [`RateLimitException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/RateLimitException.kt)                       |
-  | 5xx    | [`InternalServerException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/InternalServerException.kt)             |
-  | others | [`UnexpectedStatusCodeException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/UnexpectedStatusCodeException.kt) |
+  | Status | Exception                                                                                                                       |
+  | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/UnexpectedStatusCodeException.kt) |
 
-- [`ImageKitIoException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitIoException.kt): I/O networking errors.
+- [`ImageKitIoException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitIoException.kt): I/O networking errors.
 
-- [`ImageKitRetryableException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+- [`ImageKitRetryableException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitRetryableException.kt): Generic error indicating a failure that could be retried by the client.
 
-- [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+- [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
-- [`ImageKitException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+- [`ImageKitException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
 
 ## Logging
 
@@ -347,7 +347,7 @@ The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON seri
 
 The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
 
-If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClientAsync.kt).
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClientAsync.kt).
 
 > [!CAUTION]
 > We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
@@ -373,8 +373,8 @@ The API may also explicitly instruct the SDK to retry or not retry a request.
 To set a custom number of retries, configure the client using the `maxRetries` method:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     .fromEnv()
@@ -389,7 +389,7 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadResponse response = client.files().upload(
   params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
@@ -399,8 +399,8 @@ FileUploadResponse response = client.files().upload(
 Or configure the default for all method calls at the client level:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import java.time.Duration;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
@@ -414,8 +414,8 @@ ImageKitClient client = ImageKitOkHttpClient.builder()
 To route requests through a proxy, configure the client using the `proxy` method:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -434,8 +434,8 @@ ImageKitClient client = ImageKitOkHttpClient.builder()
 To customize the underlying OkHttp connection pool, configure the client using the `maxIdleConnections` and `keepAliveDuration` methods:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 import java.time.Duration;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
@@ -457,8 +457,8 @@ If both options are unset, OkHttp's default connection pool settings are used.
 To configure how HTTPS connections are secured, configure the client using the `sslSocketFactory`, `trustManager`, and `hostnameVerifier` methods:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     .fromEnv()
@@ -476,10 +476,10 @@ The SDK consists of three artifacts:
 - `image-kit-java-core`
   - Contains core SDK logic
   - Does not depend on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`ImageKitClient`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClient.kt), [`ImageKitClientAsync`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientAsync.kt), [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientImpl.kt), and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientAsyncImpl.kt), all of which can work with any HTTP client
+  - Exposes [`ImageKitClient`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClient.kt), [`ImageKitClientAsync`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientAsync.kt), [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientImpl.kt), and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientAsyncImpl.kt), all of which can work with any HTTP client
 - `image-kit-java-client-okhttp`
   - Depends on [OkHttp](https://square.github.io/okhttp)
-  - Exposes [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClient.kt) and [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClientAsync.kt), which provide a way to construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientImpl.kt) and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientAsyncImpl.kt), respectively, using OkHttp
+  - Exposes [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClient.kt) and [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClientAsync.kt), which provide a way to construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientImpl.kt) and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientAsyncImpl.kt), respectively, using OkHttp
 - `image-kit-java`
   - Depends on and exposes the APIs of both `image-kit-java-core` and `image-kit-java-client-okhttp`
   - Does not have its own logic
@@ -494,16 +494,16 @@ This structure allows replacing the SDK's default HTTP client without pulling in
 To use a customized `OkHttpClient`:
 
 1. Replace your [`image-kit-java` dependency](#installation) with `image-kit-java-core`
-2. Copy `image-kit-java-client-okhttp`'s [`OkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/OkHttpClient.kt) class into your code and customize it
-3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClientAsync.kt), using your customized client
+2. Copy `image-kit-java-client-okhttp`'s [`OkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClientAsync.kt), using your customized client
 
 ### Completely custom HTTP client
 
 To use a completely custom HTTP client:
 
 1. Replace your [`image-kit-java` dependency](#installation) with `image-kit-java-core`
-2. Write a class that implements the [`HttpClient`](image-kit-java-core/src/main/kotlin/io/imagekit/io/core/http/HttpClient.kt) interface
-3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/io/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/io/client/okhttp/ImageKitOkHttpClientAsync.kt), using your new client class
+2. Write a class that implements the [`HttpClient`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/http/HttpClient.kt) interface
+3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/com/imagekit/api/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/com/imagekit/api/client/okhttp/ImageKitOkHttpClientAsync.kt), using your new client class
 
 ## Undocumented API functionality
 
@@ -514,8 +514,8 @@ The SDK is typed for convenient usage of the documented API. However, it also su
 To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQueryParam`, or `putAdditionalBodyProperty` methods on any `Params` class:
 
 ```java
-import io.imagekit.io.core.JsonValue;
-import io.imagekit.io.models.files.FileUploadParams;
+import com.imagekit.api.core.JsonValue;
+import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
@@ -529,8 +529,8 @@ These can be accessed on the built object later using the `_additionalHeaders()`
 To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
 
 ```java
-import io.imagekit.io.core.JsonValue;
-import io.imagekit.io.models.files.FileUploadParams;
+import com.imagekit.api.core.JsonValue;
+import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
     .transformation(FileUploadParams.UploadTransformation.builder()
@@ -541,11 +541,11 @@ FileUploadParams params = FileUploadParams.builder()
 
 These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
-To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](image-kit-java-core/src/main/kotlin/io/imagekit/io/core/Values.kt) object to its setter:
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt) object to its setter:
 
 ```java
-import io.imagekit.io.core.JsonValue;
-import io.imagekit.io.models.files.FileUploadParams;
+import com.imagekit.api.core.JsonValue;
+import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
     .file(JsonValue.from(42))
@@ -553,10 +553,10 @@ FileUploadParams params = FileUploadParams.builder()
     .build();
 ```
 
-The most straightforward way to create a [`JsonValue`](image-kit-java-core/src/main/kotlin/io/imagekit/io/core/Values.kt) is using its `from(...)` method:
+The most straightforward way to create a [`JsonValue`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt) is using its `from(...)` method:
 
 ```java
-import io.imagekit.io.core.JsonValue;
+import com.imagekit.api.core.JsonValue;
 import java.util.List;
 import java.util.Map;
 
@@ -594,11 +594,11 @@ JsonValue complexValue = JsonValue.from(Map.of(
 
 Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
 
-To forcibly omit a required parameter or property, pass [`JsonMissing`](image-kit-java-core/src/main/kotlin/io/imagekit/io/core/Values.kt):
+To forcibly omit a required parameter or property, pass [`JsonMissing`](image-kit-java-core/src/main/kotlin/com/imagekit/api/core/Values.kt):
 
 ```java
-import io.imagekit.io.core.JsonMissing;
-import io.imagekit.io.models.files.FileUploadParams;
+import com.imagekit.api.core.JsonMissing;
+import com.imagekit.api.models.files.FileUploadParams;
 
 FileUploadParams params = FileUploadParams.builder()
     .fileName("fileName")
@@ -611,7 +611,7 @@ FileUploadParams params = FileUploadParams.builder()
 To access undocumented response properties, call the `_additionalProperties()` method:
 
 ```java
-import io.imagekit.io.core.JsonValue;
+import com.imagekit.api.core.JsonValue;
 import java.util.Map;
 
 Map<String, JsonValue> additionalProperties = client.files().upload(params)._additionalProperties();
@@ -641,7 +641,7 @@ String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
 To access a property's raw JSON value, which may be undocumented, call its `_` prefixed method:
 
 ```java
-import io.imagekit.io.core.JsonField;
+import com.imagekit.api.core.JsonField;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -665,12 +665,12 @@ if (file.isMissing()) {
 
 In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-By default, the SDK will not throw an exception in this case. It will throw [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/io/imagekit/io/errors/ImageKitInvalidDataException.kt) only if you directly access the property.
+By default, the SDK will not throw an exception in this case. It will throw [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/com/imagekit/api/errors/ImageKitInvalidDataException.kt) only if you directly access the property.
 
 If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadResponse response = client.files().upload(params).validate();
 ```
@@ -678,7 +678,7 @@ FileUploadResponse response = client.files().upload(params).validate();
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import io.imagekit.io.models.files.FileUploadResponse;
+import com.imagekit.api.models.files.FileUploadResponse;
 
 FileUploadResponse response = client.files().upload(
   params, RequestOptions.builder().responseValidation(true).build()
@@ -688,8 +688,8 @@ FileUploadResponse response = client.files().upload(
 Or configure the default for all method calls at the client level:
 
 ```java
-import io.imagekit.io.client.ImageKitClient;
-import io.imagekit.io.client.okhttp.ImageKitOkHttpClient;
+import com.imagekit.api.client.ImageKitClient;
+import com.imagekit.api.client.okhttp.ImageKitOkHttpClient;
 
 ImageKitClient client = ImageKitOkHttpClient.builder()
     .fromEnv()
