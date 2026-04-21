@@ -4,6 +4,8 @@ package io.imagekit.client
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.getPackageVersion
+import io.imagekit.lib.Helper
+import io.imagekit.lib.HelperService
 import io.imagekit.services.async.AccountServiceAsync
 import io.imagekit.services.async.AccountServiceAsyncImpl
 import io.imagekit.services.async.AssetServiceAsync
@@ -73,6 +75,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
         WebhookServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val helper: Helper by lazy { Helper.create(clientOptions) }
+
     override fun sync(): ImageKitClient = sync
 
     override fun withRawResponse(): ImageKitClientAsync.WithRawResponse = withRawResponse
@@ -97,6 +101,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
     override fun beta(): BetaServiceAsync = beta
 
     override fun webhooks(): WebhookServiceAsync = webhooks
+
+    override fun helper(): HelperService = helper
 
     override fun close() = clientOptions.close()
 

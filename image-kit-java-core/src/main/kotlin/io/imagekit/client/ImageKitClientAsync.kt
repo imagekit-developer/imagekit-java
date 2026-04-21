@@ -3,6 +3,7 @@
 package io.imagekit.client
 
 import io.imagekit.core.ClientOptions
+import io.imagekit.lib.HelperService
 import io.imagekit.services.async.AccountServiceAsync
 import io.imagekit.services.async.AssetServiceAsync
 import io.imagekit.services.async.BetaServiceAsync
@@ -67,6 +68,8 @@ interface ImageKitClientAsync {
     fun beta(): BetaServiceAsync
 
     fun webhooks(): WebhookServiceAsync
+
+    fun helper(): HelperService
 
     /**
      * Closes this client, relinquishing any underlying resources.

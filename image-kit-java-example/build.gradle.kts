@@ -19,7 +19,7 @@ tasks.withType<JavaCompile>().configureEach {
 application {
     // Use `./gradlew :image-kit-java-example:run` to run `Main`
     // Use `./gradlew :image-kit-java-example:run -Pexample=Something` to run `SomethingExample`
-    mainClass = "com.imagekit.api.example.${
+    mainClass = "io.imagekit.example.${
         if (project.hasProperty("example"))
             "${project.property("example")}Example"
         else

@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.JsonGenerator
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import io.imagekit.core.BaseSerializer
@@ -21,6 +22,7 @@ import io.imagekit.core.checkRequired
 import io.imagekit.core.getOrThrow
 import io.imagekit.core.http.Headers
 import io.imagekit.core.http.QueryParams
+import io.imagekit.core.jsonMapper
 import io.imagekit.core.toImmutable
 import io.imagekit.errors.ImageKitInvalidDataException
 import io.imagekit.models.ExtensionItem
@@ -1082,9 +1084,9 @@ private constructor(
                 "token" to _token(),
                 "checks" to _checks(),
                 "customCoordinates" to _customCoordinates(),
-                "customMetadata" to _customMetadata(),
+                "customMetadata" to _toJsonString(_customMetadata()),
                 "description" to _description(),
-                "extensions" to _extensions(),
+                "extensions" to _toJsonString(_extensions()),
                 "folder" to _folder(),
                 "isPrivateFile" to _isPrivateFile(),
                 "isPublished" to _isPublished(),
@@ -1092,13 +1094,43 @@ private constructor(
                 "overwriteCustomMetadata" to _overwriteCustomMetadata(),
                 "overwriteFile" to _overwriteFile(),
                 "overwriteTags" to _overwriteTags(),
-                "responseFields" to _responseFields(),
-                "tags" to _tags(),
-                "transformation" to _transformation(),
+                "responseFields" to _toCommaSeparated(_responseFields()),
+                "tags" to _toCommaSeparated(_tags()),
+                "transformation" to _toJsonString(_transformation()),
                 "useUniqueFileName" to _useUniqueFileName(),
                 "webhookUrl" to _webhookUrl(),
             ) + _additionalBodyProperties().mapValues { (_, value) -> MultipartField.of(value) })
             .toImmutable()
+
+    private fun _toJsonString(field: MultipartField<*>): MultipartField<String> {
+        if (field.value.isMissing() || field.value.isNull()) {
+            @Suppress("UNCHECKED_CAST")
+            return field as MultipartField<String>
+        }
+        val jsonString = jsonMapper().writeValueAsString(field.value)
+        return MultipartField.of(jsonString)
+    }
+
+    private fun _toCommaSeparated(field: MultipartField<*>): MultipartField<String> {
+        if (field.value.isMissing() || field.value.isNull()) {
+            @Suppress("UNCHECKED_CAST")
+            return field as MultipartField<String>
+        }
+        val mapper = jsonMapper()
+        val node = mapper.valueToTree<JsonNode>(field.value)
+        if (!node.isArray) {
+            @Suppress("UNCHECKED_CAST")
+            return field as MultipartField<String>
+        }
+        val csv =
+            node
+                .elements()
+                .asSequence()
+                .filter { !it.isNull && !it.isMissingNode }
+                .map { it.asText() }
+                .joinToString(",")
+        return MultipartField.of(csv)
+    }
 
     override fun _headers(): Headers = additionalHeaders
 
