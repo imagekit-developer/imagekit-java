@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/0.0.1)
-[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/0.0.1/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/0.0.1)
+[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.0.0)
+[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.0.0/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.0.0)
 
 <!-- x-release-please-end -->
 
@@ -11,7 +11,7 @@ The ImageKit Java SDK is a comprehensive library designed to simplify the integr
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/0.0.1).
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.0.0).
 
 <!-- x-release-please-end -->
 
@@ -46,7 +46,7 @@ The REST API documentation can be found on [imagekit.io](https://imagekit.io/doc
 ### Gradle
 
 ```kotlin
-implementation("io.imagekit:image-kit-java:0.0.1")
+implementation("io.imagekit:image-kit-java:3.0.0")
 ```
 
 ### Maven
@@ -55,7 +55,7 @@ implementation("io.imagekit:image-kit-java:0.0.1")
 <dependency>
   <groupId>io.imagekit</groupId>
   <artifactId>image-kit-java</artifactId>
-  <version>0.0.1</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
