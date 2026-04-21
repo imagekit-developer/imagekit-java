@@ -1,1209 +1,1032 @@
-# ImageKit Java SDK
+# ImageKit.io Java SDK
 
-[![Java CI](https://github.com/imagekit-developer/imagekit-java/workflows/Java%20CI/badge.svg)](https://github.com/imagekit-developer/imagekit-java)
-[![Release](https://jitpack.io/v/com.github.imagekit-developer/imagekit-java.svg)](https://jitpack.io/#com.github.imagekit-developer/imagekit-java)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Twitter Follow](https://img.shields.io/twitter/follow/imagekitio?label=Follow&style=social)](https://twitter.com/ImagekitIo)
- 
-Java SDK for [ImageKit.io](https://imagekit.io/) that implements the new APIs and interface for performing different file operations.
+<!-- x-release-please-start-version -->
 
-ImageKit is complete media storage, optimization, and transformation solution that comes with an [image and video CDN](https://imagekit.io). It can be integrated with your existing infrastructure - storage like AWS S3, web servers, your CDN, and custom domain names, allowing you to deliver optimized images in minutes with minimal code changes.
+[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.0.0)
+[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.0.0/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.0.0)
 
-Table of contents -
- * [Installation](#installation)
- * [Initialization](#initialization)
- * [Usage](#usage)
- * [Versioning](#versioning)
- * [URL generation](#url-generation)
- * [File upload](#file-upload)
- * [File management](#file-management)
- * [Utility functions](#utility-functions)
- * [Handling errors](#handling-errors)
- * [Support](#support)
- * [Links](#links)
- 
+<!-- x-release-please-end -->
+
+The ImageKit Java SDK is a comprehensive library designed to simplify the integration of ImageKit into your server-side applications. It provides powerful tools for working with the ImageKit REST API, including building and transforming URLs, generating signed URLs for secure content delivery, verifying webhooks, and handling file uploads.
+
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.0.0).
+
+<!-- x-release-please-end -->
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Requirements](#requirements)
+- [Usage](#usage)
+- [URL generation](#url-generation)
+  - [Basic URL generation](#basic-url-generation)
+  - [URL generation with transformations](#url-generation-with-transformations)
+  - [URL generation with image overlay](#url-generation-with-image-overlay)
+  - [URL generation with text overlay](#url-generation-with-text-overlay)
+  - [URL generation with multiple overlays](#url-generation-with-multiple-overlays)
+  - [Signed URLs for secure delivery](#signed-urls-for-secure-delivery)
+- [Authentication parameters for client-side uploads](#authentication-parameters-for-client-side-uploads)
+- [Webhook verification](#webhook-verification)
+- [Advanced Usage](#advanced-usage)
+  - [Client configuration](#client-configuration)
+  - [File uploads](#file-uploads)
+  - [Error handling](#error-handling)
+  - [Retries](#retries)
+  - [Timeouts](#timeouts)
+  - [Proxies](#proxies)
+  - [Logging](#logging)
+- [Semantic versioning](#semantic-versioning)
+
 ## Installation
 
-### Requirements
+<!-- x-release-please-start-version -->
 
-- Java 1.8 or later
+### Gradle
 
-### Gradle users
-Step 1. Add the JitPack repository to your build file
+```kotlin
+implementation("io.imagekit:image-kit-java:3.0.0")
 ```
-allprojects {
-  repositories {
-    ...
-    maven { url 'https://jitpack.io' }
-  }
-}
-```
-Step 2. Add the dependency on the project's `build.gradle`:
-```
-dependencies {
-        implementation 'com.github.imagekit-developer:imagekit-java:2.0.0'
-}
-```
-### Maven users
-Step 1. Add the JitPack repository to your build file
-```
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
-```
-Step 2. Add the dependency in the POM file:
-```
+
+### Maven
+
+```xml
 <dependency>
-    <groupId>com.github.imagekit-developer</groupId>
-    <artifactId>imagekit-java</artifactId>
-    <version>2.0.0</version>
+  <groupId>io.imagekit</groupId>
+  <artifactId>image-kit-java</artifactId>
+  <version>3.0.0</version>
 </dependency>
 ```
 
-## Initialization
+<!-- x-release-please-end -->
 
-**Step 1**. Create a `config.properties` file inside `src/main/resources` of your project. And put essential values of keys [UrlEndpoint, PrivateKey, PublicKey], no need to use quote(`'` or `"`) in values. 
+## Requirements
 
- You can get the value of [URL-endpoint](https://imagekit.io/dashboard#url-endpoints) from your ImageKit dashboard. API keys can be obtained from the [developer](https://imagekit.io/dashboard/developer/api-keys) section in your ImageKit dashboard.
-
-```editorconfig
-# Put essential values of keys [UrlEndpoint, PrivateKey, PublicKey]
-UrlEndpoint=your_public_api_key
-PrivateKey=your_private_api_key
-PublicKey=https://ik.imagekit.io/imagekit_id/
-```
-
-**Step 2**. Then you need to initialize ImageKit with that configuration. 
-
- ```java
-import io.imagekit.sdk.ImageKit;
-import io.imagekit.sdk.config.Configuration;
-import io.imagekit.sdk.utils.Utils;
-class App {
-    public static void main(String[] args){
-        ImageKit imageKit=ImageKit.getInstance();
-        Configuration config=Utils.getSystemConfig(App.class);
-        imageKit.setConfig(config);
-    }
-}
-```
-
-or
-
- ```java
-import io.imagekit.sdk.ImageKit;
-import io.imagekit.sdk.config.Configuration;
-import io.imagekit.sdk.utils.Utils;
-class App {
-    public static void main(String[] args) {
-        ImageKit imageKit = ImageKit.getInstance();
-        Configuration config = new Configuration("your_public_key", "your_private_key", "your_url_endpoint");
-        imageKit.setConfig(config);
-    }
-}
-```
+This library requires Java 8 or later.
 
 ## Usage
-You can use this Java SDK for 3 different kinds of methods:
 
-* URL generation
-* file upload
-* file management
+```java
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.ByteArrayInputStream;
 
-The usage of the SDK has been explained below.
+// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
+// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 
-## Change log
-This document presents a list of changes that break the existing functionality of previous versions. We try our best to minimize these disruptions, but sometimes they are unavoidable and will be in major versions.
-
-### Breaking History:
-
-Changes from 1.0.3 -> 2.0.0 are listed below
-
-1. Result `raw` object and `getMap()` properties:
-
-**What changed**
-- `raw` and `getMap()` has been deprecated.
-
-**Who is affected?**
-- This affects any development that uses the `raw` or `getMap()` from the response object of APIs and Result object.
-
-**How should I update my code?**
-- If you still need to use `raw` and `getMap()`, do this `result.getResponseMetaData().getRaw()`.
- 
-2. Result object `message` and `isSuccessful` boolean properties:
-
-**What changed**
-- `message` and `isSuccessful` have been replaced with custom exceptions according to response code.
-
-**Who is affected?**
-- This affects any development that uses the `message` or `isSuccessful` from response object of APIs that is Result object.
-
-**How should I update my code?**
-- If you still need to use `message` it will be there in the custom exceptions that could be raised when calling the various API methods. `isSuccessful` can be understood to be `true` if the API method doesn't throw any exception.
-
+FileUploadParams params = FileUploadParams.builder()
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
+    .build();
+FileUploadResponse response = client.files().upload(params);
+System.out.println(response);
+```
 
 ## URL generation
 
-**1. Using image path and URL-endpoint**
+The ImageKit SDK provides a powerful `client.helper().buildUrl()` method for generating optimized image and video URLs with transformations.
 
-This method allows you to create an URL to access a file using the relative file path and the ImageKit URL endpoint (`urlEndpoint`). The file can be an image, video, or any other static file supported by ImageKit.
+### Basic URL generation
 
-```java
-Map<String, String> queryParam=new HashMap<>();
-queryParam.put("v","123");
-
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","600");
-scale.put("width","400");
-scale.put("raw", "ar-4-3,q-40");
-transformation.add(scale);
-    
-Map<String, Object> options=new HashMap();
-options.put("urlEndpoint","https://ik.imagekit.io/your_imagekit_id/");
-options.put("path","/default-image.jpg");
-options.put("transformation", transformation);
-
-String url = ImageKit.getInstance().getUrl(options);
-```
-The result in a URL like
-```
-https://ik.imagekit.io/your_imagekit_id/tr:w-400,h-600/default-image.jpg?v=123
-```
-
-**2. Using full image URL**
-This method allows you to add transformation parameters to an absolute URL. For example, if you have configured a custom CNAME and have absolute asset URLs in your database or CMS, you will often need this.
+Generate a simple URL without any transformations:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","600");
-scale.put("width","400");
-scale.put("raw", "ar-4-3,q-40");
-transformation.add(scale);
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import io.imagekit.models.SrcOptions;
 
-Map<String, Object> options=new HashMap();
-options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
-options.put("transformation", transformation);
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
 
-String url = ImageKit.getInstance().getUrl(options);
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/image.jpg")
+        .build()
+);
+System.out.println(url);
+// Result: https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg
 ```
 
-The results in a URL like
+### URL generation with transformations
 
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=w-400,h-600
-```
-
-The ```.getUrl()``` method accepts the following parameters
-
-| Option                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| :---------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| urlEndpoint            | Optional. `(Type: String)` The base URL to be appended before the path of the image. If not specified, the URL Endpoint specified during SDK initialization is used. For example, https://ik.imagekit.io/your_imagekit_id/                                                                                                                                                                                                                                                                                                                                             |
-| path                    | Conditional. `(Type: String)` This is the path at which the image exists. For example, `/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                                                                                                |
-| src                     | Conditional. `(Type: String)` This is the complete URL of an image already mapped to ImageKit. For example, `https://ik.imagekit.io/your_imagekit_id/endpoint/path/to/image.jpg`. Either the `path` or `src` parameter needs to be specified for URL generation.                                                                                                                                                                                                                                                                                                                           |
-| transformation          | Optional. `(Type: List<Map<String,String>>)` An array of objects specifying the transformation to be applied in the URL. The transformation name and the value should be specified as a key-value pair in the object. Different steps of a [chained transformation](https://docs.imagekit.io/features/image-transformations/chained-transformations) can be specified as different objects of the array. The complete list of supported transformations in the SDK and some examples of using them are given later. If you use a transformation name that is not specified in the SDK, it gets applied as it is in the URL. |
-| transformationPosition | Optional. `(Type: String)` Default value is `path` that places the transformation string as a path parameter in the URL. It can also be specified as `query`, which adds the transformation string as the query parameter `tr` in the URL. If you use the `src` parameter to create the URL, then the transformation string is always added as a query parameter.                                                                                                                                                                                                                                 |
-| queryParameters        | Optional. `(Type: Map<String, String>)` These are the other query parameters that you want to add to the final URL. These can be any query parameters and not necessarily related to ImageKit. Especially useful if you want to add some versioning parameters to your URLs.                                                                                                                                                                                                                                                                                                                           |
-| signed                  | Optional. `(Type: Boolean)` Default is `false`. If set to `true`, the SDK generates a signed image URL adding the image signature to the image URL. This can only be used if you create the URL with the `url_endpoint` and `path` parameters and not with the `src` parameter.                                                                                                                                                                                                                                                                                            |
-| expireSeconds          | Optional. `(Type: Integer)` Meant to be used along with the `signed` parameter to specify the time in seconds from now when the URL should expire. If specified, the URL contains the expiry timestamp in the URL, and the image signature is modified accordingly.                                                                                                                                                                                                                                                                                                                |
-
-
-## Examples of generating URLs
-**1. Chained Transformations as a query parameter**
+Apply common transformations like resizing, quality, and format conversion:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","300");
-scale.put("width","400");
-transformation.add(scale);
-Map<String, String> rotate=new HashMap<>();
-rotate.put("rotation","90");
-transformation.add(rotate);
+import io.imagekit.models.SrcOptions;
+import io.imagekit.models.Transformation;
 
-Map<String, Object> options=new HashMap();
-options.put("path","/default-image.jpg");
-options.put("transformationPosition","query");
-options.put("transformation", transformation);
-
-String url = ImageKit.getInstance().getUrl(options);
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(400.0)
+                .height(300.0)
+                .crop(Transformation.Crop.MAINTAIN_RATIO)
+                .quality(80.0)
+                .format(Transformation.Format.WEBP)
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: https://ik.imagekit.io/your_imagekit_id/path/to/image.jpg?tr=w-400,h-300,c-maintain_ratio,q-80,f-webp
 ```
 
-Sample Result URL -
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300&w-400:rt-90
-```
+### URL generation with image overlay
 
-**2. Sharpening and contrast transform and a progressive JPG image**
-
-There are some transforms like [Sharpening](https://docs.imagekit.io/features/image-transformations/image-enhancement-and-color-manipulation)
-that can be added to the URL with or without any other value. To use such transforms without specifying a value, specify
-the value as "-" in the transformation object. Otherwise, specify the value that you want to be
-added to this transformation.
+Add image overlays to your base image:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("format","jpg");
-scale.put("progressive","true");
-scale.put("effect_sharpen","-");
-scale.put("effect_contrast","1");
-transformation.add(scale);
+import io.imagekit.models.ImageOverlay;
+import io.imagekit.models.Overlay;
+import io.imagekit.models.OverlayPosition;
+import io.imagekit.models.SrcOptions;
+import io.imagekit.models.Transformation;
 
-Map<String, Object> options=new HashMap();
-options.put("path","/default-image.jpg");
-options.put("transformation", transformation);
-String url = ImageKit.getInstance().getUrl(options);
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(500.0)
+                .height(400.0)
+                .overlay(Overlay.ofImage(
+                    ImageOverlay.builder()
+                        .input("/path/to/overlay-logo.png")
+                        .position(OverlayPosition.builder()
+                            .x(10.0)
+                            .y(10.0)
+                            .build())
+                        .addTransformation(
+                            Transformation.builder()
+                                .width(100.0)
+                                .height(50.0)
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with image overlay positioned at x:10, y:10
 ```
 
-Note that because the `src` parameter was used, the transformation string gets added as a query parameter.
+### URL generation with text overlay
 
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=f-jpg&pr-true&e-sharpen&e-contrast-1
-```
-
-**3. Signed URL that expires in 300 seconds with the default URL endpoint and other query parameters**
+Add customized text overlays:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","600");
-scale.put("width","400");
+import io.imagekit.models.Overlay;
+import io.imagekit.models.OverlayPosition;
+import io.imagekit.models.SrcOptions;
+import io.imagekit.models.TextOverlay;
+import io.imagekit.models.TextOverlayTransformation;
+import io.imagekit.models.Transformation;
 
-transformation.add(format);
-
-Map<String, Object> options=new HashMap();
-options.put("path","/default-image.jpg");
-options.put("signed",true);
-options.put("expireSeconds",300);
-String url = ImageKit.getInstance().getUrl(options);
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(600.0)
+                .height(400.0)
+                .overlay(Overlay.ofText(
+                    TextOverlay.builder()
+                        .text("Sample Text Overlay")
+                        .position(OverlayPosition.builder()
+                            .x(50.0)
+                            .y(50.0)
+                            .focus(OverlayPosition.Focus.CENTER)
+                            .build())
+                        .addTransformation(
+                            TextOverlayTransformation.builder()
+                                .fontSize(40.0)
+                                .fontFamily("Arial")
+                                .fontColor("FFFFFF")
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with white Arial text overlay at center position
 ```
-**Sample Result URL**
-```
-https://ik.imagekit.io/your_imagekit_id/tr:h-600,w-400/default-image.jpg?ik-t=1567358667&ik-s=f2c7cdacbe7707b71a83d49cf1c6110e3d701054
-```
 
-**4. Adding overlays**
+### URL generation with multiple overlays
 
-ImageKit.io enables you to apply overlays to [images](https://docs.imagekit.io/features/image-transformations/overlay-using-layers) and [videos](https://docs.imagekit.io/features/video-transformation/overlay) using the raw parameter with the concept of [layers](https://docs.imagekit.io/features/image-transformations/overlay-using-layers#layers). The raw parameter facilitates incorporating transformations directly in the URL. A layer is a distinct type of transformation that allows you to define an asset to serve as an overlay, along with its positioning and additional transformations.
-
-**Text as overlays**
-
-You can add any text string over a base video or image using a text layer (l-text).
-
-For example:
+Combine multiple overlays for complex compositions:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","300");
-scale.put("width","400");
-scale.put("raw", "l-text,i-Imagekit,fs-50,l-end");
-transformation.add(scale);
+import io.imagekit.models.ImageOverlay;
+import io.imagekit.models.Overlay;
+import io.imagekit.models.OverlayPosition;
+import io.imagekit.models.SrcOptions;
+import io.imagekit.models.TextOverlay;
+import io.imagekit.models.TextOverlayTransformation;
+import io.imagekit.models.Transformation;
+import java.util.Arrays;
 
-Map<String, Object> options=new HashMap();
-options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
-options.put("transformation", transformation);
-
-String url = ImageKit.getInstance().getUrl(options);
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/path/to/base-image.jpg")
+        .addTransformation(
+            // First transformation step: text overlay
+            Transformation.builder()
+                .width(800.0)
+                .height(600.0)
+                .overlay(Overlay.ofText(
+                    TextOverlay.builder()
+                        .text("Header Text")
+                        .position(OverlayPosition.builder()
+                            .x(20.0)
+                            .y(20.0)
+                            .build())
+                        .addTransformation(
+                            TextOverlayTransformation.builder()
+                                .fontSize(30.0)
+                                .fontColor("000000")
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .addTransformation(
+            // Second transformation step: image watermark overlay
+            Transformation.builder()
+                .overlay(Overlay.ofImage(
+                    ImageOverlay.builder()
+                        .input("/watermark.png")
+                        .position(OverlayPosition.builder()
+                            .focus(OverlayPosition.Focus.BOTTOM_RIGHT)
+                            .build())
+                        .addTransformation(
+                            Transformation.builder()
+                                .width(100.0)
+                                .opacity(70.0)
+                                .build()
+                        )
+                        .build()
+                ))
+                .build()
+        )
+        .build()
+);
+System.out.println(url);
+// Result: URL with text overlay at top-left and semi-transparent watermark at bottom-right
 ```
-**Sample Result URL**
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-text,i-Imagekit,fs-50,l-end
-```
 
-**Image as overlays**
+### Signed URLs for secure delivery
 
-You can add an image over a base video or image using an image layer (l-image).
-
-For example:
+Generate signed URLs that expire after a specified time for secure content delivery:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","300");
-scale.put("width","400");
-scale.put("raw", "l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end");
-transformation.add(scale);
+import io.imagekit.models.SrcOptions;
+import io.imagekit.models.Transformation;
 
-Map<String, Object> options=new HashMap();
-options.put("src","https://ik.imagekit.io/your_imagekit_id/default-image.jpg");
-options.put("transformation", transformation);
+// Generate a signed URL that expires in 1 hour (3600 seconds)
+String url = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/private/secure-image.jpg")
+        .addTransformation(
+            Transformation.builder()
+                .width(400.0)
+                .height(300.0)
+                .quality(90.0)
+                .build()
+        )
+        .signed(true)
+        .expiresIn(3600.0) // URL expires in 1 hour
+        .build()
+);
+System.out.println(url);
+// Result: URL with signature parameters (?ik-t=timestamp&ik-s=signature)
 
-String url = ImageKit.getInstance().getUrl(options);
+// Generate a signed URL that doesn't expire
+String permanentSignedUrl = client.helper().buildUrl(
+    SrcOptions.builder()
+        .urlEndpoint("https://ik.imagekit.io/your_imagekit_id")
+        .src("/private/secure-image.jpg")
+        .signed(true)
+        // No expiresIn means the URL won't expire
+        .build()
+);
+System.out.println(permanentSignedUrl);
+// Result: URL with signature parameter (?ik-s=signature)
 ```
-**Sample Result URL**
-```
-https://ik.imagekit.io/your_imagekit_id/default-image.jpg?tr=h-300,w-400,l-image,i-default-image.jpg,w-100,b-10_CDDC39,l-end
-```
 
-**Solid color blocks as overlays**
+## Authentication parameters for client-side uploads
 
-You can add solid color blocks over a base video or image using an image layer (l-image).
-
-For example:
+Generate authentication parameters for secure client-side file uploads:
 
 ```java
-List<Map<String, String>> transformation=new ArrayList<Map<String, String>>();
-Map<String, String> scale=new HashMap<>();
-scale.put("height","300");
-scale.put("width","400");
-scale.put("raw", "l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end");
-transformation.add(scale);
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import java.util.Map;
 
-Map<String, Object> options=new HashMap();
-options.put("src","https://ik.imagekit.io/your_imagekit_id/img/sample-video.mp4");
-options.put("transformation", transformation);
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
 
-String url = ImageKit.getInstance().getUrl(options);
+// Generate authentication parameters with auto-generated token and default expiry
+Map<String, Object> authParams = client.helper().getAuthenticationParameters(null, null);
+System.out.println(authParams);
+// Result: {token=<uuid>, expire=<timestamp>, signature=<hmac-signature>}
+
+// Generate with custom token and expiry
+Map<String, Object> customAuthParams = client.helper().getAuthenticationParameters("my-custom-token", 1800L);
+System.out.println(customAuthParams);
+// Result: {token=my-custom-token, expire=1800, signature=<hmac-signature>}
 ```
-**Sample Result URL**
-```
-https://ik.imagekit.io/your_imagekit_id/img/sample-video.mp4?tr=h-300,w-400,l-image,i-ik_canvas,bg-FF0000,w-300,h-100,l-end
-```
 
-**List of transformations**
+These authentication parameters can be used in client-side upload forms to securely upload files without exposing your private API key.
 
-See the complete list of [image](https://docs.imagekit.io/features/image-transformations) and [video](https://docs.imagekit.io/features/video-transformation) transformations supported in ImageKit. The SDK gives a name to each transformation parameter e.g. `height` for `h` and `width` for `w` parameter. It makes your code more readable. If the property does not match any of the following supported options, it is added as it is.
+## Webhook verification
 
-If you want to generate transformations in your application and add them to the URL as it is, use the `raw` parameter.
+The ImageKit SDK provides utilities to verify webhook signatures for secure event handling. This ensures that webhook requests are actually coming from ImageKit and haven't been tampered with.
 
-| Supported Transformation Name | Translates to parameter |
-|-------------------------------|-------------------------|
-| height | h |
-| width | w |
-| aspectRatio | ar |
-| quality | q |
-| crop | c |
-| cropMode | cm |
-| x | x |
-| y | y |
-| focus | fo |
-| format | f |
-| radius | r |
-| background | bg |
-| border | b |
-| rotation | rt |
-| blur | bl |
-| named | n |
-| progressive | pr |
-| lossless | lo |
-| trim | t |
-| metadata | md |
-| colorProfile | cp |
-| defaultImage | di |
-| dpr | dpr |
-| effectSharpen | e-sharpen |
-| effectUSM | e-usm |
-| effectContrast | e-contrast |
-| effectGray | e-grayscale |
-| original | orig |
-| raw | `replaced by the parameter value` |
+For detailed information about webhook setup, signature verification, and handling different webhook events, refer to the [ImageKit webhook documentation](https://imagekit.io/docs/webhooks#verify-webhook-signature).
 
+# Advanced Usage
 
-## File Upload
+## Client configuration
 
-The SDK provides a simple interface using the `.upload()` method to upload files to the ImageKit Media library. It
-accepts an object of the `FileCreateRequest` class that contains all the parameters supported by the [ImageKit Upload API](https://docs.imagekit.io/api-reference/upload-file-api/server-side-file-upload).
-
-The constructor `FileCreateRequest` class requires `file` as (URL/Base64/Byte Array) and `file_name`. The method returns object of `Result` in case of successful, or it will throw custom exception in case of failure.
-
-Sample usage
+Configure the client using system properties or environment variables:
 
 ```java
-String filePath = "your-local-file-path";
-String base64 = Utils.fileToBase64(new File(filePath));
-FileCreateRequest fileCreateRequest = new FileCreateRequest(base64, "file_name.jpg");
-String customCoordinates = "10,10,20,20";
-fileCreateRequest.setCustomCoordinates(customCoordinates);  // optional
-List<String> tags = new ArrayList<>();
-tags.add("Sample-tag");
-tags.add("T-shirt");
-fileCreateRequest.setTags(tags); // optional
-fileCreateRequest.setFileName("override_file_name.jpg");  // optional
-fileCreateRequest.setFolder("sample-folder/nested-folder");  // optional
-fileCreateRequest.setPrivateFile(false);  // optional
-fileCreateRequest.setUseUniqueFileName(true);  // optional
-List<String> responseFields=new ArrayList<>();
-responseFields.add("tags");
-responseFields.add("customCoordinates");
-fileCreateRequest.setResponseFields(responseFields); // optional
-JsonObject innerObject1 = new JsonObject();
-innerObject1.addProperty("name", "remove-bg");
-innerObject1.add("options", optionsInnerObject);
-JsonObject innerObject2 = new JsonObject();
-innerObject2.addProperty("name", "google-auto-tagging");
-innerObject2.addProperty("minConfidence", 10);
-innerObject2.addProperty("maxTags", 5);
-JsonArray jsonArray = new JsonArray();
-jsonArray.add(innerObject1);
-jsonArray.add(innerObject2);
-fileCreateRequest.setExtensions(jsonArray); // optional
-fileCreateRequest.setWebhookUrl("Your webhook url"); // optional
-fileCreateRequest.setOverwriteFile(true); // optional
-fileCreateRequest.setOverwriteAITags(true); // optional
-fileCreateRequest.setOverwriteTags(true); // optional
-fileCreateRequest.setOverwriteCustomMetadata(true); // optional
-JsonObject jsonObjectCustomMetadata = new JsonObject();
-jsonObjectCustomMetadata.addProperty("test1", 10);
-fileCreateRequest.setCustomMetadata(jsonObjectCustomMetadata); // optional
-Result result = ImageKit.getInstance().upload(fileCreateRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+
+// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
+// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+ImageKitClient client = ImageKitOkHttpClient.fromEnv();
 ```
 
-If the upload is successful, result will be there as an object of `Result` class that contains the same all the parameters received from ImageKit's servers.
-
-If the upload fails, custom exception is thrown and `getMessage()` can be called to get the error message received from ImageKit's servers.
-
-
-## File Management
-
-The SDK provides a simple interface for all the [media APIs mentioned here](https://docs.imagekit.io/api-reference/media-api) to manage your files. This also returns `error` and `result`, the error will be `None` if API succeeds.
-
-**1. List & Search Files**
-
-Accepts an object of class `GetFileListRequest` specifying the parameters to be used to list and search files. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/list-and-search-files) can be passed via their setter functions to get the results.
-
-#### Applying Filters
-Filter out the files by specifying the parameters.
+Or manually:
 
 ```java
-String[] tags = new String[3];
-tags[0] = "Software";
-tags[1] = "Developer";
-tags[2] = "Engineer";
-GetFileListRequest getFileListRequest = new GetFileListRequest();
-getFileListRequest.setType("file");
-getFileListRequest.setSort("ASC_CREATED");
-getFileListRequest.setPath("/");
-getFileListRequest.setFileType("all");
-getFileListRequest.setLimit("4");
-getFileListRequest.setSkip("1");
-getFileListRequest.setTags(tags);
-ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultList);
-System.out.println("Raw Response:");
-System.out.println(resultList.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultList.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .privateKey("private_key_xxx")
+    .build();
 ```
 
-#### Advance Search
-In addition, you can fine-tune your query by specifying various filters by generating a query string in a Lucene-like syntax and setting this generated string to the `GetFileListRequest` object using `setSearchQuery` function.
+Or using a combination of the two approaches:
 
 ```java
-GetFileListRequest getFileListRequest = new GetFileListRequest();
-getFileListRequest.setSearchQuery("createdAt >= '2d' OR size < '2mb' OR format='png'");
-ResultList resultList = ImageKit.getInstance().getFileList(getFileListRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultList);
-System.out.println("Raw Response:");
-System.out.println(resultList.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultList.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    // Configures using the `imagekit.imagekitPrivateKey`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
+    // Or configures using the `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+    .fromEnv()
+    .privateKey("private_key_xxx")
+    .build();
 ```
 
-Detailed documentation can be found here for [advance search queries](https://docs.imagekit.io/api-reference/media-api/list-and-search-files#advanced-search-queries).
+See this table for the available options:
 
-**2. Get File Details**
+| Setter          | Environment variable             | Required | Default value               |
+| --------------- | -------------------------------- | -------- | --------------------------- |
+| `privateKey`    | `IMAGEKIT_PRIVATE_KEY`           | true     | -                           |
+| `webhookSecret` | `IMAGEKIT_WEBHOOK_SECRET`        | false    | -                           |
+| `baseUrl`       | `IMAGE_KIT_BASE_URL`             | false    | `"https://api.imagekit.io"` |
 
-Accepts the file ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-details)
+> [!TIP]
+> Don't create more than one client in the same application. Each client has a connection pool and
+> thread pools, which are more efficient to share between requests.
+
+### Modifying configuration
+
+To temporarily use a modified client configuration, while reusing the same connection and thread pools, call `withOptions()` on any client or service:
 
 ```java
-String fileId="your-file-id";
-Result result=ImageKit.getInstance().getFileDetail(fileId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+
+ImageKitClient clientWithOptions = client.withOptions(optionsBuilder -> {
+    optionsBuilder.baseUrl("https://example.com");
+    optionsBuilder.maxRetries(42);
+});
 ```
 
-**3. Get File Versions**
+The `withOptions()` method does not affect the original client or service.
 
-Accepts the file ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-versions).
+## Requests and responses
+
+To send a request to the Image Kit API, build an instance of some `Params` class and pass it to the corresponding client method. When the response is received, it will be deserialized into an instance of a Java class.
+
+For example, `client.files().upload(...)` should be called with an instance of `FileUploadParams`, and it will return an instance of `FileUploadResponse`.
+
+## Immutability
+
+Each class in the SDK has an associated [builder](https://blogs.oracle.com/javamagazine/post/exploring-joshua-blochs-builder-design-pattern-in-java) or factory method for constructing it.
+
+Each class is [immutable](https://docs.oracle.com/javase/tutorial/essential/concurrency/immutable.html) once constructed. If the class has an associated builder, then it has a `toBuilder()` method, which can be used to convert it back to a builder for making a modified copy.
+
+Because each class is immutable, builder modification will _never_ affect already built class instances.
+
+## Asynchronous execution
+
+The default client is synchronous. To switch to asynchronous execution, call the `async()` method:
 
 ```java
-String fileId = "62a04834c10d49825c6de9e8";
-ResultFileVersions resultFileVersions = ImageKit.getInstance().getFileVersions(fileId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultFileVersions);
-System.out.println("Raw Response:");
-System.out.println(resultFileVersions.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultFileVersions.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.FileInputStream;
+import java.util.concurrent.CompletableFuture;
+
+// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
+// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+ImageKitClient client = ImageKitOkHttpClient.fromEnv();
+
+FileUploadParams params = FileUploadParams.builder()
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
+    .build();
+CompletableFuture<FileUploadResponse> response = client.async().files().upload(params);
 ```
 
-**4. Get File Version details**
-
-Accepts the file ID and version ID and fetches the details as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/get-file-version-details).
+Or create an asynchronous client from the beginning:
 
 ```java
-String fileId = "62a04834c10d49825c6de9e8";
-String versionId = "62a04834c10d49825c6de9e8";
-ResultFileVersionDetails resultFileVersionDetails = ImageKit.getInstance().getFileVersionDetails(fileId, versionId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultFileVersionDetails);
-System.out.println("Raw Response:");
-System.out.println(resultFileVersionDetails.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultFileVersionDetails.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClientAsync;
+import io.imagekit.client.okhttp.ImageKitOkHttpClientAsync;
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.FileInputStream;
+import java.util.concurrent.CompletableFuture;
+
+// Configures using the `imagekit.imagekitPrivateKey`, `imagekit.imagekitWebhookSecret` and `imagekit.baseUrl` system properties
+// Or configures using the `IMAGEKIT_PRIVATE_KEY`, `IMAGEKIT_WEBHOOK_SECRET` and `IMAGE_KIT_BASE_URL` environment variables
+ImageKitClientAsync client = ImageKitOkHttpClientAsync.fromEnv();
+
+FileUploadParams params = FileUploadParams.builder()
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
+    .build();
+CompletableFuture<FileUploadResponse> response = client.files().upload(params);
 ```
 
-**5. Update File Details**
+The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
 
-Accepts an object of class `FileUpdateRequest` specifying the parameters to be used to update file details. All parameters specified in the [documentation here] (https://docs.imagekit.io/api-reference/media-api/update-file-details) can be passed via their setter functions to get the results.
+## File uploads
+
+The SDK defines methods that accept files.
+
+To upload a file, pass a [`Path`](https://docs.oracle.com/javase/8/docs/api/java/nio/file/Path.html):
 
 ```java
-List<String> tags = new ArrayList<>();
-tags.add("Software");
-tags.add("Developer");
-tags.add("Engineer");
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.nio.file.Paths;
 
-List<String> aiTags = new ArrayList<>();
-aiTags.add("Plant");
-FileUpdateRequest fileUpdateRequest = new FileUpdateRequest("fileId");
-fileUpdateRequest.setTags(tags);
-fileUpdateRequest.setRemoveAITags(aiTags);
-fileUpdateRequest.setWebhookUrl("https://webhook.site/c78d617f-33bc-40d9-9e61-608999721e2e");
-
-JsonObject optionsInnerObject = new JsonObject();
-optionsInnerObject.addProperty("add_shadow", true);
-optionsInnerObject.addProperty("bg_color", "yellow");
-JsonObject innerObject1 = new JsonObject();
-innerObject1.addProperty("name", "remove-bg");
-innerObject1.add("options", optionsInnerObject);
-JsonObject innerObject2 = new JsonObject();
-innerObject2.addProperty("name", "google-auto-tagging");
-innerObject2.addProperty("minConfidence", 15);
-innerObject2.addProperty("maxTags", 20);
-JsonArray jsonArray = new JsonArray();
-jsonArray.add(innerObject1);
-jsonArray.add(innerObject2);
-
-fileUpdateRequest.setExtensions(jsonArray);
-fileUpdateRequest.setCustomCoordinates("10,10,40,40");
-JsonObject jsonObjectCustomMetadata = new JsonObject();
-jsonObjectCustomMetadata.addProperty("test10", 11);
-fileUpdateRequest.setCustomMetadata(jsonObjectCustomMetadata);
-Result result=ImageKit.getInstance().updateFileDetail(fileUpdateRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("uploaded-image.jpg")
+    .file(Paths.get("/path/to/your/image.jpg"))
+    .build();
+FileUploadResponse response = client.files().upload(params);
 ```
 
-**6. Add tags**
-
-Accepts an object of class `TagsRequest` specifying the parameters to be used to add tags. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/add-tags-bulk) can be passed via their setter functions to get the results.
+Or an arbitrary [`InputStream`](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html):
 
 ```java
-List<String> fileIds = new ArrayList<>();
-fileIds.add("FileId");
-List<String> tags = new ArrayList<>();
-tags.add("tag-to-add-1");
-tags.add("tag-to-add-2");
-ResultTags resultTags=ImageKit.getInstance().addTags(new TagsRequest(fileIds, tags));
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultTags);
-System.out.println("Raw Response:");
-System.out.println(resultTags.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultTags.getResponseMetaData().getMap());
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.FileInputStream;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("uploaded-image.jpg")
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .build();
+FileUploadResponse response = client.files().upload(params);
 ```
 
-**7. Remove tags**
-
-Accepts an object of class `TagsRequest` specifying the parameters to be used to remove tags. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/remove-tags-bulk) can be passed via their setter functions to get the results.
+Or a `byte[]` array:
 
 ```java
-List<String> fileIds = new ArrayList<>();
-fileIds.add("FileId");
-List<String> tags = new ArrayList<>();
-tags.add("tag-to-remove-1");
-tags.add("tag-to-remove-2");
-ResultTags resultTags=ImageKit.getInstance().removeTags(new TagsRequest(fileIds, tags));
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultTags);
-System.out.println("Raw Response:");
-System.out.println(resultTags.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultTags.getResponseMetaData().getMap());
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+
+byte[] imageData = /* your binary data */;
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("binary-upload.jpg")
+    .file(imageData)
+    .build();
+FileUploadResponse response = client.files().upload(params);
 ```
 
-**8. Remove AI tags**
-
-Accepts an object of class `AITagsRequest` specifying the parameters to be used to remove AI tags. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/remove-aitags-bulk) can be passed via their setter functions to get the results.
+Note that when passing a non-`Path` its filename is unknown so it will not be included in the request. To manually set a filename, pass a [`MultipartField`](image-kit-java-core/src/main/kotlin/io/imagekit/core/Values.kt):
 
 ```java
-List<String> fileIds = new ArrayList<>();
-fileIds.add("629f3de17eb0fe4053615450");
-List<String> aiTags = new ArrayList<>();
-aiTags.add("Rectangle");
-AITagsRequest aiTagsRequest =new AITagsRequest();
-aiTagsRequest.setFileIds(fileIds);
-aiTagsRequest.setAITags(aiTags);
-ResultTags resultTags = ImageKit.getInstance().removeAITags(aiTagsRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultTags);
-System.out.println("Raw Response:");
-System.out.println(resultTags.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultTags.getResponseMetaData().getMap());
+import io.imagekit.core.MultipartField;
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("custom-upload.jpg")
+    .file(MultipartField.<InputStream>builder()
+        .value(new FileInputStream("/path/to/your/image.jpg"))
+        .filename("image.jpg")
+        .contentType("image/jpeg")
+        .build())
+    .build();
+FileUploadResponse response = client.files().upload(params);
 ```
 
-**9. Delete File**
+## Raw responses
 
-Accepts the file ID and delete a file as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file).
+The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
+
+To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
 
 ```java
-String fileId="your-file-id";
-Result result=ImageKit.getInstance().deleteFile(fileId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.core.http.Headers;
+import io.imagekit.core.http.HttpResponseFor;
+import io.imagekit.models.files.FileUploadParams;
+import io.imagekit.models.files.FileUploadResponse;
+import java.io.FileInputStream;
+
+FileUploadParams params = FileUploadParams.builder()
+    .file(new FileInputStream("/path/to/your/image.jpg"))
+    .fileName("uploaded-image.jpg")
+    .build();
+HttpResponseFor<FileUploadResponse> response = client.files().withRawResponse().upload(params);
+
+int statusCode = response.statusCode();
+Headers headers = response.headers();
 ```
 
-**10. Delete FileVersion**
-
-Accepts an object of class `DeleteFileVersionRequest` specifying the parameters to be used to delete file version. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/delete-file-version) can be passed via their setter functions to get the results.
+You can still deserialize the response into an instance of a Java class if needed:
 
 ```java
-DeleteFileVersionRequest deleteFileVersionRequest = new DeleteFileVersionRequest();
-deleteFileVersionRequest.setFileId("629d95278482ba129fd17c97");
-deleteFileVersionRequest.setVersionId("629d953ebd24e8ceca911a66");
-ResultNoContent resultNoContent = ImageKit.getInstance().deleteFileVersion(deleteFileVersionRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultNoContent);
-System.out.println("Raw Response:");
-System.out.println(resultNoContent.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultNoContent.getResponseMetaData().getMap());
+import io.imagekit.models.files.FileUploadResponse;
+
+FileUploadResponse parsedResponse = response.parse();
 ```
 
-**11. Delete files (bulk)**
+## Error handling
 
-Accepts the file IDs to delete files as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/delete-files-bulk).
+The SDK throws custom unchecked exception types:
+
+- [`ImageKitServiceException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
+
+  | Status | Exception                                                                                                                  |
+  | ------ | -------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/UnexpectedStatusCodeException.kt) |
+
+- [`ImageKitIoException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitIoException.kt): I/O networking errors.
+
+- [`ImageKitRetryableException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+
+- [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
+
+- [`ImageKitException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+
+## Logging
+
+The SDK uses the standard [OkHttp logging interceptor](https://github.com/square/okhttp/tree/master/okhttp-logging-interceptor).
+
+Enable logging by setting the `IMAGE_KIT_LOG` environment variable to `info`:
+
+```sh
+export IMAGE_KIT_LOG=info
+```
+
+Or to `debug` for more verbose logging:
+
+```sh
+export IMAGE_KIT_LOG=debug
+```
+
+## ProGuard and R8
+
+Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `image-kit-java-core` is published with a [configuration file](image-kit-java-core/src/main/resources/META-INF/proguard/image-kit-java-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
+
+ProGuard and R8 should automatically detect and use the published rules, but you can also manually copy the keep rules if necessary.
+
+## Jackson
+
+The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It is compatible with version 2.13.4 or higher, but depends on version 2.18.2 by default.
+
+The SDK throws an exception if it detects an incompatible Jackson version at runtime (e.g. if the default version was overridden in your Maven or Gradle config).
+
+If the SDK threw an exception, but you're _certain_ the version is compatible, then disable the version check using the `checkJacksonVersionCompatibility` on [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClientAsync.kt).
+
+> [!CAUTION]
+> We make no guarantee that the SDK works correctly when the Jackson version check is disabled.
+
+Also note that there are bugs in older Jackson versions that can affect the SDK. We don't work around all Jackson bugs ([example](https://github.com/FasterXML/jackson-databind/issues/3240)) and expect users to upgrade Jackson for those instead.
+
+## Network options
+
+### Retries
+
+The SDK automatically retries 2 times by default, with a short exponential backoff between requests.
+
+Only the following error types are retried:
+
+- Connection errors (for example, due to a network connectivity problem)
+- 408 Request Timeout
+- 409 Conflict
+- 429 Rate Limit
+- 5xx Internal
+
+The API may also explicitly instruct the SDK to retry or not retry a request.
+
+To set a custom number of retries, configure the client using the `maxRetries` method:
 
 ```java
-List<String> fileIds = new ArrayList<>();
-fileIds.add("your-file-id");
-fileIds.add("your-file-id");
-fileIds.add("your-file-id");
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
 
-ResultFileDelete result=ImageKit.getInstance().bulkDeleteFiles(fileIds);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    .maxRetries(4)
+    .build();
 ```
 
-**12. Copy file**
+### Timeouts
 
-Accepts an object of class `CopyFileRequest` specifying the parameters to be used to copy file. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/copy-file) can be passed via their setter functions to get the results.
+Requests time out after 1 minute by default.
+
+To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-CopyFileRequest copyFileRequest = new CopyFileRequest();
-copyFileRequest.setSourceFilePath("/w2_image.png");
-copyFileRequest.setDestinationPath("/Gallery/");
-copyFileRequest.setIncludeFileVersions(true);
-ResultNoContent resultNoContent = ImageKit.getInstance().copyFile(copyFileRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultNoContent);
-System.out.println("Raw Response:");
-System.out.println(resultNoContent.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultNoContent.getResponseMetaData().getMap());
+import io.imagekit.models.files.FileUploadResponse;
+
+FileUploadResponse response = client.files().upload(
+  params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
+);
 ```
 
-**13. Move file**
-
-Accepts an object of class `MoveFileRequest` specifying the parameters to be used to move file. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/move-file) can be passed via their setter functions to get the results.
+Or configure the default for all method calls at the client level:
 
 ```java
-MoveFileRequest moveFileRequest = new MoveFileRequest();
-moveFileRequest.setSourceFilePath("/Gallery/w2_image.png");
-moveFileRequest.setDestinationPath("/");
-ResultNoContent resultNoContent = ImageKit.getInstance().moveFile(moveFileRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultNoContent);
-System.out.println("Raw Response:");
-System.out.println(resultNoContent.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultNoContent.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import java.time.Duration;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    .timeout(Duration.ofSeconds(30))
+    .build();
 ```
 
-**14. Rename file**
+### Proxies
 
-Accepts an object of class `RenameFileRequest` specifying the parameters to be used to rename file. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/rename-file) can be passed via their setter functions to get the results.
+To route requests through a proxy, configure the client using the `proxy` method:
 
 ```java
-RenameFileRequest renameFileRequest = new RenameFileRequest();
-renameFileRequest.setFilePath("/w2_image.png");
-renameFileRequest.setNewFileName("w2_image_s.png");
-renameFileRequest.setPurgeCache(true);
-ResultRenameFile resultRenameFile = ImageKit.getInstance().renameFile(renameFileRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultRenameFile);
-System.out.println("Raw Response:");
-System.out.println(resultRenameFile.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultRenameFile.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    .proxy(new Proxy(
+      Proxy.Type.HTTP, new InetSocketAddress(
+        "https://example.com", 8080
+      )
+    ))
+    .build();
 ```
 
-**15. Restore file Version**
+### Connection pooling
 
-Accepts the fileId and versionId to restore file version as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/restore-file-version).
+To customize the underlying OkHttp connection pool, configure the client using the `maxIdleConnections` and `keepAliveDuration` methods:
 
 ```java
-Result result = ImageKit.getInstance().restoreFileVersion("fileId", "versionId");
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import java.time.Duration;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    // If `maxIdleConnections` is set, then `keepAliveDuration` must be set, and vice versa.
+    .maxIdleConnections(10)
+    .keepAliveDuration(Duration.ofMinutes(2))
+    .build();
 ```
 
-**16. Create Folder**
+If both options are unset, OkHttp's default connection pool settings are used.
 
-Accepts an object of class `CreateFolderRequest` specifying the parameters to be used to create folder. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/create-folder) can be passed via their setter functions to get the results.
+### HTTPS
+
+> [!NOTE]
+> Most applications should not call these methods, and instead use the system defaults. The defaults include
+> special optimizations that can be lost if the implementations are modified.
+
+To configure how HTTPS connections are secured, configure the client using the `sslSocketFactory`, `trustManager`, and `hostnameVerifier` methods:
 
 ```java
-CreateFolderRequest createFolderRequest = new CreateFolderRequest();
-createFolderRequest.setFolderName("test1");
-createFolderRequest.setParentFolderPath("/");
-ResultEmptyBlock resultEmptyBlock = ImageKit.getInstance().createFolder(createFolderRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultEmptyBlock);
-System.out.println("Raw Response:");
-System.out.println(resultEmptyBlock.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultEmptyBlock.getResponseMetaData().getMap());
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    // If `sslSocketFactory` is set, then `trustManager` must be set, and vice versa.
+    .sslSocketFactory(yourSSLSocketFactory)
+    .trustManager(yourTrustManager)
+    .hostnameVerifier(yourHostnameVerifier)
+    .build();
 ```
 
-**17. Delete Folder**
+### Custom HTTP client
 
-Accepts an object of class `DeleteFolderRequest` specifying the parameters to be used to delete folder. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/delete-folder) can be passed via their setter functions to get the results.
+The SDK consists of three artifacts:
+
+- `image-kit-java-core`
+  - Contains core SDK logic
+  - Does not depend on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`ImageKitClient`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClient.kt), [`ImageKitClientAsync`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientAsync.kt), [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientImpl.kt), and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientAsyncImpl.kt), all of which can work with any HTTP client
+- `image-kit-java-client-okhttp`
+  - Depends on [OkHttp](https://square.github.io/okhttp)
+  - Exposes [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClient.kt) and [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClientAsync.kt), which provide a way to construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientImpl.kt) and [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientAsyncImpl.kt), respectively, using OkHttp
+- `image-kit-java`
+  - Depends on and exposes the APIs of both `image-kit-java-core` and `image-kit-java-client-okhttp`
+  - Does not have its own logic
+
+This structure allows replacing the SDK's default HTTP client without pulling in unnecessary dependencies.
+
+#### Customized [`OkHttpClient`](https://square.github.io/okhttp/3.x/okhttp/okhttp3/OkHttpClient.html)
+
+> [!TIP]
+> Try the available [network options](#network-options) before replacing the default client.
+
+To use a customized `OkHttpClient`:
+
+1. Replace your [`image-kit-java` dependency](#installation) with `image-kit-java-core`
+2. Copy `image-kit-java-client-okhttp`'s [`OkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/OkHttpClient.kt) class into your code and customize it
+3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClientAsync.kt), using your customized client
+
+### Completely custom HTTP client
+
+To use a completely custom HTTP client:
+
+1. Replace your [`image-kit-java` dependency](#installation) with `image-kit-java-core`
+2. Write a class that implements the [`HttpClient`](image-kit-java-core/src/main/kotlin/io/imagekit/core/http/HttpClient.kt) interface
+3. Construct [`ImageKitClientImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientImpl.kt) or [`ImageKitClientAsyncImpl`](image-kit-java-core/src/main/kotlin/io/imagekit/client/ImageKitClientAsyncImpl.kt), similarly to [`ImageKitOkHttpClient`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClient.kt) or [`ImageKitOkHttpClientAsync`](image-kit-java-client-okhttp/src/main/kotlin/io/imagekit/client/okhttp/ImageKitOkHttpClientAsync.kt), using your new client class
+
+## Undocumented API functionality
+
+The SDK is typed for convenient usage of the documented API. However, it also supports working with undocumented or not yet supported parts of the API.
+
+### Parameters
+
+To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQueryParam`, or `putAdditionalBodyProperty` methods on any `Params` class:
 
 ```java
-DeleteFolderRequest deleteFolderRequest = new DeleteFolderRequest();
-deleteFolderRequest.setFolderPath("/test1");
-ResultNoContent resultNoContent = ImageKit.getInstance().deleteFolder(deleteFolderRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultNoContent);
-System.out.println("Raw Response:");
-System.out.println(resultNoContent.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultNoContent.getResponseMetaData().getMap());
+import io.imagekit.core.JsonValue;
+import io.imagekit.models.files.FileUploadParams;
+
+FileUploadParams params = FileUploadParams.builder()
+    .putAdditionalHeader("Secret-Header", "42")
+    .putAdditionalQueryParam("secret_query_param", "42")
+    .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
+    .build();
 ```
 
-**18. Copy Folder**
+These can be accessed on the built object later using the `_additionalHeaders()`, `_additionalQueryParams()`, and `_additionalBodyProperties()` methods.
 
-Accepts an object of class `CopyFolderRequest` specifying the parameters to be used to copy folder. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/copy-folder) can be passed via their setter functions to get the results.
+To set undocumented parameters on _nested_ headers, query params, or body classes, call the `putAdditionalProperty` method on the nested class:
 
 ```java
-CopyFolderRequest copyFolderRequest = new CopyFolderRequest();
-copyFolderRequest.setSourceFolderPath("/Gallery/test");
-copyFolderRequest.setDestinationPath("/");
-ResultOfFolderActions resultOfFolderActions = ImageKit.getInstance().copyFolder(copyFolderRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultOfFolderActions);
-System.out.println("Raw Response:");
-System.out.println(resultOfFolderActions.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
+import io.imagekit.core.JsonValue;
+import io.imagekit.models.files.FileUploadParams;
+
+FileUploadParams params = FileUploadParams.builder()
+    .transformation(FileUploadParams.UploadTransformation.builder()
+        .putAdditionalProperty("secretProperty", JsonValue.from("42"))
+        .build())
+    .build();
 ```
 
-**19. Move Folder**
+These properties can be accessed on the nested built object later using the `_additionalProperties()` method.
 
-Accepts an object of class `MoveFolderRequest` specifying the parameters to be used to move folder. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/media-api/move-folder) can be passed via their setter functions to get the results.
+To set a documented parameter or property to an undocumented or not yet supported _value_, pass a [`JsonValue`](image-kit-java-core/src/main/kotlin/io/imagekit/core/Values.kt) object to its setter:
 
 ```java
-MoveFolderRequest moveFolderRequest = new MoveFolderRequest();
-moveFolderRequest.setSourceFolderPath("/Gallery/test");
-moveFolderRequest.setDestinationPath("/");
-ResultOfFolderActions resultOfFolderActions = ImageKit.getInstance().moveFolder(moveFolderRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultOfFolderActions);
-System.out.println("Raw Response:");
-System.out.println(resultOfFolderActions.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultOfFolderActions.getResponseMetaData().getMap());
+import io.imagekit.core.JsonValue;
+import io.imagekit.models.files.FileUploadParams;
+
+FileUploadParams params = FileUploadParams.builder()
+    .file(JsonValue.from(42))
+    .fileName("file-name.jpg")
+    .build();
 ```
 
-**20. Get Bulk Job Status**
-
-Accepts the jobId to get bulk job status as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/copy-move-folder-status).
+The most straightforward way to create a [`JsonValue`](image-kit-java-core/src/main/kotlin/io/imagekit/core/Values.kt) is using its `from(...)` method:
 
 ```java
-String jobId = "629f44ac7eb0fe8173622d4b";
-ResultBulkJobStatus resultBulkJobStatus = ImageKit.getInstance().getBulkJobStatus(jobId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultBulkJobStatus);
-System.out.println("Raw Response:");
-System.out.println(resultBulkJobStatus.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultBulkJobStatus.getResponseMetaData().getMap());
+import io.imagekit.core.JsonValue;
+import java.util.List;
+import java.util.Map;
+
+// Create primitive JSON values
+JsonValue nullValue = JsonValue.from(null);
+JsonValue booleanValue = JsonValue.from(true);
+JsonValue numberValue = JsonValue.from(42);
+JsonValue stringValue = JsonValue.from("Hello World!");
+
+// Create a JSON array value equivalent to `["Hello", "World"]`
+JsonValue arrayValue = JsonValue.from(List.of(
+  "Hello", "World"
+));
+
+// Create a JSON object value equivalent to `{ "a": 1, "b": 2 }`
+JsonValue objectValue = JsonValue.from(Map.of(
+  "a", 1,
+  "b", 2
+));
+
+// Create an arbitrarily nested JSON equivalent to:
+// {
+//   "a": [1, 2],
+//   "b": [3, 4]
+// }
+JsonValue complexValue = JsonValue.from(Map.of(
+  "a", List.of(
+    1, 2
+  ),
+  "b", List.of(
+    3, 4
+  )
+));
 ```
 
-**21. Purge Cache**
+Normally a `Builder` class's `build` method will throw [`IllegalStateException`](https://docs.oracle.com/javase/8/docs/api/java/lang/IllegalStateException.html) if any required parameter or property is unset.
 
-Accepts a full URL of the file for which the cache has to be cleared as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache).
+To forcibly omit a required parameter or property, pass [`JsonMissing`](image-kit-java-core/src/main/kotlin/io/imagekit/core/Values.kt):
 
 ```java
-ResultCache result=ImageKit.getInstance().purgeCache("https://ik.imagekit.io/imagekit-id/default-image.jpg");
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.core.JsonMissing;
+import io.imagekit.models.files.FileUploadParams;
+
+FileUploadParams params = FileUploadParams.builder()
+    .fileName("fileName")
+    .file(JsonMissing.of())
+    .build();
 ```
 
-**22. Purge Cache Status**
+### Response properties
 
-Accepts a request ID and fetch purge cache status as per the [API documentation here](https://docs.imagekit.io/api-reference/media-api/purge-cache-status)
+To access undocumented response properties, call the `_additionalProperties()` method:
 
 ```java
-String requestId="cache-requestId";
-ResultCacheStatus result=ImageKit.getInstance().getPurgeCacheStatus(requestId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
+import io.imagekit.core.JsonValue;
+import java.util.Map;
+
+Map<String, JsonValue> additionalProperties = client.files().upload(params)._additionalProperties();
+JsonValue secretPropertyValue = additionalProperties.get("secretProperty");
+
+String result = secretPropertyValue.accept(new JsonValue.Visitor<>() {
+    @Override
+    public String visitNull() {
+        return "It's null!";
+    }
+
+    @Override
+    public String visitBoolean(boolean value) {
+        return "It's a boolean!";
+    }
+
+    @Override
+    public String visitNumber(Number value) {
+        return "It's a number!";
+    }
+
+    // Other methods include `visitMissing`, `visitString`, `visitArray`, and `visitObject`
+    // The default implementation of each unimplemented method delegates to `visitDefault`, which throws by default, but can also be overridden
+});
 ```
 
-**23. Get File Metadata**
-
-Accepts the file ID and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/metadata-api/get-image-metadata-for-uploaded-media-files)
+To access a property's raw JSON value, which may be undocumented, call its `_` prefixed method:
 
 ```java
-String fileId="your-file-id";
-ResultMetaData result=ImageKit.getInstance().getFileMetadata(fileId);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
-```
+import io.imagekit.core.JsonField;
+import java.io.InputStream;
+import java.util.Optional;
 
-Another way to get metadata from a remote file URL as per the [API documentation here](https://docs.imagekit.io/api-reference/metadata-api/get-image-metadata-from-remote-url). This file should be accessible over the ImageKit.io URL-endpoint.
-```java
-String url="Remote File URL";
-ResultMetaData result=ImageKit.getInstance().getRemoteFileMetadata(url);
-System.out.println("======FINAL RESULT=======");
-System.out.println(result);
-System.out.println("Raw Response:");
-System.out.println(result.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(result.getResponseMetaData().getMap());
-```
+JsonField<InputStream> file = client.files().upload(params)._file();
 
-**24. Create CustomMetaDataFields**
+if (file.isMissing()) {
+  // The property is absent from the JSON response
+} else if (file.isNull()) {
+  // The property was set to literal null
+} else {
+  // Check if value was provided as a string
+  // Other methods include `asNumber()`, `asBoolean()`, etc.
+  Optional<String> jsonString = file.asString();
 
-Accepts an object of class `CustomMetaDataFieldCreateRequest` specifying the parameters to be used to create cusomMetaDataFields. All parameters specified in the [documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field) can be passed as-is with the correct values to get the results.
-
-Check for the [Allowed Values In The Schema](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/create-custom-metadata-field#allowed-values-in-the-schema-object).
-
-#### Examples:
-
-```java
-CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-schemaObject.setType("Number");
-schemaObject.setMinValue(10);
-schemaObject.setMaxValue(200);
-CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-customMetaDataFieldCreateRequest.setName("Name");
-customMetaDataFieldCreateRequest.setLabel("Label");
-customMetaDataFieldCreateRequest.setSchema(schemaObject);
-ResultCustomMetaDataField resultCustomMetaDataField=ImageKit.getInstance().createCustomMetaDataFields(customMetaDataFieldCreateRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultCustomMetaDataField);
-System.out.println("Raw Response:");
-System.out.println(resultCustomMetaDataField.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
-```
-
-- MultiSelect type Exmample:
-
-```java
-List<Object> objectList = new ArrayList<>();
-objectList.add("small");
-objectList.add(30);
-objectList.add(40);
-objectList.add(true);
-
-List<Object> defaultValueObject = new ArrayList<>();
-defaultValueObject.add("small");
-defaultValueObject.add(30);
-defaultValueObject.add(true);
-CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-customMetaDataFieldSchemaObject.setType("MultiSelect");
-customMetaDataFieldSchemaObject.setValueRequired(true);                 // optional
-customMetaDataFieldSchemaObject.setDefaultValue(defaultValueObject);    // required if isValueRequired set to true
-customMetaDataFieldSchemaObject.setSelectOptions(objectList);
-CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-customMetaDataFieldCreateRequest.setName("Name-MultiSelect");
-customMetaDataFieldCreateRequest.setLabel("Label-MultiSelect");
-customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
-
-ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
-      .createCustomMetaDataFields(customMetaDataFieldCreateRequest);
-```
-
-- Date type Exmample:
-
-```java
-CustomMetaDataFieldSchemaObject customMetaDataFieldSchemaObject = new CustomMetaDataFieldSchemaObject();
-customMetaDataFieldSchemaObject.setType("Date");
-customMetaDataFieldSchemaObject.setValueRequired(true);                          // optional
-customMetaDataFieldSchemaObject.setDefaultValue("2022-11-30T10:11:10+00:00");    // required if isValueRequired set to true
-customMetaDataFieldSchemaObject.setMinValue("2022-11-30T10:11:10+00:00");
-customMetaDataFieldSchemaObject.setMaxValue("2022-12-30T10:11:10+00:00");
-
-CustomMetaDataFieldCreateRequest customMetaDataFieldCreateRequest = new CustomMetaDataFieldCreateRequest();
-customMetaDataFieldCreateRequest.setName("Name");
-customMetaDataFieldCreateRequest.setLabel("Label");
-customMetaDataFieldCreateRequest.setSchema(customMetaDataFieldSchemaObject);
-
-ResultCustomMetaDataField resultCustomMetaDataField = ImageKit.getInstance()
-       .createCustomMetaDataFields(customMetaDataFieldCreateRequest);
-```
-
-
-**25. Get CustomMetaDataFields**
-
-Accepts the includeDeleted boolean and fetches the metadata as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/get-custom-metadata-field)
-
-```java
-ResultCustomMetaDataFieldList resultCustomMetaDataFieldList=ImageKit.getInstance().getCustomMetaDataFields(false);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultCustomMetaDataFieldList);
-System.out.println("Raw Response:");
-System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultCustomMetaDataFieldList.getResponseMetaData().getList());
-System.out.println(resultCustomMetaDataFieldList.getResultCustomMetaDataFields());
-```
-
-**26. Edit CustomMetaDataFields**
-
-Accepts an ID of customMetaDataField and object of class `CustomMetaDataFieldUpdateRequest` specifying the parameters to be used to edit cusomMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/update-custom-metadata-field).
-
-```java
-CustomMetaDataFieldSchemaObject schemaObject = new CustomMetaDataFieldSchemaObject();
-schemaObject.setMinValue(10);
-schemaObject.setMaxValue(200);
-
-CustomMetaDataFieldUpdateRequest customMetaDataFieldUpdateRequest = new CustomMetaDataFieldUpdateRequest();
-customMetaDataFieldUpdateRequest.setId("id");
-customMetaDataFieldUpdateRequest.setLabel("label");
-customMetaDataFieldUpdateRequest.setSchema(schemaObject);
-ResultCustomMetaDataField resultCustomMetaDataField=ImageKit.getInstance().updateCustomMetaDataFields(customMetaDataFieldUpdateRequest);
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultCustomMetaDataField);
-System.out.println("Raw Response:");
-System.out.println(resultCustomMetaDataField.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultCustomMetaDataField.getResponseMetaData().getMap());
-```
-
-**27. Delete CustomMetaDataFields**
-
-Accepts the id to delete the customMetaDataFields as per the [API documentation here](https://docs.imagekit.io/api-reference/custom-metadata-fields-api/delete-custom-metadata-field).
-
-```java
-ResultNoContent resultNoContent=ImageKit.getInstance().deleteCustomMetaDataField("id");
-System.out.println("======FINAL RESULT=======");
-System.out.println(resultNoContent);
-System.out.println("Raw Response:");
-System.out.println(resultNoContent.getResponseMetaData().getRaw());
-System.out.println("Map Response:");
-System.out.println(resultNoContent.getResponseMetaData().getMap());
-```
-
-## Utility functions
-
-We have included the following commonly used utility functions in this package.
-
-**Authentication parameter generation**
-
-In case you are looking to implement client-side file upload, you are going to need a token, expiry timestamp, and a valid signature for that upload. The SDK provides a simple method that you can use in your code to generate these
-authentication parameters for you.
-
-<em>Note: The Private API Key should never be exposed in any client-side code. You must always generate these authentications
- parameters on the server-side</em>
-
-authentication
-
-```java
-Map<String,String> authenticationParams = ImageKit.getInstance().getAuthenticationParameters(token, expire);
-```
-
-Returns Map object of this json
-```json
-{
-    "token": "unique_token",
-    "expire": "valid_expiry_timestamp",
-    "signature": "generated_signature"
+  // Try to deserialize into a custom type
+  MyClass myObject = file.asUnknown().orElseThrow().convert(MyClass.class);
 }
 ```
 
-Both the `token` and `expire` parameters are optional. If not specified, the SDK uses the uuid to generate a random
-token and also generates a valid expiry timestamp internally. The value of the token and expire used to generate the
-signature are always returned in the response, no matter if they are provided as an input to this method or not.
+### Response validation
 
-**Distance calculation between two pHash values**
+In rare cases, the API may return a response that doesn't match the expected type. For example, the SDK may expect a property to contain a `String`, but the API could return something else.
 
-Perceptual hashing allows you to construct a hash value that uniquely identifies an input image based on the contents
-of an image. [imagekit.io metadata API](https://docs.imagekit.io/api-reference/metadata-api) returns the pHash
-value of an image in the response. You can use this value to find a duplicate (or similar) images by calculating the distance between the two images.
+By default, the SDK will not throw an exception in this case. It will throw [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitInvalidDataException.kt) only if you directly access the property.
 
-
-This SDK exposes phash_distance function to calculate the distance between two pHash value. It accepts two pHash hexadecimal
-strings and returns a numeric value indicative of the level of difference between the two images.
+If you would prefer to check that the response is completely well-typed upfront, then either call `validate()`:
 
 ```java
-int calculateDistance(){
-    // fetch metadata of two uploaded image files
-    ...
-    // extract pHash strings from both: say 'first_hash' and 'second_hash'
-    ...
-    // calculate the distance between them:
+import io.imagekit.models.files.FileUploadResponse;
 
-    int distance = ImageKit.getInstance().pHashDistance(first_hash, second_hash);
-    return distance;
-}
+FileUploadResponse response = client.files().upload(params).validate();
 ```
 
-**Distance calculation examples**
-```java
-ImageKit.getInstance().pHashDistance("f06830ca9f1e3e90", "f06830ca9f1e3e90");
-// output: 0 (ame image)
-
-ImageKit.getInstance().pHashDistance("2d5ad3936d2e015b", "2d6ed293db36a4fb");
-// output: 17 (similar images)
-
-ImageKit.getInstance().pHashDistance("a4a65595ac94518b", "7838873e791f8400");
-// output: 37 (dissimilar images)
-```
-
-**HTTP response metadata of Internal API**
-
-HTTP response metadata of the internal API call can be accessed using the getResponseMetaData function on the Result (or ResultList, ResultCache etc.) object. Example:
+Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-Result result = ImageKit.getInstance().upload(fileCreateRequest);
-result.getResponseMetaData().getRaw();
-result.getResponseMetaData().getHeaders();
-result.getResponseMetaData().getHttpStatusCode();
+import io.imagekit.models.files.FileUploadResponse;
+
+FileUploadResponse response = client.files().upload(
+  params, RequestOptions.builder().responseValidation(true).build()
+);
 ```
 
-## Sample Code Instruction
-
-**1. First clone this repository to your system using git.**
-```shell script
-git clone https://github.com/imagekit-developer/imagekit-java.git
-```
-**2. Open project in your favorite Java IDE that can supports Gradle dependency management or you can use Terminal/Command Prompt.**
-
-**3. Goto `src/main/resources` directory.**
-
-**4. Rename file `config.sample.properties` to `config.properties`.**
-
-**5. Edit `config.properties` and write values of given keys.**
-```properties
-UrlEndpoint=your_url_endpoint
-PrivateKey=your_private_key
-PublicKey=your_public_key
-```
-
-**5. You will find `App.java` in `src/main/java/io/imagekit/sampleapp/` directory. Edit program as you need, then run `App.java`. If you are using CLI Tool (Terminal/Command Prompt) Then Open Project in CLI and execute using gradle**
-```shell
-cd imagekit-java
-./gradlew run
-```
-* Run test case:
-```shell
-./gradlew imagekit-sdk:test
-```
-* Build ImageKit SDK:
-```shell
-./gradlew imagekit-sdk:clean
-./gradlew imagekit-sdk:build
-# You will find jar in "imagekit-sdk/build/libs/" directory.
-```
-
-## Handling errors
-Catch and respond to invalid data, internal problems, and more.
-
-Imagekit Java SDK raise exceptions for many reasons, such as not found, invalid parameters, authentication errors, and internal server error. We recommend writing code that gracefully handles all possible API exceptions.
-
-#### Example:
+Or configure the default for all method calls at the client level:
 
 ```java
-try {
-  // Use ImageKit's SDK to make requests...
-} catch (BadRequestException e) {
-  // Missing or Invalid parameters were supplied to Imagekit.io's API
-  System.out.println("Status is: " + e.getResponseMetaData().getHttpStatusCode());
-  System.out.println("Message is: " + e.getMessage());
-  System.out.println("Headers are: " + e.getResponseMetaData().getHeaders());
-  System.out.println("Raw body is: " + e.getResponseMetaData().getRaw());
-  System.out.println("Mapped body is: " + e.getResponseMetaData().getMap());
-} catch (UnauthorizedException e) {
-  // No valid API key was provided.
-} catch (ForbiddenException e) {
-  // Can be for the following reasons: 
-  // ImageKit could not authenticate your account with the keys provided.
-  // An expired key (public or private) was used with the request.
-  // The account is disabled.
-  // If you are using the upload API, the total storage limit (or upload limit) is exceeded.
-} catch (TooManyRequestsException e) {
-  // Too many requests made to the API too quickly
-} catch (InternalServerException e) {
-  // Something went wrong with ImageKit.io API.
-} catch (PartialSuccessException e) {
-  // Error cases on partial success.
-} catch (NotFoundException e) {
-  // If any of the field or parameter is not found in data 
-} catch (UnknownException e) {
-  // Something else happened, which can be unrelated to imagekit, reason will be indicated in the message field
-}
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    .responseValidation(true)
+    .build();
 ```
 
-## Supporttim
-For any feedback or to report any issues or general implementation support, please reach out to [support@imagekit.io]()
+## FAQ
 
+### Why don't you use plain `enum` classes?
 
-## Links
+Java `enum` classes are not trivially [forwards compatible](https://www.stainless.com/blog/making-java-enums-forwards-compatible). Using them in the SDK could cause runtime exceptions if the API is updated to respond with a new enum value.
 
-* [Documentation](https://docs.imagekit.io/)
-* [Main Website](https://imagekit.io/)
+### Why do you represent fields using `JsonField<T>` instead of just plain `T`?
 
+Using `JsonField<T>` enables a few features:
 
-## License
-Released under the MIT license.
+- Allowing usage of [undocumented API functionality](#undocumented-api-functionality)
+- Lazily [validating the API response against the expected shape](#response-validation)
+- Representing absent vs explicitly null values
+
+### Why don't you use [`data` classes](https://kotlinlang.org/docs/data-classes.html)?
+
+It is not [backwards compatible to add new fields to a data class](https://kotlinlang.org/docs/api-guidelines-backward-compatibility.html#avoid-using-data-classes-in-your-api) and we don't want to introduce a breaking change every time we add a field to a class.
+
+### Why don't you use checked exceptions?
+
+Checked exceptions are widely considered a mistake in the Java programming language. In fact, they were omitted from Kotlin for this reason.
+
+Checked exceptions:
+
+- Are verbose to handle
+- Encourage error handling at the wrong level of abstraction, where nothing can be done about the error
+- Are tedious to propagate due to the [function coloring problem](https://journal.stuffwithstuff.com/2015/02/01/what-color-is-your-function)
+- Don't play well with lambdas (also due to the function coloring problem)
+
+## Semantic versioning
+
+This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
+
+1. Changes to library internals which are technically public but not intended or documented for external use. _(Please open a GitHub issue to let us know if you are relying on such internals.)_
+2. Changes that we do not expect to impact the vast majority of users in practice.
+
+We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
+
+We are keen for your feedback; please open an [issue](https://www.github.com/imagekit-developer/imagekit-java/issues) with questions, bugs, or suggestions.
