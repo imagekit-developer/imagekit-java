@@ -1095,6 +1095,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): FileUploadResponse = apply {
         if (validated) {
             return@apply
@@ -1432,6 +1440,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): ExtensionStatus = apply {
             if (validated) {
                 return@apply
@@ -1568,6 +1585,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): AiAutoDescription = apply {
                 if (validated) {
                     return@apply
@@ -1704,6 +1731,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): AiTasks = apply {
                 if (validated) {
                     return@apply
@@ -1842,6 +1879,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): AwsAutoTagging = apply {
                 if (validated) {
                     return@apply
@@ -1981,6 +2028,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): GoogleAutoTagging = apply {
                 if (validated) {
                     return@apply
@@ -2117,6 +2174,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): RemoveBg = apply {
                 if (validated) {
                     return@apply
