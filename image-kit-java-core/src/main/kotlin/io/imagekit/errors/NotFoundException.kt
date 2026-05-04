@@ -5,12 +5,16 @@ package io.imagekit.errors
 import io.imagekit.core.JsonValue
 import io.imagekit.core.checkRequired
 import io.imagekit.core.http.Headers
+import io.imagekit.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class NotFoundException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    ImageKitServiceException("404: $body", cause) {
+    ImageKitServiceException(
+        "404: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 404
 
