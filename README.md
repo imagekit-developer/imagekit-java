@@ -723,6 +723,21 @@ ImageKitClient client = ImageKitOkHttpClient.builder()
     .build();
 ```
 
+If the proxy responds with `407 Proxy Authentication Required`, supply credentials by also configuring `proxyAuthenticator`:
+
+```java
+import io.imagekit.client.ImageKitClient;
+import io.imagekit.client.okhttp.ImageKitOkHttpClient;
+import io.imagekit.core.http.ProxyAuthenticator;
+
+ImageKitClient client = ImageKitOkHttpClient.builder()
+    .fromEnv()
+    .proxy(...)
+    // Or a custom implementation of `ProxyAuthenticator`.
+    .proxyAuthenticator(ProxyAuthenticator.basic("username", "password"))
+    .build();
+```
+
 ### Connection pooling
 
 To customize the underlying OkHttp connection pool, configure the client using the `maxIdleConnections` and `keepAliveDuration` methods:
