@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import io.imagekit.client.ImageKitClient
 import io.imagekit.client.ImageKitClientImpl
 import io.imagekit.core.ClientOptions
+import io.imagekit.core.LogLevel
 import io.imagekit.core.Sleeper
 import io.imagekit.core.Timeout
 import io.imagekit.core.http.Headers
@@ -276,6 +277,15 @@ class ImageKitOkHttpClient private constructor() {
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { clientOptions.maxRetries(maxRetries) }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { clientOptions.logLevel(logLevel) }
 
         /**
          * Your ImageKit private API key (starts with `private_`). You can find this in the
