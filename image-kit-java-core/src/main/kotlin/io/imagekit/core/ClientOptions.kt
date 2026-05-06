@@ -5,6 +5,7 @@ package io.imagekit.core
 import com.fasterxml.jackson.databind.json.JsonMapper
 import io.imagekit.core.http.Headers
 import io.imagekit.core.http.HttpClient
+import io.imagekit.core.http.LoggingHttpClient
 import io.imagekit.core.http.PhantomReachableClosingHttpClient
 import io.imagekit.core.http.QueryParams
 import io.imagekit.core.http.RetryingHttpClient
@@ -98,6 +99,14 @@ private constructor(
      */
     @get:JvmName("maxRetries") val maxRetries: Int,
     /**
+     * The level at which to log request and response information.
+     *
+     * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+     *
+     * Defaults to [LogLevel.fromEnv].
+     */
+    @get:JvmName("logLevel") val logLevel: LogLevel,
+    /**
      * Your ImageKit private API key (starts with `private_`). You can find this in the
      * [ImageKit dashboard](https://imagekit.io/dashboard/developer/api-keys).
      */
@@ -175,6 +184,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var timeout: Timeout = Timeout.default()
         private var maxRetries: Int = 2
+        private var logLevel: LogLevel = LogLevel.fromEnv()
         private var privateKey: String? = null
         private var password: String? = "do_not_set"
         private var webhookSecret: String? = null
@@ -192,6 +202,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             timeout = clientOptions.timeout
             maxRetries = clientOptions.maxRetries
+            logLevel = clientOptions.logLevel
             privateKey = clientOptions.privateKey
             password = clientOptions.password
             webhookSecret = clientOptions.webhookSecret
@@ -303,6 +314,15 @@ private constructor(
          * Defaults to 2.
          */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
+
+        /**
+         * The level at which to log request and response information.
+         *
+         * [fromEnv] will set the level from environment variables. See [LogLevel.fromEnv].
+         *
+         * Defaults to [LogLevel.fromEnv].
+         */
+        fun logLevel(logLevel: LogLevel) = apply { this.logLevel = logLevel }
 
         /**
          * Your ImageKit private API key (starts with `private_`). You can find this in the
@@ -430,6 +450,7 @@ private constructor(
          * System properties take precedence over environment variables.
          */
         fun fromEnv() = apply {
+            logLevel(LogLevel.fromEnv())
             (System.getProperty("imagekit.baseUrl") ?: System.getenv("IMAGE_KIT_BASE_URL"))?.let {
                 baseUrl(it)
             }
@@ -497,7 +518,13 @@ private constructor(
             return ClientOptions(
                 httpClient,
                 RetryingHttpClient.builder()
-                    .httpClient(httpClient)
+                    .httpClient(
+                        LoggingHttpClient.builder()
+                            .httpClient(httpClient)
+                            .clock(clock)
+                            .level(logLevel)
+                            .build()
+                    )
                     .sleeper(sleeper)
                     .clock(clock)
                     .maxRetries(maxRetries)
@@ -512,6 +539,7 @@ private constructor(
                 responseValidation,
                 timeout,
                 maxRetries,
+                logLevel,
                 privateKey,
                 password,
                 webhookSecret,
