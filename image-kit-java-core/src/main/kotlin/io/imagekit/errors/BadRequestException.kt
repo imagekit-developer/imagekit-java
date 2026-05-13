@@ -5,12 +5,16 @@ package io.imagekit.errors
 import io.imagekit.core.JsonValue
 import io.imagekit.core.checkRequired
 import io.imagekit.core.http.Headers
+import io.imagekit.core.jsonMapper
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 class BadRequestException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    ImageKitServiceException("400: $body", cause) {
+    ImageKitServiceException(
+        "400: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 400
 

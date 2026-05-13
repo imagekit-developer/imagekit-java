@@ -53,6 +53,7 @@ private constructor(
     private val background: JsonField<String>,
     private val blur: JsonField<Double>,
     private val border: JsonField<String>,
+    private val colorize: JsonField<String>,
     private val colorProfile: JsonField<Boolean>,
     private val colorReplace: JsonField<String>,
     private val contrastStretch: JsonField<ContrastStretch>,
@@ -132,6 +133,7 @@ private constructor(
         background: JsonField<String> = JsonMissing.of(),
         @JsonProperty("blur") @ExcludeMissing blur: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("border") @ExcludeMissing border: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("colorize") @ExcludeMissing colorize: JsonField<String> = JsonMissing.of(),
         @JsonProperty("colorProfile")
         @ExcludeMissing
         colorProfile: JsonField<Boolean> = JsonMissing.of(),
@@ -209,6 +211,7 @@ private constructor(
         background,
         blur,
         border,
+        colorize,
         colorProfile,
         colorReplace,
         contrastStretch,
@@ -398,6 +401,17 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun border(): Optional<String> = border.getOptional("border")
+
+    /**
+     * Applies a color tint to the image. Accepts color and intensity as optional parameters.
+     * - `co-color` - Color to apply (e.g., `red`, `blue`, `FF0022`). Default is gray color.
+     * - `in-intensity` - Intensity of the color (0-100). Default is 35. See
+     *   [Colorize](https://imagekit.io/docs/effects-and-enhancements#colorize---e-colorize).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun colorize(): Optional<String> = colorize.getOptional("colorize")
 
     /**
      * Indicates whether the output image should retain the original color profile. See
@@ -933,6 +947,13 @@ private constructor(
     @JsonProperty("border") @ExcludeMissing fun _border(): JsonField<String> = border
 
     /**
+     * Returns the raw JSON value of [colorize].
+     *
+     * Unlike [colorize], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("colorize") @ExcludeMissing fun _colorize(): JsonField<String> = colorize
+
+    /**
      * Returns the raw JSON value of [colorProfile].
      *
      * Unlike [colorProfile], this method doesn't throw if the JSON field has an unexpected type.
@@ -1273,6 +1294,7 @@ private constructor(
         private var background: JsonField<String> = JsonMissing.of()
         private var blur: JsonField<Double> = JsonMissing.of()
         private var border: JsonField<String> = JsonMissing.of()
+        private var colorize: JsonField<String> = JsonMissing.of()
         private var colorProfile: JsonField<Boolean> = JsonMissing.of()
         private var colorReplace: JsonField<String> = JsonMissing.of()
         private var contrastStretch: JsonField<ContrastStretch> = JsonMissing.of()
@@ -1331,6 +1353,7 @@ private constructor(
             background = transformation.background
             blur = transformation.blur
             border = transformation.border
+            colorize = transformation.colorize
             colorProfile = transformation.colorProfile
             colorReplace = transformation.colorReplace
             contrastStretch = transformation.contrastStretch
@@ -1624,6 +1647,22 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun border(border: JsonField<String>) = apply { this.border = border }
+
+        /**
+         * Applies a color tint to the image. Accepts color and intensity as optional parameters.
+         * - `co-color` - Color to apply (e.g., `red`, `blue`, `FF0022`). Default is gray color.
+         * - `in-intensity` - Intensity of the color (0-100). Default is 35. See
+         *   [Colorize](https://imagekit.io/docs/effects-and-enhancements#colorize---e-colorize).
+         */
+        fun colorize(colorize: String) = colorize(JsonField.of(colorize))
+
+        /**
+         * Sets [Builder.colorize] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.colorize] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun colorize(colorize: JsonField<String>) = apply { this.colorize = colorize }
 
         /**
          * Indicates whether the output image should retain the original color profile. See
@@ -2510,6 +2549,7 @@ private constructor(
                 background,
                 blur,
                 border,
+                colorize,
                 colorProfile,
                 colorReplace,
                 contrastStretch,
@@ -2557,6 +2597,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): Transformation = apply {
         if (validated) {
             return@apply
@@ -2575,6 +2623,7 @@ private constructor(
         background()
         blur()
         border()
+        colorize()
         colorProfile()
         colorReplace()
         contrastStretch().ifPresent { it.validate() }
@@ -2647,6 +2696,7 @@ private constructor(
             (if (background.asKnown().isPresent) 1 else 0) +
             (if (blur.asKnown().isPresent) 1 else 0) +
             (if (border.asKnown().isPresent) 1 else 0) +
+            (if (colorize.asKnown().isPresent) 1 else 0) +
             (if (colorProfile.asKnown().isPresent) 1 else 0) +
             (if (colorReplace.asKnown().isPresent) 1 else 0) +
             (contrastStretch.asKnown().getOrNull()?.validity() ?: 0) +
@@ -2719,6 +2769,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = aiDropShadow.accept(new AiDropShadow.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -2728,6 +2807,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiDropShadow = apply {
             if (validated) {
                 return@apply
@@ -2964,6 +3052,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiRemoveBackground = apply {
             if (validated) {
                 return@apply
@@ -3095,6 +3192,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiRemoveBackgroundExternal = apply {
             if (validated) {
                 return@apply
@@ -3219,6 +3325,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiRetouch = apply {
             if (validated) {
                 return@apply
@@ -3343,6 +3458,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiUpscale = apply {
             if (validated) {
                 return@apply
@@ -3470,6 +3594,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AiVariation = apply {
             if (validated) {
                 return@apply
@@ -3537,6 +3670,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = aspectRatio.accept(new AspectRatio.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -3546,6 +3708,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AspectRatio = apply {
             if (validated) {
                 return@apply
@@ -3785,6 +3956,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): AudioCodec = apply {
             if (validated) {
                 return@apply
@@ -3911,6 +4091,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): ContrastStretch = apply {
             if (validated) {
                 return@apply
@@ -3977,6 +4166,8 @@ private constructor(
 
             @JvmField val MAINTAIN_RATIO = of("maintain_ratio")
 
+            @JvmField val MAINTAIN_RATIO_NO_ENLARGE = of("maintain_ratio_no_enlarge")
+
             @JvmStatic fun of(value: String) = Crop(JsonField.of(value))
         }
 
@@ -3987,6 +4178,7 @@ private constructor(
             AT_MAX_ENLARGE,
             AT_LEAST,
             MAINTAIN_RATIO,
+            MAINTAIN_RATIO_NO_ENLARGE,
         }
 
         /**
@@ -4004,6 +4196,7 @@ private constructor(
             AT_MAX_ENLARGE,
             AT_LEAST,
             MAINTAIN_RATIO,
+            MAINTAIN_RATIO_NO_ENLARGE,
             /** An enum member indicating that [Crop] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -4022,6 +4215,7 @@ private constructor(
                 AT_MAX_ENLARGE -> Value.AT_MAX_ENLARGE
                 AT_LEAST -> Value.AT_LEAST
                 MAINTAIN_RATIO -> Value.MAINTAIN_RATIO
+                MAINTAIN_RATIO_NO_ENLARGE -> Value.MAINTAIN_RATIO_NO_ENLARGE
                 else -> Value._UNKNOWN
             }
 
@@ -4041,6 +4235,7 @@ private constructor(
                 AT_MAX_ENLARGE -> Known.AT_MAX_ENLARGE
                 AT_LEAST -> Known.AT_LEAST
                 MAINTAIN_RATIO -> Known.MAINTAIN_RATIO
+                MAINTAIN_RATIO_NO_ENLARGE -> Known.MAINTAIN_RATIO_NO_ENLARGE
                 else -> throw ImageKitInvalidDataException("Unknown Crop: $value")
             }
 
@@ -4060,6 +4255,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Crop = apply {
             if (validated) {
                 return@apply
@@ -4122,6 +4326,10 @@ private constructor(
 
             @JvmField val PAD_EXTRACT = of("pad_extract")
 
+            @JvmField val PAD_RESIZE_NO_ENLARGE = of("pad_resize_no_enlarge")
+
+            @JvmField val PAD_EXTRACT_NO_SHRINK = of("pad_extract_no_shrink")
+
             @JvmStatic fun of(value: String) = CropMode(JsonField.of(value))
         }
 
@@ -4130,6 +4338,8 @@ private constructor(
             PAD_RESIZE,
             EXTRACT,
             PAD_EXTRACT,
+            PAD_RESIZE_NO_ENLARGE,
+            PAD_EXTRACT_NO_SHRINK,
         }
 
         /**
@@ -4145,6 +4355,8 @@ private constructor(
             PAD_RESIZE,
             EXTRACT,
             PAD_EXTRACT,
+            PAD_RESIZE_NO_ENLARGE,
+            PAD_EXTRACT_NO_SHRINK,
             /** An enum member indicating that [CropMode] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -4161,6 +4373,8 @@ private constructor(
                 PAD_RESIZE -> Value.PAD_RESIZE
                 EXTRACT -> Value.EXTRACT
                 PAD_EXTRACT -> Value.PAD_EXTRACT
+                PAD_RESIZE_NO_ENLARGE -> Value.PAD_RESIZE_NO_ENLARGE
+                PAD_EXTRACT_NO_SHRINK -> Value.PAD_EXTRACT_NO_SHRINK
                 else -> Value._UNKNOWN
             }
 
@@ -4178,6 +4392,8 @@ private constructor(
                 PAD_RESIZE -> Known.PAD_RESIZE
                 EXTRACT -> Known.EXTRACT
                 PAD_EXTRACT -> Known.PAD_EXTRACT
+                PAD_RESIZE_NO_ENLARGE -> Known.PAD_RESIZE_NO_ENLARGE
+                PAD_EXTRACT_NO_SHRINK -> Known.PAD_EXTRACT_NO_SHRINK
                 else -> throw ImageKitInvalidDataException("Unknown CropMode: $value")
             }
 
@@ -4197,6 +4413,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): CropMode = apply {
             if (validated) {
                 return@apply
@@ -4263,6 +4488,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = duration.accept(new Duration.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -4272,6 +4526,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Duration = apply {
             if (validated) {
                 return@apply
@@ -4437,6 +4700,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = endOffset.accept(new EndOffset.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -4446,6 +4738,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): EndOffset = apply {
             if (validated) {
                 return@apply
@@ -4689,6 +4990,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Flip = apply {
             if (validated) {
                 return@apply
@@ -4878,6 +5188,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Format = apply {
             if (validated) {
                 return@apply
@@ -4944,6 +5263,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = gradient.accept(new Gradient.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -4953,6 +5301,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Gradient = apply {
             if (validated) {
                 return@apply
@@ -5185,6 +5542,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Grayscale = apply {
             if (validated) {
                 return@apply
@@ -5253,6 +5619,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = height.accept(new Height.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -5262,6 +5657,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Height = apply {
             if (validated) {
                 return@apply
@@ -5426,6 +5830,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = page.accept(new Page.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -5435,6 +5868,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Page = apply {
             if (validated) {
                 return@apply
@@ -5607,6 +6049,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = radius.accept(new Radius.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -5617,6 +6088,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Radius = apply {
             if (validated) {
                 return@apply
@@ -5805,6 +6285,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = rotation.accept(new Rotation.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -5814,6 +6323,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Rotation = apply {
             if (validated) {
                 return@apply
@@ -5980,6 +6498,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = shadow.accept(new Shadow.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -5989,6 +6536,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Shadow = apply {
             if (validated) {
                 return@apply
@@ -6161,6 +6717,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = sharpen.accept(new Sharpen.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -6170,6 +6755,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Sharpen = apply {
             if (validated) {
                 return@apply
@@ -6344,6 +6938,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = startOffset.accept(new StartOffset.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -6353,6 +6976,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): StartOffset = apply {
             if (validated) {
                 return@apply
@@ -6519,6 +7151,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = trim.accept(new Trim.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -6528,6 +7189,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Trim = apply {
             if (validated) {
                 return@apply
@@ -6699,6 +7369,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = unsharpMask.accept(new UnsharpMask.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 true_ != null -> visitor.visitTrue(true_)
@@ -6708,6 +7407,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): UnsharpMask = apply {
             if (validated) {
                 return@apply
@@ -6962,6 +7670,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): VideoCodec = apply {
             if (validated) {
                 return@apply
@@ -7030,6 +7747,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = width.accept(new Width.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -7039,6 +7785,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Width = apply {
             if (validated) {
                 return@apply
@@ -7201,6 +7956,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = x.accept(new X.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -7210,6 +7994,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): X = apply {
             if (validated) {
                 return@apply
@@ -7371,6 +8164,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = xCenter.accept(new XCenter.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -7380,6 +8202,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): XCenter = apply {
             if (validated) {
                 return@apply
@@ -7544,6 +8375,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = y.accept(new Y.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -7553,6 +8413,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Y = apply {
             if (validated) {
                 return@apply
@@ -7714,6 +8583,35 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = yCenter.accept(new YCenter.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitNumber(Double number) {
+         *         return Optional.of(number.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 number != null -> visitor.visitNumber(number)
@@ -7723,6 +8621,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): YCenter = apply {
             if (validated) {
                 return@apply
@@ -7879,6 +8786,7 @@ private constructor(
             background == other.background &&
             blur == other.blur &&
             border == other.border &&
+            colorize == other.colorize &&
             colorProfile == other.colorProfile &&
             colorReplace == other.colorReplace &&
             contrastStretch == other.contrastStretch &&
@@ -7938,6 +8846,7 @@ private constructor(
             background,
             blur,
             border,
+            colorize,
             colorProfile,
             colorReplace,
             contrastStretch,
@@ -7986,5 +8895,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
+        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorize=$colorize, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
 }

@@ -1,5 +1,34 @@
 # Changelog
 
+## 3.1.0 (2026-05-13)
+
+Full Changelog: [v3.0.0...v3.1.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.0.0...v3.1.0)
+
+### Features
+
+* **api:** add no-enlarge crop modes and colorize transformation ([183b131](https://github.com/imagekit-developer/imagekit-java/commit/183b131e263f5d3958317b867011349ebd0820ae))
+* **client:** improve logging ([a62b5e3](https://github.com/imagekit-developer/imagekit-java/commit/a62b5e30077bab50d3a9764daa7c520df18914bb))
+* **client:** more robust error parsing ([8e42517](https://github.com/imagekit-developer/imagekit-java/commit/8e4251712d721a17b9caa4f1ad04e9c2c06822a0))
+* **client:** support proxy authentication ([60effd3](https://github.com/imagekit-developer/imagekit-java/commit/60effd33a60b70e3f44e9180927e3a63a93ee00d))
+* **helper:** add colorize transformation support in URL generation ([209a37c](https://github.com/imagekit-developer/imagekit-java/commit/209a37cb5547b1875b8b0b39b54c674d527a3e87))
+* support setting headers via env ([c31a472](https://github.com/imagekit-developer/imagekit-java/commit/c31a472fd2674c2e339d16024cb47bf246994a38))
+
+
+### Performance Improvements
+
+* **client:** create one json mapper ([92128db](https://github.com/imagekit-developer/imagekit-java/commit/92128db5fbd82870290b9c1b5003115dd7c04469))
+
+
+### Chores
+
+* redact api-key headers in debug logs ([8db78f2](https://github.com/imagekit-developer/imagekit-java/commit/8db78f2751eb396a6f418e63631c22ecddbafb8c))
+* remove duplicated dokka setup ([a1a0ece](https://github.com/imagekit-developer/imagekit-java/commit/a1a0ece2a2e02b2dc10b6bee8d043170e3cd9681))
+
+
+### Documentation
+
+* clarify forwards compat behavior ([d5ec8cf](https://github.com/imagekit-developer/imagekit-java/commit/d5ec8cffa3ebac99d70f70f7b6c4fadbe042a5be))
+
 ## 3.0.0 (2026-04-21)
 
 Full Changelog: [v0.0.1...v3.0.0](https://github.com/imagekit-developer/imagekit-java/compare/v0.0.1...v3.0.0)
