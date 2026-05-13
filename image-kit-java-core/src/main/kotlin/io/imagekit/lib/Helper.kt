@@ -494,6 +494,8 @@ class Helper(private val privateKey: String) : HelperService {
                 }
             }
 
+            transform.colorize().ifPresent { co -> parts.add("e-colorize-$co") }
+
             transform.distort().ifPresent { d -> parts.add("e-distort-$d") }
 
             // Original
