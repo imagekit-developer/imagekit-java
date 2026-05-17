@@ -1438,8 +1438,8 @@ private constructor(
             this.aiDropShadow = aiDropShadow
         }
 
-        /** Alias for calling [aiDropShadow] with `AiDropShadow.ofDefault()`. */
-        fun aiDropShadowDefault() = aiDropShadow(AiDropShadow.ofDefault())
+        /** Alias for calling [aiDropShadow] with `AiDropShadow.ofTrue()`. */
+        fun aiDropShadowTrue() = aiDropShadow(AiDropShadow.ofTrue())
 
         /** Alias for calling [aiDropShadow] with `AiDropShadow.ofString(string)`. */
         fun aiDropShadow(string: String) = aiDropShadow(AiDropShadow.ofString(string))
@@ -1914,8 +1914,8 @@ private constructor(
          */
         fun gradient(gradient: JsonField<Gradient>) = apply { this.gradient = gradient }
 
-        /** Alias for calling [gradient] with `Gradient.ofDefault()`. */
-        fun gradientDefault() = gradient(Gradient.ofDefault())
+        /** Alias for calling [gradient] with `Gradient.ofTrue()`. */
+        fun gradientTrue() = gradient(Gradient.ofTrue())
 
         /** Alias for calling [gradient] with `Gradient.ofString(string)`. */
         fun gradient(string: String) = gradient(Gradient.ofString(string))
@@ -2249,8 +2249,8 @@ private constructor(
          */
         fun shadow(shadow: JsonField<Shadow>) = apply { this.shadow = shadow }
 
-        /** Alias for calling [shadow] with `Shadow.ofDefault()`. */
-        fun shadowDefault() = shadow(Shadow.ofDefault())
+        /** Alias for calling [shadow] with `Shadow.ofTrue()`. */
+        fun shadowTrue() = shadow(Shadow.ofTrue())
 
         /** Alias for calling [shadow] with `Shadow.ofString(string)`. */
         fun shadow(string: String) = shadow(Shadow.ofString(string))
@@ -2270,8 +2270,8 @@ private constructor(
          */
         fun sharpen(sharpen: JsonField<Sharpen>) = apply { this.sharpen = sharpen }
 
-        /** Alias for calling [sharpen] with `Sharpen.ofDefault()`. */
-        fun sharpenDefault() = sharpen(Sharpen.ofDefault())
+        /** Alias for calling [sharpen] with `Sharpen.ofTrue()`. */
+        fun sharpenTrue() = sharpen(Sharpen.ofTrue())
 
         /** Alias for calling [sharpen] with `Sharpen.ofNumber(number)`. */
         fun sharpen(number: Double) = sharpen(Sharpen.ofNumber(number))
@@ -2347,8 +2347,8 @@ private constructor(
          */
         fun trim(trim: JsonField<Trim>) = apply { this.trim = trim }
 
-        /** Alias for calling [trim] with `Trim.ofDefault()`. */
-        fun trimDefault() = trim(Trim.ofDefault())
+        /** Alias for calling [trim] with `Trim.ofTrue()`. */
+        fun trimTrue() = trim(Trim.ofTrue())
 
         /** Alias for calling [trim] with `Trim.ofNumber(number)`. */
         fun trim(number: Double) = trim(Trim.ofNumber(number))
@@ -2371,8 +2371,8 @@ private constructor(
             this.unsharpMask = unsharpMask
         }
 
-        /** Alias for calling [unsharpMask] with `UnsharpMask.ofDefault()`. */
-        fun unsharpMaskDefault() = unsharpMask(UnsharpMask.ofDefault())
+        /** Alias for calling [unsharpMask] with `UnsharpMask.ofTrue()`. */
+        fun unsharpMaskTrue() = unsharpMask(UnsharpMask.ofTrue())
 
         /** Alias for calling [unsharpMask] with `UnsharpMask.ofString(string)`. */
         fun unsharpMask(string: String) = unsharpMask(UnsharpMask.ofString(string))
@@ -2750,20 +2750,20 @@ private constructor(
     @JsonSerialize(using = AiDropShadow.Serializer::class)
     class AiDropShadow
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -2781,8 +2781,8 @@ private constructor(
          *
          * Optional<String> result = aiDropShadow.accept(new AiDropShadow.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -2800,7 +2800,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -2823,11 +2823,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -2857,8 +2857,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -2871,14 +2871,14 @@ private constructor(
                 return true
             }
 
-            return other is AiDropShadow && default_ == other.default_ && string == other.string
+            return other is AiDropShadow && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                default_ != null -> "AiDropShadow{default_=$default_}"
+                true_ != null -> "AiDropShadow{true_=$true_}"
                 string != null -> "AiDropShadow{string=$string}"
                 _json != null -> "AiDropShadow{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid AiDropShadow")
@@ -2886,7 +2886,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = AiDropShadow(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = AiDropShadow(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = AiDropShadow(string = string)
         }
@@ -2897,7 +2897,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -2924,7 +2924,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { AiDropShadow(default_ = it, _json = json) }
+                                ?.let { AiDropShadow(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 AiDropShadow(string = it, _json = json)
@@ -2954,7 +2954,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid AiDropShadow")
@@ -5244,20 +5244,20 @@ private constructor(
     @JsonSerialize(using = Gradient.Serializer::class)
     class Gradient
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -5275,8 +5275,8 @@ private constructor(
          *
          * Optional<String> result = gradient.accept(new Gradient.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -5294,7 +5294,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -5317,11 +5317,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -5351,8 +5351,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -5365,14 +5365,14 @@ private constructor(
                 return true
             }
 
-            return other is Gradient && default_ == other.default_ && string == other.string
+            return other is Gradient && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                default_ != null -> "Gradient{default_=$default_}"
+                true_ != null -> "Gradient{true_=$true_}"
                 string != null -> "Gradient{string=$string}"
                 _json != null -> "Gradient{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Gradient")
@@ -5380,7 +5380,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = Gradient(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = Gradient(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Gradient(string = string)
         }
@@ -5390,7 +5390,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -5417,7 +5417,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { Gradient(default_ = it, _json = json) }
+                                ?.let { Gradient(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Gradient(string = it, _json = json)
@@ -5447,7 +5447,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Gradient")
@@ -6479,20 +6479,20 @@ private constructor(
     @JsonSerialize(using = Shadow.Serializer::class)
     class Shadow
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -6510,8 +6510,8 @@ private constructor(
          *
          * Optional<String> result = shadow.accept(new Shadow.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -6529,7 +6529,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -6552,11 +6552,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -6586,8 +6586,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -6600,14 +6600,14 @@ private constructor(
                 return true
             }
 
-            return other is Shadow && default_ == other.default_ && string == other.string
+            return other is Shadow && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                default_ != null -> "Shadow{default_=$default_}"
+                true_ != null -> "Shadow{true_=$true_}"
                 string != null -> "Shadow{string=$string}"
                 _json != null -> "Shadow{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Shadow")
@@ -6615,7 +6615,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = Shadow(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = Shadow(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Shadow(string = string)
         }
@@ -6623,7 +6623,7 @@ private constructor(
         /** An interface that defines how to map each variant of [Shadow] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -6650,7 +6650,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { Shadow(default_ = it, _json = json) }
+                                ?.let { Shadow(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Shadow(string = it, _json = json)
@@ -6680,7 +6680,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Shadow")
@@ -6698,20 +6698,20 @@ private constructor(
     @JsonSerialize(using = Sharpen.Serializer::class)
     class Sharpen
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val number: Double? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isNumber(): Boolean = number != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asNumber(): Double = number.getOrThrow("number")
 
@@ -6729,8 +6729,8 @@ private constructor(
          *
          * Optional<String> result = sharpen.accept(new Sharpen.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -6748,7 +6748,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 number != null -> visitor.visitNumber(number)
                 else -> visitor.unknown(_json)
             }
@@ -6771,11 +6771,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -6805,8 +6805,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -6819,14 +6819,14 @@ private constructor(
                 return true
             }
 
-            return other is Sharpen && default_ == other.default_ && number == other.number
+            return other is Sharpen && true_ == other.true_ && number == other.number
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, number)
+        override fun hashCode(): Int = Objects.hash(true_, number)
 
         override fun toString(): String =
             when {
-                default_ != null -> "Sharpen{default_=$default_}"
+                true_ != null -> "Sharpen{true_=$true_}"
                 number != null -> "Sharpen{number=$number}"
                 _json != null -> "Sharpen{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Sharpen")
@@ -6834,7 +6834,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = Sharpen(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = Sharpen(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofNumber(number: Double) = Sharpen(number = number)
         }
@@ -6844,7 +6844,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitNumber(number: Double): T
 
@@ -6871,7 +6871,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { Sharpen(default_ = it, _json = json) }
+                                ?.let { Sharpen(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Sharpen(number = it, _json = json)
@@ -6901,7 +6901,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.number != null -> generator.writeObject(value.number)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Sharpen")
@@ -7132,20 +7132,20 @@ private constructor(
     @JsonSerialize(using = Trim.Serializer::class)
     class Trim
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val number: Double? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun number(): Optional<Double> = Optional.ofNullable(number)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isNumber(): Boolean = number != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asNumber(): Double = number.getOrThrow("number")
 
@@ -7163,8 +7163,8 @@ private constructor(
          *
          * Optional<String> result = trim.accept(new Trim.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -7182,7 +7182,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 number != null -> visitor.visitNumber(number)
                 else -> visitor.unknown(_json)
             }
@@ -7205,11 +7205,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -7239,8 +7239,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -7253,14 +7253,14 @@ private constructor(
                 return true
             }
 
-            return other is Trim && default_ == other.default_ && number == other.number
+            return other is Trim && true_ == other.true_ && number == other.number
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, number)
+        override fun hashCode(): Int = Objects.hash(true_, number)
 
         override fun toString(): String =
             when {
-                default_ != null -> "Trim{default_=$default_}"
+                true_ != null -> "Trim{true_=$true_}"
                 number != null -> "Trim{number=$number}"
                 _json != null -> "Trim{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Trim")
@@ -7268,7 +7268,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = Trim(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = Trim(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofNumber(number: Double) = Trim(number = number)
         }
@@ -7276,7 +7276,7 @@ private constructor(
         /** An interface that defines how to map each variant of [Trim] to a value of type [T]. */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitNumber(number: Double): T
 
@@ -7302,7 +7302,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { Trim(default_ = it, _json = json) }
+                                ?.let { Trim(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Double>())?.let {
                                 Trim(number = it, _json = json)
@@ -7332,7 +7332,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.number != null -> generator.writeObject(value.number)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Trim")
@@ -7350,20 +7350,20 @@ private constructor(
     @JsonSerialize(using = UnsharpMask.Serializer::class)
     class UnsharpMask
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -7381,8 +7381,8 @@ private constructor(
          *
          * Optional<String> result = unsharpMask.accept(new UnsharpMask.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -7400,7 +7400,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -7423,11 +7423,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -7457,8 +7457,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -7471,14 +7471,14 @@ private constructor(
                 return true
             }
 
-            return other is UnsharpMask && default_ == other.default_ && string == other.string
+            return other is UnsharpMask && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                default_ != null -> "UnsharpMask{default_=$default_}"
+                true_ != null -> "UnsharpMask{true_=$true_}"
                 string != null -> "UnsharpMask{string=$string}"
                 _json != null -> "UnsharpMask{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid UnsharpMask")
@@ -7486,7 +7486,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = UnsharpMask(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = UnsharpMask(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = UnsharpMask(string = string)
         }
@@ -7497,7 +7497,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -7524,7 +7524,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { UnsharpMask(default_ = it, _json = json) }
+                                ?.let { UnsharpMask(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 UnsharpMask(string = it, _json = json)
@@ -7554,7 +7554,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid UnsharpMask")

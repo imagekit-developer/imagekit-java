@@ -244,8 +244,8 @@ private constructor(
          */
         fun gradient(gradient: JsonField<Gradient>) = apply { this.gradient = gradient }
 
-        /** Alias for calling [gradient] with `Gradient.ofDefault()`. */
-        fun gradientDefault() = gradient(Gradient.ofDefault())
+        /** Alias for calling [gradient] with `Gradient.ofTrue()`. */
+        fun gradientTrue() = gradient(Gradient.ofTrue())
 
         /** Alias for calling [gradient] with `Gradient.ofString(string)`. */
         fun gradient(string: String) = gradient(Gradient.ofString(string))
@@ -410,20 +410,20 @@ private constructor(
     @JsonSerialize(using = Gradient.Serializer::class)
     class Gradient
     private constructor(
-        private val default_: JsonValue? = null,
+        private val true_: JsonValue? = null,
         private val string: String? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun default_(): Optional<JsonValue> = Optional.ofNullable(default_)
+        fun true_(): Optional<JsonValue> = Optional.ofNullable(true_)
 
         fun string(): Optional<String> = Optional.ofNullable(string)
 
-        fun isDefault(): Boolean = default_ != null
+        fun isTrue(): Boolean = true_ != null
 
         fun isString(): Boolean = string != null
 
-        fun asDefault(): JsonValue = default_.getOrThrow("default_")
+        fun asTrue(): JsonValue = true_.getOrThrow("true_")
 
         fun asString(): String = string.getOrThrow("string")
 
@@ -441,8 +441,8 @@ private constructor(
          *
          * Optional<String> result = gradient.accept(new Gradient.Visitor<Optional<String>>() {
          *     @Override
-         *     public Optional<String> visitDefault(JsonValue default_) {
-         *         return Optional.of(default_.toString());
+         *     public Optional<String> visitTrue(JsonValue true_) {
+         *         return Optional.of(true_.toString());
          *     }
          *
          *     // ...
@@ -460,7 +460,7 @@ private constructor(
          */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
-                default_ != null -> visitor.visitDefault(default_)
+                true_ != null -> visitor.visitTrue(true_)
                 string != null -> visitor.visitString(string)
                 else -> visitor.unknown(_json)
             }
@@ -483,11 +483,11 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitDefault(default_: JsonValue) {
-                        default_.let {
+                    override fun visitTrue(true_: JsonValue) {
+                        true_.let {
                             if (it != JsonValue.from(true)) {
                                 throw ImageKitInvalidDataException(
-                                    "'default_' is invalid, received $it"
+                                    "'true_' is invalid, received $it"
                                 )
                             }
                         }
@@ -517,8 +517,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitDefault(default_: JsonValue) =
-                        default_.let { if (it == JsonValue.from(true)) 1 else 0 }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -531,14 +531,14 @@ private constructor(
                 return true
             }
 
-            return other is Gradient && default_ == other.default_ && string == other.string
+            return other is Gradient && true_ == other.true_ && string == other.string
         }
 
-        override fun hashCode(): Int = Objects.hash(default_, string)
+        override fun hashCode(): Int = Objects.hash(true_, string)
 
         override fun toString(): String =
             when {
-                default_ != null -> "Gradient{default_=$default_}"
+                true_ != null -> "Gradient{true_=$true_}"
                 string != null -> "Gradient{string=$string}"
                 _json != null -> "Gradient{_unknown=$_json}"
                 else -> throw IllegalStateException("Invalid Gradient")
@@ -546,7 +546,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofDefault() = Gradient(default_ = JsonValue.from(true))
+            @JvmStatic fun ofTrue() = Gradient(true_ = JsonValue.from(true))
 
             @JvmStatic fun ofString(string: String) = Gradient(string = string)
         }
@@ -556,7 +556,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitDefault(default_: JsonValue): T
+            fun visitTrue(true_: JsonValue): T
 
             fun visitString(string: String): T
 
@@ -583,7 +583,7 @@ private constructor(
                 val bestMatches =
                     sequenceOf(
                             tryDeserialize(node, jacksonTypeRef<JsonValue>())
-                                ?.let { Gradient(default_ = it, _json = json) }
+                                ?.let { Gradient(true_ = it, _json = json) }
                                 ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<String>())?.let {
                                 Gradient(string = it, _json = json)
@@ -613,7 +613,7 @@ private constructor(
                 provider: SerializerProvider,
             ) {
                 when {
-                    value.default_ != null -> generator.writeObject(value.default_)
+                    value.true_ != null -> generator.writeObject(value.true_)
                     value.string != null -> generator.writeObject(value.string)
                     value._json != null -> generator.writeObject(value._json)
                     else -> throw IllegalStateException("Invalid Gradient")
