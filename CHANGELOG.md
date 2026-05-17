@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.1.1 (2026-05-17)
+
+Full Changelog: [v3.1.0...v3.1.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.0...v3.1.1)
+
+### Build System
+
+* **dotnet:** adding variant name for build warnings cannot infer union variant name ([ede45e2](https://github.com/imagekit-developer/imagekit-java/commit/ede45e238c23ec07bd5c9209d81645636b9e1892))
+* revert dotnet specific changes ([a2059aa](https://github.com/imagekit-developer/imagekit-java/commit/a2059aad80d79249bd66492a063c0358421c391b))
+
 ## 3.1.0 (2026-05-13)
 
 Full Changelog: [v3.0.0...v3.1.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.0.0...v3.1.0)
