@@ -203,6 +203,7 @@ interface FileServiceAsync {
      * **Version limit** \ A file can have a maximum of 100 versions.
      *
      * **Demo applications**
+     *
      * - A full-fledged
      *   [upload widget using Uppy](https://github.com/imagekit-samples/uppy-uploader), supporting
      *   file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.

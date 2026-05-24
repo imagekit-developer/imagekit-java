@@ -1123,8 +1123,9 @@ private constructor(
 
                         override fun visitBool(bool: Boolean) = 1
 
-                        override fun visitMixed(mixed: List<DefaultValueItem>) =
-                            mixed.sumOf { it.validity().toInt() }
+                        override fun visitMixed(mixed: List<DefaultValueItem>) = mixed.sumOf {
+                            it.validity().toInt()
+                        }
 
                         override fun unknown(json: JsonValue?) = 0
                     }

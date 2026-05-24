@@ -18,6 +18,7 @@ jobs:
         run: |
           bash ./bin/check-release-environment
         env:
+          RELEASE_PLEASE_TOKEN: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           SONATYPE_USERNAME: ${{ secrets.IMAGE_KIT_SONATYPE_USERNAME || secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.IMAGE_KIT_SONATYPE_PASSWORD || secrets.SONATYPE_PASSWORD }}
           GPG_SIGNING_KEY: ${{ secrets.IMAGE_KIT_SONATYPE_GPG_SIGNING_KEY || secrets.GPG_SIGNING_KEY }}
