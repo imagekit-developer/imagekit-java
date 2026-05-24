@@ -141,7 +141,7 @@ private constructor(
     /**
      * Your ImageKit webhook secret for verifying webhook signatures (starts with `whsec_`). You can
      * find this in the [ImageKit dashboard](https://imagekit.io/dashboard/developer/webhooks). Only
-     * required if you are re using webhooks.
+     * required if you are using webhooks.
      */
     fun webhookSecret(): Optional<String> = Optional.ofNullable(webhookSecret)
 
@@ -345,7 +345,7 @@ private constructor(
          * Your ImageKit webhook secret for verifying webhook signatures (starts with `whsec_`). You
          * can find this in the
          * [ImageKit dashboard](https://imagekit.io/dashboard/developer/webhooks). Only required if
-         * you are re using webhooks.
+         * you are using webhooks.
          */
         fun webhookSecret(webhookSecret: String?) = apply { this.webhookSecret = webhookSecret }
 
