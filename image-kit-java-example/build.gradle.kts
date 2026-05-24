@@ -8,7 +8,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":image-kit-java"))
+    implementation(project(":image-kit-java-core"))
+    implementation(project(":image-kit-java-client-okhttp"))
 }
 
 tasks.withType<JavaCompile>().configureEach {

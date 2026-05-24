@@ -751,9 +751,11 @@ private constructor(
          * An enum containing [Flip]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Flip] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1109,9 +1111,11 @@ private constructor(
          * An enum containing [InnerAlignment]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [InnerAlignment] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -1772,8 +1776,9 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitMax(max: JsonValue) =
-                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
+                    override fun visitMax(max: JsonValue) = max.let {
+                        if (it == JsonValue.from("max")) 1 else 0
+                    }
 
                     override fun visitString(string: String) = 1
 

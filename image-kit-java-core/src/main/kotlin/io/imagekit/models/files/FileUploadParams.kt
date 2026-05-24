@@ -53,6 +53,7 @@ import kotlin.io.path.name
  * **Version limit** \ A file can have a maximum of 100 versions.
  *
  * **Demo applications**
+ *
  * - A full-fledged [upload widget using Uppy](https://github.com/imagekit-samples/uppy-uploader),
  *   supporting file selections from local storage, URL, Dropbox, Google Drive, Instagram, and more.
  * - [Quick start guides](/docs/quick-start-guides) for various frameworks and technologies.
@@ -66,6 +67,7 @@ private constructor(
 
     /**
      * The API accepts any of the following:
+     *
      * - **Binary data** – send the raw bytes as `multipart/form-data`.
      * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
      * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -80,6 +82,7 @@ private constructor(
 
     /**
      * The name with which the file has to be uploaded. The file name can contain:
+     *
      * - Alphanumeric Characters: `a-z`, `A-Z`, `0-9`.
      * - Special Characters: `.`, `-`
      *
@@ -116,6 +119,7 @@ private constructor(
 
     /**
      * Define an important area in the image. This is only relevant for image type files.
+     *
      * - To be passed as a string with the x and y coordinates of the top-left corner, and width and
      *   height of the area of interest in the format `x,y,width,height`. For example -
      *   `10,10,100,100`
@@ -170,6 +174,7 @@ private constructor(
      * a new folder(s) is created.
      *
      * The folder name can contain:
+     *
      * - Alphanumeric Characters: `a-z` , `A-Z` , `0-9`
      * - Special Characters: `/` , `_` , `-`
      *
@@ -283,8 +288,10 @@ private constructor(
 
     /**
      * Configure pre-processing (`pre`) and post-processing (`post`) transformations.
+     *
      * - `pre` — applied before the file is uploaded to the Media Library. Useful for reducing file
      *   size or applying basic optimizations upfront (e.g., resize, compress).
+     *
      * - `post` — applied immediately after upload. Ideal for generating transformed versions (like
      *   video encodes or thumbnails) in advance, so they're ready for delivery without delay.
      *
@@ -547,6 +554,7 @@ private constructor(
 
         /**
          * The API accepts any of the following:
+         *
          * - **Binary data** – send the raw bytes as `multipart/form-data`.
          * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
          * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -567,6 +575,7 @@ private constructor(
 
         /**
          * The API accepts any of the following:
+         *
          * - **Binary data** – send the raw bytes as `multipart/form-data`.
          * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
          * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -578,6 +587,7 @@ private constructor(
 
         /**
          * The API accepts any of the following:
+         *
          * - **Binary data** – send the raw bytes as `multipart/form-data`.
          * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
          * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -589,6 +599,7 @@ private constructor(
 
         /**
          * The name with which the file has to be uploaded. The file name can contain:
+         *
          * - Alphanumeric Characters: `a-z`, `A-Z`, `0-9`.
          * - Special Characters: `.`, `-`
          *
@@ -640,6 +651,7 @@ private constructor(
 
         /**
          * Define an important area in the image. This is only relevant for image type files.
+         *
          * - To be passed as a string with the x and y coordinates of the top-left corner, and width
          *   and height of the area of interest in the format `x,y,width,height`. For example -
          *   `10,10,100,100`
@@ -786,6 +798,7 @@ private constructor(
          * before, a new folder(s) is created.
          *
          * The folder name can contain:
+         *
          * - Alphanumeric Characters: `a-z` , `A-Z` , `0-9`
          * - Special Characters: `/` , `_` , `-`
          *
@@ -998,8 +1011,10 @@ private constructor(
 
         /**
          * Configure pre-processing (`pre`) and post-processing (`post`) transformations.
+         *
          * - `pre` — applied before the file is uploaded to the Media Library. Useful for reducing
          *   file size or applying basic optimizations upfront (e.g., resize, compress).
+         *
          * - `post` — applied immediately after upload. Ideal for generating transformed versions
          *   (like video encodes or thumbnails) in advance, so they're ready for delivery without
          *   delay.
@@ -1288,6 +1303,7 @@ private constructor(
 
         /**
          * The API accepts any of the following:
+         *
          * - **Binary data** – send the raw bytes as `multipart/form-data`.
          * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
          * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -1302,6 +1318,7 @@ private constructor(
 
         /**
          * The name with which the file has to be uploaded. The file name can contain:
+         *
          * - Alphanumeric Characters: `a-z`, `A-Z`, `0-9`.
          * - Special Characters: `.`, `-`
          *
@@ -1338,6 +1355,7 @@ private constructor(
 
         /**
          * Define an important area in the image. This is only relevant for image type files.
+         *
          * - To be passed as a string with the x and y coordinates of the top-left corner, and width
          *   and height of the area of interest in the format `x,y,width,height`. For example -
          *   `10,10,100,100`
@@ -1394,6 +1412,7 @@ private constructor(
          * before, a new folder(s) is created.
          *
          * The folder name can contain:
+         *
          * - Alphanumeric Characters: `a-z` , `A-Z` , `0-9`
          * - Special Characters: `/` , `_` , `-`
          *
@@ -1510,8 +1529,10 @@ private constructor(
 
         /**
          * Configure pre-processing (`pre`) and post-processing (`post`) transformations.
+         *
          * - `pre` — applied before the file is uploaded to the Media Library. Useful for reducing
          *   file size or applying basic optimizations upfront (e.g., resize, compress).
+         *
          * - `post` — applied immediately after upload. Ideal for generating transformed versions
          *   (like video encodes or thumbnails) in advance, so they're ready for delivery without
          *   delay.
@@ -1845,6 +1866,7 @@ private constructor(
 
             /**
              * The API accepts any of the following:
+             *
              * - **Binary data** – send the raw bytes as `multipart/form-data`.
              * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
              * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -1865,6 +1887,7 @@ private constructor(
 
             /**
              * The API accepts any of the following:
+             *
              * - **Binary data** – send the raw bytes as `multipart/form-data`.
              * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
              * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -1876,6 +1899,7 @@ private constructor(
 
             /**
              * The API accepts any of the following:
+             *
              * - **Binary data** – send the raw bytes as `multipart/form-data`.
              * - **HTTP / HTTPS URL** – a publicly reachable URL that ImageKit’s servers can fetch.
              * - **Base64 string** – the file encoded as a Base64 data URI or plain Base64.
@@ -1893,6 +1917,7 @@ private constructor(
 
             /**
              * The name with which the file has to be uploaded. The file name can contain:
+             *
              * - Alphanumeric Characters: `a-z`, `A-Z`, `0-9`.
              * - Special Characters: `.`, `-`
              *
@@ -1947,6 +1972,7 @@ private constructor(
 
             /**
              * Define an important area in the image. This is only relevant for image type files.
+             *
              * - To be passed as a string with the x and y coordinates of the top-left corner, and
              *   width and height of the area of interest in the format `x,y,width,height`. For
              *   example - `10,10,100,100`
@@ -2099,6 +2125,7 @@ private constructor(
              * before, a new folder(s) is created.
              *
              * The folder name can contain:
+             *
              * - Alphanumeric Characters: `a-z` , `A-Z` , `0-9`
              * - Special Characters: `/` , `_` , `-`
              *
@@ -2323,9 +2350,11 @@ private constructor(
 
             /**
              * Configure pre-processing (`pre`) and post-processing (`post`) transformations.
+             *
              * - `pre` — applied before the file is uploaded to the Media Library. Useful for
              *   reducing file size or applying basic optimizations upfront (e.g., resize,
              *   compress).
+             *
              * - `post` — applied immediately after upload. Ideal for generating transformed
              *   versions (like video encodes or thumbnails) in advance, so they're ready for
              *   delivery without delay.
@@ -2717,9 +2746,11 @@ private constructor(
          * An enum containing [ResponseField]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [ResponseField] can contain an unknown value in a couple of cases:
+         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
+         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -2845,8 +2876,10 @@ private constructor(
 
     /**
      * Configure pre-processing (`pre`) and post-processing (`post`) transformations.
+     *
      * - `pre` — applied before the file is uploaded to the Media Library. Useful for reducing file
      *   size or applying basic optimizations upfront (e.g., resize, compress).
+     *
      * - `post` — applied immediately after upload. Ideal for generating transformed versions (like
      *   video encodes or thumbnails) in advance, so they're ready for delivery without delay.
      *
@@ -4080,9 +4113,11 @@ private constructor(
                      * member.
                      *
                      * An instance of [Protocol] can contain an unknown value in a couple of cases:
+                     *
                      * - It was deserialized from data that doesn't match any known member. For
                      *   example, if the SDK is on an older version than the API, then the API may
                      *   respond with new members that the SDK is unaware of.
+                     *
                      * - It was constructed with an arbitrary value using the [of] method.
                      */
                     enum class Value {
