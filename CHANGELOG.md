@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.1.2](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.1...v3.1.2) (2026-05-25)
+
+
+### Features
+
+* initial stlc build ([9418324](https://github.com/imagekit-developer/imagekit-java/commit/941832443279b45ffdab0ff5a440fc19b1904aa4))
+
+
+### Chores
+
+* pin next release ([537e748](https://github.com/imagekit-developer/imagekit-java/commit/537e7488b778bfdfc543b9b876dd5faf6bfea53c))
+* Update webhook description ([9e5cc4b](https://github.com/imagekit-developer/imagekit-java/commit/9e5cc4bc6da2ffe1ecfc8993465a502c2716451e))
+* Update webhook description ([3859bd4](https://github.com/imagekit-developer/imagekit-java/commit/3859bd4f87124025eb99bcc19fbaaacc78713852))
+
 ## 3.1.1 (2026-05-17)
 
 Full Changelog: [v3.1.0...v3.1.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.0...v3.1.1)
