@@ -871,8 +871,9 @@ private constructor(
              * Used for best match union deserialization.
              */
             @JvmSynthetic
-            internal fun validity(): Int =
-                additionalProperties.count { (_, value) -> !value.isNull() && !value.isMissing() }
+            internal fun validity(): Int = additionalProperties.count { (_, value) ->
+                !value.isNull() && !value.isMissing()
+            }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -1013,8 +1014,9 @@ private constructor(
                     object : Visitor<Int> {
                         override fun visitStrings(strings: List<String>) = strings.size
 
-                        override fun visitAll(all: JsonValue) =
-                            all.let { if (it == JsonValue.from("all")) 1 else 0 }
+                        override fun visitAll(all: JsonValue) = all.let {
+                            if (it == JsonValue.from("all")) 1 else 0
+                        }
 
                         override fun unknown(json: JsonValue?) = 0
                     }

@@ -308,7 +308,7 @@ class ImageKitOkHttpClient private constructor() {
          * Your ImageKit webhook secret for verifying webhook signatures (starts with `whsec_`). You
          * can find this in the
          * [ImageKit dashboard](https://imagekit.io/dashboard/developer/webhooks). Only required if
-         * you're using webhooks.
+         * you are using webhooks.
          */
         fun webhookSecret(webhookSecret: String?) = apply {
             clientOptions.webhookSecret(webhookSecret)
