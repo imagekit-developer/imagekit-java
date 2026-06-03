@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.2.0 (2026-06-03)
+
+Full Changelog: [v3.1.2...v3.2.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.2...v3.2.0)
+
+### Bug Fixes
+
+* metadata response shape ([2064e1a](https://github.com/imagekit-developer/imagekit-java/commit/2064e1a12d6d20d71d0921bf1bb4b3e40be9f520))
+
 ## [3.1.2](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.1...v3.1.2) (2026-05-25)
 
 
