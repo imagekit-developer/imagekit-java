@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.1.2)
-[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.1.2/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.1.2)
+[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.2.0)
+[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.2.0/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.2.0)
 
 <!-- x-release-please-end -->
 
@@ -20,7 +20,7 @@ Use the Image Kit MCP Server to enable AI assistants to interact with this API, 
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.1.2).
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.2.0).
 
 <!-- x-release-please-end -->
 
@@ -31,7 +31,7 @@ The REST API documentation can be found on [imagekit.io](https://imagekit.io/doc
 ### Gradle
 
 ```kotlin
-implementation("io.imagekit:image-kit-java:3.1.2")
+implementation("io.imagekit:image-kit-java:3.2.0")
 ```
 
 ### Maven
@@ -40,7 +40,7 @@ implementation("io.imagekit:image-kit-java:3.1.2")
 <dependency>
   <groupId>io.imagekit</groupId>
   <artifactId>image-kit-java</artifactId>
-  <version>3.1.2</version>
+  <version>3.2.0</version>
 </dependency>
 ```
 
