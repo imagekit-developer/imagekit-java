@@ -945,6 +945,7 @@ private constructor(
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val apertureValue: JsonField<Double>,
+            private val brightnessValue: JsonField<Double>,
             private val colorSpace: JsonField<Long>,
             private val createDate: JsonField<String>,
             private val customRendered: JsonField<Long>,
@@ -959,16 +960,23 @@ private constructor(
             private val flash: JsonField<Long>,
             private val flashpixVersion: JsonField<String>,
             private val fNumber: JsonField<Double>,
-            private val focalLength: JsonField<Long>,
+            private val focalLength: JsonField<Double>,
+            private val focalLengthIn35mmFormat: JsonField<Long>,
             private val focalPlaneResolutionUnit: JsonField<Long>,
             private val focalPlaneXResolution: JsonField<Double>,
             private val focalPlaneYResolution: JsonField<Double>,
             private val interopOffset: JsonField<Long>,
             private val iso: JsonField<Long>,
+            private val lensModel: JsonField<String>,
+            private val lightSource: JsonField<Long>,
+            private val maxApertureValue: JsonField<Double>,
             private val meteringMode: JsonField<Long>,
             private val sceneCaptureType: JsonField<Long>,
+            private val sceneType: JsonField<String>,
+            private val sensingMethod: JsonField<Long>,
             private val shutterSpeedValue: JsonField<Double>,
             private val subSecTime: JsonField<String>,
+            private val userComment: JsonField<String>,
             private val whiteBalance: JsonField<Long>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
@@ -978,6 +986,9 @@ private constructor(
                 @JsonProperty("ApertureValue")
                 @ExcludeMissing
                 apertureValue: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("BrightnessValue")
+                @ExcludeMissing
+                brightnessValue: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("ColorSpace")
                 @ExcludeMissing
                 colorSpace: JsonField<Long> = JsonMissing.of(),
@@ -1020,7 +1031,10 @@ private constructor(
                 fNumber: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("FocalLength")
                 @ExcludeMissing
-                focalLength: JsonField<Long> = JsonMissing.of(),
+                focalLength: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("FocalLengthIn35mmFormat")
+                @ExcludeMissing
+                focalLengthIn35mmFormat: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("FocalPlaneResolutionUnit")
                 @ExcludeMissing
                 focalPlaneResolutionUnit: JsonField<Long> = JsonMissing.of(),
@@ -1034,23 +1048,42 @@ private constructor(
                 @ExcludeMissing
                 interopOffset: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("ISO") @ExcludeMissing iso: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("LensModel")
+                @ExcludeMissing
+                lensModel: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("LightSource")
+                @ExcludeMissing
+                lightSource: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("MaxApertureValue")
+                @ExcludeMissing
+                maxApertureValue: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("MeteringMode")
                 @ExcludeMissing
                 meteringMode: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("SceneCaptureType")
                 @ExcludeMissing
                 sceneCaptureType: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("SceneType")
+                @ExcludeMissing
+                sceneType: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("SensingMethod")
+                @ExcludeMissing
+                sensingMethod: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("ShutterSpeedValue")
                 @ExcludeMissing
                 shutterSpeedValue: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("SubSecTime")
                 @ExcludeMissing
                 subSecTime: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("UserComment")
+                @ExcludeMissing
+                userComment: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("WhiteBalance")
                 @ExcludeMissing
                 whiteBalance: JsonField<Long> = JsonMissing.of(),
             ) : this(
                 apertureValue,
+                brightnessValue,
                 colorSpace,
                 createDate,
                 customRendered,
@@ -1066,15 +1099,22 @@ private constructor(
                 flashpixVersion,
                 fNumber,
                 focalLength,
+                focalLengthIn35mmFormat,
                 focalPlaneResolutionUnit,
                 focalPlaneXResolution,
                 focalPlaneYResolution,
                 interopOffset,
                 iso,
+                lensModel,
+                lightSource,
+                maxApertureValue,
                 meteringMode,
                 sceneCaptureType,
+                sceneType,
+                sensingMethod,
                 shutterSpeedValue,
                 subSecTime,
+                userComment,
                 whiteBalance,
                 mutableMapOf(),
             )
@@ -1084,6 +1124,12 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun apertureValue(): Optional<Double> = apertureValue.getOptional("ApertureValue")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun brightnessValue(): Optional<Double> = brightnessValue.getOptional("BrightnessValue")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1175,7 +1221,14 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun focalLength(): Optional<Long> = focalLength.getOptional("FocalLength")
+            fun focalLength(): Optional<Double> = focalLength.getOptional("FocalLength")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun focalLengthIn35mmFormat(): Optional<Long> =
+                focalLengthIn35mmFormat.getOptional("FocalLengthIn35mmFormat")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1214,6 +1267,25 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
+            fun lensModel(): Optional<String> = lensModel.getOptional("LensModel")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun lightSource(): Optional<Long> = lightSource.getOptional("LightSource")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun maxApertureValue(): Optional<Double> =
+                maxApertureValue.getOptional("MaxApertureValue")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
             fun meteringMode(): Optional<Long> = meteringMode.getOptional("MeteringMode")
 
             /**
@@ -1222,6 +1294,18 @@ private constructor(
              */
             fun sceneCaptureType(): Optional<Long> =
                 sceneCaptureType.getOptional("SceneCaptureType")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun sceneType(): Optional<String> = sceneType.getOptional("SceneType")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun sensingMethod(): Optional<Long> = sensingMethod.getOptional("SensingMethod")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -1240,6 +1324,12 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
+            fun userComment(): Optional<String> = userComment.getOptional("UserComment")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
             fun whiteBalance(): Optional<Long> = whiteBalance.getOptional("WhiteBalance")
 
             /**
@@ -1251,6 +1341,16 @@ private constructor(
             @JsonProperty("ApertureValue")
             @ExcludeMissing
             fun _apertureValue(): JsonField<Double> = apertureValue
+
+            /**
+             * Returns the raw JSON value of [brightnessValue].
+             *
+             * Unlike [brightnessValue], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("BrightnessValue")
+            @ExcludeMissing
+            fun _brightnessValue(): JsonField<Double> = brightnessValue
 
             /**
              * Returns the raw JSON value of [colorSpace].
@@ -1394,7 +1494,17 @@ private constructor(
              */
             @JsonProperty("FocalLength")
             @ExcludeMissing
-            fun _focalLength(): JsonField<Long> = focalLength
+            fun _focalLength(): JsonField<Double> = focalLength
+
+            /**
+             * Returns the raw JSON value of [focalLengthIn35mmFormat].
+             *
+             * Unlike [focalLengthIn35mmFormat], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("FocalLengthIn35mmFormat")
+            @ExcludeMissing
+            fun _focalLengthIn35mmFormat(): JsonField<Long> = focalLengthIn35mmFormat
 
             /**
              * Returns the raw JSON value of [focalPlaneResolutionUnit].
@@ -1444,6 +1554,36 @@ private constructor(
             @JsonProperty("ISO") @ExcludeMissing fun _iso(): JsonField<Long> = iso
 
             /**
+             * Returns the raw JSON value of [lensModel].
+             *
+             * Unlike [lensModel], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("LensModel")
+            @ExcludeMissing
+            fun _lensModel(): JsonField<String> = lensModel
+
+            /**
+             * Returns the raw JSON value of [lightSource].
+             *
+             * Unlike [lightSource], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("LightSource")
+            @ExcludeMissing
+            fun _lightSource(): JsonField<Long> = lightSource
+
+            /**
+             * Returns the raw JSON value of [maxApertureValue].
+             *
+             * Unlike [maxApertureValue], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("MaxApertureValue")
+            @ExcludeMissing
+            fun _maxApertureValue(): JsonField<Double> = maxApertureValue
+
+            /**
              * Returns the raw JSON value of [meteringMode].
              *
              * Unlike [meteringMode], this method doesn't throw if the JSON field has an unexpected
@@ -1464,6 +1604,26 @@ private constructor(
             fun _sceneCaptureType(): JsonField<Long> = sceneCaptureType
 
             /**
+             * Returns the raw JSON value of [sceneType].
+             *
+             * Unlike [sceneType], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("SceneType")
+            @ExcludeMissing
+            fun _sceneType(): JsonField<String> = sceneType
+
+            /**
+             * Returns the raw JSON value of [sensingMethod].
+             *
+             * Unlike [sensingMethod], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("SensingMethod")
+            @ExcludeMissing
+            fun _sensingMethod(): JsonField<Long> = sensingMethod
+
+            /**
              * Returns the raw JSON value of [shutterSpeedValue].
              *
              * Unlike [shutterSpeedValue], this method doesn't throw if the JSON field has an
@@ -1482,6 +1642,16 @@ private constructor(
             @JsonProperty("SubSecTime")
             @ExcludeMissing
             fun _subSecTime(): JsonField<String> = subSecTime
+
+            /**
+             * Returns the raw JSON value of [userComment].
+             *
+             * Unlike [userComment], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("UserComment")
+            @ExcludeMissing
+            fun _userComment(): JsonField<String> = userComment
 
             /**
              * Returns the raw JSON value of [whiteBalance].
@@ -1515,6 +1685,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var apertureValue: JsonField<Double> = JsonMissing.of()
+                private var brightnessValue: JsonField<Double> = JsonMissing.of()
                 private var colorSpace: JsonField<Long> = JsonMissing.of()
                 private var createDate: JsonField<String> = JsonMissing.of()
                 private var customRendered: JsonField<Long> = JsonMissing.of()
@@ -1529,22 +1700,30 @@ private constructor(
                 private var flash: JsonField<Long> = JsonMissing.of()
                 private var flashpixVersion: JsonField<String> = JsonMissing.of()
                 private var fNumber: JsonField<Double> = JsonMissing.of()
-                private var focalLength: JsonField<Long> = JsonMissing.of()
+                private var focalLength: JsonField<Double> = JsonMissing.of()
+                private var focalLengthIn35mmFormat: JsonField<Long> = JsonMissing.of()
                 private var focalPlaneResolutionUnit: JsonField<Long> = JsonMissing.of()
                 private var focalPlaneXResolution: JsonField<Double> = JsonMissing.of()
                 private var focalPlaneYResolution: JsonField<Double> = JsonMissing.of()
                 private var interopOffset: JsonField<Long> = JsonMissing.of()
                 private var iso: JsonField<Long> = JsonMissing.of()
+                private var lensModel: JsonField<String> = JsonMissing.of()
+                private var lightSource: JsonField<Long> = JsonMissing.of()
+                private var maxApertureValue: JsonField<Double> = JsonMissing.of()
                 private var meteringMode: JsonField<Long> = JsonMissing.of()
                 private var sceneCaptureType: JsonField<Long> = JsonMissing.of()
+                private var sceneType: JsonField<String> = JsonMissing.of()
+                private var sensingMethod: JsonField<Long> = JsonMissing.of()
                 private var shutterSpeedValue: JsonField<Double> = JsonMissing.of()
                 private var subSecTime: JsonField<String> = JsonMissing.of()
+                private var userComment: JsonField<String> = JsonMissing.of()
                 private var whiteBalance: JsonField<Long> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(exifDetails: ExifDetails) = apply {
                     apertureValue = exifDetails.apertureValue
+                    brightnessValue = exifDetails.brightnessValue
                     colorSpace = exifDetails.colorSpace
                     createDate = exifDetails.createDate
                     customRendered = exifDetails.customRendered
@@ -1560,15 +1739,22 @@ private constructor(
                     flashpixVersion = exifDetails.flashpixVersion
                     fNumber = exifDetails.fNumber
                     focalLength = exifDetails.focalLength
+                    focalLengthIn35mmFormat = exifDetails.focalLengthIn35mmFormat
                     focalPlaneResolutionUnit = exifDetails.focalPlaneResolutionUnit
                     focalPlaneXResolution = exifDetails.focalPlaneXResolution
                     focalPlaneYResolution = exifDetails.focalPlaneYResolution
                     interopOffset = exifDetails.interopOffset
                     iso = exifDetails.iso
+                    lensModel = exifDetails.lensModel
+                    lightSource = exifDetails.lightSource
+                    maxApertureValue = exifDetails.maxApertureValue
                     meteringMode = exifDetails.meteringMode
                     sceneCaptureType = exifDetails.sceneCaptureType
+                    sceneType = exifDetails.sceneType
+                    sensingMethod = exifDetails.sensingMethod
                     shutterSpeedValue = exifDetails.shutterSpeedValue
                     subSecTime = exifDetails.subSecTime
+                    userComment = exifDetails.userComment
                     whiteBalance = exifDetails.whiteBalance
                     additionalProperties = exifDetails.additionalProperties.toMutableMap()
                 }
@@ -1585,6 +1771,20 @@ private constructor(
                  */
                 fun apertureValue(apertureValue: JsonField<Double>) = apply {
                     this.apertureValue = apertureValue
+                }
+
+                fun brightnessValue(brightnessValue: Double) =
+                    brightnessValue(JsonField.of(brightnessValue))
+
+                /**
+                 * Sets [Builder.brightnessValue] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.brightnessValue] with a well-typed [Double]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun brightnessValue(brightnessValue: JsonField<Double>) = apply {
+                    this.brightnessValue = brightnessValue
                 }
 
                 fun colorSpace(colorSpace: Long) = colorSpace(JsonField.of(colorSpace))
@@ -1770,17 +1970,31 @@ private constructor(
                  */
                 fun fNumber(fNumber: JsonField<Double>) = apply { this.fNumber = fNumber }
 
-                fun focalLength(focalLength: Long) = focalLength(JsonField.of(focalLength))
+                fun focalLength(focalLength: Double) = focalLength(JsonField.of(focalLength))
 
                 /**
                  * Sets [Builder.focalLength] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.focalLength] with a well-typed [Long] value
+                 * You should usually call [Builder.focalLength] with a well-typed [Double] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun focalLength(focalLength: JsonField<Long>) = apply {
+                fun focalLength(focalLength: JsonField<Double>) = apply {
                     this.focalLength = focalLength
+                }
+
+                fun focalLengthIn35mmFormat(focalLengthIn35mmFormat: Long) =
+                    focalLengthIn35mmFormat(JsonField.of(focalLengthIn35mmFormat))
+
+                /**
+                 * Sets [Builder.focalLengthIn35mmFormat] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.focalLengthIn35mmFormat] with a well-typed
+                 * [Long] value instead. This method is primarily for setting the field to an
+                 * undocumented or not yet supported value.
+                 */
+                fun focalLengthIn35mmFormat(focalLengthIn35mmFormat: JsonField<Long>) = apply {
+                    this.focalLengthIn35mmFormat = focalLengthIn35mmFormat
                 }
 
                 fun focalPlaneResolutionUnit(focalPlaneResolutionUnit: Long) =
@@ -1849,6 +2063,44 @@ private constructor(
                  */
                 fun iso(iso: JsonField<Long>) = apply { this.iso = iso }
 
+                fun lensModel(lensModel: String) = lensModel(JsonField.of(lensModel))
+
+                /**
+                 * Sets [Builder.lensModel] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.lensModel] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun lensModel(lensModel: JsonField<String>) = apply { this.lensModel = lensModel }
+
+                fun lightSource(lightSource: Long) = lightSource(JsonField.of(lightSource))
+
+                /**
+                 * Sets [Builder.lightSource] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.lightSource] with a well-typed [Long] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun lightSource(lightSource: JsonField<Long>) = apply {
+                    this.lightSource = lightSource
+                }
+
+                fun maxApertureValue(maxApertureValue: Double) =
+                    maxApertureValue(JsonField.of(maxApertureValue))
+
+                /**
+                 * Sets [Builder.maxApertureValue] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.maxApertureValue] with a well-typed [Double]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun maxApertureValue(maxApertureValue: JsonField<Double>) = apply {
+                    this.maxApertureValue = maxApertureValue
+                }
+
                 fun meteringMode(meteringMode: Long) = meteringMode(JsonField.of(meteringMode))
 
                 /**
@@ -1876,6 +2128,30 @@ private constructor(
                     this.sceneCaptureType = sceneCaptureType
                 }
 
+                fun sceneType(sceneType: String) = sceneType(JsonField.of(sceneType))
+
+                /**
+                 * Sets [Builder.sceneType] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.sceneType] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun sceneType(sceneType: JsonField<String>) = apply { this.sceneType = sceneType }
+
+                fun sensingMethod(sensingMethod: Long) = sensingMethod(JsonField.of(sensingMethod))
+
+                /**
+                 * Sets [Builder.sensingMethod] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.sensingMethod] with a well-typed [Long] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun sensingMethod(sensingMethod: JsonField<Long>) = apply {
+                    this.sensingMethod = sensingMethod
+                }
+
                 fun shutterSpeedValue(shutterSpeedValue: Double) =
                     shutterSpeedValue(JsonField.of(shutterSpeedValue))
 
@@ -1901,6 +2177,19 @@ private constructor(
                  */
                 fun subSecTime(subSecTime: JsonField<String>) = apply {
                     this.subSecTime = subSecTime
+                }
+
+                fun userComment(userComment: String) = userComment(JsonField.of(userComment))
+
+                /**
+                 * Sets [Builder.userComment] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.userComment] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun userComment(userComment: JsonField<String>) = apply {
+                    this.userComment = userComment
                 }
 
                 fun whiteBalance(whiteBalance: Long) = whiteBalance(JsonField.of(whiteBalance))
@@ -1946,6 +2235,7 @@ private constructor(
                 fun build(): ExifDetails =
                     ExifDetails(
                         apertureValue,
+                        brightnessValue,
                         colorSpace,
                         createDate,
                         customRendered,
@@ -1961,15 +2251,22 @@ private constructor(
                         flashpixVersion,
                         fNumber,
                         focalLength,
+                        focalLengthIn35mmFormat,
                         focalPlaneResolutionUnit,
                         focalPlaneXResolution,
                         focalPlaneYResolution,
                         interopOffset,
                         iso,
+                        lensModel,
+                        lightSource,
+                        maxApertureValue,
                         meteringMode,
                         sceneCaptureType,
+                        sceneType,
+                        sensingMethod,
                         shutterSpeedValue,
                         subSecTime,
+                        userComment,
                         whiteBalance,
                         additionalProperties.toMutableMap(),
                     )
@@ -1993,6 +2290,7 @@ private constructor(
                 }
 
                 apertureValue()
+                brightnessValue()
                 colorSpace()
                 createDate()
                 customRendered()
@@ -2008,15 +2306,22 @@ private constructor(
                 flashpixVersion()
                 fNumber()
                 focalLength()
+                focalLengthIn35mmFormat()
                 focalPlaneResolutionUnit()
                 focalPlaneXResolution()
                 focalPlaneYResolution()
                 interopOffset()
                 iso()
+                lensModel()
+                lightSource()
+                maxApertureValue()
                 meteringMode()
                 sceneCaptureType()
+                sceneType()
+                sensingMethod()
                 shutterSpeedValue()
                 subSecTime()
+                userComment()
                 whiteBalance()
                 validated = true
             }
@@ -2038,6 +2343,7 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (apertureValue.asKnown().isPresent) 1 else 0) +
+                    (if (brightnessValue.asKnown().isPresent) 1 else 0) +
                     (if (colorSpace.asKnown().isPresent) 1 else 0) +
                     (if (createDate.asKnown().isPresent) 1 else 0) +
                     (if (customRendered.asKnown().isPresent) 1 else 0) +
@@ -2053,15 +2359,22 @@ private constructor(
                     (if (flashpixVersion.asKnown().isPresent) 1 else 0) +
                     (if (fNumber.asKnown().isPresent) 1 else 0) +
                     (if (focalLength.asKnown().isPresent) 1 else 0) +
+                    (if (focalLengthIn35mmFormat.asKnown().isPresent) 1 else 0) +
                     (if (focalPlaneResolutionUnit.asKnown().isPresent) 1 else 0) +
                     (if (focalPlaneXResolution.asKnown().isPresent) 1 else 0) +
                     (if (focalPlaneYResolution.asKnown().isPresent) 1 else 0) +
                     (if (interopOffset.asKnown().isPresent) 1 else 0) +
                     (if (iso.asKnown().isPresent) 1 else 0) +
+                    (if (lensModel.asKnown().isPresent) 1 else 0) +
+                    (if (lightSource.asKnown().isPresent) 1 else 0) +
+                    (if (maxApertureValue.asKnown().isPresent) 1 else 0) +
                     (if (meteringMode.asKnown().isPresent) 1 else 0) +
                     (if (sceneCaptureType.asKnown().isPresent) 1 else 0) +
+                    (if (sceneType.asKnown().isPresent) 1 else 0) +
+                    (if (sensingMethod.asKnown().isPresent) 1 else 0) +
                     (if (shutterSpeedValue.asKnown().isPresent) 1 else 0) +
                     (if (subSecTime.asKnown().isPresent) 1 else 0) +
+                    (if (userComment.asKnown().isPresent) 1 else 0) +
                     (if (whiteBalance.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
@@ -2071,6 +2384,7 @@ private constructor(
 
                 return other is ExifDetails &&
                     apertureValue == other.apertureValue &&
+                    brightnessValue == other.brightnessValue &&
                     colorSpace == other.colorSpace &&
                     createDate == other.createDate &&
                     customRendered == other.customRendered &&
@@ -2086,15 +2400,22 @@ private constructor(
                     flashpixVersion == other.flashpixVersion &&
                     fNumber == other.fNumber &&
                     focalLength == other.focalLength &&
+                    focalLengthIn35mmFormat == other.focalLengthIn35mmFormat &&
                     focalPlaneResolutionUnit == other.focalPlaneResolutionUnit &&
                     focalPlaneXResolution == other.focalPlaneXResolution &&
                     focalPlaneYResolution == other.focalPlaneYResolution &&
                     interopOffset == other.interopOffset &&
                     iso == other.iso &&
+                    lensModel == other.lensModel &&
+                    lightSource == other.lightSource &&
+                    maxApertureValue == other.maxApertureValue &&
                     meteringMode == other.meteringMode &&
                     sceneCaptureType == other.sceneCaptureType &&
+                    sceneType == other.sceneType &&
+                    sensingMethod == other.sensingMethod &&
                     shutterSpeedValue == other.shutterSpeedValue &&
                     subSecTime == other.subSecTime &&
+                    userComment == other.userComment &&
                     whiteBalance == other.whiteBalance &&
                     additionalProperties == other.additionalProperties
             }
@@ -2102,6 +2423,7 @@ private constructor(
             private val hashCode: Int by lazy {
                 Objects.hash(
                     apertureValue,
+                    brightnessValue,
                     colorSpace,
                     createDate,
                     customRendered,
@@ -2117,15 +2439,22 @@ private constructor(
                     flashpixVersion,
                     fNumber,
                     focalLength,
+                    focalLengthIn35mmFormat,
                     focalPlaneResolutionUnit,
                     focalPlaneXResolution,
                     focalPlaneYResolution,
                     interopOffset,
                     iso,
+                    lensModel,
+                    lightSource,
+                    maxApertureValue,
                     meteringMode,
                     sceneCaptureType,
+                    sceneType,
+                    sensingMethod,
                     shutterSpeedValue,
                     subSecTime,
+                    userComment,
                     whiteBalance,
                     additionalProperties,
                 )
@@ -2134,29 +2463,243 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "ExifDetails{apertureValue=$apertureValue, colorSpace=$colorSpace, createDate=$createDate, customRendered=$customRendered, dateTimeOriginal=$dateTimeOriginal, exifImageHeight=$exifImageHeight, exifImageWidth=$exifImageWidth, exifVersion=$exifVersion, exposureCompensation=$exposureCompensation, exposureMode=$exposureMode, exposureProgram=$exposureProgram, exposureTime=$exposureTime, flash=$flash, flashpixVersion=$flashpixVersion, fNumber=$fNumber, focalLength=$focalLength, focalPlaneResolutionUnit=$focalPlaneResolutionUnit, focalPlaneXResolution=$focalPlaneXResolution, focalPlaneYResolution=$focalPlaneYResolution, interopOffset=$interopOffset, iso=$iso, meteringMode=$meteringMode, sceneCaptureType=$sceneCaptureType, shutterSpeedValue=$shutterSpeedValue, subSecTime=$subSecTime, whiteBalance=$whiteBalance, additionalProperties=$additionalProperties}"
+                "ExifDetails{apertureValue=$apertureValue, brightnessValue=$brightnessValue, colorSpace=$colorSpace, createDate=$createDate, customRendered=$customRendered, dateTimeOriginal=$dateTimeOriginal, exifImageHeight=$exifImageHeight, exifImageWidth=$exifImageWidth, exifVersion=$exifVersion, exposureCompensation=$exposureCompensation, exposureMode=$exposureMode, exposureProgram=$exposureProgram, exposureTime=$exposureTime, flash=$flash, flashpixVersion=$flashpixVersion, fNumber=$fNumber, focalLength=$focalLength, focalLengthIn35mmFormat=$focalLengthIn35mmFormat, focalPlaneResolutionUnit=$focalPlaneResolutionUnit, focalPlaneXResolution=$focalPlaneXResolution, focalPlaneYResolution=$focalPlaneYResolution, interopOffset=$interopOffset, iso=$iso, lensModel=$lensModel, lightSource=$lightSource, maxApertureValue=$maxApertureValue, meteringMode=$meteringMode, sceneCaptureType=$sceneCaptureType, sceneType=$sceneType, sensingMethod=$sensingMethod, shutterSpeedValue=$shutterSpeedValue, subSecTime=$subSecTime, userComment=$userComment, whiteBalance=$whiteBalance, additionalProperties=$additionalProperties}"
         }
 
         /** Object containing GPS information. */
         class Gps
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
+            private val gpsAltitude: JsonField<Double>,
+            private val gpsAltitudeRef: JsonField<Long>,
+            private val gpsDateStamp: JsonField<String>,
+            private val gpsImgDirection: JsonField<Double>,
+            private val gpsImgDirectionRef: JsonField<String>,
+            private val gpsLatitude: JsonField<List<Double>>,
+            private val gpsLatitudeRef: JsonField<String>,
+            private val gpsLongitude: JsonField<List<Double>>,
+            private val gpsLongitudeRef: JsonField<String>,
+            private val gpsTimeStamp: JsonField<List<Double>>,
             private val gpsVersionId: JsonField<List<Long>>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
             @JsonCreator
             private constructor(
+                @JsonProperty("GPSAltitude")
+                @ExcludeMissing
+                gpsAltitude: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("GPSAltitudeRef")
+                @ExcludeMissing
+                gpsAltitudeRef: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("GPSDateStamp")
+                @ExcludeMissing
+                gpsDateStamp: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("GPSImgDirection")
+                @ExcludeMissing
+                gpsImgDirection: JsonField<Double> = JsonMissing.of(),
+                @JsonProperty("GPSImgDirectionRef")
+                @ExcludeMissing
+                gpsImgDirectionRef: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("GPSLatitude")
+                @ExcludeMissing
+                gpsLatitude: JsonField<List<Double>> = JsonMissing.of(),
+                @JsonProperty("GPSLatitudeRef")
+                @ExcludeMissing
+                gpsLatitudeRef: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("GPSLongitude")
+                @ExcludeMissing
+                gpsLongitude: JsonField<List<Double>> = JsonMissing.of(),
+                @JsonProperty("GPSLongitudeRef")
+                @ExcludeMissing
+                gpsLongitudeRef: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("GPSTimeStamp")
+                @ExcludeMissing
+                gpsTimeStamp: JsonField<List<Double>> = JsonMissing.of(),
                 @JsonProperty("GPSVersionID")
                 @ExcludeMissing
-                gpsVersionId: JsonField<List<Long>> = JsonMissing.of()
-            ) : this(gpsVersionId, mutableMapOf())
+                gpsVersionId: JsonField<List<Long>> = JsonMissing.of(),
+            ) : this(
+                gpsAltitude,
+                gpsAltitudeRef,
+                gpsDateStamp,
+                gpsImgDirection,
+                gpsImgDirectionRef,
+                gpsLatitude,
+                gpsLatitudeRef,
+                gpsLongitude,
+                gpsLongitudeRef,
+                gpsTimeStamp,
+                gpsVersionId,
+                mutableMapOf(),
+            )
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsAltitude(): Optional<Double> = gpsAltitude.getOptional("GPSAltitude")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsAltitudeRef(): Optional<Long> = gpsAltitudeRef.getOptional("GPSAltitudeRef")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsDateStamp(): Optional<String> = gpsDateStamp.getOptional("GPSDateStamp")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsImgDirection(): Optional<Double> = gpsImgDirection.getOptional("GPSImgDirection")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsImgDirectionRef(): Optional<String> =
+                gpsImgDirectionRef.getOptional("GPSImgDirectionRef")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsLatitude(): Optional<List<Double>> = gpsLatitude.getOptional("GPSLatitude")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsLatitudeRef(): Optional<String> = gpsLatitudeRef.getOptional("GPSLatitudeRef")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsLongitude(): Optional<List<Double>> = gpsLongitude.getOptional("GPSLongitude")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsLongitudeRef(): Optional<String> = gpsLongitudeRef.getOptional("GPSLongitudeRef")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun gpsTimeStamp(): Optional<List<Double>> = gpsTimeStamp.getOptional("GPSTimeStamp")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
             fun gpsVersionId(): Optional<List<Long>> = gpsVersionId.getOptional("GPSVersionID")
+
+            /**
+             * Returns the raw JSON value of [gpsAltitude].
+             *
+             * Unlike [gpsAltitude], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("GPSAltitude")
+            @ExcludeMissing
+            fun _gpsAltitude(): JsonField<Double> = gpsAltitude
+
+            /**
+             * Returns the raw JSON value of [gpsAltitudeRef].
+             *
+             * Unlike [gpsAltitudeRef], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("GPSAltitudeRef")
+            @ExcludeMissing
+            fun _gpsAltitudeRef(): JsonField<Long> = gpsAltitudeRef
+
+            /**
+             * Returns the raw JSON value of [gpsDateStamp].
+             *
+             * Unlike [gpsDateStamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("GPSDateStamp")
+            @ExcludeMissing
+            fun _gpsDateStamp(): JsonField<String> = gpsDateStamp
+
+            /**
+             * Returns the raw JSON value of [gpsImgDirection].
+             *
+             * Unlike [gpsImgDirection], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("GPSImgDirection")
+            @ExcludeMissing
+            fun _gpsImgDirection(): JsonField<Double> = gpsImgDirection
+
+            /**
+             * Returns the raw JSON value of [gpsImgDirectionRef].
+             *
+             * Unlike [gpsImgDirectionRef], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("GPSImgDirectionRef")
+            @ExcludeMissing
+            fun _gpsImgDirectionRef(): JsonField<String> = gpsImgDirectionRef
+
+            /**
+             * Returns the raw JSON value of [gpsLatitude].
+             *
+             * Unlike [gpsLatitude], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("GPSLatitude")
+            @ExcludeMissing
+            fun _gpsLatitude(): JsonField<List<Double>> = gpsLatitude
+
+            /**
+             * Returns the raw JSON value of [gpsLatitudeRef].
+             *
+             * Unlike [gpsLatitudeRef], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("GPSLatitudeRef")
+            @ExcludeMissing
+            fun _gpsLatitudeRef(): JsonField<String> = gpsLatitudeRef
+
+            /**
+             * Returns the raw JSON value of [gpsLongitude].
+             *
+             * Unlike [gpsLongitude], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("GPSLongitude")
+            @ExcludeMissing
+            fun _gpsLongitude(): JsonField<List<Double>> = gpsLongitude
+
+            /**
+             * Returns the raw JSON value of [gpsLongitudeRef].
+             *
+             * Unlike [gpsLongitudeRef], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("GPSLongitudeRef")
+            @ExcludeMissing
+            fun _gpsLongitudeRef(): JsonField<String> = gpsLongitudeRef
+
+            /**
+             * Returns the raw JSON value of [gpsTimeStamp].
+             *
+             * Unlike [gpsTimeStamp], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("GPSTimeStamp")
+            @ExcludeMissing
+            fun _gpsTimeStamp(): JsonField<List<Double>> = gpsTimeStamp
 
             /**
              * Returns the raw JSON value of [gpsVersionId].
@@ -2189,13 +2732,206 @@ private constructor(
             /** A builder for [Gps]. */
             class Builder internal constructor() {
 
+                private var gpsAltitude: JsonField<Double> = JsonMissing.of()
+                private var gpsAltitudeRef: JsonField<Long> = JsonMissing.of()
+                private var gpsDateStamp: JsonField<String> = JsonMissing.of()
+                private var gpsImgDirection: JsonField<Double> = JsonMissing.of()
+                private var gpsImgDirectionRef: JsonField<String> = JsonMissing.of()
+                private var gpsLatitude: JsonField<MutableList<Double>>? = null
+                private var gpsLatitudeRef: JsonField<String> = JsonMissing.of()
+                private var gpsLongitude: JsonField<MutableList<Double>>? = null
+                private var gpsLongitudeRef: JsonField<String> = JsonMissing.of()
+                private var gpsTimeStamp: JsonField<MutableList<Double>>? = null
                 private var gpsVersionId: JsonField<MutableList<Long>>? = null
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(gps: Gps) = apply {
+                    gpsAltitude = gps.gpsAltitude
+                    gpsAltitudeRef = gps.gpsAltitudeRef
+                    gpsDateStamp = gps.gpsDateStamp
+                    gpsImgDirection = gps.gpsImgDirection
+                    gpsImgDirectionRef = gps.gpsImgDirectionRef
+                    gpsLatitude = gps.gpsLatitude.map { it.toMutableList() }
+                    gpsLatitudeRef = gps.gpsLatitudeRef
+                    gpsLongitude = gps.gpsLongitude.map { it.toMutableList() }
+                    gpsLongitudeRef = gps.gpsLongitudeRef
+                    gpsTimeStamp = gps.gpsTimeStamp.map { it.toMutableList() }
                     gpsVersionId = gps.gpsVersionId.map { it.toMutableList() }
                     additionalProperties = gps.additionalProperties.toMutableMap()
+                }
+
+                fun gpsAltitude(gpsAltitude: Double) = gpsAltitude(JsonField.of(gpsAltitude))
+
+                /**
+                 * Sets [Builder.gpsAltitude] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsAltitude] with a well-typed [Double] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun gpsAltitude(gpsAltitude: JsonField<Double>) = apply {
+                    this.gpsAltitude = gpsAltitude
+                }
+
+                fun gpsAltitudeRef(gpsAltitudeRef: Long) =
+                    gpsAltitudeRef(JsonField.of(gpsAltitudeRef))
+
+                /**
+                 * Sets [Builder.gpsAltitudeRef] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsAltitudeRef] with a well-typed [Long] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun gpsAltitudeRef(gpsAltitudeRef: JsonField<Long>) = apply {
+                    this.gpsAltitudeRef = gpsAltitudeRef
+                }
+
+                fun gpsDateStamp(gpsDateStamp: String) = gpsDateStamp(JsonField.of(gpsDateStamp))
+
+                /**
+                 * Sets [Builder.gpsDateStamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsDateStamp] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun gpsDateStamp(gpsDateStamp: JsonField<String>) = apply {
+                    this.gpsDateStamp = gpsDateStamp
+                }
+
+                fun gpsImgDirection(gpsImgDirection: Double) =
+                    gpsImgDirection(JsonField.of(gpsImgDirection))
+
+                /**
+                 * Sets [Builder.gpsImgDirection] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsImgDirection] with a well-typed [Double]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsImgDirection(gpsImgDirection: JsonField<Double>) = apply {
+                    this.gpsImgDirection = gpsImgDirection
+                }
+
+                fun gpsImgDirectionRef(gpsImgDirectionRef: String) =
+                    gpsImgDirectionRef(JsonField.of(gpsImgDirectionRef))
+
+                /**
+                 * Sets [Builder.gpsImgDirectionRef] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsImgDirectionRef] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsImgDirectionRef(gpsImgDirectionRef: JsonField<String>) = apply {
+                    this.gpsImgDirectionRef = gpsImgDirectionRef
+                }
+
+                fun gpsLatitude(gpsLatitude: List<Double>) = gpsLatitude(JsonField.of(gpsLatitude))
+
+                /**
+                 * Sets [Builder.gpsLatitude] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsLatitude] with a well-typed `List<Double>`
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsLatitude(gpsLatitude: JsonField<List<Double>>) = apply {
+                    this.gpsLatitude = gpsLatitude.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Double] to [Builder.gpsLatitude].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addGpsLatitude(gpsLatitude: Double) = apply {
+                    this.gpsLatitude =
+                        (this.gpsLatitude ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("gpsLatitude", it).add(gpsLatitude)
+                        }
+                }
+
+                fun gpsLatitudeRef(gpsLatitudeRef: String) =
+                    gpsLatitudeRef(JsonField.of(gpsLatitudeRef))
+
+                /**
+                 * Sets [Builder.gpsLatitudeRef] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsLatitudeRef] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun gpsLatitudeRef(gpsLatitudeRef: JsonField<String>) = apply {
+                    this.gpsLatitudeRef = gpsLatitudeRef
+                }
+
+                fun gpsLongitude(gpsLongitude: List<Double>) =
+                    gpsLongitude(JsonField.of(gpsLongitude))
+
+                /**
+                 * Sets [Builder.gpsLongitude] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsLongitude] with a well-typed `List<Double>`
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsLongitude(gpsLongitude: JsonField<List<Double>>) = apply {
+                    this.gpsLongitude = gpsLongitude.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Double] to [Builder.gpsLongitude].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addGpsLongitude(gpsLongitude: Double) = apply {
+                    this.gpsLongitude =
+                        (this.gpsLongitude ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("gpsLongitude", it).add(gpsLongitude)
+                        }
+                }
+
+                fun gpsLongitudeRef(gpsLongitudeRef: String) =
+                    gpsLongitudeRef(JsonField.of(gpsLongitudeRef))
+
+                /**
+                 * Sets [Builder.gpsLongitudeRef] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsLongitudeRef] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsLongitudeRef(gpsLongitudeRef: JsonField<String>) = apply {
+                    this.gpsLongitudeRef = gpsLongitudeRef
+                }
+
+                fun gpsTimeStamp(gpsTimeStamp: List<Double>) =
+                    gpsTimeStamp(JsonField.of(gpsTimeStamp))
+
+                /**
+                 * Sets [Builder.gpsTimeStamp] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.gpsTimeStamp] with a well-typed `List<Double>`
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun gpsTimeStamp(gpsTimeStamp: JsonField<List<Double>>) = apply {
+                    this.gpsTimeStamp = gpsTimeStamp.map { it.toMutableList() }
+                }
+
+                /**
+                 * Adds a single [Double] to [Builder.gpsTimeStamp].
+                 *
+                 * @throws IllegalStateException if the field was previously set to a non-list.
+                 */
+                fun addGpsTimeStamp(gpsTimeStamp: Double) = apply {
+                    this.gpsTimeStamp =
+                        (this.gpsTimeStamp ?: JsonField.of(mutableListOf())).also {
+                            checkKnown("gpsTimeStamp", it).add(gpsTimeStamp)
+                        }
                 }
 
                 fun gpsVersionId(gpsVersionId: List<Long>) =
@@ -2253,6 +2989,16 @@ private constructor(
                  */
                 fun build(): Gps =
                     Gps(
+                        gpsAltitude,
+                        gpsAltitudeRef,
+                        gpsDateStamp,
+                        gpsImgDirection,
+                        gpsImgDirectionRef,
+                        (gpsLatitude ?: JsonMissing.of()).map { it.toImmutable() },
+                        gpsLatitudeRef,
+                        (gpsLongitude ?: JsonMissing.of()).map { it.toImmutable() },
+                        gpsLongitudeRef,
+                        (gpsTimeStamp ?: JsonMissing.of()).map { it.toImmutable() },
                         (gpsVersionId ?: JsonMissing.of()).map { it.toImmutable() },
                         additionalProperties.toMutableMap(),
                     )
@@ -2275,6 +3021,16 @@ private constructor(
                     return@apply
                 }
 
+                gpsAltitude()
+                gpsAltitudeRef()
+                gpsDateStamp()
+                gpsImgDirection()
+                gpsImgDirectionRef()
+                gpsLatitude()
+                gpsLatitudeRef()
+                gpsLongitude()
+                gpsLongitudeRef()
+                gpsTimeStamp()
                 gpsVersionId()
                 validated = true
             }
@@ -2294,7 +3050,18 @@ private constructor(
              * Used for best match union deserialization.
              */
             @JvmSynthetic
-            internal fun validity(): Int = (gpsVersionId.asKnown().getOrNull()?.size ?: 0)
+            internal fun validity(): Int =
+                (if (gpsAltitude.asKnown().isPresent) 1 else 0) +
+                    (if (gpsAltitudeRef.asKnown().isPresent) 1 else 0) +
+                    (if (gpsDateStamp.asKnown().isPresent) 1 else 0) +
+                    (if (gpsImgDirection.asKnown().isPresent) 1 else 0) +
+                    (if (gpsImgDirectionRef.asKnown().isPresent) 1 else 0) +
+                    (gpsLatitude.asKnown().getOrNull()?.size ?: 0) +
+                    (if (gpsLatitudeRef.asKnown().isPresent) 1 else 0) +
+                    (gpsLongitude.asKnown().getOrNull()?.size ?: 0) +
+                    (if (gpsLongitudeRef.asKnown().isPresent) 1 else 0) +
+                    (gpsTimeStamp.asKnown().getOrNull()?.size ?: 0) +
+                    (gpsVersionId.asKnown().getOrNull()?.size ?: 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -2302,44 +3069,81 @@ private constructor(
                 }
 
                 return other is Gps &&
+                    gpsAltitude == other.gpsAltitude &&
+                    gpsAltitudeRef == other.gpsAltitudeRef &&
+                    gpsDateStamp == other.gpsDateStamp &&
+                    gpsImgDirection == other.gpsImgDirection &&
+                    gpsImgDirectionRef == other.gpsImgDirectionRef &&
+                    gpsLatitude == other.gpsLatitude &&
+                    gpsLatitudeRef == other.gpsLatitudeRef &&
+                    gpsLongitude == other.gpsLongitude &&
+                    gpsLongitudeRef == other.gpsLongitudeRef &&
+                    gpsTimeStamp == other.gpsTimeStamp &&
                     gpsVersionId == other.gpsVersionId &&
                     additionalProperties == other.additionalProperties
             }
 
-            private val hashCode: Int by lazy { Objects.hash(gpsVersionId, additionalProperties) }
+            private val hashCode: Int by lazy {
+                Objects.hash(
+                    gpsAltitude,
+                    gpsAltitudeRef,
+                    gpsDateStamp,
+                    gpsImgDirection,
+                    gpsImgDirectionRef,
+                    gpsLatitude,
+                    gpsLatitudeRef,
+                    gpsLongitude,
+                    gpsLongitudeRef,
+                    gpsTimeStamp,
+                    gpsVersionId,
+                    additionalProperties,
+                )
+            }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Gps{gpsVersionId=$gpsVersionId, additionalProperties=$additionalProperties}"
+                "Gps{gpsAltitude=$gpsAltitude, gpsAltitudeRef=$gpsAltitudeRef, gpsDateStamp=$gpsDateStamp, gpsImgDirection=$gpsImgDirection, gpsImgDirectionRef=$gpsImgDirectionRef, gpsLatitude=$gpsLatitude, gpsLatitudeRef=$gpsLatitudeRef, gpsLongitude=$gpsLongitude, gpsLongitudeRef=$gpsLongitudeRef, gpsTimeStamp=$gpsTimeStamp, gpsVersionId=$gpsVersionId, additionalProperties=$additionalProperties}"
         }
 
         /** Object containing EXIF image information. */
         class Image
         @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
+            private val artist: JsonField<String>,
+            private val copyright: JsonField<String>,
             private val exifOffset: JsonField<Long>,
             private val gpsInfo: JsonField<Long>,
+            private val imageDescription: JsonField<String>,
             private val make: JsonField<String>,
             private val model: JsonField<String>,
             private val modifyDate: JsonField<String>,
             private val orientation: JsonField<Long>,
             private val resolutionUnit: JsonField<Long>,
             private val software: JsonField<String>,
-            private val xResolution: JsonField<Long>,
+            private val xResolution: JsonField<Double>,
             private val yCbCrPositioning: JsonField<Long>,
-            private val yResolution: JsonField<Long>,
+            private val yResolution: JsonField<Double>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
             @JsonCreator
             private constructor(
+                @JsonProperty("Artist")
+                @ExcludeMissing
+                artist: JsonField<String> = JsonMissing.of(),
+                @JsonProperty("Copyright")
+                @ExcludeMissing
+                copyright: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("ExifOffset")
                 @ExcludeMissing
                 exifOffset: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("GPSInfo")
                 @ExcludeMissing
                 gpsInfo: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("ImageDescription")
+                @ExcludeMissing
+                imageDescription: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("Make") @ExcludeMissing make: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("Model") @ExcludeMissing model: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("ModifyDate")
@@ -2356,16 +3160,19 @@ private constructor(
                 software: JsonField<String> = JsonMissing.of(),
                 @JsonProperty("XResolution")
                 @ExcludeMissing
-                xResolution: JsonField<Long> = JsonMissing.of(),
+                xResolution: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("YCbCrPositioning")
                 @ExcludeMissing
                 yCbCrPositioning: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("YResolution")
                 @ExcludeMissing
-                yResolution: JsonField<Long> = JsonMissing.of(),
+                yResolution: JsonField<Double> = JsonMissing.of(),
             ) : this(
+                artist,
+                copyright,
                 exifOffset,
                 gpsInfo,
+                imageDescription,
                 make,
                 model,
                 modifyDate,
@@ -2382,6 +3189,18 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
+            fun artist(): Optional<String> = artist.getOptional("Artist")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun copyright(): Optional<String> = copyright.getOptional("Copyright")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
             fun exifOffset(): Optional<Long> = exifOffset.getOptional("ExifOffset")
 
             /**
@@ -2389,6 +3208,13 @@ private constructor(
              *   if the server responded with an unexpected value).
              */
             fun gpsInfo(): Optional<Long> = gpsInfo.getOptional("GPSInfo")
+
+            /**
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun imageDescription(): Optional<String> =
+                imageDescription.getOptional("ImageDescription")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -2430,7 +3256,7 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun xResolution(): Optional<Long> = xResolution.getOptional("XResolution")
+            fun xResolution(): Optional<Double> = xResolution.getOptional("XResolution")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
@@ -2443,7 +3269,24 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun yResolution(): Optional<Long> = yResolution.getOptional("YResolution")
+            fun yResolution(): Optional<Double> = yResolution.getOptional("YResolution")
+
+            /**
+             * Returns the raw JSON value of [artist].
+             *
+             * Unlike [artist], this method doesn't throw if the JSON field has an unexpected type.
+             */
+            @JsonProperty("Artist") @ExcludeMissing fun _artist(): JsonField<String> = artist
+
+            /**
+             * Returns the raw JSON value of [copyright].
+             *
+             * Unlike [copyright], this method doesn't throw if the JSON field has an unexpected
+             * type.
+             */
+            @JsonProperty("Copyright")
+            @ExcludeMissing
+            fun _copyright(): JsonField<String> = copyright
 
             /**
              * Returns the raw JSON value of [exifOffset].
@@ -2461,6 +3304,16 @@ private constructor(
              * Unlike [gpsInfo], this method doesn't throw if the JSON field has an unexpected type.
              */
             @JsonProperty("GPSInfo") @ExcludeMissing fun _gpsInfo(): JsonField<Long> = gpsInfo
+
+            /**
+             * Returns the raw JSON value of [imageDescription].
+             *
+             * Unlike [imageDescription], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("ImageDescription")
+            @ExcludeMissing
+            fun _imageDescription(): JsonField<String> = imageDescription
 
             /**
              * Returns the raw JSON value of [make].
@@ -2522,7 +3375,7 @@ private constructor(
              */
             @JsonProperty("XResolution")
             @ExcludeMissing
-            fun _xResolution(): JsonField<Long> = xResolution
+            fun _xResolution(): JsonField<Double> = xResolution
 
             /**
              * Returns the raw JSON value of [yCbCrPositioning].
@@ -2542,7 +3395,7 @@ private constructor(
              */
             @JsonProperty("YResolution")
             @ExcludeMissing
-            fun _yResolution(): JsonField<Long> = yResolution
+            fun _yResolution(): JsonField<Double> = yResolution
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -2565,23 +3418,29 @@ private constructor(
             /** A builder for [Image]. */
             class Builder internal constructor() {
 
+                private var artist: JsonField<String> = JsonMissing.of()
+                private var copyright: JsonField<String> = JsonMissing.of()
                 private var exifOffset: JsonField<Long> = JsonMissing.of()
                 private var gpsInfo: JsonField<Long> = JsonMissing.of()
+                private var imageDescription: JsonField<String> = JsonMissing.of()
                 private var make: JsonField<String> = JsonMissing.of()
                 private var model: JsonField<String> = JsonMissing.of()
                 private var modifyDate: JsonField<String> = JsonMissing.of()
                 private var orientation: JsonField<Long> = JsonMissing.of()
                 private var resolutionUnit: JsonField<Long> = JsonMissing.of()
                 private var software: JsonField<String> = JsonMissing.of()
-                private var xResolution: JsonField<Long> = JsonMissing.of()
+                private var xResolution: JsonField<Double> = JsonMissing.of()
                 private var yCbCrPositioning: JsonField<Long> = JsonMissing.of()
-                private var yResolution: JsonField<Long> = JsonMissing.of()
+                private var yResolution: JsonField<Double> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(image: Image) = apply {
+                    artist = image.artist
+                    copyright = image.copyright
                     exifOffset = image.exifOffset
                     gpsInfo = image.gpsInfo
+                    imageDescription = image.imageDescription
                     make = image.make
                     model = image.model
                     modifyDate = image.modifyDate
@@ -2593,6 +3452,28 @@ private constructor(
                     yResolution = image.yResolution
                     additionalProperties = image.additionalProperties.toMutableMap()
                 }
+
+                fun artist(artist: String) = artist(JsonField.of(artist))
+
+                /**
+                 * Sets [Builder.artist] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.artist] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun artist(artist: JsonField<String>) = apply { this.artist = artist }
+
+                fun copyright(copyright: String) = copyright(JsonField.of(copyright))
+
+                /**
+                 * Sets [Builder.copyright] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.copyright] with a well-typed [String] value
+                 * instead. This method is primarily for setting the field to an undocumented or not
+                 * yet supported value.
+                 */
+                fun copyright(copyright: JsonField<String>) = apply { this.copyright = copyright }
 
                 fun exifOffset(exifOffset: Long) = exifOffset(JsonField.of(exifOffset))
 
@@ -2615,6 +3496,20 @@ private constructor(
                  * supported value.
                  */
                 fun gpsInfo(gpsInfo: JsonField<Long>) = apply { this.gpsInfo = gpsInfo }
+
+                fun imageDescription(imageDescription: String) =
+                    imageDescription(JsonField.of(imageDescription))
+
+                /**
+                 * Sets [Builder.imageDescription] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.imageDescription] with a well-typed [String]
+                 * value instead. This method is primarily for setting the field to an undocumented
+                 * or not yet supported value.
+                 */
+                fun imageDescription(imageDescription: JsonField<String>) = apply {
+                    this.imageDescription = imageDescription
+                }
 
                 fun make(make: String) = make(JsonField.of(make))
 
@@ -2689,16 +3584,16 @@ private constructor(
                  */
                 fun software(software: JsonField<String>) = apply { this.software = software }
 
-                fun xResolution(xResolution: Long) = xResolution(JsonField.of(xResolution))
+                fun xResolution(xResolution: Double) = xResolution(JsonField.of(xResolution))
 
                 /**
                  * Sets [Builder.xResolution] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.xResolution] with a well-typed [Long] value
+                 * You should usually call [Builder.xResolution] with a well-typed [Double] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun xResolution(xResolution: JsonField<Long>) = apply {
+                fun xResolution(xResolution: JsonField<Double>) = apply {
                     this.xResolution = xResolution
                 }
 
@@ -2716,16 +3611,16 @@ private constructor(
                     this.yCbCrPositioning = yCbCrPositioning
                 }
 
-                fun yResolution(yResolution: Long) = yResolution(JsonField.of(yResolution))
+                fun yResolution(yResolution: Double) = yResolution(JsonField.of(yResolution))
 
                 /**
                  * Sets [Builder.yResolution] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.yResolution] with a well-typed [Long] value
+                 * You should usually call [Builder.yResolution] with a well-typed [Double] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun yResolution(yResolution: JsonField<Long>) = apply {
+                fun yResolution(yResolution: JsonField<Double>) = apply {
                     this.yResolution = yResolution
                 }
 
@@ -2758,8 +3653,11 @@ private constructor(
                  */
                 fun build(): Image =
                     Image(
+                        artist,
+                        copyright,
                         exifOffset,
                         gpsInfo,
+                        imageDescription,
                         make,
                         model,
                         modifyDate,
@@ -2790,8 +3688,11 @@ private constructor(
                     return@apply
                 }
 
+                artist()
+                copyright()
                 exifOffset()
                 gpsInfo()
+                imageDescription()
                 make()
                 model()
                 modifyDate()
@@ -2820,8 +3721,11 @@ private constructor(
              */
             @JvmSynthetic
             internal fun validity(): Int =
-                (if (exifOffset.asKnown().isPresent) 1 else 0) +
+                (if (artist.asKnown().isPresent) 1 else 0) +
+                    (if (copyright.asKnown().isPresent) 1 else 0) +
+                    (if (exifOffset.asKnown().isPresent) 1 else 0) +
                     (if (gpsInfo.asKnown().isPresent) 1 else 0) +
+                    (if (imageDescription.asKnown().isPresent) 1 else 0) +
                     (if (make.asKnown().isPresent) 1 else 0) +
                     (if (model.asKnown().isPresent) 1 else 0) +
                     (if (modifyDate.asKnown().isPresent) 1 else 0) +
@@ -2838,8 +3742,11 @@ private constructor(
                 }
 
                 return other is Image &&
+                    artist == other.artist &&
+                    copyright == other.copyright &&
                     exifOffset == other.exifOffset &&
                     gpsInfo == other.gpsInfo &&
+                    imageDescription == other.imageDescription &&
                     make == other.make &&
                     model == other.model &&
                     modifyDate == other.modifyDate &&
@@ -2854,8 +3761,11 @@ private constructor(
 
             private val hashCode: Int by lazy {
                 Objects.hash(
+                    artist,
+                    copyright,
                     exifOffset,
                     gpsInfo,
+                    imageDescription,
                     make,
                     model,
                     modifyDate,
@@ -2872,7 +3782,7 @@ private constructor(
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Image{exifOffset=$exifOffset, gpsInfo=$gpsInfo, make=$make, model=$model, modifyDate=$modifyDate, orientation=$orientation, resolutionUnit=$resolutionUnit, software=$software, xResolution=$xResolution, yCbCrPositioning=$yCbCrPositioning, yResolution=$yResolution, additionalProperties=$additionalProperties}"
+                "Image{artist=$artist, copyright=$copyright, exifOffset=$exifOffset, gpsInfo=$gpsInfo, imageDescription=$imageDescription, make=$make, model=$model, modifyDate=$modifyDate, orientation=$orientation, resolutionUnit=$resolutionUnit, software=$software, xResolution=$xResolution, yCbCrPositioning=$yCbCrPositioning, yResolution=$yResolution, additionalProperties=$additionalProperties}"
         }
 
         /** JSON object. */
@@ -3203,8 +4113,8 @@ private constructor(
             private val resolutionUnit: JsonField<Long>,
             private val thumbnailLength: JsonField<Long>,
             private val thumbnailOffset: JsonField<Long>,
-            private val xResolution: JsonField<Long>,
-            private val yResolution: JsonField<Long>,
+            private val xResolution: JsonField<Double>,
+            private val yResolution: JsonField<Double>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -3224,10 +4134,10 @@ private constructor(
                 thumbnailOffset: JsonField<Long> = JsonMissing.of(),
                 @JsonProperty("XResolution")
                 @ExcludeMissing
-                xResolution: JsonField<Long> = JsonMissing.of(),
+                xResolution: JsonField<Double> = JsonMissing.of(),
                 @JsonProperty("YResolution")
                 @ExcludeMissing
-                yResolution: JsonField<Long> = JsonMissing.of(),
+                yResolution: JsonField<Double> = JsonMissing.of(),
             ) : this(
                 compression,
                 resolutionUnit,
@@ -3266,13 +4176,13 @@ private constructor(
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun xResolution(): Optional<Long> = xResolution.getOptional("XResolution")
+            fun xResolution(): Optional<Double> = xResolution.getOptional("XResolution")
 
             /**
              * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
              *   if the server responded with an unexpected value).
              */
-            fun yResolution(): Optional<Long> = yResolution.getOptional("YResolution")
+            fun yResolution(): Optional<Double> = yResolution.getOptional("YResolution")
 
             /**
              * Returns the raw JSON value of [compression].
@@ -3322,7 +4232,7 @@ private constructor(
              */
             @JsonProperty("XResolution")
             @ExcludeMissing
-            fun _xResolution(): JsonField<Long> = xResolution
+            fun _xResolution(): JsonField<Double> = xResolution
 
             /**
              * Returns the raw JSON value of [yResolution].
@@ -3332,7 +4242,7 @@ private constructor(
              */
             @JsonProperty("YResolution")
             @ExcludeMissing
-            fun _yResolution(): JsonField<Long> = yResolution
+            fun _yResolution(): JsonField<Double> = yResolution
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -3359,8 +4269,8 @@ private constructor(
                 private var resolutionUnit: JsonField<Long> = JsonMissing.of()
                 private var thumbnailLength: JsonField<Long> = JsonMissing.of()
                 private var thumbnailOffset: JsonField<Long> = JsonMissing.of()
-                private var xResolution: JsonField<Long> = JsonMissing.of()
-                private var yResolution: JsonField<Long> = JsonMissing.of()
+                private var xResolution: JsonField<Double> = JsonMissing.of()
+                private var yResolution: JsonField<Double> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -3429,29 +4339,29 @@ private constructor(
                     this.thumbnailOffset = thumbnailOffset
                 }
 
-                fun xResolution(xResolution: Long) = xResolution(JsonField.of(xResolution))
+                fun xResolution(xResolution: Double) = xResolution(JsonField.of(xResolution))
 
                 /**
                  * Sets [Builder.xResolution] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.xResolution] with a well-typed [Long] value
+                 * You should usually call [Builder.xResolution] with a well-typed [Double] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun xResolution(xResolution: JsonField<Long>) = apply {
+                fun xResolution(xResolution: JsonField<Double>) = apply {
                     this.xResolution = xResolution
                 }
 
-                fun yResolution(yResolution: Long) = yResolution(JsonField.of(yResolution))
+                fun yResolution(yResolution: Double) = yResolution(JsonField.of(yResolution))
 
                 /**
                  * Sets [Builder.yResolution] to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.yResolution] with a well-typed [Long] value
+                 * You should usually call [Builder.yResolution] with a well-typed [Double] value
                  * instead. This method is primarily for setting the field to an undocumented or not
                  * yet supported value.
                  */
-                fun yResolution(yResolution: JsonField<Long>) = apply {
+                fun yResolution(yResolution: JsonField<Double>) = apply {
                     this.yResolution = yResolution
                 }
 
