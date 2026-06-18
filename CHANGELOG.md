@@ -1,5 +1,18 @@
 # Changelog
 
+## 3.3.0 (2026-06-18)
+
+Full Changelog: [v3.2.0...v3.3.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.2.0...v3.3.0)
+
+### Features
+
+* **origins:** add useIAMRole for IAM role authentication ([621b8b9](https://github.com/imagekit-developer/imagekit-java/commit/621b8b9c981f03458c836ba5fc167cd77d70b008))
+
+
+### Documentation
+
+* update default value in description for intensity in colorize transformation ([b7bae14](https://github.com/imagekit-developer/imagekit-java/commit/b7bae14adf3219aac909605d951a37e991d0ff8d))
+
 ## [3.2.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.1.2...v3.2.0) (2026-06-03)
 
 
