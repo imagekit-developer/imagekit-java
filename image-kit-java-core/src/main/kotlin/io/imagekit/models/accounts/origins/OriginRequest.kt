@@ -411,6 +411,7 @@ private constructor(
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val prefix: JsonField<String>,
+        private val useIamRole: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -432,6 +433,9 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("useIAMRole")
+            @ExcludeMissing
+            useIamRole: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
             accessKey,
             bucket,
@@ -441,11 +445,12 @@ private constructor(
             baseUrlForCanonicalHeader,
             includeCanonicalHeader,
             prefix,
+            useIamRole,
             mutableMapOf(),
         )
 
         /**
-         * Access key for the bucket.
+         * Access key for the bucket. When `useIAMRole` is `true`, send an empty string.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -469,7 +474,7 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Secret key for the bucket.
+         * Secret key for the bucket. When `useIAMRole` is `true`, send an empty string.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -512,6 +517,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun prefix(): Optional<String> = prefix.getOptional("prefix")
+
+        /**
+         * Use IAM role for authentication instead of access/secret keys. When set to `true`, send
+         * an empty string for both `accessKey` and `secretKey`.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun useIamRole(): Optional<Boolean> = useIamRole.getOptional("useIAMRole")
 
         /**
          * Returns the raw JSON value of [accessKey].
@@ -568,6 +582,15 @@ private constructor(
          */
         @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
+        /**
+         * Returns the raw JSON value of [useIamRole].
+         *
+         * Unlike [useIamRole], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("useIAMRole")
+        @ExcludeMissing
+        fun _useIamRole(): JsonField<Boolean> = useIamRole
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -607,6 +630,7 @@ private constructor(
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
             private var prefix: JsonField<String> = JsonMissing.of()
+            private var useIamRole: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -619,10 +643,11 @@ private constructor(
                 baseUrlForCanonicalHeader = s3.baseUrlForCanonicalHeader
                 includeCanonicalHeader = s3.includeCanonicalHeader
                 prefix = s3.prefix
+                useIamRole = s3.useIamRole
                 additionalProperties = s3.additionalProperties.toMutableMap()
             }
 
-            /** Access key for the bucket. */
+            /** Access key for the bucket. When `useIAMRole` is `true`, send an empty string. */
             fun accessKey(accessKey: String) = accessKey(JsonField.of(accessKey))
 
             /**
@@ -658,7 +683,7 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            /** Secret key for the bucket. */
+            /** Secret key for the bucket. When `useIAMRole` is `true`, send an empty string. */
             fun secretKey(secretKey: String) = secretKey(JsonField.of(secretKey))
 
             /**
@@ -726,6 +751,21 @@ private constructor(
              */
             fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
+            /**
+             * Use IAM role for authentication instead of access/secret keys. When set to `true`,
+             * send an empty string for both `accessKey` and `secretKey`.
+             */
+            fun useIamRole(useIamRole: Boolean) = useIamRole(JsonField.of(useIamRole))
+
+            /**
+             * Sets [Builder.useIamRole] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.useIamRole] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun useIamRole(useIamRole: JsonField<Boolean>) = apply { this.useIamRole = useIamRole }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -770,6 +810,7 @@ private constructor(
                     baseUrlForCanonicalHeader,
                     includeCanonicalHeader,
                     prefix,
+                    useIamRole,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -802,6 +843,7 @@ private constructor(
             baseUrlForCanonicalHeader()
             includeCanonicalHeader()
             prefix()
+            useIamRole()
             validated = true
         }
 
@@ -828,7 +870,8 @@ private constructor(
                 type.let { if (it == JsonValue.from("S3")) 1 else 0 } +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0)
+                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (useIamRole.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -844,6 +887,7 @@ private constructor(
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
                 includeCanonicalHeader == other.includeCanonicalHeader &&
                 prefix == other.prefix &&
+                useIamRole == other.useIamRole &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -857,6 +901,7 @@ private constructor(
                 baseUrlForCanonicalHeader,
                 includeCanonicalHeader,
                 prefix,
+                useIamRole,
                 additionalProperties,
             )
         }
@@ -864,7 +909,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "S3{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
+            "S3{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, useIamRole=$useIamRole, additionalProperties=$additionalProperties}"
     }
 
     class S3Compatible
@@ -1431,6 +1476,7 @@ private constructor(
         private val baseUrlForCanonicalHeader: JsonField<String>,
         private val includeCanonicalHeader: JsonField<Boolean>,
         private val prefix: JsonField<String>,
+        private val useIamRole: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -1452,6 +1498,9 @@ private constructor(
             @ExcludeMissing
             includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("prefix") @ExcludeMissing prefix: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("useIAMRole")
+            @ExcludeMissing
+            useIamRole: JsonField<Boolean> = JsonMissing.of(),
         ) : this(
             accessKey,
             bucket,
@@ -1461,11 +1510,12 @@ private constructor(
             baseUrlForCanonicalHeader,
             includeCanonicalHeader,
             prefix,
+            useIamRole,
             mutableMapOf(),
         )
 
         /**
-         * Access key for the bucket.
+         * Access key for the bucket. When `useIAMRole` is `true`, send an empty string.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1489,7 +1539,7 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * Secret key for the bucket.
+         * Secret key for the bucket. When `useIAMRole` is `true`, send an empty string.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -1532,6 +1582,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun prefix(): Optional<String> = prefix.getOptional("prefix")
+
+        /**
+         * Use IAM role for authentication instead of access/secret keys. When set to `true`, send
+         * an empty string for both `accessKey` and `secretKey`.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun useIamRole(): Optional<Boolean> = useIamRole.getOptional("useIAMRole")
 
         /**
          * Returns the raw JSON value of [accessKey].
@@ -1588,6 +1647,15 @@ private constructor(
          */
         @JsonProperty("prefix") @ExcludeMissing fun _prefix(): JsonField<String> = prefix
 
+        /**
+         * Returns the raw JSON value of [useIamRole].
+         *
+         * Unlike [useIamRole], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("useIAMRole")
+        @ExcludeMissing
+        fun _useIamRole(): JsonField<Boolean> = useIamRole
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -1627,6 +1695,7 @@ private constructor(
             private var baseUrlForCanonicalHeader: JsonField<String> = JsonMissing.of()
             private var includeCanonicalHeader: JsonField<Boolean> = JsonMissing.of()
             private var prefix: JsonField<String> = JsonMissing.of()
+            private var useIamRole: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -1639,10 +1708,11 @@ private constructor(
                 baseUrlForCanonicalHeader = cloudinaryBackup.baseUrlForCanonicalHeader
                 includeCanonicalHeader = cloudinaryBackup.includeCanonicalHeader
                 prefix = cloudinaryBackup.prefix
+                useIamRole = cloudinaryBackup.useIamRole
                 additionalProperties = cloudinaryBackup.additionalProperties.toMutableMap()
             }
 
-            /** Access key for the bucket. */
+            /** Access key for the bucket. When `useIAMRole` is `true`, send an empty string. */
             fun accessKey(accessKey: String) = accessKey(JsonField.of(accessKey))
 
             /**
@@ -1678,7 +1748,7 @@ private constructor(
              */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
-            /** Secret key for the bucket. */
+            /** Secret key for the bucket. When `useIAMRole` is `true`, send an empty string. */
             fun secretKey(secretKey: String) = secretKey(JsonField.of(secretKey))
 
             /**
@@ -1746,6 +1816,21 @@ private constructor(
              */
             fun prefix(prefix: JsonField<String>) = apply { this.prefix = prefix }
 
+            /**
+             * Use IAM role for authentication instead of access/secret keys. When set to `true`,
+             * send an empty string for both `accessKey` and `secretKey`.
+             */
+            fun useIamRole(useIamRole: Boolean) = useIamRole(JsonField.of(useIamRole))
+
+            /**
+             * Sets [Builder.useIamRole] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.useIamRole] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun useIamRole(useIamRole: JsonField<Boolean>) = apply { this.useIamRole = useIamRole }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1790,6 +1875,7 @@ private constructor(
                     baseUrlForCanonicalHeader,
                     includeCanonicalHeader,
                     prefix,
+                    useIamRole,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1822,6 +1908,7 @@ private constructor(
             baseUrlForCanonicalHeader()
             includeCanonicalHeader()
             prefix()
+            useIamRole()
             validated = true
         }
 
@@ -1848,7 +1935,8 @@ private constructor(
                 type.let { if (it == JsonValue.from("CLOUDINARY_BACKUP")) 1 else 0 } +
                 (if (baseUrlForCanonicalHeader.asKnown().isPresent) 1 else 0) +
                 (if (includeCanonicalHeader.asKnown().isPresent) 1 else 0) +
-                (if (prefix.asKnown().isPresent) 1 else 0)
+                (if (prefix.asKnown().isPresent) 1 else 0) +
+                (if (useIamRole.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -1864,6 +1952,7 @@ private constructor(
                 baseUrlForCanonicalHeader == other.baseUrlForCanonicalHeader &&
                 includeCanonicalHeader == other.includeCanonicalHeader &&
                 prefix == other.prefix &&
+                useIamRole == other.useIamRole &&
                 additionalProperties == other.additionalProperties
         }
 
@@ -1877,6 +1966,7 @@ private constructor(
                 baseUrlForCanonicalHeader,
                 includeCanonicalHeader,
                 prefix,
+                useIamRole,
                 additionalProperties,
             )
         }
@@ -1884,7 +1974,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "CloudinaryBackup{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, additionalProperties=$additionalProperties}"
+            "CloudinaryBackup{accessKey=$accessKey, bucket=$bucket, name=$name, secretKey=$secretKey, type=$type, baseUrlForCanonicalHeader=$baseUrlForCanonicalHeader, includeCanonicalHeader=$includeCanonicalHeader, prefix=$prefix, useIamRole=$useIamRole, additionalProperties=$additionalProperties}"
     }
 
     class WebFolder

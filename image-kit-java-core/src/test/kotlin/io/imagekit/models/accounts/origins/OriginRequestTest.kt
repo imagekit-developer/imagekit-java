@@ -25,6 +25,7 @@ internal class OriginRequestTest {
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .includeCanonicalHeader(false)
                 .prefix("raw-assets")
+                .useIamRole(true)
                 .build()
 
         val originRequest = OriginRequest.ofS3(s3)
@@ -52,6 +53,7 @@ internal class OriginRequestTest {
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .includeCanonicalHeader(false)
                     .prefix("raw-assets")
+                    .useIamRole(true)
                     .build()
             )
 
@@ -129,6 +131,7 @@ internal class OriginRequestTest {
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
                 .includeCanonicalHeader(false)
                 .prefix("raw-assets")
+                .useIamRole(true)
                 .build()
 
         val originRequest = OriginRequest.ofCloudinaryBackup(cloudinaryBackup)
@@ -156,6 +159,7 @@ internal class OriginRequestTest {
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .includeCanonicalHeader(false)
                     .prefix("raw-assets")
+                    .useIamRole(true)
                     .build()
             )
 

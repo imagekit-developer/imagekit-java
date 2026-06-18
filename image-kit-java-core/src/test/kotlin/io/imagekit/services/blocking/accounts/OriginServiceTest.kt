@@ -30,6 +30,7 @@ internal class OriginServiceTest {
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
                     .includeCanonicalHeader(false)
                     .prefix("images")
+                    .useIamRole(true)
                     .build()
             )
 
@@ -59,6 +60,7 @@ internal class OriginServiceTest {
                             .baseUrlForCanonicalHeader("https://cdn.example.com")
                             .includeCanonicalHeader(false)
                             .prefix("images")
+                            .useIamRole(true)
                             .build()
                     )
                     .build()
