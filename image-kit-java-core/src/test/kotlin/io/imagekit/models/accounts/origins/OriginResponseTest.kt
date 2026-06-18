@@ -24,6 +24,7 @@ internal class OriginResponseTest {
                 .name("US S3 Storage")
                 .prefix("raw-assets")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .useIamRole(true)
                 .build()
 
         val originResponse = OriginResponse.ofS3(s3)
@@ -50,6 +51,7 @@ internal class OriginResponseTest {
                     .name("US S3 Storage")
                     .prefix("raw-assets")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .useIamRole(true)
                     .build()
             )
 
@@ -124,6 +126,7 @@ internal class OriginResponseTest {
                 .name("US S3 Storage")
                 .prefix("raw-assets")
                 .baseUrlForCanonicalHeader("https://cdn.example.com")
+                .useIamRole(true)
                 .build()
 
         val originResponse = OriginResponse.ofCloudinaryBackup(cloudinaryBackup)
@@ -150,6 +153,7 @@ internal class OriginResponseTest {
                     .name("US S3 Storage")
                     .prefix("raw-assets")
                     .baseUrlForCanonicalHeader("https://cdn.example.com")
+                    .useIamRole(true)
                     .build()
             )
 
