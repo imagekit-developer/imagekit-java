@@ -5,6 +5,7 @@ package io.imagekit.services.async
 import io.imagekit.core.ClientOptions
 import io.imagekit.services.async.accounts.OriginServiceAsync
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsync
+import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsync
 import io.imagekit.services.async.accounts.UsageServiceAsync
 import java.util.function.Consumer
 
@@ -23,6 +24,8 @@ interface AccountServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): AccountServiceAsync
 
     fun usage(): UsageServiceAsync
+
+    fun usageAnalytics(): UsageAnalyticsServiceAsync
 
     fun origins(): OriginServiceAsync
 
@@ -43,6 +46,8 @@ interface AccountServiceAsync {
         ): AccountServiceAsync.WithRawResponse
 
         fun usage(): UsageServiceAsync.WithRawResponse
+
+        fun usageAnalytics(): UsageAnalyticsServiceAsync.WithRawResponse
 
         fun origins(): OriginServiceAsync.WithRawResponse
 

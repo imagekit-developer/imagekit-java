@@ -5,6 +5,7 @@ package io.imagekit.services.blocking
 import io.imagekit.core.ClientOptions
 import io.imagekit.services.blocking.accounts.OriginService
 import io.imagekit.services.blocking.accounts.UrlEndpointService
+import io.imagekit.services.blocking.accounts.UsageAnalyticsService
 import io.imagekit.services.blocking.accounts.UsageService
 import java.util.function.Consumer
 
@@ -24,6 +25,8 @@ interface AccountService {
 
     fun usage(): UsageService
 
+    fun usageAnalytics(): UsageAnalyticsService
+
     fun origins(): OriginService
 
     fun urlEndpoints(): UrlEndpointService
@@ -39,6 +42,8 @@ interface AccountService {
         fun withOptions(modifier: Consumer<ClientOptions.Builder>): AccountService.WithRawResponse
 
         fun usage(): UsageService.WithRawResponse
+
+        fun usageAnalytics(): UsageAnalyticsService.WithRawResponse
 
         fun origins(): OriginService.WithRawResponse
 
