@@ -7,6 +7,8 @@ import io.imagekit.services.async.accounts.OriginServiceAsync
 import io.imagekit.services.async.accounts.OriginServiceAsyncImpl
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsync
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsyncImpl
+import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsync
+import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsyncImpl
 import io.imagekit.services.async.accounts.UsageServiceAsync
 import io.imagekit.services.async.accounts.UsageServiceAsyncImpl
 import java.util.function.Consumer
@@ -19,6 +21,10 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
     }
 
     private val usage: UsageServiceAsync by lazy { UsageServiceAsyncImpl(clientOptions) }
+
+    private val usageAnalytics: UsageAnalyticsServiceAsync by lazy {
+        UsageAnalyticsServiceAsyncImpl(clientOptions)
+    }
 
     private val origins: OriginServiceAsync by lazy { OriginServiceAsyncImpl(clientOptions) }
 
@@ -33,6 +39,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun usage(): UsageServiceAsync = usage
 
+    override fun usageAnalytics(): UsageAnalyticsServiceAsync = usageAnalytics
+
     override fun origins(): OriginServiceAsync = origins
 
     override fun urlEndpoints(): UrlEndpointServiceAsync = urlEndpoints
@@ -42,6 +50,10 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
         private val usage: UsageServiceAsync.WithRawResponse by lazy {
             UsageServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val usageAnalytics: UsageAnalyticsServiceAsync.WithRawResponse by lazy {
+            UsageAnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val origins: OriginServiceAsync.WithRawResponse by lazy {
@@ -60,6 +72,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
             )
 
         override fun usage(): UsageServiceAsync.WithRawResponse = usage
+
+        override fun usageAnalytics(): UsageAnalyticsServiceAsync.WithRawResponse = usageAnalytics
 
         override fun origins(): OriginServiceAsync.WithRawResponse = origins
 

@@ -7,6 +7,8 @@ import io.imagekit.services.blocking.accounts.OriginService
 import io.imagekit.services.blocking.accounts.OriginServiceImpl
 import io.imagekit.services.blocking.accounts.UrlEndpointService
 import io.imagekit.services.blocking.accounts.UrlEndpointServiceImpl
+import io.imagekit.services.blocking.accounts.UsageAnalyticsService
+import io.imagekit.services.blocking.accounts.UsageAnalyticsServiceImpl
 import io.imagekit.services.blocking.accounts.UsageService
 import io.imagekit.services.blocking.accounts.UsageServiceImpl
 import java.util.function.Consumer
@@ -20,6 +22,10 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
 
     private val usage: UsageService by lazy { UsageServiceImpl(clientOptions) }
 
+    private val usageAnalytics: UsageAnalyticsService by lazy {
+        UsageAnalyticsServiceImpl(clientOptions)
+    }
+
     private val origins: OriginService by lazy { OriginServiceImpl(clientOptions) }
 
     private val urlEndpoints: UrlEndpointService by lazy { UrlEndpointServiceImpl(clientOptions) }
@@ -31,6 +37,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun usage(): UsageService = usage
 
+    override fun usageAnalytics(): UsageAnalyticsService = usageAnalytics
+
     override fun origins(): OriginService = origins
 
     override fun urlEndpoints(): UrlEndpointService = urlEndpoints
@@ -40,6 +48,10 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val usage: UsageService.WithRawResponse by lazy {
             UsageServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val usageAnalytics: UsageAnalyticsService.WithRawResponse by lazy {
+            UsageAnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val origins: OriginService.WithRawResponse by lazy {
@@ -58,6 +70,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
             )
 
         override fun usage(): UsageService.WithRawResponse = usage
+
+        override fun usageAnalytics(): UsageAnalyticsService.WithRawResponse = usageAnalytics
 
         override fun origins(): OriginService.WithRawResponse = origins
 
