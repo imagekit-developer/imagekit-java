@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.4.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.3.0...v3.4.0) (2026-07-14)
+
+
+### Features
+
+* **api:** add usage analytics breakdown endpoint ([7fb0d7b](https://github.com/imagekit-developer/imagekit-java/commit/7fb0d7b2ce4a7ba672e0d780f94a7d0b98a32416))
+
 ## [3.3.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.2.0...v3.3.0) (2026-06-18)
 
 
