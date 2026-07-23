@@ -14,7 +14,6 @@ internal class CustomMetadataFieldCreateParamsTest {
             .name("price")
             .schema(
                 CustomMetadataFieldCreateParams.Schema.builder()
-                    .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .defaultValueOfMixed(
                         listOf(
                             CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
@@ -40,6 +39,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                             CustomMetadataFieldCreateParams.Schema.SelectOption.ofBool(true),
                         )
                     )
+                    .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .build()
             )
             .build()
@@ -53,7 +53,6 @@ internal class CustomMetadataFieldCreateParamsTest {
                 .name("price")
                 .schema(
                     CustomMetadataFieldCreateParams.Schema.builder()
-                        .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                         .defaultValueOfMixed(
                             listOf(
                                 CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
@@ -85,6 +84,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                                 CustomMetadataFieldCreateParams.Schema.SelectOption.ofBool(true),
                             )
                         )
+                        .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                         .build()
                 )
                 .build()
@@ -96,7 +96,6 @@ internal class CustomMetadataFieldCreateParamsTest {
         assertThat(body.schema())
             .isEqualTo(
                 CustomMetadataFieldCreateParams.Schema.builder()
-                    .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .defaultValueOfMixed(
                         listOf(
                             CustomMetadataFieldCreateParams.Schema.DefaultValue.DefaultValueItem
@@ -122,6 +121,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                             CustomMetadataFieldCreateParams.Schema.SelectOption.ofBool(true),
                         )
                     )
+                    .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                     .build()
             )
     }
@@ -132,11 +132,7 @@ internal class CustomMetadataFieldCreateParamsTest {
             CustomMetadataFieldCreateParams.builder()
                 .label("price")
                 .name("price")
-                .schema(
-                    CustomMetadataFieldCreateParams.Schema.builder()
-                        .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                        .build()
-                )
+                .schema(CustomMetadataFieldCreateParams.Schema.builder().build())
                 .build()
 
         val body = params._body()
@@ -144,10 +140,6 @@ internal class CustomMetadataFieldCreateParamsTest {
         assertThat(body.label()).isEqualTo("price")
         assertThat(body.name()).isEqualTo("price")
         assertThat(body.schema())
-            .isEqualTo(
-                CustomMetadataFieldCreateParams.Schema.builder()
-                    .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
-                    .build()
-            )
+            .isEqualTo(CustomMetadataFieldCreateParams.Schema.builder().build())
     }
 }
