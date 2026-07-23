@@ -33,7 +33,6 @@ private constructor(
 
     /**
      * Filter results by file type.
-     *
      * - `all` — include all file types
      * - `image` — include only image files
      * - `non-image` — include only non-image files (e.g., JS, CSS, video)
@@ -59,7 +58,6 @@ private constructor(
      *
      * Note : When the searchQuery parameter is present, the following query parameters will have no
      * effect on the result:
-     *
      * 1. `tags`
      * 2. `type`
      * 3. `name`
@@ -78,7 +76,6 @@ private constructor(
 
     /**
      * Filter results by asset type.
-     *
      * - `file` — returns only files
      * - `file-version` — returns specific file versions
      * - `folder` — returns only folders
@@ -130,7 +127,6 @@ private constructor(
 
         /**
          * Filter results by file type.
-         *
          * - `all` — include all file types
          * - `image` — include only image files
          * - `non-image` — include only non-image files (e.g., JS, CSS, video)
@@ -172,7 +168,6 @@ private constructor(
          *
          * Note : When the searchQuery parameter is present, the following query parameters will
          * have no effect on the result:
-         *
          * 1. `tags`
          * 2. `type`
          * 3. `name`
@@ -207,7 +202,6 @@ private constructor(
 
         /**
          * Filter results by asset type.
-         *
          * - `file` — returns only files
          * - `file-version` — returns specific file versions
          * - `folder` — returns only folders
@@ -353,7 +347,6 @@ private constructor(
 
     /**
      * Filter results by file type.
-     *
      * - `all` — include all file types
      * - `image` — include only image files
      * - `non-image` — include only non-image files (e.g., JS, CSS, video)
@@ -392,11 +385,9 @@ private constructor(
          * An enum containing [FileType]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [FileType] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -570,11 +561,9 @@ private constructor(
          * An enum containing [Sort]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Sort] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -715,7 +704,6 @@ private constructor(
 
     /**
      * Filter results by asset type.
-     *
      * - `file` — returns only files
      * - `file-version` — returns specific file versions
      * - `folder` — returns only folders
@@ -758,11 +746,9 @@ private constructor(
          * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Type] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {

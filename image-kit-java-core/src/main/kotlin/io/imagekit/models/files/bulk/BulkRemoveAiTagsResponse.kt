@@ -95,9 +95,8 @@ private constructor(
          */
         fun successfullyUpdatedFileIds(successfullyUpdatedFileIds: JsonField<List<String>>) =
             apply {
-                this.successfullyUpdatedFileIds = successfullyUpdatedFileIds.map {
-                    it.toMutableList()
-                }
+                this.successfullyUpdatedFileIds =
+                    successfullyUpdatedFileIds.map { it.toMutableList() }
             }
 
         /**
