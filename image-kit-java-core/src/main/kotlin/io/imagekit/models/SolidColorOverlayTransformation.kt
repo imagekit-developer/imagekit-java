@@ -517,9 +517,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -962,9 +961,8 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitMax(max: JsonValue) = max.let {
-                        if (it == JsonValue.from("max")) 1 else 0
-                    }
+                    override fun visitMax(max: JsonValue) =
+                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
