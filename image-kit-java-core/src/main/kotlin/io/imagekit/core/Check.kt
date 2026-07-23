@@ -24,39 +24,45 @@ internal fun <T : Any> checkKnown(name: String, value: MultipartField<T>): T =
     }
 
 @JvmSynthetic
-internal fun checkLength(name: String, value: String, length: Int): String = value.also {
-    check(it.length == length) { "`$name` must have length $length, but was ${it.length}" }
-}
+internal fun checkLength(name: String, value: String, length: Int): String =
+    value.also {
+        check(it.length == length) { "`$name` must have length $length, but was ${it.length}" }
+    }
 
 @JvmSynthetic
-internal fun checkMinLength(name: String, value: String, minLength: Int): String = value.also {
-    check(it.length >= minLength) {
-        if (minLength == 1) "`$name` must be non-empty, but was empty"
-        else "`$name` must have at least length $minLength, but was ${it.length}"
+internal fun checkMinLength(name: String, value: String, minLength: Int): String =
+    value.also {
+        check(it.length >= minLength) {
+            if (minLength == 1) "`$name` must be non-empty, but was empty"
+            else "`$name` must have at least length $minLength, but was ${it.length}"
+        }
     }
-}
 
 @JvmSynthetic
-internal fun checkMaxLength(name: String, value: String, maxLength: Int): String = value.also {
-    check(it.length <= maxLength) {
-        "`$name` must have at most length $maxLength, but was ${it.length}"
+internal fun checkMaxLength(name: String, value: String, maxLength: Int): String =
+    value.also {
+        check(it.length <= maxLength) {
+            "`$name` must have at most length $maxLength, but was ${it.length}"
+        }
     }
-}
 
 @JvmSynthetic
 internal fun checkJacksonVersionCompatibility() {
-    val incompatibleJacksonVersions = RUNTIME_JACKSON_VERSIONS.mapNotNull {
-        val badVersionReason = BAD_JACKSON_VERSIONS[it.toString()]
-        when {
-            it.majorVersion != MINIMUM_JACKSON_VERSION.majorVersion ->
-                it to "incompatible major version"
-            it.minorVersion < MINIMUM_JACKSON_VERSION.minorVersion -> it to "minor version too low"
-            it.minorVersion == MINIMUM_JACKSON_VERSION.minorVersion &&
-                it.patchLevel < MINIMUM_JACKSON_VERSION.patchLevel -> it to "patch version too low"
-            badVersionReason != null -> it to badVersionReason
-            else -> null
+    val incompatibleJacksonVersions =
+        RUNTIME_JACKSON_VERSIONS.mapNotNull {
+            val badVersionReason = BAD_JACKSON_VERSIONS[it.toString()]
+            when {
+                it.majorVersion != MINIMUM_JACKSON_VERSION.majorVersion ->
+                    it to "incompatible major version"
+                it.minorVersion < MINIMUM_JACKSON_VERSION.minorVersion ->
+                    it to "minor version too low"
+                it.minorVersion == MINIMUM_JACKSON_VERSION.minorVersion &&
+                    it.patchLevel < MINIMUM_JACKSON_VERSION.patchLevel ->
+                    it to "patch version too low"
+                badVersionReason != null -> it to badVersionReason
+                else -> null
+            }
         }
-    }
     check(incompatibleJacksonVersions.isEmpty()) {
         """
 This SDK requires a minimum Jackson version of $MINIMUM_JACKSON_VERSION, but the following incompatible Jackson versions were detected at runtime:
