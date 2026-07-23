@@ -28,7 +28,6 @@ internal class CustomMetadataFieldServiceAsyncTest {
                     .name("price")
                     .schema(
                         CustomMetadataFieldCreateParams.Schema.builder()
-                            .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                             .defaultValueOfMixed(
                                 listOf(
                                     CustomMetadataFieldCreateParams.Schema.DefaultValue
@@ -67,6 +66,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
                                     CustomMetadataFieldCreateParams.Schema.SelectOption.ofBool(true),
                                 )
                             )
+                            .type(CustomMetadataFieldCreateParams.Schema.Type.NUMBER)
                             .build()
                     )
                     .build()

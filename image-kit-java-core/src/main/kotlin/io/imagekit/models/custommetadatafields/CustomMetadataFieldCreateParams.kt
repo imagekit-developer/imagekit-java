@@ -586,7 +586,6 @@ private constructor(
     class Schema
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val type: JsonField<Type>,
         private val defaultValue: JsonField<DefaultValue>,
         private val isValueRequired: JsonField<Boolean>,
         private val maxLength: JsonField<Double>,
@@ -594,12 +593,12 @@ private constructor(
         private val minLength: JsonField<Double>,
         private val minValue: JsonField<MinValue>,
         private val selectOptions: JsonField<List<SelectOption>>,
+        private val type: JsonField<Type>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
             @JsonProperty("defaultValue")
             @ExcludeMissing
             defaultValue: JsonField<DefaultValue> = JsonMissing.of(),
@@ -621,8 +620,8 @@ private constructor(
             @JsonProperty("selectOptions")
             @ExcludeMissing
             selectOptions: JsonField<List<SelectOption>> = JsonMissing.of(),
+            @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
         ) : this(
-            type,
             defaultValue,
             isValueRequired,
             maxLength,
@@ -630,16 +629,9 @@ private constructor(
             minLength,
             minValue,
             selectOptions,
+            type,
             mutableMapOf(),
         )
-
-        /**
-         * Type of the custom metadata field.
-         *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-         */
-        fun type(): Type = type.getRequired("type")
 
         /**
          * The default value for this custom metadata field. This property is only required if
@@ -710,11 +702,12 @@ private constructor(
             selectOptions.getOptional("selectOptions")
 
         /**
-         * Returns the raw JSON value of [type].
+         * Type of the custom metadata field.
          *
-         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
          */
-        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+        fun type(): Optional<Type> = type.getOptional("type")
 
         /**
          * Returns the raw JSON value of [defaultValue].
@@ -774,6 +767,13 @@ private constructor(
         @ExcludeMissing
         fun _selectOptions(): JsonField<List<SelectOption>> = selectOptions
 
+        /**
+         * Returns the raw JSON value of [type].
+         *
+         * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
+
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
             additionalProperties.put(key, value)
@@ -788,21 +788,13 @@ private constructor(
 
         companion object {
 
-            /**
-             * Returns a mutable builder for constructing an instance of [Schema].
-             *
-             * The following fields are required:
-             * ```java
-             * .type()
-             * ```
-             */
+            /** Returns a mutable builder for constructing an instance of [Schema]. */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Schema]. */
         class Builder internal constructor() {
 
-            private var type: JsonField<Type>? = null
             private var defaultValue: JsonField<DefaultValue> = JsonMissing.of()
             private var isValueRequired: JsonField<Boolean> = JsonMissing.of()
             private var maxLength: JsonField<Double> = JsonMissing.of()
@@ -810,11 +802,11 @@ private constructor(
             private var minLength: JsonField<Double> = JsonMissing.of()
             private var minValue: JsonField<MinValue> = JsonMissing.of()
             private var selectOptions: JsonField<MutableList<SelectOption>>? = null
+            private var type: JsonField<Type> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(schema: Schema) = apply {
-                type = schema.type
                 defaultValue = schema.defaultValue
                 isValueRequired = schema.isValueRequired
                 maxLength = schema.maxLength
@@ -822,20 +814,9 @@ private constructor(
                 minLength = schema.minLength
                 minValue = schema.minValue
                 selectOptions = schema.selectOptions.map { it.toMutableList() }
+                type = schema.type
                 additionalProperties = schema.additionalProperties.toMutableMap()
             }
-
-            /** Type of the custom metadata field. */
-            fun type(type: Type) = type(JsonField.of(type))
-
-            /**
-             * Sets [Builder.type] to an arbitrary JSON value.
-             *
-             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
-             */
-            fun type(type: JsonField<Type>) = apply { this.type = type }
 
             /**
              * The default value for this custom metadata field. This property is only required if
@@ -1000,6 +981,18 @@ private constructor(
             /** Alias for calling [addSelectOption] with `SelectOption.ofBool(bool)`. */
             fun addSelectOption(bool: Boolean) = addSelectOption(SelectOption.ofBool(bool))
 
+            /** Type of the custom metadata field. */
+            fun type(type: Type) = type(JsonField.of(type))
+
+            /**
+             * Sets [Builder.type] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.type] with a well-typed [Type] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun type(type: JsonField<Type>) = apply { this.type = type }
+
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
                 putAllAdditionalProperties(additionalProperties)
@@ -1023,17 +1016,9 @@ private constructor(
              * Returns an immutable instance of [Schema].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
-             *
-             * The following fields are required:
-             * ```java
-             * .type()
-             * ```
-             *
-             * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Schema =
                 Schema(
-                    checkRequired("type", type),
                     defaultValue,
                     isValueRequired,
                     maxLength,
@@ -1041,6 +1026,7 @@ private constructor(
                     minLength,
                     minValue,
                     (selectOptions ?: JsonMissing.of()).map { it.toImmutable() },
+                    type,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -1061,7 +1047,6 @@ private constructor(
                 return@apply
             }
 
-            type().validate()
             defaultValue().ifPresent { it.validate() }
             isValueRequired()
             maxLength()
@@ -1069,6 +1054,7 @@ private constructor(
             minLength()
             minValue().ifPresent { it.validate() }
             selectOptions().ifPresent { it.forEach { it.validate() } }
+            type().ifPresent { it.validate() }
             validated = true
         }
 
@@ -1088,182 +1074,14 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (type.asKnown().getOrNull()?.validity() ?: 0) +
-                (defaultValue.asKnown().getOrNull()?.validity() ?: 0) +
+            (defaultValue.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (isValueRequired.asKnown().isPresent) 1 else 0) +
                 (if (maxLength.asKnown().isPresent) 1 else 0) +
                 (maxValue.asKnown().getOrNull()?.validity() ?: 0) +
                 (if (minLength.asKnown().isPresent) 1 else 0) +
                 (minValue.asKnown().getOrNull()?.validity() ?: 0) +
-                (selectOptions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
-
-        /** Type of the custom metadata field. */
-        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
-
-            /**
-             * Returns this class instance's raw value.
-             *
-             * This is usually only useful if this instance was deserialized from data that doesn't
-             * match any known member, and you want to know that value. For example, if the SDK is
-             * on an older version than the API, then the API may respond with new members that the
-             * SDK is unaware of.
-             */
-            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-            companion object {
-
-                @JvmField val TEXT = of("Text")
-
-                @JvmField val TEXTAREA = of("Textarea")
-
-                @JvmField val NUMBER = of("Number")
-
-                @JvmField val DATE = of("Date")
-
-                @JvmField val BOOLEAN = of("Boolean")
-
-                @JvmField val SINGLE_SELECT = of("SingleSelect")
-
-                @JvmField val MULTI_SELECT = of("MultiSelect")
-
-                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-            }
-
-            /** An enum containing [Type]'s known values. */
-            enum class Known {
-                TEXT,
-                TEXTAREA,
-                NUMBER,
-                DATE,
-                BOOLEAN,
-                SINGLE_SELECT,
-                MULTI_SELECT,
-            }
-
-            /**
-             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-             *
-             * An instance of [Type] can contain an unknown value in a couple of cases:
-             * - It was deserialized from data that doesn't match any known member. For example, if
-             *   the SDK is on an older version than the API, then the API may respond with new
-             *   members that the SDK is unaware of.
-             * - It was constructed with an arbitrary value using the [of] method.
-             */
-            enum class Value {
-                TEXT,
-                TEXTAREA,
-                NUMBER,
-                DATE,
-                BOOLEAN,
-                SINGLE_SELECT,
-                MULTI_SELECT,
-                /** An enum member indicating that [Type] was instantiated with an unknown value. */
-                _UNKNOWN,
-            }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value, or
-             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-             *
-             * Use the [known] method instead if you're certain the value is always known or if you
-             * want to throw for the unknown case.
-             */
-            fun value(): Value =
-                when (this) {
-                    TEXT -> Value.TEXT
-                    TEXTAREA -> Value.TEXTAREA
-                    NUMBER -> Value.NUMBER
-                    DATE -> Value.DATE
-                    BOOLEAN -> Value.BOOLEAN
-                    SINGLE_SELECT -> Value.SINGLE_SELECT
-                    MULTI_SELECT -> Value.MULTI_SELECT
-                    else -> Value._UNKNOWN
-                }
-
-            /**
-             * Returns an enum member corresponding to this class instance's value.
-             *
-             * Use the [value] method instead if you're uncertain the value is always known and
-             * don't want to throw for the unknown case.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
-             *   member.
-             */
-            fun known(): Known =
-                when (this) {
-                    TEXT -> Known.TEXT
-                    TEXTAREA -> Known.TEXTAREA
-                    NUMBER -> Known.NUMBER
-                    DATE -> Known.DATE
-                    BOOLEAN -> Known.BOOLEAN
-                    SINGLE_SELECT -> Known.SINGLE_SELECT
-                    MULTI_SELECT -> Known.MULTI_SELECT
-                    else -> throw ImageKitInvalidDataException("Unknown Type: $value")
-                }
-
-            /**
-             * Returns this class instance's primitive wire representation.
-             *
-             * This differs from the [toString] method because that method is primarily for
-             * debugging and generally doesn't throw.
-             *
-             * @throws ImageKitInvalidDataException if this class instance's value does not have the
-             *   expected primitive type.
-             */
-            fun asString(): String =
-                _value().asString().orElseThrow {
-                    ImageKitInvalidDataException("Value is not a String")
-                }
-
-            private var validated: Boolean = false
-
-            /**
-             * Validates that the types of all values in this object match their expected types
-             * recursively.
-             *
-             * This method is _not_ forwards compatible with new types from the API for existing
-             * fields.
-             *
-             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
-             *   its expected type.
-             */
-            fun validate(): Type = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                known()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: ImageKitInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return other is Type && value == other.value
-            }
-
-            override fun hashCode() = value.hashCode()
-
-            override fun toString() = value.toString()
-        }
+                (selectOptions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (type.asKnown().getOrNull()?.validity() ?: 0)
 
         /**
          * The default value for this custom metadata field. This property is only required if
@@ -2447,13 +2265,180 @@ private constructor(
             }
         }
 
+        /** Type of the custom metadata field. */
+        class Type @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
+
+            /**
+             * Returns this class instance's raw value.
+             *
+             * This is usually only useful if this instance was deserialized from data that doesn't
+             * match any known member, and you want to know that value. For example, if the SDK is
+             * on an older version than the API, then the API may respond with new members that the
+             * SDK is unaware of.
+             */
+            @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
+
+            companion object {
+
+                @JvmField val TEXT = of("Text")
+
+                @JvmField val TEXTAREA = of("Textarea")
+
+                @JvmField val NUMBER = of("Number")
+
+                @JvmField val DATE = of("Date")
+
+                @JvmField val BOOLEAN = of("Boolean")
+
+                @JvmField val SINGLE_SELECT = of("SingleSelect")
+
+                @JvmField val MULTI_SELECT = of("MultiSelect")
+
+                @JvmStatic fun of(value: String) = Type(JsonField.of(value))
+            }
+
+            /** An enum containing [Type]'s known values. */
+            enum class Known {
+                TEXT,
+                TEXTAREA,
+                NUMBER,
+                DATE,
+                BOOLEAN,
+                SINGLE_SELECT,
+                MULTI_SELECT,
+            }
+
+            /**
+             * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
+             *
+             * An instance of [Type] can contain an unknown value in a couple of cases:
+             * - It was deserialized from data that doesn't match any known member. For example, if
+             *   the SDK is on an older version than the API, then the API may respond with new
+             *   members that the SDK is unaware of.
+             * - It was constructed with an arbitrary value using the [of] method.
+             */
+            enum class Value {
+                TEXT,
+                TEXTAREA,
+                NUMBER,
+                DATE,
+                BOOLEAN,
+                SINGLE_SELECT,
+                MULTI_SELECT,
+                /** An enum member indicating that [Type] was instantiated with an unknown value. */
+                _UNKNOWN,
+            }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value, or
+             * [Value._UNKNOWN] if the class was instantiated with an unknown value.
+             *
+             * Use the [known] method instead if you're certain the value is always known or if you
+             * want to throw for the unknown case.
+             */
+            fun value(): Value =
+                when (this) {
+                    TEXT -> Value.TEXT
+                    TEXTAREA -> Value.TEXTAREA
+                    NUMBER -> Value.NUMBER
+                    DATE -> Value.DATE
+                    BOOLEAN -> Value.BOOLEAN
+                    SINGLE_SELECT -> Value.SINGLE_SELECT
+                    MULTI_SELECT -> Value.MULTI_SELECT
+                    else -> Value._UNKNOWN
+                }
+
+            /**
+             * Returns an enum member corresponding to this class instance's value.
+             *
+             * Use the [value] method instead if you're uncertain the value is always known and
+             * don't want to throw for the unknown case.
+             *
+             * @throws ImageKitInvalidDataException if this class instance's value is a not a known
+             *   member.
+             */
+            fun known(): Known =
+                when (this) {
+                    TEXT -> Known.TEXT
+                    TEXTAREA -> Known.TEXTAREA
+                    NUMBER -> Known.NUMBER
+                    DATE -> Known.DATE
+                    BOOLEAN -> Known.BOOLEAN
+                    SINGLE_SELECT -> Known.SINGLE_SELECT
+                    MULTI_SELECT -> Known.MULTI_SELECT
+                    else -> throw ImageKitInvalidDataException("Unknown Type: $value")
+                }
+
+            /**
+             * Returns this class instance's primitive wire representation.
+             *
+             * This differs from the [toString] method because that method is primarily for
+             * debugging and generally doesn't throw.
+             *
+             * @throws ImageKitInvalidDataException if this class instance's value does not have the
+             *   expected primitive type.
+             */
+            fun asString(): String =
+                _value().asString().orElseThrow {
+                    ImageKitInvalidDataException("Value is not a String")
+                }
+
+            private var validated: Boolean = false
+
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws ImageKitInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
+            fun validate(): Type = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                known()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: ImageKitInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
+            override fun equals(other: Any?): Boolean {
+                if (this === other) {
+                    return true
+                }
+
+                return other is Type && value == other.value
+            }
+
+            override fun hashCode() = value.hashCode()
+
+            override fun toString() = value.toString()
+        }
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
             }
 
             return other is Schema &&
-                type == other.type &&
                 defaultValue == other.defaultValue &&
                 isValueRequired == other.isValueRequired &&
                 maxLength == other.maxLength &&
@@ -2461,12 +2446,12 @@ private constructor(
                 minLength == other.minLength &&
                 minValue == other.minValue &&
                 selectOptions == other.selectOptions &&
+                type == other.type &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
             Objects.hash(
-                type,
                 defaultValue,
                 isValueRequired,
                 maxLength,
@@ -2474,6 +2459,7 @@ private constructor(
                 minLength,
                 minValue,
                 selectOptions,
+                type,
                 additionalProperties,
             )
         }
@@ -2481,7 +2467,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Schema{type=$type, defaultValue=$defaultValue, isValueRequired=$isValueRequired, maxLength=$maxLength, maxValue=$maxValue, minLength=$minLength, minValue=$minValue, selectOptions=$selectOptions, additionalProperties=$additionalProperties}"
+            "Schema{defaultValue=$defaultValue, isValueRequired=$isValueRequired, maxLength=$maxLength, maxValue=$maxValue, minLength=$minLength, minValue=$minValue, selectOptions=$selectOptions, type=$type, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
