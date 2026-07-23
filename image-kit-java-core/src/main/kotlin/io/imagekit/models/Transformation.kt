@@ -2857,9 +2857,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -2998,11 +2997,9 @@ private constructor(
          * An enum containing [AiRemoveBackground]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [AiRemoveBackground] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -3139,11 +3136,9 @@ private constructor(
          *
          * An instance of [AiRemoveBackgroundExternal] can contain an unknown value in a couple of
          * cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -3276,11 +3271,9 @@ private constructor(
          * An enum containing [AiRetouch]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [AiRetouch] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -3411,11 +3404,9 @@ private constructor(
          * An enum containing [AiUpscale]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [AiUpscale] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -3549,11 +3540,9 @@ private constructor(
          * An enum containing [AiVariation]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [AiVariation] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -3904,11 +3893,9 @@ private constructor(
          * An enum containing [AudioCodec]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [AudioCodec] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -4049,11 +4036,9 @@ private constructor(
          * An enum containing [ContrastStretch]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [ContrastStretch] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -4200,11 +4185,9 @@ private constructor(
          * An enum containing [Crop]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Crop] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -4363,11 +4346,9 @@ private constructor(
          * An enum containing [CropMode]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [CropMode] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -4945,11 +4926,9 @@ private constructor(
          * An enum containing [Flip]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Flip] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -5124,11 +5103,9 @@ private constructor(
          * An enum containing [Format]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Format] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -5374,9 +5351,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -5512,11 +5488,9 @@ private constructor(
          * An enum containing [Grayscale]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [Grayscale] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
@@ -6166,9 +6140,8 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitNumber(number: Double) = 1
 
-                    override fun visitMax(max: JsonValue) = max.let {
-                        if (it == JsonValue.from("max")) 1 else 0
-                    }
+                    override fun visitMax(max: JsonValue) =
+                        max.let { if (it == JsonValue.from("max")) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -6613,9 +6586,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -6833,9 +6805,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -7268,9 +7239,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitNumber(number: Double) = 1
 
@@ -7487,9 +7457,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitTrue(true_: JsonValue) = true_.let {
-                        if (it == JsonValue.from(true)) 1 else 0
-                    }
+                    override fun visitTrue(true_: JsonValue) =
+                        true_.let { if (it == JsonValue.from(true)) 1 else 0 }
 
                     override fun visitString(string: String) = 1
 
@@ -7635,11 +7604,9 @@ private constructor(
          * An enum containing [VideoCodec]'s known values, as well as an [_UNKNOWN] member.
          *
          * An instance of [VideoCodec] can contain an unknown value in a couple of cases:
-         *
          * - It was deserialized from data that doesn't match any known member. For example, if the
          *   SDK is on an older version than the API, then the API may respond with new members that
          *   the SDK is unaware of.
-         *
          * - It was constructed with an arbitrary value using the [of] method.
          */
         enum class Value {
