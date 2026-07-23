@@ -202,7 +202,6 @@ private constructor(
     /**
      * The value for the HTML `sizes` attribute (e.g., `"100vw"` or `"(min-width:768px) 50vw,
      * 100vw"`).
-     *
      * - If it includes one or more `vw` units, breakpoints smaller than the corresponding
      *   percentage of the smallest device width are excluded.
      * - If it contains no `vw` units, the full breakpoint list is used.
@@ -586,7 +585,6 @@ private constructor(
         /**
          * The value for the HTML `sizes` attribute (e.g., `"100vw"` or `"(min-width:768px) 50vw,
          * 100vw"`).
-         *
          * - If it includes one or more `vw` units, breakpoints smaller than the corresponding
          *   percentage of the smallest device width are excluded.
          * - If it contains no `vw` units, the full breakpoint list is used.
