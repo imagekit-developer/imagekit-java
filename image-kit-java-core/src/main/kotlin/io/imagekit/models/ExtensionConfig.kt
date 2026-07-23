@@ -1063,11 +1063,9 @@ private constructor(
              * An enum containing [Name]'s known values, as well as an [_UNKNOWN] member.
              *
              * An instance of [Name] can contain an unknown value in a couple of cases:
-             *
              * - It was deserialized from data that doesn't match any known member. For example, if
              *   the SDK is on an older version than the API, then the API may respond with new
              *   members that the SDK is unaware of.
-             *
              * - It was constructed with an arbitrary value using the [of] method.
              */
             enum class Value {
@@ -3741,9 +3739,7 @@ private constructor(
                                         override fun visitBool(bool: Boolean) = 1
 
                                         override fun visitMixed(mixed: List<MetadataValueItem>) =
-                                            mixed.sumOf {
-                                                it.validity().toInt()
-                                            }
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
@@ -5080,9 +5076,7 @@ private constructor(
                                         override fun visitBool(bool: Boolean) = 1
 
                                         override fun visitMixed(mixed: List<MetadataValueItem>) =
-                                            mixed.sumOf {
-                                                it.validity().toInt()
-                                            }
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
@@ -6417,9 +6411,7 @@ private constructor(
                                         override fun visitBool(bool: Boolean) = 1
 
                                         override fun visitMixed(mixed: List<MetadataValueItem>) =
-                                            mixed.sumOf {
-                                                it.validity().toInt()
-                                            }
+                                            mixed.sumOf { it.validity().toInt() }
 
                                         override fun unknown(json: JsonValue?) = 0
                                     }
