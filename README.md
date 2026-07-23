@@ -3,7 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.4.0)
-[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.4.0/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.1.1)
+[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/3.4.0/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.4.0)
 
 <!-- x-release-please-end -->
 
