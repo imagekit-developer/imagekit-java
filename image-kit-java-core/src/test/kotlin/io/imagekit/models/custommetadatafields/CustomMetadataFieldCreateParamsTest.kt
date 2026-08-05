@@ -42,6 +42,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                     )
                     .build()
             )
+            .description("description")
             .build()
     }
 
@@ -87,6 +88,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                         )
                         .build()
                 )
+                .description("description")
                 .build()
 
         val body = params._body()
@@ -124,6 +126,7 @@ internal class CustomMetadataFieldCreateParamsTest {
                     )
                     .build()
             )
+        assertThat(body.description()).contains("description")
     }
 
     @Test

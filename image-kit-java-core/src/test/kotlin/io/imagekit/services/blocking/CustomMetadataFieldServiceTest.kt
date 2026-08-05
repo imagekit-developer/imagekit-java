@@ -69,6 +69,7 @@ internal class CustomMetadataFieldServiceTest {
                             )
                             .build()
                     )
+                    .description("description")
                     .build()
             )
 
@@ -89,6 +90,7 @@ internal class CustomMetadataFieldServiceTest {
             customMetadataFieldService.update(
                 CustomMetadataFieldUpdateParams.builder()
                     .id("id")
+                    .description("description")
                     .label("price")
                     .schema(
                         CustomMetadataFieldUpdateParams.Schema.builder()

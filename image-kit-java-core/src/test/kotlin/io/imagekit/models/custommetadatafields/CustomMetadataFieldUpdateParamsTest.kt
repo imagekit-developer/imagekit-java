@@ -11,6 +11,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
     fun create() {
         CustomMetadataFieldUpdateParams.builder()
             .id("id")
+            .description("description")
             .label("price")
             .schema(
                 CustomMetadataFieldUpdateParams.Schema.builder()
@@ -58,6 +59,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
         val params =
             CustomMetadataFieldUpdateParams.builder()
                 .id("id")
+                .description("description")
                 .label("price")
                 .schema(
                     CustomMetadataFieldUpdateParams.Schema.builder()
@@ -98,6 +100,7 @@ internal class CustomMetadataFieldUpdateParamsTest {
 
         val body = params._body()
 
+        assertThat(body.description()).contains("description")
         assertThat(body.label()).contains("price")
         assertThat(body.schema())
             .contains(
