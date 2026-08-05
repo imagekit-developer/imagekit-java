@@ -69,6 +69,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
                             )
                             .build()
                     )
+                    .description("description")
                     .build()
             )
 
@@ -90,6 +91,7 @@ internal class CustomMetadataFieldServiceAsyncTest {
             customMetadataFieldServiceAsync.update(
                 CustomMetadataFieldUpdateParams.builder()
                     .id("id")
+                    .description("description")
                     .label("price")
                     .schema(
                         CustomMetadataFieldUpdateParams.Schema.builder()

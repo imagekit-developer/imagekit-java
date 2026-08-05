@@ -43,7 +43,7 @@ interface CustomMetadataFieldServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CustomMetadataField>
 
-    /** This API updates the label or schema of an existing custom metadata field. */
+    /** This API updates the label, description, or schema of an existing custom metadata field. */
     fun update(id: String): CompletableFuture<CustomMetadataField> =
         update(id, CustomMetadataFieldUpdateParams.none())
 

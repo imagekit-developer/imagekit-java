@@ -39,6 +39,7 @@ private constructor(
     private val label: JsonField<String>,
     private val name: JsonField<String>,
     private val schema: JsonField<Schema>,
+    private val description: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -48,7 +49,10 @@ private constructor(
         @JsonProperty("label") @ExcludeMissing label: JsonField<String> = JsonMissing.of(),
         @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
         @JsonProperty("schema") @ExcludeMissing schema: JsonField<Schema> = JsonMissing.of(),
-    ) : this(id, label, name, schema, mutableMapOf())
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
+    ) : this(id, label, name, schema, description, mutableMapOf())
 
     /**
      * Unique identifier for the custom metadata field. Use this to update the field.
@@ -85,6 +89,16 @@ private constructor(
     fun schema(): Schema = schema.getRequired("schema")
 
     /**
+     * Optional description of the custom metadata field. Only present when a description has been
+     * set. Shown as a hint to the users while setting the field's value on an asset in the media
+     * library UI.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = description.getOptional("description")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -111,6 +125,13 @@ private constructor(
      * Unlike [schema], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("schema") @ExcludeMissing fun _schema(): JsonField<Schema> = schema
+
+    /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -147,6 +168,7 @@ private constructor(
         private var label: JsonField<String>? = null
         private var name: JsonField<String>? = null
         private var schema: JsonField<Schema>? = null
+        private var description: JsonField<String> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -155,6 +177,7 @@ private constructor(
             label = customMetadataField.label
             name = customMetadataField.name
             schema = customMetadataField.schema
+            description = customMetadataField.description
             additionalProperties = customMetadataField.additionalProperties.toMutableMap()
         }
 
@@ -208,6 +231,22 @@ private constructor(
          */
         fun schema(schema: JsonField<Schema>) = apply { this.schema = schema }
 
+        /**
+         * Optional description of the custom metadata field. Only present when a description has
+         * been set. Shown as a hint to the users while setting the field's value on an asset in the
+         * media library UI.
+         */
+        fun description(description: String) = description(JsonField.of(description))
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { this.description = description }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -248,6 +287,7 @@ private constructor(
                 checkRequired("label", label),
                 checkRequired("name", name),
                 checkRequired("schema", schema),
+                description,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -271,6 +311,7 @@ private constructor(
         label()
         name()
         schema().validate()
+        description()
         validated = true
     }
 
@@ -292,7 +333,8 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (label.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
-            (schema.asKnown().getOrNull()?.validity() ?: 0)
+            (schema.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (description.asKnown().isPresent) 1 else 0)
 
     /** An object that describes the rules for the custom metadata field value. */
     class Schema
@@ -2185,15 +2227,16 @@ private constructor(
             label == other.label &&
             name == other.name &&
             schema == other.schema &&
+            description == other.description &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, label, name, schema, additionalProperties)
+        Objects.hash(id, label, name, schema, description, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CustomMetadataField{id=$id, label=$label, name=$name, schema=$schema, additionalProperties=$additionalProperties}"
+        "CustomMetadataField{id=$id, label=$label, name=$name, schema=$schema, description=$description, additionalProperties=$additionalProperties}"
 }
