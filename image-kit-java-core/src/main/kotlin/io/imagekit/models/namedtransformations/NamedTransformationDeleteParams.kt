@@ -15,12 +15,13 @@ import kotlin.jvm.optionals.getOrNull
  * Permanently deletes the named transformation identified by `id` and returns the deleted object.
  *
  * **Note:**
- * - If another named transformation, or your account's upload
+ * - If another *enabled* named transformation, or your account's upload
  *   pre-transformation/post-transformation settings, reference this named transformation (via the
  *   `n-<name>` token), the request fails with a `409` error whose `message` describes what it is
- *   referenced by. Remove those references first, then retry the deletion. This is a best-effort
- *   check and cannot detect references baked into your own application code or previously generated
- *   URLs.
+ *   referenced by. A reference from a named transformation that is itself disabled does not block
+ *   this request. Remove or disable those references first, then retry the deletion. This is a
+ *   best-effort check and cannot detect references baked into your own application code or
+ *   previously generated URLs.
  */
 class NamedTransformationDeleteParams
 private constructor(

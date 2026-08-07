@@ -37,6 +37,9 @@ interface NamedTransformationServiceAsync {
      *
      * Learn more about
      * [named transformations](https://imagekit.io/docs/transformations#named-transformations).
+     *
+     * **Note:** You can create up to 250 named transformations per account. Once this limit is
+     * reached, the request fails with a `400` error.
      */
     fun create(params: NamedTransformationCreateParams): CompletableFuture<NamedTransformation> =
         create(params, RequestOptions.none())
@@ -50,6 +53,15 @@ interface NamedTransformationServiceAsync {
     /**
      * Updates the named transformation identified by `id` and returns the updated object. Only the
      * fields present in the request body are updated; omitted fields are left unchanged.
+     *
+     * **Note:**
+     * - If you rename this named transformation, or set `enabled` to `false`, and another *enabled*
+     *   named transformation, or your account's upload pre-transformation/post-transformation
+     *   settings, reference it (via the `n-<name>` token), the request fails with a `409` error
+     *   whose `message` describes what it is referenced by. A reference from a named transformation
+     *   that is itself disabled does not block this request. Remove or disable those references
+     *   first, then retry. This is a best-effort check and cannot detect references baked into your
+     *   own application code or previously generated URLs.
      */
     fun update(id: String): CompletableFuture<NamedTransformation> =
         update(id, NamedTransformationUpdateParams.none())
@@ -106,12 +118,13 @@ interface NamedTransformationServiceAsync {
      * object.
      *
      * **Note:**
-     * - If another named transformation, or your account's upload
+     * - If another *enabled* named transformation, or your account's upload
      *   pre-transformation/post-transformation settings, reference this named transformation (via
      *   the `n-<name>` token), the request fails with a `409` error whose `message` describes what
-     *   it is referenced by. Remove those references first, then retry the deletion. This is a
-     *   best-effort check and cannot detect references baked into your own application code or
-     *   previously generated URLs.
+     *   it is referenced by. A reference from a named transformation that is itself disabled does
+     *   not block this request. Remove or disable those references first, then retry the deletion.
+     *   This is a best-effort check and cannot detect references baked into your own application
+     *   code or previously generated URLs.
      */
     fun delete(id: String): CompletableFuture<NamedTransformation> =
         delete(id, NamedTransformationDeleteParams.none())

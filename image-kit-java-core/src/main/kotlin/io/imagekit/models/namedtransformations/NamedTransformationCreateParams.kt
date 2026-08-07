@@ -28,6 +28,9 @@ import java.util.Optional
  *
  * Learn more about
  * [named transformations](https://imagekit.io/docs/transformations#named-transformations).
+ *
+ * **Note:** You can create up to 250 named transformations per account. Once this limit is reached,
+ * the request fails with a `400` error.
  */
 class NamedTransformationCreateParams
 private constructor(
@@ -39,7 +42,9 @@ private constructor(
     /**
      * Name of the named transformation. This is the alias used to refer to the transformation
      * string in image and video URLs, for example `tr:n-<name>`. Can only contain alphanumeric
-     * characters, `_` and `-`, and must be unique for your account (case-insensitive).
+     * characters or `_` (hyphens are not allowed), and must be unique for your account. Name
+     * matching is case-sensitive, so `Small_Thumbnail` and `small_thumbnail` are treated as
+     * different names.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -47,9 +52,11 @@ private constructor(
     fun name(): String = body.name()
 
     /**
-     * The transformation string this name refers to. It must start with `tr:` followed by one or
-     * more transformation parameters, for example `tr:w-150,h-150,fo-center,cm-resize`. Learn more
-     * about the [transformation syntax](https://imagekit.io/docs/transformations).
+     * The transformation this name refers to, expressed as one or more comma-separated
+     * transformation parameters, for example `w-150,h-150,fo-center,cm-resize`. You do not need to
+     * prefix this with `tr:` — it is added automatically. If you do include it, it must appear in
+     * lowercase at the start of the string, or the request is rejected. Learn more about the
+     * [transformation syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -57,13 +64,13 @@ private constructor(
     fun transformation(): String = body.transformation()
 
     /**
-     * Whether this named transformation is disabled. Set to `true` to temporarily disable it
+     * Whether this named transformation is enabled. Set to `false` to temporarily disable it
      * without deleting it — requests using a disabled named transformation fail at delivery time.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun disabled(): Optional<Boolean> = body.disabled()
+    fun enabled(): Optional<Boolean> = body.enabled()
 
     /**
      * Returns the raw JSON value of [name].
@@ -80,11 +87,11 @@ private constructor(
     fun _transformation(): JsonField<String> = body._transformation()
 
     /**
-     * Returns the raw JSON value of [disabled].
+     * Returns the raw JSON value of [enabled].
      *
-     * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _disabled(): JsonField<Boolean> = body._disabled()
+    fun _enabled(): JsonField<Boolean> = body._enabled()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
 
@@ -134,14 +141,16 @@ private constructor(
          * Otherwise, it's more convenient to use the top-level setters instead:
          * - [name]
          * - [transformation]
-         * - [disabled]
+         * - [enabled]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
          * Name of the named transformation. This is the alias used to refer to the transformation
          * string in image and video URLs, for example `tr:n-<name>`. Can only contain alphanumeric
-         * characters, `_` and `-`, and must be unique for your account (case-insensitive).
+         * characters or `_` (hyphens are not allowed), and must be unique for your account. Name
+         * matching is case-sensitive, so `Small_Thumbnail` and `small_thumbnail` are treated as
+         * different names.
          */
         fun name(name: String) = apply { body.name(name) }
 
@@ -154,9 +163,11 @@ private constructor(
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /**
-         * The transformation string this name refers to. It must start with `tr:` followed by one
-         * or more transformation parameters, for example `tr:w-150,h-150,fo-center,cm-resize`.
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * The transformation this name refers to, expressed as one or more comma-separated
+         * transformation parameters, for example `w-150,h-150,fo-center,cm-resize`. You do not need
+         * to prefix this with `tr:` — it is added automatically. If you do include it, it must
+         * appear in lowercase at the start of the string, or the request is rejected. Learn more
+         * about the [transformation syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -172,20 +183,19 @@ private constructor(
         }
 
         /**
-         * Whether this named transformation is disabled. Set to `true` to temporarily disable it
+         * Whether this named transformation is enabled. Set to `false` to temporarily disable it
          * without deleting it — requests using a disabled named transformation fail at delivery
          * time.
          */
-        fun disabled(disabled: Boolean) = apply { body.disabled(disabled) }
+        fun enabled(enabled: Boolean) = apply { body.enabled(enabled) }
 
         /**
-         * Sets [Builder.disabled] to an arbitrary JSON value.
+         * Sets [Builder.enabled] to an arbitrary JSON value.
          *
-         * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
          */
-        fun disabled(disabled: JsonField<Boolean>) = apply { body.disabled(disabled) }
+        fun enabled(enabled: JsonField<Boolean>) = apply { body.enabled(enabled) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
             body.additionalProperties(additionalBodyProperties)
@@ -336,7 +346,7 @@ private constructor(
     private constructor(
         private val name: JsonField<String>,
         private val transformation: JsonField<String>,
-        private val disabled: JsonField<Boolean>,
+        private val enabled: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
@@ -346,15 +356,15 @@ private constructor(
             @JsonProperty("transformation")
             @ExcludeMissing
             transformation: JsonField<String> = JsonMissing.of(),
-            @JsonProperty("disabled")
-            @ExcludeMissing
-            disabled: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(name, transformation, disabled, mutableMapOf())
+            @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(name, transformation, enabled, mutableMapOf())
 
         /**
          * Name of the named transformation. This is the alias used to refer to the transformation
          * string in image and video URLs, for example `tr:n-<name>`. Can only contain alphanumeric
-         * characters, `_` and `-`, and must be unique for your account (case-insensitive).
+         * characters or `_` (hyphens are not allowed), and must be unique for your account. Name
+         * matching is case-sensitive, so `Small_Thumbnail` and `small_thumbnail` are treated as
+         * different names.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -362,9 +372,11 @@ private constructor(
         fun name(): String = name.getRequired("name")
 
         /**
-         * The transformation string this name refers to. It must start with `tr:` followed by one
-         * or more transformation parameters, for example `tr:w-150,h-150,fo-center,cm-resize`.
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * The transformation this name refers to, expressed as one or more comma-separated
+         * transformation parameters, for example `w-150,h-150,fo-center,cm-resize`. You do not need
+         * to prefix this with `tr:` — it is added automatically. If you do include it, it must
+         * appear in lowercase at the start of the string, or the request is rejected. Learn more
+         * about the [transformation syntax](https://imagekit.io/docs/transformations).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -372,14 +384,14 @@ private constructor(
         fun transformation(): String = transformation.getRequired("transformation")
 
         /**
-         * Whether this named transformation is disabled. Set to `true` to temporarily disable it
+         * Whether this named transformation is enabled. Set to `false` to temporarily disable it
          * without deleting it — requests using a disabled named transformation fail at delivery
          * time.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun disabled(): Optional<Boolean> = disabled.getOptional("disabled")
+        fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
         /**
          * Returns the raw JSON value of [name].
@@ -399,11 +411,11 @@ private constructor(
         fun _transformation(): JsonField<String> = transformation
 
         /**
-         * Returns the raw JSON value of [disabled].
+         * Returns the raw JSON value of [enabled].
          *
-         * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("disabled") @ExcludeMissing fun _disabled(): JsonField<Boolean> = disabled
+        @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -436,22 +448,23 @@ private constructor(
 
             private var name: JsonField<String>? = null
             private var transformation: JsonField<String>? = null
-            private var disabled: JsonField<Boolean> = JsonMissing.of()
+            private var enabled: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
                 name = body.name
                 transformation = body.transformation
-                disabled = body.disabled
+                enabled = body.enabled
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /**
              * Name of the named transformation. This is the alias used to refer to the
              * transformation string in image and video URLs, for example `tr:n-<name>`. Can only
-             * contain alphanumeric characters, `_` and `-`, and must be unique for your account
-             * (case-insensitive).
+             * contain alphanumeric characters or `_` (hyphens are not allowed), and must be unique
+             * for your account. Name matching is case-sensitive, so `Small_Thumbnail` and
+             * `small_thumbnail` are treated as different names.
              */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -465,9 +478,11 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /**
-             * The transformation string this name refers to. It must start with `tr:` followed by
-             * one or more transformation parameters, for example
-             * `tr:w-150,h-150,fo-center,cm-resize`. Learn more about the
+             * The transformation this name refers to, expressed as one or more comma-separated
+             * transformation parameters, for example `w-150,h-150,fo-center,cm-resize`. You do not
+             * need to prefix this with `tr:` — it is added automatically. If you do include it, it
+             * must appear in lowercase at the start of the string, or the request is rejected.
+             * Learn more about the
              * [transformation syntax](https://imagekit.io/docs/transformations).
              */
             fun transformation(transformation: String) =
@@ -485,20 +500,20 @@ private constructor(
             }
 
             /**
-             * Whether this named transformation is disabled. Set to `true` to temporarily disable
+             * Whether this named transformation is enabled. Set to `false` to temporarily disable
              * it without deleting it — requests using a disabled named transformation fail at
              * delivery time.
              */
-            fun disabled(disabled: Boolean) = disabled(JsonField.of(disabled))
+            fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
 
             /**
-             * Sets [Builder.disabled] to an arbitrary JSON value.
+             * Sets [Builder.enabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
+             * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun disabled(disabled: JsonField<Boolean>) = apply { this.disabled = disabled }
+            fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -536,7 +551,7 @@ private constructor(
                 Body(
                     checkRequired("name", name),
                     checkRequired("transformation", transformation),
-                    disabled,
+                    enabled,
                     additionalProperties.toMutableMap(),
                 )
         }
@@ -559,7 +574,7 @@ private constructor(
 
             name()
             transformation()
-            disabled()
+            enabled()
             validated = true
         }
 
@@ -581,7 +596,7 @@ private constructor(
         internal fun validity(): Int =
             (if (name.asKnown().isPresent) 1 else 0) +
                 (if (transformation.asKnown().isPresent) 1 else 0) +
-                (if (disabled.asKnown().isPresent) 1 else 0)
+                (if (enabled.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -591,18 +606,18 @@ private constructor(
             return other is Body &&
                 name == other.name &&
                 transformation == other.transformation &&
-                disabled == other.disabled &&
+                enabled == other.enabled &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(name, transformation, disabled, additionalProperties)
+            Objects.hash(name, transformation, enabled, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{name=$name, transformation=$transformation, disabled=$disabled, additionalProperties=$additionalProperties}"
+            "Body{name=$name, transformation=$transformation, enabled=$enabled, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

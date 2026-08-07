@@ -22,6 +22,15 @@ import kotlin.jvm.optionals.getOrNull
 /**
  * Updates the named transformation identified by `id` and returns the updated object. Only the
  * fields present in the request body are updated; omitted fields are left unchanged.
+ *
+ * **Note:**
+ * - If you rename this named transformation, or set `enabled` to `false`, and another *enabled*
+ *   named transformation, or your account's upload pre-transformation/post-transformation settings,
+ *   reference it (via the `n-<name>` token), the request fails with a `409` error whose `message`
+ *   describes what it is referenced by. A reference from a named transformation that is itself
+ *   disabled does not block this request. Remove or disable those references first, then retry.
+ *   This is a best-effort check and cannot detect references baked into your own application code
+ *   or previously generated URLs.
  */
 class NamedTransformationUpdateParams
 private constructor(
@@ -34,16 +43,18 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
-     * Whether this named transformation is disabled.
+     * Whether this named transformation is enabled. If omitted, the existing value is left
+     * unchanged.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun disabled(): Optional<Boolean> = body.disabled()
+    fun enabled(): Optional<Boolean> = body.enabled()
 
     /**
-     * Updated name of the named transformation. Can only contain alphanumeric characters, `_` and
-     * `-`, and must be unique for your account (case-insensitive).
+     * Updated name of the named transformation. Can only contain alphanumeric characters and `_`,
+     * and must be unique for your account. Name matching is case-sensitive, so `Small_Thumbnail`
+     * and `small_thumbnail` are treated as different names.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -51,8 +62,9 @@ private constructor(
     fun name(): Optional<String> = body.name()
 
     /**
-     * Updated transformation string. It must start with `tr:` followed by one or more
-     * transformation parameters.
+     * Updated transformation, expressed as one or more comma-separated transformation parameters.
+     * You do not need to prefix this with `tr:` — it is added automatically. If you do include it,
+     * it must appear in lowercase at the start of the string, or the request is rejected.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -60,11 +72,11 @@ private constructor(
     fun transformation(): Optional<String> = body.transformation()
 
     /**
-     * Returns the raw JSON value of [disabled].
+     * Returns the raw JSON value of [enabled].
      *
-     * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
+     * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
      */
-    fun _disabled(): JsonField<Boolean> = body._disabled()
+    fun _enabled(): JsonField<Boolean> = body._enabled()
 
     /**
      * Returns the raw JSON value of [name].
@@ -129,27 +141,30 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
-         * - [disabled]
+         * - [enabled]
          * - [name]
          * - [transformation]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
-        /** Whether this named transformation is disabled. */
-        fun disabled(disabled: Boolean) = apply { body.disabled(disabled) }
-
         /**
-         * Sets [Builder.disabled] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
-         * This method is primarily for setting the field to an undocumented or not yet supported
-         * value.
+         * Whether this named transformation is enabled. If omitted, the existing value is left
+         * unchanged.
          */
-        fun disabled(disabled: JsonField<Boolean>) = apply { body.disabled(disabled) }
+        fun enabled(enabled: Boolean) = apply { body.enabled(enabled) }
 
         /**
-         * Updated name of the named transformation. Can only contain alphanumeric characters, `_`
-         * and `-`, and must be unique for your account (case-insensitive).
+         * Sets [Builder.enabled] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun enabled(enabled: JsonField<Boolean>) = apply { body.enabled(enabled) }
+
+        /**
+         * Updated name of the named transformation. Can only contain alphanumeric characters and
+         * `_`, and must be unique for your account. Name matching is case-sensitive, so
+         * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
          */
         fun name(name: String) = apply { body.name(name) }
 
@@ -162,8 +177,10 @@ private constructor(
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /**
-         * Updated transformation string. It must start with `tr:` followed by one or more
-         * transformation parameters.
+         * Updated transformation, expressed as one or more comma-separated transformation
+         * parameters. You do not need to prefix this with `tr:` — it is added automatically. If you
+         * do include it, it must appear in lowercase at the start of the string, or the request is
+         * rejected.
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -324,7 +341,7 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val disabled: JsonField<Boolean>,
+        private val enabled: JsonField<Boolean>,
         private val name: JsonField<String>,
         private val transformation: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -332,26 +349,26 @@ private constructor(
 
         @JsonCreator
         private constructor(
-            @JsonProperty("disabled")
-            @ExcludeMissing
-            disabled: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("enabled") @ExcludeMissing enabled: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
             @JsonProperty("transformation")
             @ExcludeMissing
             transformation: JsonField<String> = JsonMissing.of(),
-        ) : this(disabled, name, transformation, mutableMapOf())
+        ) : this(enabled, name, transformation, mutableMapOf())
 
         /**
-         * Whether this named transformation is disabled.
+         * Whether this named transformation is enabled. If omitted, the existing value is left
+         * unchanged.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun disabled(): Optional<Boolean> = disabled.getOptional("disabled")
+        fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
         /**
-         * Updated name of the named transformation. Can only contain alphanumeric characters, `_`
-         * and `-`, and must be unique for your account (case-insensitive).
+         * Updated name of the named transformation. Can only contain alphanumeric characters and
+         * `_`, and must be unique for your account. Name matching is case-sensitive, so
+         * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -359,8 +376,10 @@ private constructor(
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
-         * Updated transformation string. It must start with `tr:` followed by one or more
-         * transformation parameters.
+         * Updated transformation, expressed as one or more comma-separated transformation
+         * parameters. You do not need to prefix this with `tr:` — it is added automatically. If you
+         * do include it, it must appear in lowercase at the start of the string, or the request is
+         * rejected.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -368,11 +387,11 @@ private constructor(
         fun transformation(): Optional<String> = transformation.getOptional("transformation")
 
         /**
-         * Returns the raw JSON value of [disabled].
+         * Returns the raw JSON value of [enabled].
          *
-         * Unlike [disabled], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [enabled], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("disabled") @ExcludeMissing fun _disabled(): JsonField<Boolean> = disabled
+        @JsonProperty("enabled") @ExcludeMissing fun _enabled(): JsonField<Boolean> = enabled
 
         /**
          * Returns the raw JSON value of [name].
@@ -412,34 +431,38 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var disabled: JsonField<Boolean> = JsonMissing.of()
+            private var enabled: JsonField<Boolean> = JsonMissing.of()
             private var name: JsonField<String> = JsonMissing.of()
             private var transformation: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
-                disabled = body.disabled
+                enabled = body.enabled
                 name = body.name
                 transformation = body.transformation
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Whether this named transformation is disabled. */
-            fun disabled(disabled: Boolean) = disabled(JsonField.of(disabled))
+            /**
+             * Whether this named transformation is enabled. If omitted, the existing value is left
+             * unchanged.
+             */
+            fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
 
             /**
-             * Sets [Builder.disabled] to an arbitrary JSON value.
+             * Sets [Builder.enabled] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.disabled] with a well-typed [Boolean] value instead.
+             * You should usually call [Builder.enabled] with a well-typed [Boolean] value instead.
              * This method is primarily for setting the field to an undocumented or not yet
              * supported value.
              */
-            fun disabled(disabled: JsonField<Boolean>) = apply { this.disabled = disabled }
+            fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
             /**
-             * Updated name of the named transformation. Can only contain alphanumeric characters,
-             * `_` and `-`, and must be unique for your account (case-insensitive).
+             * Updated name of the named transformation. Can only contain alphanumeric characters
+             * and `_`, and must be unique for your account. Name matching is case-sensitive, so
+             * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
              */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -453,8 +476,10 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /**
-             * Updated transformation string. It must start with `tr:` followed by one or more
-             * transformation parameters.
+             * Updated transformation, expressed as one or more comma-separated transformation
+             * parameters. You do not need to prefix this with `tr:` — it is added automatically. If
+             * you do include it, it must appear in lowercase at the start of the string, or the
+             * request is rejected.
              */
             fun transformation(transformation: String) =
                 transformation(JsonField.of(transformation))
@@ -495,7 +520,7 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Body =
-                Body(disabled, name, transformation, additionalProperties.toMutableMap())
+                Body(enabled, name, transformation, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -514,7 +539,7 @@ private constructor(
                 return@apply
             }
 
-            disabled()
+            enabled()
             name()
             transformation()
             validated = true
@@ -536,7 +561,7 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (disabled.asKnown().isPresent) 1 else 0) +
+            (if (enabled.asKnown().isPresent) 1 else 0) +
                 (if (name.asKnown().isPresent) 1 else 0) +
                 (if (transformation.asKnown().isPresent) 1 else 0)
 
@@ -546,20 +571,20 @@ private constructor(
             }
 
             return other is Body &&
-                disabled == other.disabled &&
+                enabled == other.enabled &&
                 name == other.name &&
                 transformation == other.transformation &&
                 additionalProperties == other.additionalProperties
         }
 
         private val hashCode: Int by lazy {
-            Objects.hash(disabled, name, transformation, additionalProperties)
+            Objects.hash(enabled, name, transformation, additionalProperties)
         }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{disabled=$disabled, name=$name, transformation=$transformation, additionalProperties=$additionalProperties}"
+            "Body{enabled=$enabled, name=$name, transformation=$transformation, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {

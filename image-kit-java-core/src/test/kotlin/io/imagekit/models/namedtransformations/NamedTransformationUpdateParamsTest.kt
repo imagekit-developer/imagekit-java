@@ -11,9 +11,9 @@ internal class NamedTransformationUpdateParamsTest {
     fun create() {
         NamedTransformationUpdateParams.builder()
             .id("id")
-            .disabled(true)
+            .enabled(true)
             .name("small_thumbnail_v2")
-            .transformation("tr:w-200,h-200,fo-center,cm-resize")
+            .transformation("w-200,h-200,fo-center,cm-resize")
             .build()
     }
 
@@ -31,16 +31,16 @@ internal class NamedTransformationUpdateParamsTest {
         val params =
             NamedTransformationUpdateParams.builder()
                 .id("id")
-                .disabled(true)
+                .enabled(true)
                 .name("small_thumbnail_v2")
-                .transformation("tr:w-200,h-200,fo-center,cm-resize")
+                .transformation("w-200,h-200,fo-center,cm-resize")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.disabled()).contains(true)
+        assertThat(body.enabled()).contains(true)
         assertThat(body.name()).contains("small_thumbnail_v2")
-        assertThat(body.transformation()).contains("tr:w-200,h-200,fo-center,cm-resize")
+        assertThat(body.transformation()).contains("w-200,h-200,fo-center,cm-resize")
     }
 
     @Test
