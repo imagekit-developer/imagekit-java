@@ -47,7 +47,7 @@ internal class NamedTransformationServiceTest {
                 NamedTransformationUpdateParams.builder()
                     .id("id")
                     .enabled(true)
-                    .name("small_thumbnail_v2")
+                    .name("small_thumbnail")
                     .transformation("w-200,h-200,fo-center,cm-resize")
                     .build()
             )

@@ -21,16 +21,13 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * Updates the named transformation identified by `id` and returns the updated object. Only the
- * fields present in the request body are updated; omitted fields are left unchanged.
+ * fields present in the request body are updated; other fields stay unchanged.
  *
- * **Note:**
- * - If you rename this named transformation, or set `enabled` to `false`, and another *enabled*
- *   named transformation, or your account's upload pre-transformation/post-transformation settings,
- *   reference it (via the `n-<name>` token), the request fails with a `409` error whose `message`
- *   describes what it is referenced by. A reference from a named transformation that is itself
- *   disabled does not block this request. Remove or disable those references first, then retry.
- *   This is a best-effort check and cannot detect references baked into your own application code
- *   or previously generated URLs.
+ * Renaming or disabling a named transformation fails with a `409` error if it is still referenced
+ * (via the `n-<name>` token) by another enabled named transformation, or by an upload
+ * pre-transformation/post-transformation setting. References from disabled named transformations
+ * don't count. This check is best-effort and can't detect references in your own application code
+ * or in previously generated URLs.
  */
 class NamedTransformationUpdateParams
 private constructor(
@@ -43,8 +40,7 @@ private constructor(
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
-     * Whether this named transformation is enabled. If omitted, the existing value is left
-     * unchanged.
+     * Whether the named transformation is enabled. Omit to leave the current value unchanged.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -52,9 +48,9 @@ private constructor(
     fun enabled(): Optional<Boolean> = body.enabled()
 
     /**
-     * Updated name of the named transformation. Can only contain alphanumeric characters and `_`,
-     * and must be unique for your account. Name matching is case-sensitive, so `Small_Thumbnail`
-     * and `small_thumbnail` are treated as different names.
+     * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
+     * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name matching is
+     * case-sensitive.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -62,9 +58,9 @@ private constructor(
     fun name(): Optional<String> = body.name()
 
     /**
-     * Updated transformation, expressed as one or more comma-separated transformation parameters.
-     * You do not need to prefix this with `tr:` — it is added automatically. If you do include it,
-     * it must appear in lowercase at the start of the string, or the request is rejected.
+     * The transformation string this name refers to, for example `w-150,h-150,fo-center,cm-resize`.
+     * The `tr:` prefix is optional — it's added automatically if missing, and validated if present.
+     * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -148,8 +144,7 @@ private constructor(
         fun body(body: Body) = apply { this.body = body.toBuilder() }
 
         /**
-         * Whether this named transformation is enabled. If omitted, the existing value is left
-         * unchanged.
+         * Whether the named transformation is enabled. Omit to leave the current value unchanged.
          */
         fun enabled(enabled: Boolean) = apply { body.enabled(enabled) }
 
@@ -162,9 +157,9 @@ private constructor(
         fun enabled(enabled: JsonField<Boolean>) = apply { body.enabled(enabled) }
 
         /**
-         * Updated name of the named transformation. Can only contain alphanumeric characters and
-         * `_`, and must be unique for your account. Name matching is case-sensitive, so
-         * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
+         * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
+         * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name
+         * matching is case-sensitive.
          */
         fun name(name: String) = apply { body.name(name) }
 
@@ -177,10 +172,10 @@ private constructor(
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         /**
-         * Updated transformation, expressed as one or more comma-separated transformation
-         * parameters. You do not need to prefix this with `tr:` — it is added automatically. If you
-         * do include it, it must appear in lowercase at the start of the string, or the request is
-         * rejected.
+         * The transformation string this name refers to, for example
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
+         * automatically if missing, and validated if present. Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -357,8 +352,7 @@ private constructor(
         ) : this(enabled, name, transformation, mutableMapOf())
 
         /**
-         * Whether this named transformation is enabled. If omitted, the existing value is left
-         * unchanged.
+         * Whether the named transformation is enabled. Omit to leave the current value unchanged.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -366,9 +360,9 @@ private constructor(
         fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
         /**
-         * Updated name of the named transformation. Can only contain alphanumeric characters and
-         * `_`, and must be unique for your account. Name matching is case-sensitive, so
-         * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
+         * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
+         * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name
+         * matching is case-sensitive.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -376,10 +370,10 @@ private constructor(
         fun name(): Optional<String> = name.getOptional("name")
 
         /**
-         * Updated transformation, expressed as one or more comma-separated transformation
-         * parameters. You do not need to prefix this with `tr:` — it is added automatically. If you
-         * do include it, it must appear in lowercase at the start of the string, or the request is
-         * rejected.
+         * The transformation string this name refers to, for example
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
+         * automatically if missing, and validated if present. Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -445,7 +439,7 @@ private constructor(
             }
 
             /**
-             * Whether this named transformation is enabled. If omitted, the existing value is left
+             * Whether the named transformation is enabled. Omit to leave the current value
              * unchanged.
              */
             fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
@@ -460,9 +454,9 @@ private constructor(
             fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
             /**
-             * Updated name of the named transformation. Can only contain alphanumeric characters
-             * and `_`, and must be unique for your account. Name matching is case-sensitive, so
-             * `Small_Thumbnail` and `small_thumbnail` are treated as different names.
+             * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
+             * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name
+             * matching is case-sensitive.
              */
             fun name(name: String) = name(JsonField.of(name))
 
@@ -476,10 +470,10 @@ private constructor(
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /**
-             * Updated transformation, expressed as one or more comma-separated transformation
-             * parameters. You do not need to prefix this with `tr:` — it is added automatically. If
-             * you do include it, it must appear in lowercase at the start of the string, or the
-             * request is rejected.
+             * The transformation string this name refers to, for example
+             * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
+             * automatically if missing, and validated if present. Learn more about the
+             * [transformation syntax](https://imagekit.io/docs/transformations).
              */
             fun transformation(transformation: String) =
                 transformation(JsonField.of(transformation))
