@@ -24,10 +24,9 @@ import kotlin.jvm.optionals.getOrNull
  * fields present in the request body are updated; other fields stay unchanged.
  *
  * Renaming or disabling a named transformation fails with a `409` error if it is still referenced
- * (via the `n-<name>` token) by another enabled named transformation, or by an upload
- * pre-transformation/post-transformation setting. References from disabled named transformations
- * don't count. This check is best-effort and can't detect references in your own application code
- * or in previously generated URLs.
+ * (via the `n-<name>` token) by an upload pre-transformation or post-transformation setting. This
+ * check is best-effort and can't detect references in your own application code or in previously
+ * generated URLs.
  */
 class NamedTransformationUpdateParams
 private constructor(
@@ -60,7 +59,9 @@ private constructor(
     /**
      * The transformation string this name refers to, for example `w-150,h-150,fo-center,cm-resize`.
      * The `tr:` prefix is optional — it's added automatically if missing, and validated if present.
-     * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+     * The string must be a valid ImageKit transformation and cannot itself reference another named
+     * transformation (no nesting). Learn more about the
+     * [transformation syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -174,8 +175,9 @@ private constructor(
         /**
          * The transformation string this name refers to, for example
          * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. Learn more about the
-         * [transformation syntax](https://imagekit.io/docs/transformations).
+         * automatically if missing, and validated if present. The string must be a valid ImageKit
+         * transformation and cannot itself reference another named transformation (no nesting).
+         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -372,8 +374,9 @@ private constructor(
         /**
          * The transformation string this name refers to, for example
          * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. Learn more about the
-         * [transformation syntax](https://imagekit.io/docs/transformations).
+         * automatically if missing, and validated if present. The string must be a valid ImageKit
+         * transformation and cannot itself reference another named transformation (no nesting).
+         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -472,7 +475,9 @@ private constructor(
             /**
              * The transformation string this name refers to, for example
              * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-             * automatically if missing, and validated if present. Learn more about the
+             * automatically if missing, and validated if present. The string must be a valid
+             * ImageKit transformation and cannot itself reference another named transformation (no
+             * nesting). Learn more about the
              * [transformation syntax](https://imagekit.io/docs/transformations).
              */
             fun transformation(transformation: String) =
