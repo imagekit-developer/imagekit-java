@@ -62,8 +62,8 @@ private constructor(
     fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("createdAt")
 
     /**
-     * Whether the named transformation is currently enabled. When this is set to `false`, requests
-     * using such disabled named transformations fail at delivery time.
+     * Whether the named transformation is currently enabled. When set to `false`, requests using
+     * this named transformation fail at delivery time.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -71,9 +71,9 @@ private constructor(
     fun enabled(): Optional<Boolean> = enabled.getOptional("enabled")
 
     /**
-     * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
-     * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name matching is
-     * case-sensitive.
+     * Alias for the transformation string, used in URLs as `tr:n-<name>`. This is case-sensitive,
+     * contains only alphanumeric characters or `_` (underscore), and is unique across all named
+     * transformations for your account.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -81,11 +81,8 @@ private constructor(
     fun name(): Optional<String> = name.getOptional("name")
 
     /**
-     * The transformation string this name refers to, for example `w-150,h-150,fo-center,cm-resize`.
-     * The `tr:` prefix is optional; if present, it is validated. The string must be a valid
-     * ImageKit transformation and cannot itself reference another named transformation (no
-     * nesting). Learn more about the
-     * [transformation syntax](https://imagekit.io/docs/transformations).
+     * The transformation string this named transformation refers to. Learn more about the
+     * [transformation string syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -193,8 +190,8 @@ private constructor(
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
 
         /**
-         * Whether the named transformation is currently enabled. When this is set to `false`,
-         * requests using such disabled named transformations fail at delivery time.
+         * Whether the named transformation is currently enabled. When set to `false`, requests
+         * using this named transformation fail at delivery time.
          */
         fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
 
@@ -207,9 +204,9 @@ private constructor(
         fun enabled(enabled: JsonField<Boolean>) = apply { this.enabled = enabled }
 
         /**
-         * Alias for the transformation string, used in URLs as `tr:n-<name>`. Must contain only
-         * alphanumeric characters or `_` (no hyphens), and be unique for your account. Name
-         * matching is case-sensitive.
+         * Alias for the transformation string, used in URLs as `tr:n-<name>`. This is
+         * case-sensitive, contains only alphanumeric characters or `_` (underscore), and is unique
+         * across all named transformations for your account.
          */
         fun name(name: String) = name(JsonField.of(name))
 
@@ -222,11 +219,8 @@ private constructor(
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /**
-         * The transformation string this name refers to, for example
-         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
-         * validated. The string must be a valid ImageKit transformation and cannot itself reference
-         * another named transformation (no nesting). Learn more about the
-         * [transformation syntax](https://imagekit.io/docs/transformations).
+         * The transformation string this named transformation refers to. Learn more about the
+         * [transformation string syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = transformation(JsonField.of(transformation))
 
