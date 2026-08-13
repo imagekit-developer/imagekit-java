@@ -20,8 +20,6 @@ import io.imagekit.services.blocking.FileService
 import io.imagekit.services.blocking.FileServiceImpl
 import io.imagekit.services.blocking.FolderService
 import io.imagekit.services.blocking.FolderServiceImpl
-import io.imagekit.services.blocking.NamedTransformationService
-import io.imagekit.services.blocking.NamedTransformationServiceImpl
 import io.imagekit.services.blocking.SavedExtensionService
 import io.imagekit.services.blocking.SavedExtensionServiceImpl
 import io.imagekit.services.blocking.WebhookService
@@ -55,10 +53,6 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
         SavedExtensionServiceImpl(clientOptionsWithUserAgent)
     }
 
-    private val namedTransformations: NamedTransformationService by lazy {
-        NamedTransformationServiceImpl(clientOptionsWithUserAgent)
-    }
-
     private val assets: AssetService by lazy { AssetServiceImpl(clientOptionsWithUserAgent) }
 
     private val cache: CacheService by lazy { CacheServiceImpl(clientOptionsWithUserAgent) }
@@ -85,8 +79,6 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun files(): FileService = files
 
     override fun savedExtensions(): SavedExtensionService = savedExtensions
-
-    override fun namedTransformations(): NamedTransformationService = namedTransformations
 
     override fun assets(): AssetService = assets
 
@@ -117,10 +109,6 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
         private val savedExtensions: SavedExtensionService.WithRawResponse by lazy {
             SavedExtensionServiceImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val namedTransformations: NamedTransformationService.WithRawResponse by lazy {
-            NamedTransformationServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val assets: AssetService.WithRawResponse by lazy {
@@ -160,9 +148,6 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
         override fun files(): FileService.WithRawResponse = files
 
         override fun savedExtensions(): SavedExtensionService.WithRawResponse = savedExtensions
-
-        override fun namedTransformations(): NamedTransformationService.WithRawResponse =
-            namedTransformations
 
         override fun assets(): AssetService.WithRawResponse = assets
 

@@ -11,7 +11,6 @@ import io.imagekit.services.blocking.CacheService
 import io.imagekit.services.blocking.CustomMetadataFieldService
 import io.imagekit.services.blocking.FileService
 import io.imagekit.services.blocking.FolderService
-import io.imagekit.services.blocking.NamedTransformationService
 import io.imagekit.services.blocking.SavedExtensionService
 import io.imagekit.services.blocking.WebhookService
 import java.util.function.Consumer
@@ -58,8 +57,6 @@ interface ImageKitClient {
 
     fun savedExtensions(): SavedExtensionService
 
-    fun namedTransformations(): NamedTransformationService
-
     fun assets(): AssetService
 
     fun cache(): CacheService
@@ -102,8 +99,6 @@ interface ImageKitClient {
         fun files(): FileService.WithRawResponse
 
         fun savedExtensions(): SavedExtensionService.WithRawResponse
-
-        fun namedTransformations(): NamedTransformationService.WithRawResponse
 
         fun assets(): AssetService.WithRawResponse
 

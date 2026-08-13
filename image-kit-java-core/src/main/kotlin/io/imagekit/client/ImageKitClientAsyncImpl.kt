@@ -20,8 +20,6 @@ import io.imagekit.services.async.FileServiceAsync
 import io.imagekit.services.async.FileServiceAsyncImpl
 import io.imagekit.services.async.FolderServiceAsync
 import io.imagekit.services.async.FolderServiceAsyncImpl
-import io.imagekit.services.async.NamedTransformationServiceAsync
-import io.imagekit.services.async.NamedTransformationServiceAsyncImpl
 import io.imagekit.services.async.SavedExtensionServiceAsync
 import io.imagekit.services.async.SavedExtensionServiceAsyncImpl
 import io.imagekit.services.async.WebhookServiceAsync
@@ -53,10 +51,6 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     private val savedExtensions: SavedExtensionServiceAsync by lazy {
         SavedExtensionServiceAsyncImpl(clientOptionsWithUserAgent)
-    }
-
-    private val namedTransformations: NamedTransformationServiceAsync by lazy {
-        NamedTransformationServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
     private val assets: AssetServiceAsync by lazy {
@@ -96,8 +90,6 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun savedExtensions(): SavedExtensionServiceAsync = savedExtensions
 
-    override fun namedTransformations(): NamedTransformationServiceAsync = namedTransformations
-
     override fun assets(): AssetServiceAsync = assets
 
     override fun cache(): CacheServiceAsync = cache
@@ -127,10 +119,6 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
         private val savedExtensions: SavedExtensionServiceAsync.WithRawResponse by lazy {
             SavedExtensionServiceAsyncImpl.WithRawResponseImpl(clientOptions)
-        }
-
-        private val namedTransformations: NamedTransformationServiceAsync.WithRawResponse by lazy {
-            NamedTransformationServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val assets: AssetServiceAsync.WithRawResponse by lazy {
@@ -170,9 +158,6 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
         override fun files(): FileServiceAsync.WithRawResponse = files
 
         override fun savedExtensions(): SavedExtensionServiceAsync.WithRawResponse = savedExtensions
-
-        override fun namedTransformations(): NamedTransformationServiceAsync.WithRawResponse =
-            namedTransformations
 
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
 

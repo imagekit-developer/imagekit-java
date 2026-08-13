@@ -43,7 +43,7 @@ interface CustomMetadataFieldService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CustomMetadataField
 
-    /** This API updates the label or schema of an existing custom metadata field. */
+    /** This API updates the label, description, or schema of an existing custom metadata field. */
     fun update(id: String): CustomMetadataField = update(id, CustomMetadataFieldUpdateParams.none())
 
     /** @see update */

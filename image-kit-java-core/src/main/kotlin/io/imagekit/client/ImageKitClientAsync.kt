@@ -11,7 +11,6 @@ import io.imagekit.services.async.CacheServiceAsync
 import io.imagekit.services.async.CustomMetadataFieldServiceAsync
 import io.imagekit.services.async.FileServiceAsync
 import io.imagekit.services.async.FolderServiceAsync
-import io.imagekit.services.async.NamedTransformationServiceAsync
 import io.imagekit.services.async.SavedExtensionServiceAsync
 import io.imagekit.services.async.WebhookServiceAsync
 import java.util.function.Consumer
@@ -57,8 +56,6 @@ interface ImageKitClientAsync {
     fun files(): FileServiceAsync
 
     fun savedExtensions(): SavedExtensionServiceAsync
-
-    fun namedTransformations(): NamedTransformationServiceAsync
 
     fun assets(): AssetServiceAsync
 
@@ -106,8 +103,6 @@ interface ImageKitClientAsync {
         fun files(): FileServiceAsync.WithRawResponse
 
         fun savedExtensions(): SavedExtensionServiceAsync.WithRawResponse
-
-        fun namedTransformations(): NamedTransformationServiceAsync.WithRawResponse
 
         fun assets(): AssetServiceAsync.WithRawResponse
 
