@@ -19,6 +19,7 @@ import io.imagekit.core.prepare
 import io.imagekit.models.NamedTransformation
 import io.imagekit.models.namedtransformations.NamedTransformationCreateParams
 import io.imagekit.models.namedtransformations.NamedTransformationDeleteParams
+import io.imagekit.models.namedtransformations.NamedTransformationDeleteResponse
 import io.imagekit.models.namedtransformations.NamedTransformationGetParams
 import io.imagekit.models.namedtransformations.NamedTransformationListParams
 import io.imagekit.models.namedtransformations.NamedTransformationUpdateParams
@@ -63,7 +64,7 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
     override fun delete(
         params: NamedTransformationDeleteParams,
         requestOptions: RequestOptions,
-    ): NamedTransformation =
+    ): NamedTransformationDeleteResponse =
         // delete /v1/named-transformations/{id}
         withRawResponse().delete(params, requestOptions).parse()
 
@@ -173,13 +174,13 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
             }
         }
 
-        private val deleteHandler: Handler<NamedTransformation> =
-            jsonHandler<NamedTransformation>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<NamedTransformationDeleteResponse> =
+            jsonHandler<NamedTransformationDeleteResponse>(clientOptions.jsonMapper)
 
         override fun delete(
             params: NamedTransformationDeleteParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<NamedTransformation> {
+        ): HttpResponseFor<NamedTransformationDeleteResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())

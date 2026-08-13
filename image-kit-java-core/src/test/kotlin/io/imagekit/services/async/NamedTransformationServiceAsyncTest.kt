@@ -46,8 +46,8 @@ internal class NamedTransformationServiceAsyncTest {
         val namedTransformationFuture =
             namedTransformationServiceAsync.update(
                 NamedTransformationUpdateParams.builder()
-                    .id("id")
-                    .enabled(true)
+                    .id("6bZ9x2ZUx")
+                    .enabled(false)
                     .name("small_thumbnail")
                     .transformation("w-200,h-200,fo-center,cm-resize")
                     .build()
@@ -83,7 +83,7 @@ internal class NamedTransformationServiceAsyncTest {
                 .build()
         val namedTransformationServiceAsync = client.namedTransformations()
 
-        val namedTransformationFuture = namedTransformationServiceAsync.delete("id")
+        val namedTransformationFuture = namedTransformationServiceAsync.delete("6bZ9x2ZUx")
 
         val namedTransformation = namedTransformationFuture.get()
         namedTransformation.validate()
@@ -99,7 +99,7 @@ internal class NamedTransformationServiceAsyncTest {
                 .build()
         val namedTransformationServiceAsync = client.namedTransformations()
 
-        val namedTransformationFuture = namedTransformationServiceAsync.get("id")
+        val namedTransformationFuture = namedTransformationServiceAsync.get("6bZ9x2ZUx")
 
         val namedTransformation = namedTransformationFuture.get()
         namedTransformation.validate()

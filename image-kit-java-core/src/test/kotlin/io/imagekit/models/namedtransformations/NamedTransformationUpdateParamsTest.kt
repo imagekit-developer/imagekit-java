@@ -10,8 +10,8 @@ internal class NamedTransformationUpdateParamsTest {
     @Test
     fun create() {
         NamedTransformationUpdateParams.builder()
-            .id("id")
-            .enabled(true)
+            .id("6bZ9x2ZUx")
+            .enabled(false)
             .name("small_thumbnail")
             .transformation("w-200,h-200,fo-center,cm-resize")
             .build()
@@ -19,9 +19,9 @@ internal class NamedTransformationUpdateParamsTest {
 
     @Test
     fun pathParams() {
-        val params = NamedTransformationUpdateParams.builder().id("id").build()
+        val params = NamedTransformationUpdateParams.builder().id("6bZ9x2ZUx").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(0)).isEqualTo("6bZ9x2ZUx")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }
@@ -30,22 +30,22 @@ internal class NamedTransformationUpdateParamsTest {
     fun body() {
         val params =
             NamedTransformationUpdateParams.builder()
-                .id("id")
-                .enabled(true)
+                .id("6bZ9x2ZUx")
+                .enabled(false)
                 .name("small_thumbnail")
                 .transformation("w-200,h-200,fo-center,cm-resize")
                 .build()
 
         val body = params._body()
 
-        assertThat(body.enabled()).contains(true)
+        assertThat(body.enabled()).contains(false)
         assertThat(body.name()).contains("small_thumbnail")
         assertThat(body.transformation()).contains("w-200,h-200,fo-center,cm-resize")
     }
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params = NamedTransformationUpdateParams.builder().id("id").build()
+        val params = NamedTransformationUpdateParams.builder().id("6bZ9x2ZUx").build()
 
         val body = params._body()
     }

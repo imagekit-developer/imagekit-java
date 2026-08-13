@@ -32,7 +32,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-/** This API updates the label or schema of an existing custom metadata field. */
+/** This API updates the label, description, or schema of an existing custom metadata field. */
 class CustomMetadataFieldUpdateParams
 private constructor(
     private val id: String?,
@@ -42,6 +42,16 @@ private constructor(
 ) : Params {
 
     fun id(): Optional<String> = Optional.ofNullable(id)
+
+    /**
+     * Optional description for the custom metadata field. Can be up to 500 characters. Send an
+     * empty string to clear an existing description. This is shown as a hint to the users while
+     * setting the field's value on an asset in the media library UI.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun description(): Optional<String> = body.description()
 
     /**
      * Human readable name of the custom metadata field. This should be unique across all non
@@ -63,6 +73,13 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun schema(): Optional<Schema> = body.schema()
+
+    /**
+     * Returns the raw JSON value of [description].
+     *
+     * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    fun _description(): JsonField<String> = body._description()
 
     /**
      * Returns the raw JSON value of [label].
@@ -127,10 +144,27 @@ private constructor(
          *
          * This is generally only useful if you are already constructing the body separately.
          * Otherwise, it's more convenient to use the top-level setters instead:
+         * - [description]
          * - [label]
          * - [schema]
          */
         fun body(body: Body) = apply { this.body = body.toBuilder() }
+
+        /**
+         * Optional description for the custom metadata field. Can be up to 500 characters. Send an
+         * empty string to clear an existing description. This is shown as a hint to the users while
+         * setting the field's value on an asset in the media library UI.
+         */
+        fun description(description: String) = apply { body.description(description) }
+
+        /**
+         * Sets [Builder.description] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.description] with a well-typed [String] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun description(description: JsonField<String>) = apply { body.description(description) }
 
         /**
          * Human readable name of the custom metadata field. This should be unique across all non
@@ -309,6 +343,7 @@ private constructor(
     class Body
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
+        private val description: JsonField<String>,
         private val label: JsonField<String>,
         private val schema: JsonField<Schema>,
         private val additionalProperties: MutableMap<String, JsonValue>,
@@ -316,9 +351,22 @@ private constructor(
 
         @JsonCreator
         private constructor(
+            @JsonProperty("description")
+            @ExcludeMissing
+            description: JsonField<String> = JsonMissing.of(),
             @JsonProperty("label") @ExcludeMissing label: JsonField<String> = JsonMissing.of(),
             @JsonProperty("schema") @ExcludeMissing schema: JsonField<Schema> = JsonMissing.of(),
-        ) : this(label, schema, mutableMapOf())
+        ) : this(description, label, schema, mutableMapOf())
+
+        /**
+         * Optional description for the custom metadata field. Can be up to 500 characters. Send an
+         * empty string to clear an existing description. This is shown as a hint to the users while
+         * setting the field's value on an asset in the media library UI.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun description(): Optional<String> = description.getOptional("description")
 
         /**
          * Human readable name of the custom metadata field. This should be unique across all non
@@ -340,6 +388,15 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun schema(): Optional<Schema> = schema.getOptional("schema")
+
+        /**
+         * Returns the raw JSON value of [description].
+         *
+         * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("description")
+        @ExcludeMissing
+        fun _description(): JsonField<String> = description
 
         /**
          * Returns the raw JSON value of [label].
@@ -376,15 +433,35 @@ private constructor(
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
+            private var description: JsonField<String> = JsonMissing.of()
             private var label: JsonField<String> = JsonMissing.of()
             private var schema: JsonField<Schema> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(body: Body) = apply {
+                description = body.description
                 label = body.label
                 schema = body.schema
                 additionalProperties = body.additionalProperties.toMutableMap()
+            }
+
+            /**
+             * Optional description for the custom metadata field. Can be up to 500 characters. Send
+             * an empty string to clear an existing description. This is shown as a hint to the
+             * users while setting the field's value on an asset in the media library UI.
+             */
+            fun description(description: String) = description(JsonField.of(description))
+
+            /**
+             * Sets [Builder.description] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.description] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun description(description: JsonField<String>) = apply {
+                this.description = description
             }
 
             /**
@@ -445,7 +522,8 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Body = Body(label, schema, additionalProperties.toMutableMap())
+            fun build(): Body =
+                Body(description, label, schema, additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -464,6 +542,7 @@ private constructor(
                 return@apply
             }
 
+            description()
             label()
             schema().ifPresent { it.validate() }
             validated = true
@@ -485,7 +564,8 @@ private constructor(
          */
         @JvmSynthetic
         internal fun validity(): Int =
-            (if (label.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
+                (if (label.asKnown().isPresent) 1 else 0) +
                 (schema.asKnown().getOrNull()?.validity() ?: 0)
 
         override fun equals(other: Any?): Boolean {
@@ -494,17 +574,20 @@ private constructor(
             }
 
             return other is Body &&
+                description == other.description &&
                 label == other.label &&
                 schema == other.schema &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(label, schema, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(description, label, schema, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Body{label=$label, schema=$schema, additionalProperties=$additionalProperties}"
+            "Body{description=$description, label=$label, schema=$schema, additionalProperties=$additionalProperties}"
     }
 
     /**

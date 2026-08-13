@@ -36,6 +36,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** Unique identifier for a named transformation. */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /**
@@ -58,9 +59,9 @@ private constructor(
 
     /**
      * The transformation string this name refers to, for example `w-150,h-150,fo-center,cm-resize`.
-     * The `tr:` prefix is optional — it's added automatically if missing, and validated if present.
-     * The string must be a valid ImageKit transformation and cannot itself reference another named
-     * transformation (no nesting). Learn more about the
+     * The `tr:` prefix is optional; if present, it is validated. The string must be a valid
+     * ImageKit transformation and cannot itself reference another named transformation (no
+     * nesting). Learn more about the
      * [transformation syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
@@ -128,6 +129,7 @@ private constructor(
                     namedTransformationUpdateParams.additionalQueryParams.toBuilder()
             }
 
+        /** Unique identifier for a named transformation. */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
@@ -174,10 +176,10 @@ private constructor(
 
         /**
          * The transformation string this name refers to, for example
-         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. The string must be a valid ImageKit
-         * transformation and cannot itself reference another named transformation (no nesting).
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+         * validated. The string must be a valid ImageKit transformation and cannot itself reference
+         * another named transformation (no nesting). Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -373,10 +375,10 @@ private constructor(
 
         /**
          * The transformation string this name refers to, for example
-         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. The string must be a valid ImageKit
-         * transformation and cannot itself reference another named transformation (no nesting).
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+         * validated. The string must be a valid ImageKit transformation and cannot itself reference
+         * another named transformation (no nesting). Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -474,10 +476,9 @@ private constructor(
 
             /**
              * The transformation string this name refers to, for example
-             * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-             * automatically if missing, and validated if present. The string must be a valid
-             * ImageKit transformation and cannot itself reference another named transformation (no
-             * nesting). Learn more about the
+             * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+             * validated. The string must be a valid ImageKit transformation and cannot itself
+             * reference another named transformation (no nesting). Learn more about the
              * [transformation syntax](https://imagekit.io/docs/transformations).
              */
             fun transformation(transformation: String) =

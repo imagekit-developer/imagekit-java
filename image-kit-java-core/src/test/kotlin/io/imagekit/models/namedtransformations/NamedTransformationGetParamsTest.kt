@@ -9,14 +9,14 @@ internal class NamedTransformationGetParamsTest {
 
     @Test
     fun create() {
-        NamedTransformationGetParams.builder().id("id").build()
+        NamedTransformationGetParams.builder().id("6bZ9x2ZUx").build()
     }
 
     @Test
     fun pathParams() {
-        val params = NamedTransformationGetParams.builder().id("id").build()
+        val params = NamedTransformationGetParams.builder().id("6bZ9x2ZUx").build()
 
-        assertThat(params._pathParam(0)).isEqualTo("id")
+        assertThat(params._pathParam(0)).isEqualTo("6bZ9x2ZUx")
         // out-of-bound path param
         assertThat(params._pathParam(1)).isEqualTo("")
     }

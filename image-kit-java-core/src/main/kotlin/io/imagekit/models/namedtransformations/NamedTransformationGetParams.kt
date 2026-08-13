@@ -17,6 +17,7 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
+    /** Unique identifier for a named transformation. */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Additional headers to send with the request. */
@@ -51,6 +52,7 @@ private constructor(
             additionalQueryParams = namedTransformationGetParams.additionalQueryParams.toBuilder()
         }
 
+        /** Unique identifier for a named transformation. */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */

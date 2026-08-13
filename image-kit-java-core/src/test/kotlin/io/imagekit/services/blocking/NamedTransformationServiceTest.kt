@@ -45,8 +45,8 @@ internal class NamedTransformationServiceTest {
         val namedTransformation =
             namedTransformationService.update(
                 NamedTransformationUpdateParams.builder()
-                    .id("id")
-                    .enabled(true)
+                    .id("6bZ9x2ZUx")
+                    .enabled(false)
                     .name("small_thumbnail")
                     .transformation("w-200,h-200,fo-center,cm-resize")
                     .build()
@@ -80,7 +80,7 @@ internal class NamedTransformationServiceTest {
                 .build()
         val namedTransformationService = client.namedTransformations()
 
-        val namedTransformation = namedTransformationService.delete("id")
+        val namedTransformation = namedTransformationService.delete("6bZ9x2ZUx")
 
         namedTransformation.validate()
     }
@@ -95,7 +95,7 @@ internal class NamedTransformationServiceTest {
                 .build()
         val namedTransformationService = client.namedTransformations()
 
-        val namedTransformation = namedTransformationService.get("id")
+        val namedTransformation = namedTransformationService.get("6bZ9x2ZUx")
 
         namedTransformation.validate()
     }

@@ -48,9 +48,9 @@ private constructor(
 
     /**
      * The transformation string this name refers to, for example `w-150,h-150,fo-center,cm-resize`.
-     * The `tr:` prefix is optional — it's added automatically if missing, and validated if present.
-     * The string must be a valid ImageKit transformation and cannot itself reference another named
-     * transformation (no nesting). Learn more about the
+     * The `tr:` prefix is optional; if present, it is validated. The string must be a valid
+     * ImageKit transformation and cannot itself reference another named transformation (no
+     * nesting). Learn more about the
      * [transformation syntax](https://imagekit.io/docs/transformations).
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
@@ -59,8 +59,8 @@ private constructor(
     fun transformation(): String = body.transformation()
 
     /**
-     * Whether the named transformation is enabled. Set to `false` to disable it without deleting
-     * it; requests using a disabled named transformation fail at delivery time.
+     * Whether the named transformation is currently enabled. When this is set to `false`, requests
+     * using such disabled named transformations fail at delivery time.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -157,10 +157,10 @@ private constructor(
 
         /**
          * The transformation string this name refers to, for example
-         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. The string must be a valid ImageKit
-         * transformation and cannot itself reference another named transformation (no nesting).
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+         * validated. The string must be a valid ImageKit transformation and cannot itself reference
+         * another named transformation (no nesting). Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          */
         fun transformation(transformation: String) = apply { body.transformation(transformation) }
 
@@ -176,8 +176,8 @@ private constructor(
         }
 
         /**
-         * Whether the named transformation is enabled. Set to `false` to disable it without
-         * deleting it; requests using a disabled named transformation fail at delivery time.
+         * Whether the named transformation is currently enabled. When this is set to `false`,
+         * requests using such disabled named transformations fail at delivery time.
          */
         fun enabled(enabled: Boolean) = apply { body.enabled(enabled) }
 
@@ -363,10 +363,10 @@ private constructor(
 
         /**
          * The transformation string this name refers to, for example
-         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-         * automatically if missing, and validated if present. The string must be a valid ImageKit
-         * transformation and cannot itself reference another named transformation (no nesting).
-         * Learn more about the [transformation syntax](https://imagekit.io/docs/transformations).
+         * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+         * validated. The string must be a valid ImageKit transformation and cannot itself reference
+         * another named transformation (no nesting). Learn more about the
+         * [transformation syntax](https://imagekit.io/docs/transformations).
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -374,8 +374,8 @@ private constructor(
         fun transformation(): String = transformation.getRequired("transformation")
 
         /**
-         * Whether the named transformation is enabled. Set to `false` to disable it without
-         * deleting it; requests using a disabled named transformation fail at delivery time.
+         * Whether the named transformation is currently enabled. When this is set to `false`,
+         * requests using such disabled named transformations fail at delivery time.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -466,10 +466,9 @@ private constructor(
 
             /**
              * The transformation string this name refers to, for example
-             * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional — it's added
-             * automatically if missing, and validated if present. The string must be a valid
-             * ImageKit transformation and cannot itself reference another named transformation (no
-             * nesting). Learn more about the
+             * `w-150,h-150,fo-center,cm-resize`. The `tr:` prefix is optional; if present, it is
+             * validated. The string must be a valid ImageKit transformation and cannot itself
+             * reference another named transformation (no nesting). Learn more about the
              * [transformation syntax](https://imagekit.io/docs/transformations).
              */
             fun transformation(transformation: String) =
@@ -487,8 +486,8 @@ private constructor(
             }
 
             /**
-             * Whether the named transformation is enabled. Set to `false` to disable it without
-             * deleting it; requests using a disabled named transformation fail at delivery time.
+             * Whether the named transformation is currently enabled. When this is set to `false`,
+             * requests using such disabled named transformations fail at delivery time.
              */
             fun enabled(enabled: Boolean) = enabled(JsonField.of(enabled))
 

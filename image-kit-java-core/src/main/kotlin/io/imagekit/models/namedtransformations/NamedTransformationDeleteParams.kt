@@ -12,7 +12,7 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
- * Permanently deletes the named transformation identified by `id` and returns the deleted object.
+ * Permanently deletes the named transformation identified by `id`.
  *
  * Deletion fails with a `409` error if the named transformation is still referenced (via the
  * `n-<name>` token) by an upload pre-transformation or post-transformation setting. This check is
@@ -27,6 +27,7 @@ private constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
+    /** Unique identifier for a named transformation. */
     fun id(): Optional<String> = Optional.ofNullable(id)
 
     /** Additional body properties to send with the request. */
@@ -70,6 +71,7 @@ private constructor(
                     namedTransformationDeleteParams.additionalBodyProperties.toMutableMap()
             }
 
+        /** Unique identifier for a named transformation. */
         fun id(id: String?) = apply { this.id = id }
 
         /** Alias for calling [Builder.id] with `id.orElse(null)`. */
