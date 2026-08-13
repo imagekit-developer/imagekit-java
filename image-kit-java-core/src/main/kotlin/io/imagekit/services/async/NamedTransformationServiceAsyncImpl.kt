@@ -5,6 +5,7 @@ package io.imagekit.services.async
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.checkRequired
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -19,7 +20,6 @@ import io.imagekit.core.prepareAsync
 import io.imagekit.models.NamedTransformation
 import io.imagekit.models.namedtransformations.NamedTransformationCreateParams
 import io.imagekit.models.namedtransformations.NamedTransformationDeleteParams
-import io.imagekit.models.namedtransformations.NamedTransformationDeleteResponse
 import io.imagekit.models.namedtransformations.NamedTransformationGetParams
 import io.imagekit.models.namedtransformations.NamedTransformationListParams
 import io.imagekit.models.namedtransformations.NamedTransformationUpdateParams
@@ -68,9 +68,9 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
     override fun delete(
         params: NamedTransformationDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<NamedTransformationDeleteResponse> =
+    ): CompletableFuture<Void?> =
         // delete /v1/named-transformations/{id}
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenAccept {}
 
     override fun get(
         params: NamedTransformationGetParams,
@@ -187,13 +187,12 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
                 }
         }
 
-        private val deleteHandler: Handler<NamedTransformationDeleteResponse> =
-            jsonHandler<NamedTransformationDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: NamedTransformationDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> {
+        ): CompletableFuture<HttpResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -210,13 +209,7 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { deleteHandler.handle(it) }
                     }
                 }
         }

@@ -83,10 +83,9 @@ internal class NamedTransformationServiceAsyncTest {
                 .build()
         val namedTransformationServiceAsync = client.namedTransformations()
 
-        val namedTransformationFuture = namedTransformationServiceAsync.delete("6bZ9x2ZUx")
+        val future = namedTransformationServiceAsync.delete("6bZ9x2ZUx")
 
-        val namedTransformation = namedTransformationFuture.get()
-        namedTransformation.validate()
+        val response = future.get()
     }
 
     @Disabled("Mock server tests are disabled")

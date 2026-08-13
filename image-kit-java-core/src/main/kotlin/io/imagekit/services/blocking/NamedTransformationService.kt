@@ -5,11 +5,11 @@ package io.imagekit.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.NamedTransformation
 import io.imagekit.models.namedtransformations.NamedTransformationCreateParams
 import io.imagekit.models.namedtransformations.NamedTransformationDeleteParams
-import io.imagekit.models.namedtransformations.NamedTransformationDeleteResponse
 import io.imagekit.models.namedtransformations.NamedTransformationGetParams
 import io.imagekit.models.namedtransformations.NamedTransformationListParams
 import io.imagekit.models.namedtransformations.NamedTransformationUpdateParams
@@ -112,34 +112,32 @@ interface NamedTransformationService {
      * is best-effort and can't detect references in your own application code or in previously
      * generated URLs.
      */
-    fun delete(id: String): NamedTransformationDeleteResponse =
-        delete(id, NamedTransformationDeleteParams.none())
+    fun delete(id: String) = delete(id, NamedTransformationDeleteParams.none())
 
     /** @see delete */
     fun delete(
         id: String,
         params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): NamedTransformationDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+    ) = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         id: String,
         params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
-    ): NamedTransformationDeleteResponse = delete(id, params, RequestOptions.none())
+    ) = delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: NamedTransformationDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): NamedTransformationDeleteResponse
+    )
 
     /** @see delete */
-    fun delete(params: NamedTransformationDeleteParams): NamedTransformationDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: NamedTransformationDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(id: String, requestOptions: RequestOptions): NamedTransformationDeleteResponse =
+    fun delete(id: String, requestOptions: RequestOptions) =
         delete(id, NamedTransformationDeleteParams.none(), requestOptions)
 
     /** Retrieves the named transformation identified by `id`. */
@@ -277,8 +275,7 @@ interface NamedTransformationService {
          * the same as [NamedTransformationService.delete].
          */
         @MustBeClosed
-        fun delete(id: String): HttpResponseFor<NamedTransformationDeleteResponse> =
-            delete(id, NamedTransformationDeleteParams.none())
+        fun delete(id: String): HttpResponse = delete(id, NamedTransformationDeleteParams.none())
 
         /** @see delete */
         @MustBeClosed
@@ -286,37 +283,30 @@ interface NamedTransformationService {
             id: String,
             params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<NamedTransformationDeleteResponse> =
-            delete(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
-        ): HttpResponseFor<NamedTransformationDeleteResponse> =
-            delete(id, params, RequestOptions.none())
+        ): HttpResponse = delete(id, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: NamedTransformationDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<NamedTransformationDeleteResponse>
+        ): HttpResponse
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: NamedTransformationDeleteParams
-        ): HttpResponseFor<NamedTransformationDeleteResponse> =
+        fun delete(params: NamedTransformationDeleteParams): HttpResponse =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<NamedTransformationDeleteResponse> =
+        fun delete(id: String, requestOptions: RequestOptions): HttpResponse =
             delete(id, NamedTransformationDeleteParams.none(), requestOptions)
 
         /**

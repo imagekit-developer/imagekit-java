@@ -80,9 +80,7 @@ internal class NamedTransformationServiceTest {
                 .build()
         val namedTransformationService = client.namedTransformations()
 
-        val namedTransformation = namedTransformationService.delete("6bZ9x2ZUx")
-
-        namedTransformation.validate()
+        namedTransformationService.delete("6bZ9x2ZUx")
     }
 
     @Disabled("Mock server tests are disabled")

@@ -4,11 +4,11 @@ package io.imagekit.services.async
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.NamedTransformation
 import io.imagekit.models.namedtransformations.NamedTransformationCreateParams
 import io.imagekit.models.namedtransformations.NamedTransformationDeleteParams
-import io.imagekit.models.namedtransformations.NamedTransformationDeleteResponse
 import io.imagekit.models.namedtransformations.NamedTransformationGetParams
 import io.imagekit.models.namedtransformations.NamedTransformationListParams
 import io.imagekit.models.namedtransformations.NamedTransformationUpdateParams
@@ -115,7 +115,7 @@ interface NamedTransformationServiceAsync {
      * is best-effort and can't detect references in your own application code or in previously
      * generated URLs.
      */
-    fun delete(id: String): CompletableFuture<NamedTransformationDeleteResponse> =
+    fun delete(id: String): CompletableFuture<Void?> =
         delete(id, NamedTransformationDeleteParams.none())
 
     /** @see delete */
@@ -123,32 +123,26 @@ interface NamedTransformationServiceAsync {
         id: String,
         params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<NamedTransformationDeleteResponse> =
-        delete(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Void?> = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         id: String,
         params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
-    ): CompletableFuture<NamedTransformationDeleteResponse> =
-        delete(id, params, RequestOptions.none())
+    ): CompletableFuture<Void?> = delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: NamedTransformationDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<NamedTransformationDeleteResponse>
+    ): CompletableFuture<Void?>
 
     /** @see delete */
-    fun delete(
-        params: NamedTransformationDeleteParams
-    ): CompletableFuture<NamedTransformationDeleteResponse> = delete(params, RequestOptions.none())
+    fun delete(params: NamedTransformationDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<NamedTransformationDeleteResponse> =
+    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
         delete(id, NamedTransformationDeleteParams.none(), requestOptions)
 
     /** Retrieves the named transformation identified by `id`. */
@@ -283,9 +277,7 @@ interface NamedTransformationServiceAsync {
          * Returns a raw HTTP response for `delete /v1/named-transformations/{id}`, but is otherwise
          * the same as [NamedTransformationServiceAsync.delete].
          */
-        fun delete(
-            id: String
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> =
+        fun delete(id: String): CompletableFuture<HttpResponse> =
             delete(id, NamedTransformationDeleteParams.none())
 
         /** @see delete */
@@ -293,33 +285,27 @@ interface NamedTransformationServiceAsync {
             id: String,
             params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> =
+        ): CompletableFuture<HttpResponse> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         fun delete(
             id: String,
             params: NamedTransformationDeleteParams = NamedTransformationDeleteParams.none(),
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> =
-            delete(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponse> = delete(id, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: NamedTransformationDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>>
+        ): CompletableFuture<HttpResponse>
 
         /** @see delete */
-        fun delete(
-            params: NamedTransformationDeleteParams
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> =
+        fun delete(params: NamedTransformationDeleteParams): CompletableFuture<HttpResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<NamedTransformationDeleteResponse>> =
+        fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
             delete(id, NamedTransformationDeleteParams.none(), requestOptions)
 
         /**

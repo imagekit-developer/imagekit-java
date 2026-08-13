@@ -5,6 +5,7 @@ package io.imagekit.services.blocking
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.checkRequired
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -19,7 +20,6 @@ import io.imagekit.core.prepare
 import io.imagekit.models.NamedTransformation
 import io.imagekit.models.namedtransformations.NamedTransformationCreateParams
 import io.imagekit.models.namedtransformations.NamedTransformationDeleteParams
-import io.imagekit.models.namedtransformations.NamedTransformationDeleteResponse
 import io.imagekit.models.namedtransformations.NamedTransformationGetParams
 import io.imagekit.models.namedtransformations.NamedTransformationListParams
 import io.imagekit.models.namedtransformations.NamedTransformationUpdateParams
@@ -61,12 +61,10 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
         // get /v1/named-transformations
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
-        params: NamedTransformationDeleteParams,
-        requestOptions: RequestOptions,
-    ): NamedTransformationDeleteResponse =
+    override fun delete(params: NamedTransformationDeleteParams, requestOptions: RequestOptions) {
         // delete /v1/named-transformations/{id}
-        withRawResponse().delete(params, requestOptions).parse()
+        withRawResponse().delete(params, requestOptions)
+    }
 
     override fun get(
         params: NamedTransformationGetParams,
@@ -174,13 +172,12 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
             }
         }
 
-        private val deleteHandler: Handler<NamedTransformationDeleteResponse> =
-            jsonHandler<NamedTransformationDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: NamedTransformationDeleteParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<NamedTransformationDeleteResponse> {
+        ): HttpResponse {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -195,13 +192,7 @@ internal constructor(private val clientOptions: ClientOptions) : NamedTransforma
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
+                response.use { deleteHandler.handle(it) }
             }
         }
 
