@@ -18,7 +18,7 @@ internal class NamedTransformationTest {
                 .createdAt(OffsetDateTime.parse("2024-01-10T09:00:00.000Z"))
                 .enabled(true)
                 .name("small_thumbnail")
-                .transformation("w-150,h-150,fo-center,cm-resize")
+                .transformation("w-150,h-150,fo-center,cm-pad_resize")
                 .build()
 
         assertThat(namedTransformation.id()).contains("6bZ9x2ZUx")
@@ -26,7 +26,8 @@ internal class NamedTransformationTest {
             .contains(OffsetDateTime.parse("2024-01-10T09:00:00.000Z"))
         assertThat(namedTransformation.enabled()).contains(true)
         assertThat(namedTransformation.name()).contains("small_thumbnail")
-        assertThat(namedTransformation.transformation()).contains("w-150,h-150,fo-center,cm-resize")
+        assertThat(namedTransformation.transformation())
+            .contains("w-150,h-150,fo-center,cm-pad_resize")
     }
 
     @Test
@@ -38,7 +39,7 @@ internal class NamedTransformationTest {
                 .createdAt(OffsetDateTime.parse("2024-01-10T09:00:00.000Z"))
                 .enabled(true)
                 .name("small_thumbnail")
-                .transformation("w-150,h-150,fo-center,cm-resize")
+                .transformation("w-150,h-150,fo-center,cm-pad_resize")
                 .build()
 
         val roundtrippedNamedTransformation =

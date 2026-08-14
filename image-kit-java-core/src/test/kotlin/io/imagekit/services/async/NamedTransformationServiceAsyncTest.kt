@@ -24,7 +24,7 @@ internal class NamedTransformationServiceAsyncTest {
             namedTransformationServiceAsync.create(
                 NamedTransformationCreateParams.builder()
                     .name("small_thumbnail")
-                    .transformation("w-150,h-150,fo-center,cm-resize")
+                    .transformation("w-150,h-150,fo-center,cm-pad_resize")
                     .enabled(true)
                     .build()
             )
@@ -49,7 +49,7 @@ internal class NamedTransformationServiceAsyncTest {
                     .id("6bZ9x2ZUx")
                     .enabled(false)
                     .name("small_thumbnail")
-                    .transformation("w-200,h-200,fo-center,cm-resize")
+                    .transformation("w-200,h-200,fo-center,cm-pad_resize")
                     .build()
             )
 

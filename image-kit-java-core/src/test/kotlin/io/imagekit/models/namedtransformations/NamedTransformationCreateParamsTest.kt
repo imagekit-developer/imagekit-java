@@ -11,7 +11,7 @@ internal class NamedTransformationCreateParamsTest {
     fun create() {
         NamedTransformationCreateParams.builder()
             .name("small_thumbnail")
-            .transformation("w-150,h-150,fo-center,cm-resize")
+            .transformation("w-150,h-150,fo-center,cm-pad_resize")
             .enabled(true)
             .build()
     }
@@ -21,14 +21,14 @@ internal class NamedTransformationCreateParamsTest {
         val params =
             NamedTransformationCreateParams.builder()
                 .name("small_thumbnail")
-                .transformation("w-150,h-150,fo-center,cm-resize")
+                .transformation("w-150,h-150,fo-center,cm-pad_resize")
                 .enabled(true)
                 .build()
 
         val body = params._body()
 
         assertThat(body.name()).isEqualTo("small_thumbnail")
-        assertThat(body.transformation()).isEqualTo("w-150,h-150,fo-center,cm-resize")
+        assertThat(body.transformation()).isEqualTo("w-150,h-150,fo-center,cm-pad_resize")
         assertThat(body.enabled()).contains(true)
     }
 
@@ -37,12 +37,12 @@ internal class NamedTransformationCreateParamsTest {
         val params =
             NamedTransformationCreateParams.builder()
                 .name("small_thumbnail")
-                .transformation("w-150,h-150,fo-center,cm-resize")
+                .transformation("w-150,h-150,fo-center,cm-pad_resize")
                 .build()
 
         val body = params._body()
 
         assertThat(body.name()).isEqualTo("small_thumbnail")
-        assertThat(body.transformation()).isEqualTo("w-150,h-150,fo-center,cm-resize")
+        assertThat(body.transformation()).isEqualTo("w-150,h-150,fo-center,cm-pad_resize")
     }
 }

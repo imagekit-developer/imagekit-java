@@ -13,7 +13,7 @@ internal class NamedTransformationUpdateParamsTest {
             .id("6bZ9x2ZUx")
             .enabled(false)
             .name("small_thumbnail")
-            .transformation("w-200,h-200,fo-center,cm-resize")
+            .transformation("w-200,h-200,fo-center,cm-pad_resize")
             .build()
     }
 
@@ -33,14 +33,14 @@ internal class NamedTransformationUpdateParamsTest {
                 .id("6bZ9x2ZUx")
                 .enabled(false)
                 .name("small_thumbnail")
-                .transformation("w-200,h-200,fo-center,cm-resize")
+                .transformation("w-200,h-200,fo-center,cm-pad_resize")
                 .build()
 
         val body = params._body()
 
         assertThat(body.enabled()).contains(false)
         assertThat(body.name()).contains("small_thumbnail")
-        assertThat(body.transformation()).contains("w-200,h-200,fo-center,cm-resize")
+        assertThat(body.transformation()).contains("w-200,h-200,fo-center,cm-pad_resize")
     }
 
     @Test
