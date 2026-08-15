@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.4.0...v3.5.0) (2026-08-15)
+
+
+### Features
+
+* add description field in custom metadata field api ([af892fc](https://github.com/imagekit-developer/imagekit-java/commit/af892fc222d509e553277866ffc07debe10f9415))
+* **api:** Named Transformations ([6a2807c](https://github.com/imagekit-developer/imagekit-java/commit/6a2807ce6fafdceda1eef863b8e34b6509cc4568))
+
 ## [3.4.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.3.0...v3.4.0) (2026-07-14)
 
 
