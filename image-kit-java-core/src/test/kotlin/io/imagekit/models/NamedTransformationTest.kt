@@ -21,13 +21,13 @@ internal class NamedTransformationTest {
                 .transformation("w-150,h-150,fo-center,cm-pad_resize")
                 .build()
 
-        assertThat(namedTransformation.id()).contains("6bZ9x2ZUx")
+        assertThat(namedTransformation.id()).isEqualTo("6bZ9x2ZUx")
         assertThat(namedTransformation.createdAt())
-            .contains(OffsetDateTime.parse("2024-01-10T09:00:00.000Z"))
-        assertThat(namedTransformation.enabled()).contains(true)
-        assertThat(namedTransformation.name()).contains("small_thumbnail")
+            .isEqualTo(OffsetDateTime.parse("2024-01-10T09:00:00.000Z"))
+        assertThat(namedTransformation.enabled()).isEqualTo(true)
+        assertThat(namedTransformation.name()).isEqualTo("small_thumbnail")
         assertThat(namedTransformation.transformation())
-            .contains("w-150,h-150,fo-center,cm-pad_resize")
+            .isEqualTo("w-150,h-150,fo-center,cm-pad_resize")
     }
 
     @Test
