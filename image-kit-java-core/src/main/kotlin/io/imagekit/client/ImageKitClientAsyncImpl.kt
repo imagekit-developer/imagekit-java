@@ -8,6 +8,8 @@ import io.imagekit.lib.Helper
 import io.imagekit.lib.HelperService
 import io.imagekit.services.async.AccountServiceAsync
 import io.imagekit.services.async.AccountServiceAsyncImpl
+import io.imagekit.services.async.AiFilterSearchServiceAsync
+import io.imagekit.services.async.AiFilterSearchServiceAsyncImpl
 import io.imagekit.services.async.AssetServiceAsync
 import io.imagekit.services.async.AssetServiceAsyncImpl
 import io.imagekit.services.async.BetaServiceAsync
@@ -63,6 +65,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
         AssetServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val aiFilterSearch: AiFilterSearchServiceAsync by lazy {
+        AiFilterSearchServiceAsyncImpl(clientOptionsWithUserAgent)
+    }
+
     private val cache: CacheServiceAsync by lazy {
         CacheServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -100,6 +106,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun assets(): AssetServiceAsync = assets
 
+    override fun aiFilterSearch(): AiFilterSearchServiceAsync = aiFilterSearch
+
     override fun cache(): CacheServiceAsync = cache
 
     override fun folders(): FolderServiceAsync = folders
@@ -135,6 +143,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
         private val assets: AssetServiceAsync.WithRawResponse by lazy {
             AssetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val aiFilterSearch: AiFilterSearchServiceAsync.WithRawResponse by lazy {
+            AiFilterSearchServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val cache: CacheServiceAsync.WithRawResponse by lazy {
@@ -175,6 +187,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
             namedTransformations
 
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
+
+        override fun aiFilterSearch(): AiFilterSearchServiceAsync.WithRawResponse = aiFilterSearch
 
         override fun cache(): CacheServiceAsync.WithRawResponse = cache
 

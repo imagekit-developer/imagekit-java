@@ -5,6 +5,7 @@ package io.imagekit.client
 import io.imagekit.core.ClientOptions
 import io.imagekit.lib.HelperService
 import io.imagekit.services.async.AccountServiceAsync
+import io.imagekit.services.async.AiFilterSearchServiceAsync
 import io.imagekit.services.async.AssetServiceAsync
 import io.imagekit.services.async.BetaServiceAsync
 import io.imagekit.services.async.CacheServiceAsync
@@ -62,6 +63,8 @@ interface ImageKitClientAsync {
 
     fun assets(): AssetServiceAsync
 
+    fun aiFilterSearch(): AiFilterSearchServiceAsync
+
     fun cache(): CacheServiceAsync
 
     fun folders(): FolderServiceAsync
@@ -110,6 +113,8 @@ interface ImageKitClientAsync {
         fun namedTransformations(): NamedTransformationServiceAsync.WithRawResponse
 
         fun assets(): AssetServiceAsync.WithRawResponse
+
+        fun aiFilterSearch(): AiFilterSearchServiceAsync.WithRawResponse
 
         fun cache(): CacheServiceAsync.WithRawResponse
 
