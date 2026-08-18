@@ -6,6 +6,8 @@ import io.imagekit.core.ClientOptions
 import io.imagekit.core.getPackageVersion
 import io.imagekit.services.blocking.AccountService
 import io.imagekit.services.blocking.AccountServiceImpl
+import io.imagekit.services.blocking.AiFilterSearchService
+import io.imagekit.services.blocking.AiFilterSearchServiceImpl
 import io.imagekit.services.blocking.AssetService
 import io.imagekit.services.blocking.AssetServiceImpl
 import io.imagekit.services.blocking.BetaService
@@ -59,6 +61,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val assets: AssetService by lazy { AssetServiceImpl(clientOptionsWithUserAgent) }
 
+    private val aiFilterSearch: AiFilterSearchService by lazy {
+        AiFilterSearchServiceImpl(clientOptionsWithUserAgent)
+    }
+
     private val cache: CacheService by lazy { CacheServiceImpl(clientOptionsWithUserAgent) }
 
     private val folders: FolderService by lazy { FolderServiceImpl(clientOptionsWithUserAgent) }
@@ -85,6 +91,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun namedTransformations(): NamedTransformationService = namedTransformations
 
     override fun assets(): AssetService = assets
+
+    override fun aiFilterSearch(): AiFilterSearchService = aiFilterSearch
 
     override fun cache(): CacheService = cache
 
@@ -119,6 +127,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
         private val assets: AssetService.WithRawResponse by lazy {
             AssetServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val aiFilterSearch: AiFilterSearchService.WithRawResponse by lazy {
+            AiFilterSearchServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val cache: CacheService.WithRawResponse by lazy {
@@ -159,6 +171,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
             namedTransformations
 
         override fun assets(): AssetService.WithRawResponse = assets
+
+        override fun aiFilterSearch(): AiFilterSearchService.WithRawResponse = aiFilterSearch
 
         override fun cache(): CacheService.WithRawResponse = cache
 

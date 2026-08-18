@@ -66,6 +66,7 @@ internal class ProGuardCompatibilityTest {
         assertThat(client.savedExtensions()).isNotNull()
         assertThat(client.namedTransformations()).isNotNull()
         assertThat(client.assets()).isNotNull()
+        assertThat(client.aiFilterSearch()).isNotNull()
         assertThat(client.cache()).isNotNull()
         assertThat(client.folders()).isNotNull()
         assertThat(client.accounts()).isNotNull()
