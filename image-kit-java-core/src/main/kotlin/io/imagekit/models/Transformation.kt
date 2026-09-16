@@ -60,6 +60,7 @@ private constructor(
     private val crop: JsonField<Crop>,
     private val cropMode: JsonField<CropMode>,
     private val defaultImage: JsonField<String>,
+    private val density: JsonField<Density>,
     private val distort: JsonField<String>,
     private val dpr: JsonField<Double>,
     private val duration: JsonField<Duration>,
@@ -148,6 +149,7 @@ private constructor(
         @JsonProperty("defaultImage")
         @ExcludeMissing
         defaultImage: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("density") @ExcludeMissing density: JsonField<Density> = JsonMissing.of(),
         @JsonProperty("distort") @ExcludeMissing distort: JsonField<String> = JsonMissing.of(),
         @JsonProperty("dpr") @ExcludeMissing dpr: JsonField<Double> = JsonMissing.of(),
         @JsonProperty("duration") @ExcludeMissing duration: JsonField<Duration> = JsonMissing.of(),
@@ -218,6 +220,7 @@ private constructor(
         crop,
         cropMode,
         defaultImage,
+        density,
         distort,
         dpr,
         duration,
@@ -471,6 +474,18 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun defaultImage(): Optional<String> = defaultImage.getOptional("defaultImage")
+
+    /**
+     * Sets the output image density in dots per inch (DPI). Accepts an integer from 1 to 1200 or an
+     * arithmetic expression using the `idn` variable, such as `idn_mul_2`. For raster images, this
+     * updates density metadata without changing dimensions. For vector images, it controls the DPI
+     * used during rasterization. Cannot be used inside layers. See
+     * [Density](https://imagekit.io/docs/image-optimization#density---dn).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun density(): Optional<Density> = density.getOptional("density")
 
     /**
      * Distorts the shape of an image. Supports two modes:
@@ -1004,6 +1019,13 @@ private constructor(
     fun _defaultImage(): JsonField<String> = defaultImage
 
     /**
+     * Returns the raw JSON value of [density].
+     *
+     * Unlike [density], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("density") @ExcludeMissing fun _density(): JsonField<Density> = density
+
+    /**
      * Returns the raw JSON value of [distort].
      *
      * Unlike [distort], this method doesn't throw if the JSON field has an unexpected type.
@@ -1301,6 +1323,7 @@ private constructor(
         private var crop: JsonField<Crop> = JsonMissing.of()
         private var cropMode: JsonField<CropMode> = JsonMissing.of()
         private var defaultImage: JsonField<String> = JsonMissing.of()
+        private var density: JsonField<Density> = JsonMissing.of()
         private var distort: JsonField<String> = JsonMissing.of()
         private var dpr: JsonField<Double> = JsonMissing.of()
         private var duration: JsonField<Duration> = JsonMissing.of()
@@ -1360,6 +1383,7 @@ private constructor(
             crop = transformation.crop
             cropMode = transformation.cropMode
             defaultImage = transformation.defaultImage
+            density = transformation.density
             distort = transformation.distort
             dpr = transformation.dpr
             duration = transformation.duration
@@ -1765,6 +1789,29 @@ private constructor(
         fun defaultImage(defaultImage: JsonField<String>) = apply {
             this.defaultImage = defaultImage
         }
+
+        /**
+         * Sets the output image density in dots per inch (DPI). Accepts an integer from 1 to 1200
+         * or an arithmetic expression using the `idn` variable, such as `idn_mul_2`. For raster
+         * images, this updates density metadata without changing dimensions. For vector images, it
+         * controls the DPI used during rasterization. Cannot be used inside layers. See
+         * [Density](https://imagekit.io/docs/image-optimization#density---dn).
+         */
+        fun density(density: Density) = density(JsonField.of(density))
+
+        /**
+         * Sets [Builder.density] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.density] with a well-typed [Density] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun density(density: JsonField<Density>) = apply { this.density = density }
+
+        /** Alias for calling [density] with `Density.ofInteger(integer)`. */
+        fun density(integer: Long) = density(Density.ofInteger(integer))
+
+        /** Alias for calling [density] with `Density.ofString(string)`. */
+        fun density(string: String) = density(Density.ofString(string))
 
         /**
          * Distorts the shape of an image. Supports two modes:
@@ -2556,6 +2603,7 @@ private constructor(
                 crop,
                 cropMode,
                 defaultImage,
+                density,
                 distort,
                 dpr,
                 duration,
@@ -2630,6 +2678,7 @@ private constructor(
         crop().ifPresent { it.validate() }
         cropMode().ifPresent { it.validate() }
         defaultImage()
+        density().ifPresent { it.validate() }
         distort()
         dpr()
         duration().ifPresent { it.validate() }
@@ -2703,6 +2752,7 @@ private constructor(
             (crop.asKnown().getOrNull()?.validity() ?: 0) +
             (cropMode.asKnown().getOrNull()?.validity() ?: 0) +
             (if (defaultImage.asKnown().isPresent) 1 else 0) +
+            (density.asKnown().getOrNull()?.validity() ?: 0) +
             (if (distort.asKnown().isPresent) 1 else 0) +
             (if (dpr.asKnown().isPresent) 1 else 0) +
             (duration.asKnown().getOrNull()?.validity() ?: 0) +
@@ -4458,6 +4508,220 @@ private constructor(
         override fun hashCode() = value.hashCode()
 
         override fun toString() = value.toString()
+    }
+
+    /**
+     * Sets the output image density in dots per inch (DPI). Accepts an integer from 1 to 1200 or an
+     * arithmetic expression using the `idn` variable, such as `idn_mul_2`. For raster images, this
+     * updates density metadata without changing dimensions. For vector images, it controls the DPI
+     * used during rasterization. Cannot be used inside layers. See
+     * [Density](https://imagekit.io/docs/image-optimization#density---dn).
+     */
+    @JsonDeserialize(using = Density.Deserializer::class)
+    @JsonSerialize(using = Density.Serializer::class)
+    class Density
+    private constructor(
+        private val integer: Long? = null,
+        private val string: String? = null,
+        private val _json: JsonValue? = null,
+    ) {
+
+        fun integer(): Optional<Long> = Optional.ofNullable(integer)
+
+        fun string(): Optional<String> = Optional.ofNullable(string)
+
+        fun isInteger(): Boolean = integer != null
+
+        fun isString(): Boolean = string != null
+
+        fun asInteger(): Long = integer.getOrThrow("integer")
+
+        fun asString(): String = string.getOrThrow("string")
+
+        fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
+
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import io.imagekit.core.JsonValue;
+         * import java.util.Optional;
+         *
+         * Optional<String> result = density.accept(new Density.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitInteger(Long integer) {
+         *         return Optional.of(integer.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws ImageKitInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
+                integer != null -> visitor.visitInteger(integer)
+                string != null -> visitor.visitString(string)
+                else -> visitor.unknown(_json)
+            }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): Density = apply {
+            if (validated) {
+                return@apply
+            }
+
+            accept(
+                object : Visitor<Unit> {
+                    override fun visitInteger(integer: Long) {}
+
+                    override fun visitString(string: String) {}
+                }
+            )
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitInteger(integer: Long) = 1
+
+                    override fun visitString(string: String) = 1
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is Density && integer == other.integer && string == other.string
+        }
+
+        override fun hashCode(): Int = Objects.hash(integer, string)
+
+        override fun toString(): String =
+            when {
+                integer != null -> "Density{integer=$integer}"
+                string != null -> "Density{string=$string}"
+                _json != null -> "Density{_unknown=$_json}"
+                else -> throw IllegalStateException("Invalid Density")
+            }
+
+        companion object {
+
+            @JvmStatic fun ofInteger(integer: Long) = Density(integer = integer)
+
+            @JvmStatic fun ofString(string: String) = Density(string = string)
+        }
+
+        /**
+         * An interface that defines how to map each variant of [Density] to a value of type [T].
+         */
+        interface Visitor<out T> {
+
+            fun visitInteger(integer: Long): T
+
+            fun visitString(string: String): T
+
+            /**
+             * Maps an unknown variant of [Density] to a value of type [T].
+             *
+             * An instance of [Density] can contain an unknown variant if it was deserialized from
+             * data that doesn't match any known variant. For example, if the SDK is on an older
+             * version than the API, then the API may respond with new variants that the SDK is
+             * unaware of.
+             *
+             * @throws ImageKitInvalidDataException in the default implementation.
+             */
+            fun unknown(json: JsonValue?): T {
+                throw ImageKitInvalidDataException("Unknown Density: $json")
+            }
+        }
+
+        internal class Deserializer : BaseDeserializer<Density>(Density::class) {
+
+            override fun ObjectCodec.deserialize(node: JsonNode): Density {
+                val json = JsonValue.fromJsonNode(node)
+
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<String>())?.let {
+                                Density(string = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Long>())?.let {
+                                Density(integer = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> Density(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
+            }
+        }
+
+        internal class Serializer : BaseSerializer<Density>(Density::class) {
+
+            override fun serialize(
+                value: Density,
+                generator: JsonGenerator,
+                provider: SerializerProvider,
+            ) {
+                when {
+                    value.integer != null -> generator.writeObject(value.integer)
+                    value.string != null -> generator.writeObject(value.string)
+                    value._json != null -> generator.writeObject(value._json)
+                    else -> throw IllegalStateException("Invalid Density")
+                }
+            }
+        }
     }
 
     /**
@@ -8793,6 +9057,7 @@ private constructor(
             crop == other.crop &&
             cropMode == other.cropMode &&
             defaultImage == other.defaultImage &&
+            density == other.density &&
             distort == other.distort &&
             dpr == other.dpr &&
             duration == other.duration &&
@@ -8853,6 +9118,7 @@ private constructor(
             crop,
             cropMode,
             defaultImage,
+            density,
             distort,
             dpr,
             duration,
@@ -8895,5 +9161,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorize=$colorize, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
+        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorize=$colorize, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, density=$density, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
 }

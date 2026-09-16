@@ -40,6 +40,7 @@ private constructor(
     private val name: JsonField<String>,
     private val schema: JsonField<Schema>,
     private val description: JsonField<String>,
+    private val reserved: JsonField<Boolean>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
@@ -52,7 +53,8 @@ private constructor(
         @JsonProperty("description")
         @ExcludeMissing
         description: JsonField<String> = JsonMissing.of(),
-    ) : this(id, label, name, schema, description, mutableMapOf())
+        @JsonProperty("reserved") @ExcludeMissing reserved: JsonField<Boolean> = JsonMissing.of(),
+    ) : this(id, label, name, schema, description, reserved, mutableMapOf())
 
     /**
      * Unique identifier for the custom metadata field. Use this to update the field.
@@ -99,6 +101,15 @@ private constructor(
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
+     * Present and set to `true` when the field is reserved. Omitted for regular fields. Reserved
+     * fields cannot be deleted.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun reserved(): Optional<Boolean> = reserved.getOptional("reserved")
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
@@ -132,6 +143,13 @@ private constructor(
      * Unlike [description], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("description") @ExcludeMissing fun _description(): JsonField<String> = description
+
+    /**
+     * Returns the raw JSON value of [reserved].
+     *
+     * Unlike [reserved], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("reserved") @ExcludeMissing fun _reserved(): JsonField<Boolean> = reserved
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -169,6 +187,7 @@ private constructor(
         private var name: JsonField<String>? = null
         private var schema: JsonField<Schema>? = null
         private var description: JsonField<String> = JsonMissing.of()
+        private var reserved: JsonField<Boolean> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -178,6 +197,7 @@ private constructor(
             name = customMetadataField.name
             schema = customMetadataField.schema
             description = customMetadataField.description
+            reserved = customMetadataField.reserved
             additionalProperties = customMetadataField.additionalProperties.toMutableMap()
         }
 
@@ -247,6 +267,21 @@ private constructor(
          */
         fun description(description: JsonField<String>) = apply { this.description = description }
 
+        /**
+         * Present and set to `true` when the field is reserved. Omitted for regular fields.
+         * Reserved fields cannot be deleted.
+         */
+        fun reserved(reserved: Boolean) = reserved(JsonField.of(reserved))
+
+        /**
+         * Sets [Builder.reserved] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.reserved] with a well-typed [Boolean] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun reserved(reserved: JsonField<Boolean>) = apply { this.reserved = reserved }
+
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
             putAllAdditionalProperties(additionalProperties)
@@ -288,6 +323,7 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("schema", schema),
                 description,
+                reserved,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -312,6 +348,7 @@ private constructor(
         name()
         schema().validate()
         description()
+        reserved()
         validated = true
     }
 
@@ -334,7 +371,8 @@ private constructor(
             (if (label.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (schema.asKnown().getOrNull()?.validity() ?: 0) +
-            (if (description.asKnown().isPresent) 1 else 0)
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (if (reserved.asKnown().isPresent) 1 else 0)
 
     /** An object that describes the rules for the custom metadata field value. */
     class Schema
@@ -2228,15 +2266,16 @@ private constructor(
             name == other.name &&
             schema == other.schema &&
             description == other.description &&
+            reserved == other.reserved &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, label, name, schema, description, additionalProperties)
+        Objects.hash(id, label, name, schema, description, reserved, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CustomMetadataField{id=$id, label=$label, name=$name, schema=$schema, description=$description, additionalProperties=$additionalProperties}"
+        "CustomMetadataField{id=$id, label=$label, name=$name, schema=$schema, description=$description, reserved=$reserved, additionalProperties=$additionalProperties}"
 }

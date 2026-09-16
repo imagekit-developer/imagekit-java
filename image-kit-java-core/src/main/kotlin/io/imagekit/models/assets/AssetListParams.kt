@@ -536,6 +536,14 @@ private constructor(
 
             @JvmField val DESC_RELEVANCE = of("DESC_RELEVANCE")
 
+            @JvmField val ASC_DURATION = of("ASC_DURATION")
+
+            @JvmField val DESC_DURATION = of("DESC_DURATION")
+
+            @JvmField val ASC_ORIGINAL_CREATION_DATE = of("ASC_ORIGINAL_CREATION_DATE")
+
+            @JvmField val DESC_ORIGINAL_CREATION_DATE = of("DESC_ORIGINAL_CREATION_DATE")
+
             @JvmStatic fun of(value: String) = Sort(JsonField.of(value))
         }
 
@@ -555,6 +563,10 @@ private constructor(
             DESC_SIZE,
             ASC_RELEVANCE,
             DESC_RELEVANCE,
+            ASC_DURATION,
+            DESC_DURATION,
+            ASC_ORIGINAL_CREATION_DATE,
+            DESC_ORIGINAL_CREATION_DATE,
         }
 
         /**
@@ -581,6 +593,10 @@ private constructor(
             DESC_SIZE,
             ASC_RELEVANCE,
             DESC_RELEVANCE,
+            ASC_DURATION,
+            DESC_DURATION,
+            ASC_ORIGINAL_CREATION_DATE,
+            DESC_ORIGINAL_CREATION_DATE,
             /** An enum member indicating that [Sort] was instantiated with an unknown value. */
             _UNKNOWN,
         }
@@ -608,6 +624,10 @@ private constructor(
                 DESC_SIZE -> Value.DESC_SIZE
                 ASC_RELEVANCE -> Value.ASC_RELEVANCE
                 DESC_RELEVANCE -> Value.DESC_RELEVANCE
+                ASC_DURATION -> Value.ASC_DURATION
+                DESC_DURATION -> Value.DESC_DURATION
+                ASC_ORIGINAL_CREATION_DATE -> Value.ASC_ORIGINAL_CREATION_DATE
+                DESC_ORIGINAL_CREATION_DATE -> Value.DESC_ORIGINAL_CREATION_DATE
                 else -> Value._UNKNOWN
             }
 
@@ -636,6 +656,10 @@ private constructor(
                 DESC_SIZE -> Known.DESC_SIZE
                 ASC_RELEVANCE -> Known.ASC_RELEVANCE
                 DESC_RELEVANCE -> Known.DESC_RELEVANCE
+                ASC_DURATION -> Known.ASC_DURATION
+                DESC_DURATION -> Known.DESC_DURATION
+                ASC_ORIGINAL_CREATION_DATE -> Known.ASC_ORIGINAL_CREATION_DATE
+                DESC_ORIGINAL_CREATION_DATE -> Known.DESC_ORIGINAL_CREATION_DATE
                 else -> throw ImageKitInvalidDataException("Unknown Sort: $value")
             }
 
