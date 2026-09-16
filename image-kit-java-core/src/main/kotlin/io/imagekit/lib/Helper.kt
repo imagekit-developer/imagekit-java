@@ -394,6 +394,14 @@ class Helper(private val privateKey: String) : HelperService {
             // Color Profile
             transform.colorProfile().ifPresent { cp -> parts.add("cp-$cp") }
 
+            // Density
+            transform.density().ifPresent { dn ->
+                when {
+                    dn.isInteger() -> parts.add("dn-${dn.asInteger()}")
+                    dn.isString() -> parts.add("dn-${dn.asString()}")
+                }
+            }
+
             // Video Codec
             transform.videoCodec().ifPresent { vc ->
                 if (vc.toString().isNotEmpty()) parts.add("vc-$vc")
