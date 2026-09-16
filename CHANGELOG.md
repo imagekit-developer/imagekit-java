@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.6.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.5.0...v3.6.0) (2026-09-16)
+
+
+### Features
+
+* serialize density as dn in SDK URL builders ([8ff5b63](https://github.com/imagekit-developer/imagekit-java/commit/8ff5b63943ece28469ba8279a9e2f1b6a84a5bc0))
+
 ## [3.5.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.4.0...v3.5.0) (2026-08-15)
 
 
