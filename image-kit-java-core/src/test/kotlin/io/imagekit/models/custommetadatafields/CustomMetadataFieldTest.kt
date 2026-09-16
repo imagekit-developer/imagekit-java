@@ -50,6 +50,7 @@ internal class CustomMetadataFieldTest {
                         .build()
                 )
                 .description("description")
+                .reserved(true)
                 .build()
 
         assertThat(customMetadataField.id()).isEqualTo("id")
@@ -86,6 +87,7 @@ internal class CustomMetadataFieldTest {
                     .build()
             )
         assertThat(customMetadataField.description()).contains("description")
+        assertThat(customMetadataField.reserved()).contains(true)
     }
 
     @Test
@@ -130,6 +132,7 @@ internal class CustomMetadataFieldTest {
                         .build()
                 )
                 .description("description")
+                .reserved(true)
                 .build()
 
         val roundtrippedCustomMetadataField =
