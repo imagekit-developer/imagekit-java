@@ -8,7 +8,7 @@ repositories {
 
 allprojects {
     group = "io.imagekit"
-    version = "3.5.0" // x-release-please-version
+    version = "3.6.0" // x-release-please-version
 }
 
 subprojects {
