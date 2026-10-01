@@ -101,8 +101,18 @@ private constructor(
     fun description(): Optional<String> = description.getOptional("description")
 
     /**
-     * Present and set to `true` when the field is reserved. Omitted for regular fields. Reserved
-     * fields cannot be deleted.
+     * Present and set to `true` when the field is reserved, i.e. created and managed by ImageKit
+     * rather than by you. Omitted for regular fields.
+     *
+     * Currently the only reserved field is `_internal_original_created_datetime` (label "Original
+     * creation date", type `Date`). ImageKit creates it when you enable the original creation date
+     * setting under the Custom Metadata tab of the media library settings in the dashboard. Use it
+     * to preserve the original creation date of assets migrated from another system: set its value
+     * through the `customMetadata` object in the upload or update file details API, then sort with
+     * `ASC_ORIGINAL_CREATION_DATE` or `DESC_ORIGINAL_CREATION_DATE` in the list and search assets
+     * API, or filter with `"customMetadata._internal_original_created_datetime"` in `searchQuery`.
+     *
+     * Reserved fields cannot be deleted, and their name cannot be reused when creating a new field.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -268,8 +278,20 @@ private constructor(
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /**
-         * Present and set to `true` when the field is reserved. Omitted for regular fields.
-         * Reserved fields cannot be deleted.
+         * Present and set to `true` when the field is reserved, i.e. created and managed by
+         * ImageKit rather than by you. Omitted for regular fields.
+         *
+         * Currently the only reserved field is `_internal_original_created_datetime` (label
+         * "Original creation date", type `Date`). ImageKit creates it when you enable the original
+         * creation date setting under the Custom Metadata tab of the media library settings in the
+         * dashboard. Use it to preserve the original creation date of assets migrated from another
+         * system: set its value through the `customMetadata` object in the upload or update file
+         * details API, then sort with `ASC_ORIGINAL_CREATION_DATE` or `DESC_ORIGINAL_CREATION_DATE`
+         * in the list and search assets API, or filter with
+         * `"customMetadata._internal_original_created_datetime"` in `searchQuery`.
+         *
+         * Reserved fields cannot be deleted, and their name cannot be reused when creating a new
+         * field.
          */
         fun reserved(reserved: Boolean) = reserved(JsonField.of(reserved))
 
