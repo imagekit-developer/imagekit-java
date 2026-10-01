@@ -128,7 +128,10 @@ private constructor(
 
     /**
      * JSON key-value pairs to associate with the asset. Create the custom metadata fields before
-     * setting these values.
+     * setting these values. To preserve the original creation date of an asset migrated from
+     * another system, set the reserved `_internal_original_created_datetime` key to an ISO 8601
+     * date string. This key is available once the original creation date setting is enabled in the
+     * media library settings.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -600,7 +603,10 @@ private constructor(
 
         /**
          * JSON key-value pairs to associate with the asset. Create the custom metadata fields
-         * before setting these values.
+         * before setting these values. To preserve the original creation date of an asset migrated
+         * from another system, set the reserved `_internal_original_created_datetime` key to an ISO
+         * 8601 date string. This key is available once the original creation date setting is
+         * enabled in the media library settings.
          */
         fun customMetadata(customMetadata: CustomMetadata) = apply {
             body.customMetadata(customMetadata)
@@ -1227,7 +1233,10 @@ private constructor(
 
         /**
          * JSON key-value pairs to associate with the asset. Create the custom metadata fields
-         * before setting these values.
+         * before setting these values. To preserve the original creation date of an asset migrated
+         * from another system, set the reserved `_internal_original_created_datetime` key to an ISO
+         * 8601 date string. This key is available once the original creation date setting is
+         * enabled in the media library settings.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
@@ -1772,7 +1781,10 @@ private constructor(
 
             /**
              * JSON key-value pairs to associate with the asset. Create the custom metadata fields
-             * before setting these values.
+             * before setting these values. To preserve the original creation date of an asset
+             * migrated from another system, set the reserved `_internal_original_created_datetime`
+             * key to an ISO 8601 date string. This key is available once the original creation date
+             * setting is enabled in the media library settings.
              */
             fun customMetadata(customMetadata: CustomMetadata) =
                 customMetadata(MultipartField.of(customMetadata))
@@ -2302,7 +2314,10 @@ private constructor(
 
     /**
      * JSON key-value pairs to associate with the asset. Create the custom metadata fields before
-     * setting these values.
+     * setting these values. To preserve the original creation date of an asset migrated from
+     * another system, set the reserved `_internal_original_created_datetime` key to an ISO 8601
+     * date string. This key is available once the original creation date setting is enabled in the
+     * media library settings.
      */
     class CustomMetadata
     private constructor(

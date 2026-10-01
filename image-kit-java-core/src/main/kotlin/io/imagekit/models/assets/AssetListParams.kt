@@ -71,7 +71,17 @@ private constructor(
     /** The number of results to skip before returning results. */
     fun skip(): Optional<Long> = Optional.ofNullable(skip)
 
-    /** Sort the results by one of the supported fields in ascending or descending order. */
+    /**
+     * Sort the results by one of the supported fields in ascending or descending order.
+     *
+     * `ASC_ORIGINAL_CREATION_DATE` and `DESC_ORIGINAL_CREATION_DATE` sort files by the value of the
+     * reserved `_internal_original_created_datetime` custom metadata field (labelled "Original
+     * creation date" in the dashboard). This field exists only after you enable the original
+     * creation date setting under the Custom Metadata tab of the media library settings. Files that
+     * have no value set for this field fall back to their upload time, so migrated assets carrying
+     * a preserved original date and natively uploaded assets are ordered together in a single
+     * timeline.
+     */
     fun sort(): Optional<Sort> = Optional.ofNullable(sort)
 
     /**
@@ -194,7 +204,17 @@ private constructor(
         /** Alias for calling [Builder.skip] with `skip.orElse(null)`. */
         fun skip(skip: Optional<Long>) = skip(skip.getOrNull())
 
-        /** Sort the results by one of the supported fields in ascending or descending order. */
+        /**
+         * Sort the results by one of the supported fields in ascending or descending order.
+         *
+         * `ASC_ORIGINAL_CREATION_DATE` and `DESC_ORIGINAL_CREATION_DATE` sort files by the value of
+         * the reserved `_internal_original_created_datetime` custom metadata field (labelled
+         * "Original creation date" in the dashboard). This field exists only after you enable the
+         * original creation date setting under the Custom Metadata tab of the media library
+         * settings. Files that have no value set for this field fall back to their upload time, so
+         * migrated assets carrying a preserved original date and natively uploaded assets are
+         * ordered together in a single timeline.
+         */
         fun sort(sort: Sort?) = apply { this.sort = sort }
 
         /** Alias for calling [Builder.sort] with `sort.orElse(null)`. */
@@ -493,7 +513,17 @@ private constructor(
         override fun toString() = value.toString()
     }
 
-    /** Sort the results by one of the supported fields in ascending or descending order. */
+    /**
+     * Sort the results by one of the supported fields in ascending or descending order.
+     *
+     * `ASC_ORIGINAL_CREATION_DATE` and `DESC_ORIGINAL_CREATION_DATE` sort files by the value of the
+     * reserved `_internal_original_created_datetime` custom metadata field (labelled "Original
+     * creation date" in the dashboard). This field exists only after you enable the original
+     * creation date setting under the Custom Metadata tab of the media library settings. Files that
+     * have no value set for this field fall back to their upload time, so migrated assets carrying
+     * a preserved original date and natively uploaded assets are ordered together in a single
+     * timeline.
+     */
     class Sort @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
