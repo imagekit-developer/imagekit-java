@@ -8,11 +8,9 @@ import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.files.File
 import io.imagekit.models.files.FileCopyParams
-import io.imagekit.models.files.FileCopyResponse
 import io.imagekit.models.files.FileDeleteParams
 import io.imagekit.models.files.FileGetParams
 import io.imagekit.models.files.FileMoveParams
-import io.imagekit.models.files.FileMoveResponse
 import io.imagekit.models.files.FileRenameParams
 import io.imagekit.models.files.FileRenameResponse
 import io.imagekit.models.files.FileUpdateParams
@@ -114,14 +112,13 @@ interface FileServiceAsync {
      * file and its versions (if `includeFileVersions` is set to true) will be appended to the
      * destination file version history.
      */
-    fun copy(params: FileCopyParams): CompletableFuture<FileCopyResponse> =
-        copy(params, RequestOptions.none())
+    fun copy(params: FileCopyParams): CompletableFuture<Void?> = copy(params, RequestOptions.none())
 
     /** @see copy */
     fun copy(
         params: FileCopyParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileCopyResponse>
+    ): CompletableFuture<Void?>
 
     /**
      * This API returns an object with details or attributes about the current version of the file.
@@ -158,14 +155,13 @@ interface FileServiceAsync {
      * Note: If any file at the destination has the same name as the source file, then the source
      * file and its versions will be appended to the destination file.
      */
-    fun move(params: FileMoveParams): CompletableFuture<FileMoveResponse> =
-        move(params, RequestOptions.none())
+    fun move(params: FileMoveParams): CompletableFuture<Void?> = move(params, RequestOptions.none())
 
     /** @see move */
     fun move(
         params: FileMoveParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<FileMoveResponse>
+    ): CompletableFuture<Void?>
 
     /**
      * You can rename an already existing file in the media library using rename file API. This
@@ -304,14 +300,14 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `post /v1/files/copy`, but is otherwise the same as
          * [FileServiceAsync.copy].
          */
-        fun copy(params: FileCopyParams): CompletableFuture<HttpResponseFor<FileCopyResponse>> =
+        fun copy(params: FileCopyParams): CompletableFuture<HttpResponse> =
             copy(params, RequestOptions.none())
 
         /** @see copy */
         fun copy(
             params: FileCopyParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileCopyResponse>>
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/details`, but is otherwise the
@@ -355,14 +351,14 @@ interface FileServiceAsync {
          * Returns a raw HTTP response for `post /v1/files/move`, but is otherwise the same as
          * [FileServiceAsync.move].
          */
-        fun move(params: FileMoveParams): CompletableFuture<HttpResponseFor<FileMoveResponse>> =
+        fun move(params: FileMoveParams): CompletableFuture<HttpResponse> =
             move(params, RequestOptions.none())
 
         /** @see move */
         fun move(
             params: FileMoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<FileMoveResponse>>
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `put /v1/files/rename`, but is otherwise the same as
