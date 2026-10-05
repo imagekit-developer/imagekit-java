@@ -45,13 +45,12 @@ internal class FolderServiceAsyncTest {
                 .build()
         val folderServiceAsync = client.folders()
 
-        val folderFuture =
+        val future =
             folderServiceAsync.delete(
                 FolderDeleteParams.builder().folderPath("/folder/to/delete/").build()
             )
 
-        val folder = folderFuture.get()
-        folder.validate()
+        val response = future.get()
     }
 
     @Disabled("Mock server tests are disabled")

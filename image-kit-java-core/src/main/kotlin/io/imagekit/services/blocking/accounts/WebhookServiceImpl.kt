@@ -1,6 +1,6 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package io.imagekit.services.blocking
+package io.imagekit.services.blocking.accounts
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
@@ -17,79 +17,72 @@ import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.core.http.json
 import io.imagekit.core.http.parseable
 import io.imagekit.core.prepare
-import io.imagekit.models.custommetadatafields.CustomMetadataField
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldCreateParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldListParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldUpdateParams
+import io.imagekit.models.accounts.webhooks.Webhook
+import io.imagekit.models.accounts.webhooks.WebhookCreateParams
+import io.imagekit.models.accounts.webhooks.WebhookDeleteParams
+import io.imagekit.models.accounts.webhooks.WebhookGetParams
+import io.imagekit.models.accounts.webhooks.WebhookListParams
+import io.imagekit.models.accounts.webhooks.WebhookUpdateParams
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 
-class CustomMetadataFieldServiceImpl
-internal constructor(private val clientOptions: ClientOptions) : CustomMetadataFieldService {
+class WebhookServiceImpl internal constructor(private val clientOptions: ClientOptions) :
+    WebhookService {
 
-    private val withRawResponse: CustomMetadataFieldService.WithRawResponse by lazy {
+    private val withRawResponse: WebhookService.WithRawResponse by lazy {
         WithRawResponseImpl(clientOptions)
     }
 
-    override fun withRawResponse(): CustomMetadataFieldService.WithRawResponse = withRawResponse
+    override fun withRawResponse(): WebhookService.WithRawResponse = withRawResponse
 
-    override fun withOptions(
-        modifier: Consumer<ClientOptions.Builder>
-    ): CustomMetadataFieldService =
-        CustomMetadataFieldServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): WebhookService =
+        WebhookServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun create(
-        params: CustomMetadataFieldCreateParams,
-        requestOptions: RequestOptions,
-    ): CustomMetadataField =
-        // post /v1/customMetadataFields
+    override fun create(params: WebhookCreateParams, requestOptions: RequestOptions): Webhook =
+        // post /v1/accounts/webhooks
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun update(
-        params: CustomMetadataFieldUpdateParams,
-        requestOptions: RequestOptions,
-    ): CustomMetadataField =
-        // patch /v1/customMetadataFields/{id}
+    override fun update(params: WebhookUpdateParams, requestOptions: RequestOptions): Webhook =
+        // patch /v1/accounts/webhooks/{id}
         withRawResponse().update(params, requestOptions).parse()
 
-    override fun list(
-        params: CustomMetadataFieldListParams,
-        requestOptions: RequestOptions,
-    ): List<CustomMetadataField> =
-        // get /v1/customMetadataFields
+    override fun list(params: WebhookListParams, requestOptions: RequestOptions): List<Webhook> =
+        // get /v1/accounts/webhooks
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(params: CustomMetadataFieldDeleteParams, requestOptions: RequestOptions) {
-        // delete /v1/customMetadataFields/{id}
+    override fun delete(params: WebhookDeleteParams, requestOptions: RequestOptions) {
+        // delete /v1/accounts/webhooks/{id}
         withRawResponse().delete(params, requestOptions)
     }
 
+    override fun get(params: WebhookGetParams, requestOptions: RequestOptions): Webhook =
+        // get /v1/accounts/webhooks/{id}
+        withRawResponse().get(params, requestOptions).parse()
+
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        CustomMetadataFieldService.WithRawResponse {
+        WebhookService.WithRawResponse {
 
         private val errorHandler: Handler<HttpResponse> =
             errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
-        ): CustomMetadataFieldService.WithRawResponse =
-            CustomMetadataFieldServiceImpl.WithRawResponseImpl(
+        ): WebhookService.WithRawResponse =
+            WebhookServiceImpl.WithRawResponseImpl(
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val createHandler: Handler<CustomMetadataField> =
-            jsonHandler<CustomMetadataField>(clientOptions.jsonMapper)
+        private val createHandler: Handler<Webhook> = jsonHandler<Webhook>(clientOptions.jsonMapper)
 
         override fun create(
-            params: CustomMetadataFieldCreateParams,
+            params: WebhookCreateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataField> {
+        ): HttpResponseFor<Webhook> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "customMetadataFields")
+                    .addPathSegments("v1", "accounts", "webhooks")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -106,13 +99,12 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
             }
         }
 
-        private val updateHandler: Handler<CustomMetadataField> =
-            jsonHandler<CustomMetadataField>(clientOptions.jsonMapper)
+        private val updateHandler: Handler<Webhook> = jsonHandler<Webhook>(clientOptions.jsonMapper)
 
         override fun update(
-            params: CustomMetadataFieldUpdateParams,
+            params: WebhookUpdateParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataField> {
+        ): HttpResponseFor<Webhook> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -120,7 +112,7 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
                 HttpRequest.builder()
                     .method(HttpMethod.PATCH)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "customMetadataFields", params._pathParam(0))
+                    .addPathSegments("v1", "accounts", "webhooks", params._pathParam(0))
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepare(clientOptions, params)
@@ -137,18 +129,18 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
             }
         }
 
-        private val listHandler: Handler<List<CustomMetadataField>> =
-            jsonHandler<List<CustomMetadataField>>(clientOptions.jsonMapper)
+        private val listHandler: Handler<List<Webhook>> =
+            jsonHandler<List<Webhook>>(clientOptions.jsonMapper)
 
         override fun list(
-            params: CustomMetadataFieldListParams,
+            params: WebhookListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<List<CustomMetadataField>> {
+        ): HttpResponseFor<List<Webhook>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "customMetadataFields")
+                    .addPathSegments("v1", "accounts", "webhooks")
                     .build()
                     .prepare(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -167,7 +159,7 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
         private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
-            params: CustomMetadataFieldDeleteParams,
+            params: WebhookDeleteParams,
             requestOptions: RequestOptions,
         ): HttpResponse {
             // We check here instead of in the params builder because this can be specified
@@ -177,7 +169,7 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
                     .baseUrl(clientOptions.baseUrl())
-                    .addPathSegments("v1", "customMetadataFields", params._pathParam(0))
+                    .addPathSegments("v1", "accounts", "webhooks", params._pathParam(0))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
                     .prepare(clientOptions, params)
@@ -185,6 +177,35 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
                 response.use { deleteHandler.handle(it) }
+            }
+        }
+
+        private val getHandler: Handler<Webhook> = jsonHandler<Webhook>(clientOptions.jsonMapper)
+
+        override fun get(
+            params: WebhookGetParams,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<Webhook> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
+                    .addPathSegments("v1", "accounts", "webhooks", params._pathParam(0))
+                    .build()
+                    .prepare(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            val response = clientOptions.httpClient.execute(request, requestOptions)
+            return errorHandler.handle(response).parseable {
+                response
+                    .use { getHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation!!) {
+                            it.validate()
+                        }
+                    }
             }
         }
     }
