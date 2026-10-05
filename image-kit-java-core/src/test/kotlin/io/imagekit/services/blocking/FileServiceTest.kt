@@ -131,16 +131,13 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.files()
 
-        val response =
-            fileService.copy(
-                FileCopyParams.builder()
-                    .destinationPath("/folder/to/copy/into/")
-                    .sourceFilePath("/path/to/file.jpg")
-                    .includeFileVersions(false)
-                    .build()
-            )
-
-        response.validate()
+        fileService.copy(
+            FileCopyParams.builder()
+                .destinationPath("/folder/to/copy/into/")
+                .sourceFilePath("/path/to/file.jpg")
+                .includeFileVersions(false)
+                .build()
+        )
     }
 
     @Disabled("Mock server tests are disabled")
@@ -168,15 +165,12 @@ internal class FileServiceTest {
                 .build()
         val fileService = client.files()
 
-        val response =
-            fileService.move(
-                FileMoveParams.builder()
-                    .destinationPath("/folder/to/move/into/")
-                    .sourceFilePath("/path/to/file.jpg")
-                    .build()
-            )
-
-        response.validate()
+        fileService.move(
+            FileMoveParams.builder()
+                .destinationPath("/folder/to/move/into/")
+                .sourceFilePath("/path/to/file.jpg")
+                .build()
+        )
     }
 
     @Disabled("Mock server tests are disabled")

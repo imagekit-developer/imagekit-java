@@ -5,6 +5,7 @@ package io.imagekit.services.async.files
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.checkRequired
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -18,7 +19,6 @@ import io.imagekit.core.http.parseable
 import io.imagekit.core.prepareAsync
 import io.imagekit.models.files.File
 import io.imagekit.models.files.versions.VersionDeleteParams
-import io.imagekit.models.files.versions.VersionDeleteResponse
 import io.imagekit.models.files.versions.VersionGetParams
 import io.imagekit.models.files.versions.VersionListParams
 import io.imagekit.models.files.versions.VersionRestoreParams
@@ -48,9 +48,9 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<VersionDeleteResponse> =
+    ): CompletableFuture<Void?> =
         // delete /v1/files/{fileId}/versions/{versionId}
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenAccept {}
 
     override fun get(
         params: VersionGetParams,
@@ -112,13 +112,12 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 }
         }
 
-        private val deleteHandler: Handler<VersionDeleteResponse> =
-            jsonHandler<VersionDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> {
+        ): CompletableFuture<HttpResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())
@@ -141,13 +140,7 @@ class VersionServiceAsyncImpl internal constructor(private val clientOptions: Cl
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { deleteHandler.handle(it) }
                     }
                 }
         }

@@ -4,11 +4,11 @@ package io.imagekit.services.async
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.custommetadatafields.CustomMetadataField
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldCreateParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldListParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -106,7 +106,7 @@ interface CustomMetadataFieldServiceAsync {
      * This API deletes a custom metadata field. Even after deleting a custom metadata field, you
      * cannot create any new custom metadata field with the same name.
      */
-    fun delete(id: String): CompletableFuture<CustomMetadataFieldDeleteResponse> =
+    fun delete(id: String): CompletableFuture<Void?> =
         delete(id, CustomMetadataFieldDeleteParams.none())
 
     /** @see delete */
@@ -114,32 +114,26 @@ interface CustomMetadataFieldServiceAsync {
         id: String,
         params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse> =
-        delete(params.toBuilder().id(id).build(), requestOptions)
+    ): CompletableFuture<Void?> = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         id: String,
         params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse> =
-        delete(id, params, RequestOptions.none())
+    ): CompletableFuture<Void?> = delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: CustomMetadataFieldDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse>
+    ): CompletableFuture<Void?>
 
     /** @see delete */
-    fun delete(
-        params: CustomMetadataFieldDeleteParams
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse> = delete(params, RequestOptions.none())
+    fun delete(params: CustomMetadataFieldDeleteParams): CompletableFuture<Void?> =
+        delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
-        id: String,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse> =
+    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<Void?> =
         delete(id, CustomMetadataFieldDeleteParams.none(), requestOptions)
 
     /**
@@ -242,9 +236,7 @@ interface CustomMetadataFieldServiceAsync {
          * Returns a raw HTTP response for `delete /v1/customMetadataFields/{id}`, but is otherwise
          * the same as [CustomMetadataFieldServiceAsync.delete].
          */
-        fun delete(
-            id: String
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> =
+        fun delete(id: String): CompletableFuture<HttpResponse> =
             delete(id, CustomMetadataFieldDeleteParams.none())
 
         /** @see delete */
@@ -252,33 +244,27 @@ interface CustomMetadataFieldServiceAsync {
             id: String,
             params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> =
+        ): CompletableFuture<HttpResponse> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         fun delete(
             id: String,
             params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> =
-            delete(id, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponse> = delete(id, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: CustomMetadataFieldDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>>
+        ): CompletableFuture<HttpResponse>
 
         /** @see delete */
-        fun delete(
-            params: CustomMetadataFieldDeleteParams
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> =
+        fun delete(params: CustomMetadataFieldDeleteParams): CompletableFuture<HttpResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
-        fun delete(
-            id: String,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> =
+        fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<HttpResponse> =
             delete(id, CustomMetadataFieldDeleteParams.none(), requestOptions)
     }
 }

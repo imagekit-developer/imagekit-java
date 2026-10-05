@@ -174,9 +174,8 @@ internal class CustomMetadataFieldServiceAsyncTest {
                 .build()
         val customMetadataFieldServiceAsync = client.customMetadataFields()
 
-        val customMetadataFieldFuture = customMetadataFieldServiceAsync.delete("id")
+        val future = customMetadataFieldServiceAsync.delete("id")
 
-        val customMetadataField = customMetadataFieldFuture.get()
-        customMetadataField.validate()
+        val response = future.get()
     }
 }

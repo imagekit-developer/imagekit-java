@@ -4,6 +4,7 @@ package io.imagekit.services.async
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -20,7 +21,6 @@ import io.imagekit.models.folders.FolderCopyResponse
 import io.imagekit.models.folders.FolderCreateParams
 import io.imagekit.models.folders.FolderCreateResponse
 import io.imagekit.models.folders.FolderDeleteParams
-import io.imagekit.models.folders.FolderDeleteResponse
 import io.imagekit.models.folders.FolderMoveParams
 import io.imagekit.models.folders.FolderMoveResponse
 import io.imagekit.models.folders.FolderRenameParams
@@ -56,9 +56,9 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
     override fun delete(
         params: FolderDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FolderDeleteResponse> =
+    ): CompletableFuture<Void?> =
         // delete /v1/folder
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenAccept {}
 
     override fun copy(
         params: FolderCopyParams,
@@ -131,13 +131,12 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 }
         }
 
-        private val deleteHandler: Handler<FolderDeleteResponse> =
-            jsonHandler<FolderDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: FolderDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FolderDeleteResponse>> {
+        ): CompletableFuture<HttpResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
@@ -151,13 +150,7 @@ class FolderServiceAsyncImpl internal constructor(private val clientOptions: Cli
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { deleteHandler.handle(it) }
                     }
                 }
         }
