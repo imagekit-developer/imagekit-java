@@ -37,13 +37,12 @@ internal class VersionServiceAsyncTest {
                 .build()
         val versionServiceAsync = client.files().versions()
 
-        val versionFuture =
+        val future =
             versionServiceAsync.delete(
                 VersionDeleteParams.builder().fileId("fileId").versionId("versionId").build()
             )
 
-        val version = versionFuture.get()
-        version.validate()
+        val response = future.get()
     }
 
     @Disabled("Mock server tests are disabled")

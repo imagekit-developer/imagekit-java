@@ -9,11 +9,9 @@ import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.files.File
 import io.imagekit.models.files.FileCopyParams
-import io.imagekit.models.files.FileCopyResponse
 import io.imagekit.models.files.FileDeleteParams
 import io.imagekit.models.files.FileGetParams
 import io.imagekit.models.files.FileMoveParams
-import io.imagekit.models.files.FileMoveResponse
 import io.imagekit.models.files.FileRenameParams
 import io.imagekit.models.files.FileRenameResponse
 import io.imagekit.models.files.FileUpdateParams
@@ -106,13 +104,10 @@ interface FileService {
      * file and its versions (if `includeFileVersions` is set to true) will be appended to the
      * destination file version history.
      */
-    fun copy(params: FileCopyParams): FileCopyResponse = copy(params, RequestOptions.none())
+    fun copy(params: FileCopyParams) = copy(params, RequestOptions.none())
 
     /** @see copy */
-    fun copy(
-        params: FileCopyParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileCopyResponse
+    fun copy(params: FileCopyParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /**
      * This API returns an object with details or attributes about the current version of the file.
@@ -146,13 +141,10 @@ interface FileService {
      * Note: If any file at the destination has the same name as the source file, then the source
      * file and its versions will be appended to the destination file.
      */
-    fun move(params: FileMoveParams): FileMoveResponse = move(params, RequestOptions.none())
+    fun move(params: FileMoveParams) = move(params, RequestOptions.none())
 
     /** @see move */
-    fun move(
-        params: FileMoveParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FileMoveResponse
+    fun move(params: FileMoveParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /**
      * You can rename an already existing file in the media library using rename file API. This
@@ -290,15 +282,14 @@ interface FileService {
          * [FileService.copy].
          */
         @MustBeClosed
-        fun copy(params: FileCopyParams): HttpResponseFor<FileCopyResponse> =
-            copy(params, RequestOptions.none())
+        fun copy(params: FileCopyParams): HttpResponse = copy(params, RequestOptions.none())
 
         /** @see copy */
         @MustBeClosed
         fun copy(
             params: FileCopyParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileCopyResponse>
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/details`, but is otherwise the
@@ -343,15 +334,14 @@ interface FileService {
          * [FileService.move].
          */
         @MustBeClosed
-        fun move(params: FileMoveParams): HttpResponseFor<FileMoveResponse> =
-            move(params, RequestOptions.none())
+        fun move(params: FileMoveParams): HttpResponse = move(params, RequestOptions.none())
 
         /** @see move */
         @MustBeClosed
         fun move(
             params: FileMoveParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FileMoveResponse>
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `put /v1/files/rename`, but is otherwise the same as

@@ -20,11 +20,9 @@ import io.imagekit.core.http.parseable
 import io.imagekit.core.prepareAsync
 import io.imagekit.models.files.File
 import io.imagekit.models.files.FileCopyParams
-import io.imagekit.models.files.FileCopyResponse
 import io.imagekit.models.files.FileDeleteParams
 import io.imagekit.models.files.FileGetParams
 import io.imagekit.models.files.FileMoveParams
-import io.imagekit.models.files.FileMoveResponse
 import io.imagekit.models.files.FileRenameParams
 import io.imagekit.models.files.FileRenameResponse
 import io.imagekit.models.files.FileUpdateParams
@@ -82,9 +80,9 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun copy(
         params: FileCopyParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileCopyResponse> =
+    ): CompletableFuture<Void?> =
         // post /v1/files/copy
-        withRawResponse().copy(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().copy(params, requestOptions).thenAccept {}
 
     override fun get(
         params: FileGetParams,
@@ -96,9 +94,9 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
     override fun move(
         params: FileMoveParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<FileMoveResponse> =
+    ): CompletableFuture<Void?> =
         // post /v1/files/move
-        withRawResponse().move(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().move(params, requestOptions).thenAccept {}
 
     override fun rename(
         params: FileRenameParams,
@@ -206,13 +204,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val copyHandler: Handler<FileCopyResponse> =
-            jsonHandler<FileCopyResponse>(clientOptions.jsonMapper)
+        private val copyHandler: Handler<Void?> = emptyHandler()
 
         override fun copy(
             params: FileCopyParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileCopyResponse>> {
+        ): CompletableFuture<HttpResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -226,13 +223,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { copyHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { copyHandler.handle(it) }
                     }
                 }
         }
@@ -269,13 +260,12 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 }
         }
 
-        private val moveHandler: Handler<FileMoveResponse> =
-            jsonHandler<FileMoveResponse>(clientOptions.jsonMapper)
+        private val moveHandler: Handler<Void?> = emptyHandler()
 
         override fun move(
             params: FileMoveParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<FileMoveResponse>> {
+        ): CompletableFuture<HttpResponse> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
@@ -289,13 +279,7 @@ class FileServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { moveHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { moveHandler.handle(it) }
                     }
                 }
         }
