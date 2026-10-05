@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.6.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.6.0...v3.6.1) (2026-10-05)
+
+
+### Bug Fixes
+
+* don't parse empty 204 responses for copy, move and delete methods ([36070fc](https://github.com/imagekit-developer/imagekit-java/commit/36070fc1626b6e78567f8b2da60d2bdc77375ee7))
+
+
+### Documentation
+
+* describe reserved original creation date field ([9aa1bc0](https://github.com/imagekit-developer/imagekit-java/commit/9aa1bc05bce9d3551601a8340ad299524dee739f))
+
 ## [3.6.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.5.0...v3.6.0) (2026-09-16)
 
 
