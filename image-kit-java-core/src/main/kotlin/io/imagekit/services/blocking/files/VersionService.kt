@@ -5,10 +5,10 @@ package io.imagekit.services.blocking.files
 import com.google.errorprone.annotations.MustBeClosed
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.files.File
 import io.imagekit.models.files.versions.VersionDeleteParams
-import io.imagekit.models.files.versions.VersionDeleteResponse
 import io.imagekit.models.files.versions.VersionGetParams
 import io.imagekit.models.files.versions.VersionListParams
 import io.imagekit.models.files.versions.VersionRestoreParams
@@ -60,7 +60,7 @@ interface VersionService {
      *
      * Note: If you want to delete all versions of a file, use the delete file API.
      */
-    fun delete(versionId: String, params: VersionDeleteParams): VersionDeleteResponse =
+    fun delete(versionId: String, params: VersionDeleteParams) =
         delete(versionId, params, RequestOptions.none())
 
     /** @see delete */
@@ -68,18 +68,13 @@ interface VersionService {
         versionId: String,
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionDeleteResponse =
-        delete(params.toBuilder().versionId(versionId).build(), requestOptions)
+    ) = delete(params.toBuilder().versionId(versionId).build(), requestOptions)
 
     /** @see delete */
-    fun delete(params: VersionDeleteParams): VersionDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: VersionDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
-        params: VersionDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): VersionDeleteResponse
+    fun delete(params: VersionDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /** This API returns an object with details or attributes of a file version. */
     fun get(versionId: String, params: VersionGetParams): File =
@@ -174,10 +169,8 @@ interface VersionService {
          * otherwise the same as [VersionService.delete].
          */
         @MustBeClosed
-        fun delete(
-            versionId: String,
-            params: VersionDeleteParams,
-        ): HttpResponseFor<VersionDeleteResponse> = delete(versionId, params, RequestOptions.none())
+        fun delete(versionId: String, params: VersionDeleteParams): HttpResponse =
+            delete(versionId, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
@@ -185,12 +178,11 @@ interface VersionService {
             versionId: String,
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionDeleteResponse> =
-            delete(params.toBuilder().versionId(versionId).build(), requestOptions)
+        ): HttpResponse = delete(params.toBuilder().versionId(versionId).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
-        fun delete(params: VersionDeleteParams): HttpResponseFor<VersionDeleteResponse> =
+        fun delete(params: VersionDeleteParams): HttpResponse =
             delete(params, RequestOptions.none())
 
         /** @see delete */
@@ -198,7 +190,7 @@ interface VersionService {
         fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<VersionDeleteResponse>
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is

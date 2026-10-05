@@ -44,12 +44,7 @@ internal class FolderServiceTest {
                 .build()
         val folderService = client.folders()
 
-        val folder =
-            folderService.delete(
-                FolderDeleteParams.builder().folderPath("/folder/to/delete/").build()
-            )
-
-        folder.validate()
+        folderService.delete(FolderDeleteParams.builder().folderPath("/folder/to/delete/").build())
     }
 
     @Disabled("Mock server tests are disabled")
