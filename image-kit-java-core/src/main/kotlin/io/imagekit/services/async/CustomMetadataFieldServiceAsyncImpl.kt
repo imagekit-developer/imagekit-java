@@ -5,6 +5,7 @@ package io.imagekit.services.async
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.checkRequired
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -19,7 +20,6 @@ import io.imagekit.core.prepareAsync
 import io.imagekit.models.custommetadatafields.CustomMetadataField
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldCreateParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldListParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldUpdateParams
 import java.util.concurrent.CompletableFuture
@@ -67,9 +67,9 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
     override fun delete(
         params: CustomMetadataFieldDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<CustomMetadataFieldDeleteResponse> =
+    ): CompletableFuture<Void?> =
         // delete /v1/customMetadataFields/{id}
-        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+        withRawResponse().delete(params, requestOptions).thenAccept {}
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         CustomMetadataFieldServiceAsync.WithRawResponse {
@@ -179,13 +179,12 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
                 }
         }
 
-        private val deleteHandler: Handler<CustomMetadataFieldDeleteResponse> =
-            jsonHandler<CustomMetadataFieldDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: CustomMetadataFieldDeleteParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<CustomMetadataFieldDeleteResponse>> {
+        ): CompletableFuture<HttpResponse> {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("id", params.id().getOrNull())
@@ -202,13 +201,7 @@ internal constructor(private val clientOptions: ClientOptions) : CustomMetadataF
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
                     errorHandler.handle(response).parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
+                        response.use { deleteHandler.handle(it) }
                     }
                 }
         }

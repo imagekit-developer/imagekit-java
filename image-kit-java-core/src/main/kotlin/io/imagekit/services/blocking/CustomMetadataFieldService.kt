@@ -5,11 +5,11 @@ package io.imagekit.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.custommetadatafields.CustomMetadataField
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldCreateParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteParams
-import io.imagekit.models.custommetadatafields.CustomMetadataFieldDeleteResponse
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldListParams
 import io.imagekit.models.custommetadatafields.CustomMetadataFieldUpdateParams
 import java.util.function.Consumer
@@ -103,34 +103,32 @@ interface CustomMetadataFieldService {
      * This API deletes a custom metadata field. Even after deleting a custom metadata field, you
      * cannot create any new custom metadata field with the same name.
      */
-    fun delete(id: String): CustomMetadataFieldDeleteResponse =
-        delete(id, CustomMetadataFieldDeleteParams.none())
+    fun delete(id: String) = delete(id, CustomMetadataFieldDeleteParams.none())
 
     /** @see delete */
     fun delete(
         id: String,
         params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomMetadataFieldDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+    ) = delete(params.toBuilder().id(id).build(), requestOptions)
 
     /** @see delete */
     fun delete(
         id: String,
         params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
-    ): CustomMetadataFieldDeleteResponse = delete(id, params, RequestOptions.none())
+    ) = delete(id, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: CustomMetadataFieldDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CustomMetadataFieldDeleteResponse
+    )
 
     /** @see delete */
-    fun delete(params: CustomMetadataFieldDeleteParams): CustomMetadataFieldDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: CustomMetadataFieldDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(id: String, requestOptions: RequestOptions): CustomMetadataFieldDeleteResponse =
+    fun delete(id: String, requestOptions: RequestOptions) =
         delete(id, CustomMetadataFieldDeleteParams.none(), requestOptions)
 
     /**
@@ -238,8 +236,7 @@ interface CustomMetadataFieldService {
          * the same as [CustomMetadataFieldService.delete].
          */
         @MustBeClosed
-        fun delete(id: String): HttpResponseFor<CustomMetadataFieldDeleteResponse> =
-            delete(id, CustomMetadataFieldDeleteParams.none())
+        fun delete(id: String): HttpResponse = delete(id, CustomMetadataFieldDeleteParams.none())
 
         /** @see delete */
         @MustBeClosed
@@ -247,37 +244,30 @@ interface CustomMetadataFieldService {
             id: String,
             params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomMetadataFieldDeleteResponse> =
-            delete(params.toBuilder().id(id).build(), requestOptions)
+        ): HttpResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: CustomMetadataFieldDeleteParams = CustomMetadataFieldDeleteParams.none(),
-        ): HttpResponseFor<CustomMetadataFieldDeleteResponse> =
-            delete(id, params, RequestOptions.none())
+        ): HttpResponse = delete(id, params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: CustomMetadataFieldDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<CustomMetadataFieldDeleteResponse>
+        ): HttpResponse
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            params: CustomMetadataFieldDeleteParams
-        ): HttpResponseFor<CustomMetadataFieldDeleteResponse> =
+        fun delete(params: CustomMetadataFieldDeleteParams): HttpResponse =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
-        fun delete(
-            id: String,
-            requestOptions: RequestOptions,
-        ): HttpResponseFor<CustomMetadataFieldDeleteResponse> =
+        fun delete(id: String, requestOptions: RequestOptions): HttpResponse =
             delete(id, CustomMetadataFieldDeleteParams.none(), requestOptions)
     }
 }

@@ -171,8 +171,6 @@ internal class CustomMetadataFieldServiceTest {
                 .build()
         val customMetadataFieldService = client.customMetadataFields()
 
-        val customMetadataField = customMetadataFieldService.delete("id")
-
-        customMetadataField.validate()
+        customMetadataFieldService.delete("id")
     }
 }
