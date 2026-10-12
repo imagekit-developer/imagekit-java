@@ -12,6 +12,7 @@ import io.imagekit.models.EmbeddedMetadata
 import io.imagekit.models.SelectedFieldsSchema
 import io.imagekit.models.VersionInfo
 import io.imagekit.models.files.File
+import io.imagekit.models.files.Folder
 import io.imagekit.models.files.Metadata
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -103,6 +104,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -284,6 +288,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -476,6 +483,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -795,6 +805,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1081,6 +1094,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1176,6 +1192,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1285,6 +1304,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1431,6 +1453,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1614,6 +1639,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1735,6 +1763,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).contains(fileDelete)
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1845,6 +1876,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).contains(fileVersionCreate)
         assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1971,6 +2005,9 @@ internal class UnwrapWebhookEventTest {
         assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
         assertThat(unwrapWebhookEvent.fileVersionDelete()).contains(fileVersionDelete)
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
     }
 
     @Test
@@ -1988,6 +2025,215 @@ internal class UnwrapWebhookEventTest {
                             .versionId("versionId")
                             .build()
                     )
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofFolderCreate() {
+        val folderCreate =
+            FolderCreateEvent.builder()
+                .id("id")
+                .type("folder.created")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    Folder.builder()
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customMetadata(
+                            Folder.CustomMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .name("name")
+                        .type(Folder.Type.FOLDER)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFolderCreate(folderCreate)
+
+        assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).contains(folderCreate)
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
+    }
+
+    @Test
+    fun ofFolderCreateRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofFolderCreate(
+                FolderCreateEvent.builder()
+                    .id("id")
+                    .type("folder.created")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        Folder.builder()
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customMetadata(
+                                Folder.CustomMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .folderId("folderId")
+                            .folderPath("folderPath")
+                            .name("name")
+                            .type(Folder.Type.FOLDER)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofFolderUpdate() {
+        val folderUpdate =
+            FolderUpdateEvent.builder()
+                .id("id")
+                .type("folder.updated")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    Folder.builder()
+                        .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .customMetadata(
+                            Folder.CustomMetadata.builder()
+                                .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                .build()
+                        )
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .name("name")
+                        .type(Folder.Type.FOLDER)
+                        .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .build()
+                )
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFolderUpdate(folderUpdate)
+
+        assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).contains(folderUpdate)
+        assertThat(unwrapWebhookEvent.folderDelete()).isEmpty
+    }
+
+    @Test
+    fun ofFolderUpdateRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofFolderUpdate(
+                FolderUpdateEvent.builder()
+                    .id("id")
+                    .type("folder.updated")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        Folder.builder()
+                            .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .customMetadata(
+                                Folder.CustomMetadata.builder()
+                                    .putAdditionalProperty("foo", JsonValue.from("bar"))
+                                    .build()
+                            )
+                            .folderId("folderId")
+                            .folderPath("folderPath")
+                            .name("name")
+                            .type(Folder.Type.FOLDER)
+                            .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unwrapWebhookEvent),
+                jacksonTypeRef<UnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnwrapWebhookEvent).isEqualTo(unwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofFolderDelete() {
+        val folderDelete =
+            FolderDeleteEvent.builder()
+                .id("id")
+                .type("folder.deleted")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(FolderDeleteEvent.Data.builder().id("id").build())
+                .build()
+
+        val unwrapWebhookEvent = UnwrapWebhookEvent.ofFolderDelete(folderDelete)
+
+        assertThat(unwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unwrapWebhookEvent.fileCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.fileVersionDelete()).isEmpty
+        assertThat(unwrapWebhookEvent.folderCreate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderUpdate()).isEmpty
+        assertThat(unwrapWebhookEvent.folderDelete()).contains(folderDelete)
+    }
+
+    @Test
+    fun ofFolderDeleteRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unwrapWebhookEvent =
+            UnwrapWebhookEvent.ofFolderDelete(
+                FolderDeleteEvent.builder()
+                    .id("id")
+                    .type("folder.deleted")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(FolderDeleteEvent.Data.builder().id("id").build())
                     .build()
             )
 

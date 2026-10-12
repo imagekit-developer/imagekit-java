@@ -40,6 +40,9 @@ private constructor(
     private val fileDelete: FileDeleteEvent? = null,
     private val fileVersionCreate: FileVersionCreateEvent? = null,
     private val fileVersionDelete: FileVersionDeleteEvent? = null,
+    private val folderCreate: FolderCreateEvent? = null,
+    private val folderUpdate: FolderUpdateEvent? = null,
+    private val folderDelete: FolderDeleteEvent? = null,
     private val _json: JsonValue? = null,
 ) {
 
@@ -113,6 +116,15 @@ private constructor(
     fun fileVersionDelete(): Optional<FileVersionDeleteEvent> =
         Optional.ofNullable(fileVersionDelete)
 
+    /** Triggered when a folder is created. */
+    fun folderCreate(): Optional<FolderCreateEvent> = Optional.ofNullable(folderCreate)
+
+    /** Triggered when a folder is updated. */
+    fun folderUpdate(): Optional<FolderUpdateEvent> = Optional.ofNullable(folderUpdate)
+
+    /** Triggered when a folder is deleted. */
+    fun folderDelete(): Optional<FolderDeleteEvent> = Optional.ofNullable(folderDelete)
+
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
 
     fun isVideoTransformationReady(): Boolean = videoTransformationReady != null
@@ -136,6 +148,12 @@ private constructor(
     fun isFileVersionCreate(): Boolean = fileVersionCreate != null
 
     fun isFileVersionDelete(): Boolean = fileVersionDelete != null
+
+    fun isFolderCreate(): Boolean = folderCreate != null
+
+    fun isFolderUpdate(): Boolean = folderUpdate != null
+
+    fun isFolderDelete(): Boolean = folderDelete != null
 
     /**
      * Triggered when a new video transformation request is accepted for processing. This event
@@ -207,6 +225,15 @@ private constructor(
     fun asFileVersionDelete(): FileVersionDeleteEvent =
         fileVersionDelete.getOrThrow("fileVersionDelete")
 
+    /** Triggered when a folder is created. */
+    fun asFolderCreate(): FolderCreateEvent = folderCreate.getOrThrow("folderCreate")
+
+    /** Triggered when a folder is updated. */
+    fun asFolderUpdate(): FolderUpdateEvent = folderUpdate.getOrThrow("folderUpdate")
+
+    /** Triggered when a folder is deleted. */
+    fun asFolderDelete(): FolderDeleteEvent = folderDelete.getOrThrow("folderDelete")
+
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
     /**
@@ -259,6 +286,9 @@ private constructor(
             fileDelete != null -> visitor.visitFileDelete(fileDelete)
             fileVersionCreate != null -> visitor.visitFileVersionCreate(fileVersionCreate)
             fileVersionDelete != null -> visitor.visitFileVersionDelete(fileVersionDelete)
+            folderCreate != null -> visitor.visitFolderCreate(folderCreate)
+            folderUpdate != null -> visitor.visitFolderUpdate(folderUpdate)
+            folderDelete != null -> visitor.visitFolderDelete(folderDelete)
             else -> visitor.unknown(_json)
         }
 
@@ -340,6 +370,18 @@ private constructor(
                 override fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) {
                     fileVersionDelete.validate()
                 }
+
+                override fun visitFolderCreate(folderCreate: FolderCreateEvent) {
+                    folderCreate.validate()
+                }
+
+                override fun visitFolderUpdate(folderUpdate: FolderUpdateEvent) {
+                    folderUpdate.validate()
+                }
+
+                override fun visitFolderDelete(folderDelete: FolderDeleteEvent) {
+                    folderDelete.validate()
+                }
             }
         )
         validated = true
@@ -402,6 +444,15 @@ private constructor(
                 override fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) =
                     fileVersionDelete.validity()
 
+                override fun visitFolderCreate(folderCreate: FolderCreateEvent) =
+                    folderCreate.validity()
+
+                override fun visitFolderUpdate(folderUpdate: FolderUpdateEvent) =
+                    folderUpdate.validity()
+
+                override fun visitFolderDelete(folderDelete: FolderDeleteEvent) =
+                    folderDelete.validity()
+
                 override fun unknown(json: JsonValue?) = 0
             }
         )
@@ -423,7 +474,10 @@ private constructor(
             fileUpdate == other.fileUpdate &&
             fileDelete == other.fileDelete &&
             fileVersionCreate == other.fileVersionCreate &&
-            fileVersionDelete == other.fileVersionDelete
+            fileVersionDelete == other.fileVersionDelete &&
+            folderCreate == other.folderCreate &&
+            folderUpdate == other.folderUpdate &&
+            folderDelete == other.folderDelete
     }
 
     override fun hashCode(): Int =
@@ -440,6 +494,9 @@ private constructor(
             fileDelete,
             fileVersionCreate,
             fileVersionDelete,
+            folderCreate,
+            folderUpdate,
+            folderDelete,
         )
 
     override fun toString(): String =
@@ -465,6 +522,9 @@ private constructor(
                 "UnsafeUnwrapWebhookEvent{fileVersionCreate=$fileVersionCreate}"
             fileVersionDelete != null ->
                 "UnsafeUnwrapWebhookEvent{fileVersionDelete=$fileVersionDelete}"
+            folderCreate != null -> "UnsafeUnwrapWebhookEvent{folderCreate=$folderCreate}"
+            folderUpdate != null -> "UnsafeUnwrapWebhookEvent{folderUpdate=$folderUpdate}"
+            folderDelete != null -> "UnsafeUnwrapWebhookEvent{folderDelete=$folderDelete}"
             _json != null -> "UnsafeUnwrapWebhookEvent{_unknown=$_json}"
             else -> throw IllegalStateException("Invalid UnsafeUnwrapWebhookEvent")
         }
@@ -557,6 +617,21 @@ private constructor(
         @JvmStatic
         fun ofFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) =
             UnsafeUnwrapWebhookEvent(fileVersionDelete = fileVersionDelete)
+
+        /** Triggered when a folder is created. */
+        @JvmStatic
+        fun ofFolderCreate(folderCreate: FolderCreateEvent) =
+            UnsafeUnwrapWebhookEvent(folderCreate = folderCreate)
+
+        /** Triggered when a folder is updated. */
+        @JvmStatic
+        fun ofFolderUpdate(folderUpdate: FolderUpdateEvent) =
+            UnsafeUnwrapWebhookEvent(folderUpdate = folderUpdate)
+
+        /** Triggered when a folder is deleted. */
+        @JvmStatic
+        fun ofFolderDelete(folderDelete: FolderDeleteEvent) =
+            UnsafeUnwrapWebhookEvent(folderDelete = folderDelete)
     }
 
     /**
@@ -638,6 +713,15 @@ private constructor(
         /** Triggered when a file version is deleted. */
         fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent): T
 
+        /** Triggered when a folder is created. */
+        fun visitFolderCreate(folderCreate: FolderCreateEvent): T
+
+        /** Triggered when a folder is updated. */
+        fun visitFolderUpdate(folderUpdate: FolderUpdateEvent): T
+
+        /** Triggered when a folder is deleted. */
+        fun visitFolderDelete(folderDelete: FolderDeleteEvent): T
+
         /**
          * Maps an unknown variant of [UnsafeUnwrapWebhookEvent] to a value of type [T].
          *
@@ -712,6 +796,15 @@ private constructor(
                         tryDeserialize(node, jacksonTypeRef<FileVersionDeleteEvent>())?.let {
                             UnsafeUnwrapWebhookEvent(fileVersionDelete = it, _json = json)
                         },
+                        tryDeserialize(node, jacksonTypeRef<FolderCreateEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(folderCreate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<FolderUpdateEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(folderUpdate = it, _json = json)
+                        },
+                        tryDeserialize(node, jacksonTypeRef<FolderDeleteEvent>())?.let {
+                            UnsafeUnwrapWebhookEvent(folderDelete = it, _json = json)
+                        },
                     )
                     .filterNotNull()
                     .allMaxBy { it.validity() }
@@ -756,6 +849,9 @@ private constructor(
                 value.fileDelete != null -> generator.writeObject(value.fileDelete)
                 value.fileVersionCreate != null -> generator.writeObject(value.fileVersionCreate)
                 value.fileVersionDelete != null -> generator.writeObject(value.fileVersionDelete)
+                value.folderCreate != null -> generator.writeObject(value.folderCreate)
+                value.folderUpdate != null -> generator.writeObject(value.folderUpdate)
+                value.folderDelete != null -> generator.writeObject(value.folderDelete)
                 value._json != null -> generator.writeObject(value._json)
                 else -> throw IllegalStateException("Invalid UnsafeUnwrapWebhookEvent")
             }
