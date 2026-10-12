@@ -23,6 +23,7 @@ class Folder
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val createdAt: JsonField<OffsetDateTime>,
+    private val createdBy: JsonField<CreatedBy>,
     private val customMetadata: JsonField<CustomMetadata>,
     private val folderId: JsonField<String>,
     private val folderPath: JsonField<String>,
@@ -37,6 +38,9 @@ private constructor(
         @JsonProperty("createdAt")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
+        @JsonProperty("createdBy")
+        @ExcludeMissing
+        createdBy: JsonField<CreatedBy> = JsonMissing.of(),
         @JsonProperty("customMetadata")
         @ExcludeMissing
         customMetadata: JsonField<CustomMetadata> = JsonMissing.of(),
@@ -49,7 +53,17 @@ private constructor(
         @JsonProperty("updatedAt")
         @ExcludeMissing
         updatedAt: JsonField<OffsetDateTime> = JsonMissing.of(),
-    ) : this(createdAt, customMetadata, folderId, folderPath, name, type, updatedAt, mutableMapOf())
+    ) : this(
+        createdAt,
+        createdBy,
+        customMetadata,
+        folderId,
+        folderPath,
+        name,
+        type,
+        updatedAt,
+        mutableMapOf(),
+    )
 
     /**
      * Date and time when the folder was created. The date and time is in ISO8601 format.
@@ -58,6 +72,15 @@ private constructor(
      *   server responded with an unexpected value).
      */
     fun createdAt(): Optional<OffsetDateTime> = createdAt.getOptional("createdAt")
+
+    /**
+     * Details of the user who created the folder. Present only when this information is available.
+     * The `name` is the name of the user at the time of folder creation.
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun createdBy(): Optional<CreatedBy> = createdBy.getOptional("createdBy")
 
     /**
      * An object with custom metadata for the folder. Returns empty object if no custom metadata is
@@ -118,6 +141,13 @@ private constructor(
     @JsonProperty("createdAt")
     @ExcludeMissing
     fun _createdAt(): JsonField<OffsetDateTime> = createdAt
+
+    /**
+     * Returns the raw JSON value of [createdBy].
+     *
+     * Unlike [createdBy], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("createdBy") @ExcludeMissing fun _createdBy(): JsonField<CreatedBy> = createdBy
 
     /**
      * Returns the raw JSON value of [customMetadata].
@@ -187,6 +217,7 @@ private constructor(
     class Builder internal constructor() {
 
         private var createdAt: JsonField<OffsetDateTime> = JsonMissing.of()
+        private var createdBy: JsonField<CreatedBy> = JsonMissing.of()
         private var customMetadata: JsonField<CustomMetadata> = JsonMissing.of()
         private var folderId: JsonField<String> = JsonMissing.of()
         private var folderPath: JsonField<String> = JsonMissing.of()
@@ -198,6 +229,7 @@ private constructor(
         @JvmSynthetic
         internal fun from(folder: Folder) = apply {
             createdAt = folder.createdAt
+            createdBy = folder.createdBy
             customMetadata = folder.customMetadata
             folderId = folder.folderId
             folderPath = folder.folderPath
@@ -218,6 +250,21 @@ private constructor(
          * supported value.
          */
         fun createdAt(createdAt: JsonField<OffsetDateTime>) = apply { this.createdAt = createdAt }
+
+        /**
+         * Details of the user who created the folder. Present only when this information is
+         * available. The `name` is the name of the user at the time of folder creation.
+         */
+        fun createdBy(createdBy: CreatedBy) = createdBy(JsonField.of(createdBy))
+
+        /**
+         * Sets [Builder.createdBy] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.createdBy] with a well-typed [CreatedBy] value instead.
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun createdBy(createdBy: JsonField<CreatedBy>) = apply { this.createdBy = createdBy }
 
         /**
          * An object with custom metadata for the folder. Returns empty object if no custom metadata
@@ -327,6 +374,7 @@ private constructor(
         fun build(): Folder =
             Folder(
                 createdAt,
+                createdBy,
                 customMetadata,
                 folderId,
                 folderPath,
@@ -353,6 +401,7 @@ private constructor(
         }
 
         createdAt()
+        createdBy().ifPresent { it.validate() }
         customMetadata().ifPresent { it.validate() }
         folderId()
         folderPath()
@@ -378,12 +427,202 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (createdAt.asKnown().isPresent) 1 else 0) +
+            (createdBy.asKnown().getOrNull()?.validity() ?: 0) +
             (customMetadata.asKnown().getOrNull()?.validity() ?: 0) +
             (if (folderId.asKnown().isPresent) 1 else 0) +
             (if (folderPath.asKnown().isPresent) 1 else 0) +
             (if (name.asKnown().isPresent) 1 else 0) +
             (type.asKnown().getOrNull()?.validity() ?: 0) +
             (if (updatedAt.asKnown().isPresent) 1 else 0)
+
+    /**
+     * Details of the user who created the folder. Present only when this information is available.
+     * The `name` is the name of the user at the time of folder creation.
+     */
+    class CreatedBy
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
+    private constructor(
+        private val email: JsonField<String>,
+        private val name: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
+    ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("email") @ExcludeMissing email: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        ) : this(email, name, mutableMapOf())
+
+        /**
+         * Email of the user who created the folder.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun email(): Optional<String> = email.getOptional("email")
+
+        /**
+         * Name of the user who created the folder.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun name(): Optional<String> = name.getOptional("name")
+
+        /**
+         * Returns the raw JSON value of [email].
+         *
+         * Unlike [email], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
+
+        /**
+         * Returns the raw JSON value of [name].
+         *
+         * Unlike [name], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
+
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
+        @JsonAnyGetter
+        @ExcludeMissing
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
+
+        fun toBuilder() = Builder().from(this)
+
+        companion object {
+
+            /** Returns a mutable builder for constructing an instance of [CreatedBy]. */
+            @JvmStatic fun builder() = Builder()
+        }
+
+        /** A builder for [CreatedBy]. */
+        class Builder internal constructor() {
+
+            private var email: JsonField<String> = JsonMissing.of()
+            private var name: JsonField<String> = JsonMissing.of()
+            private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
+
+            @JvmSynthetic
+            internal fun from(createdBy: CreatedBy) = apply {
+                email = createdBy.email
+                name = createdBy.name
+                additionalProperties = createdBy.additionalProperties.toMutableMap()
+            }
+
+            /** Email of the user who created the folder. */
+            fun email(email: String) = email(JsonField.of(email))
+
+            /**
+             * Sets [Builder.email] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.email] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun email(email: JsonField<String>) = apply { this.email = email }
+
+            /** Name of the user who created the folder. */
+            fun name(name: String) = name(JsonField.of(name))
+
+            /**
+             * Sets [Builder.name] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.name] with a well-typed [String] value instead. This
+             * method is primarily for setting the field to an undocumented or not yet supported
+             * value.
+             */
+            fun name(name: JsonField<String>) = apply { this.name = name }
+
+            fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
+
+            fun putAdditionalProperty(key: String, value: JsonValue) = apply {
+                additionalProperties.put(key, value)
+            }
+
+            fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
+
+            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+
+            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
+
+            /**
+             * Returns an immutable instance of [CreatedBy].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
+            fun build(): CreatedBy = CreatedBy(email, name, additionalProperties.toMutableMap())
+        }
+
+        private var validated: Boolean = false
+
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
+        fun validate(): CreatedBy = apply {
+            if (validated) {
+                return@apply
+            }
+
+            email()
+            name()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: ImageKitInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (email.asKnown().isPresent) 1 else 0) + (if (name.asKnown().isPresent) 1 else 0)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) {
+                return true
+            }
+
+            return other is CreatedBy &&
+                email == other.email &&
+                name == other.name &&
+                additionalProperties == other.additionalProperties
+        }
+
+        private val hashCode: Int by lazy { Objects.hash(email, name, additionalProperties) }
+
+        override fun hashCode(): Int = hashCode
+
+        override fun toString() =
+            "CreatedBy{email=$email, name=$name, additionalProperties=$additionalProperties}"
+    }
 
     /**
      * An object with custom metadata for the folder. Returns empty object if no custom metadata is
@@ -635,6 +874,7 @@ private constructor(
 
         return other is Folder &&
             createdAt == other.createdAt &&
+            createdBy == other.createdBy &&
             customMetadata == other.customMetadata &&
             folderId == other.folderId &&
             folderPath == other.folderPath &&
@@ -647,6 +887,7 @@ private constructor(
     private val hashCode: Int by lazy {
         Objects.hash(
             createdAt,
+            createdBy,
             customMetadata,
             folderId,
             folderPath,
@@ -660,5 +901,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Folder{createdAt=$createdAt, customMetadata=$customMetadata, folderId=$folderId, folderPath=$folderPath, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
+        "Folder{createdAt=$createdAt, createdBy=$createdBy, customMetadata=$customMetadata, folderId=$folderId, folderPath=$folderPath, name=$name, type=$type, updatedAt=$updatedAt, additionalProperties=$additionalProperties}"
 }

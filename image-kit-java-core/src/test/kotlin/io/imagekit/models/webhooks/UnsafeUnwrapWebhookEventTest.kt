@@ -2053,6 +2053,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     Folder.builder()
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
                             Folder.CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -2098,6 +2099,9 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         Folder.builder()
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .createdBy(
+                                Folder.CreatedBy.builder().email("email").name("name").build()
+                            )
                             .customMetadata(
                                 Folder.CustomMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -2132,6 +2136,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .data(
                     Folder.builder()
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                        .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
                             Folder.CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -2177,6 +2182,9 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .data(
                         Folder.builder()
                             .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                            .createdBy(
+                                Folder.CreatedBy.builder().email("email").name("name").build()
+                            )
                             .customMetadata(
                                 Folder.CustomMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -2208,7 +2216,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                 .id("id")
                 .type("folder.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FolderDeleteEvent.Data.builder().id("id").build())
+                .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
                 .build()
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofFolderDelete(folderDelete)
@@ -2239,7 +2247,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                     .id("id")
                     .type("folder.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .data(FolderDeleteEvent.Data.builder().id("id").build())
+                    .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
                     .build()
             )
 

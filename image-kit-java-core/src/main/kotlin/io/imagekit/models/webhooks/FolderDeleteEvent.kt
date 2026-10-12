@@ -280,29 +280,29 @@ private constructor(
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
-        private val id: JsonField<String>,
+        private val folderId: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of()
-        ) : this(id, mutableMapOf())
+            @JsonProperty("folderId") @ExcludeMissing folderId: JsonField<String> = JsonMissing.of()
+        ) : this(folderId, mutableMapOf())
 
         /**
-         * The unique identifier of the deleted folder.
+         * The unique `folderId` of the deleted folder.
          *
          * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
          *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun id(): String = id.getRequired("id")
+        fun folderId(): String = folderId.getRequired("folderId")
 
         /**
-         * Returns the raw JSON value of [id].
+         * Returns the raw JSON value of [folderId].
          *
-         * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
+         * Unlike [folderId], this method doesn't throw if the JSON field has an unexpected type.
          */
-        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
+        @JsonProperty("folderId") @ExcludeMissing fun _folderId(): JsonField<String> = folderId
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -323,7 +323,7 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .folderId()
              * ```
              */
             @JvmStatic fun builder() = Builder()
@@ -332,26 +332,26 @@ private constructor(
         /** A builder for [Data]. */
         class Builder internal constructor() {
 
-            private var id: JsonField<String>? = null
+            private var folderId: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(data: Data) = apply {
-                id = data.id
+                folderId = data.folderId
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
-            /** The unique identifier of the deleted folder. */
-            fun id(id: String) = id(JsonField.of(id))
+            /** The unique `folderId` of the deleted folder. */
+            fun folderId(folderId: String) = folderId(JsonField.of(folderId))
 
             /**
-             * Sets [Builder.id] to an arbitrary JSON value.
+             * Sets [Builder.folderId] to an arbitrary JSON value.
              *
-             * You should usually call [Builder.id] with a well-typed [String] value instead. This
-             * method is primarily for setting the field to an undocumented or not yet supported
-             * value.
+             * You should usually call [Builder.folderId] with a well-typed [String] value instead.
+             * This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
              */
-            fun id(id: JsonField<String>) = apply { this.id = id }
+            fun folderId(folderId: JsonField<String>) = apply { this.folderId = folderId }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -379,12 +379,13 @@ private constructor(
              *
              * The following fields are required:
              * ```java
-             * .id()
+             * .folderId()
              * ```
              *
              * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Data = Data(checkRequired("id", id), additionalProperties.toMutableMap())
+            fun build(): Data =
+                Data(checkRequired("folderId", folderId), additionalProperties.toMutableMap())
         }
 
         private var validated: Boolean = false
@@ -403,7 +404,7 @@ private constructor(
                 return@apply
             }
 
-            id()
+            folderId()
             validated = true
         }
 
@@ -421,7 +422,7 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic internal fun validity(): Int = (if (folderId.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -429,15 +430,16 @@ private constructor(
             }
 
             return other is Data &&
-                id == other.id &&
+                folderId == other.folderId &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(id, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(folderId, additionalProperties) }
 
         override fun hashCode(): Int = hashCode
 
-        override fun toString() = "Data{id=$id, additionalProperties=$additionalProperties}"
+        override fun toString() =
+            "Data{folderId=$folderId, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
