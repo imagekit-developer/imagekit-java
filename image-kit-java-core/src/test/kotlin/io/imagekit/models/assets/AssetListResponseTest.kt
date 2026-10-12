@@ -171,6 +171,7 @@ internal class AssetListResponseTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                 .customMetadata(
                     Folder.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -196,6 +197,7 @@ internal class AssetListResponseTest {
             AssetListResponse.ofFolder(
                 Folder.builder()
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                     .customMetadata(
                         Folder.CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
