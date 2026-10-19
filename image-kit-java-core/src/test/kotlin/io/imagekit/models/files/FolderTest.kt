@@ -5,6 +5,7 @@ package io.imagekit.models.files
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.imagekit.core.JsonValue
 import io.imagekit.core.jsonMapper
+import io.imagekit.models.CustomMetadata
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ internal class FolderTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                 .customMetadata(
-                    Folder.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )
@@ -34,9 +35,7 @@ internal class FolderTest {
             .contains(Folder.CreatedBy.builder().email("email").name("name").build())
         assertThat(folder.customMetadata())
             .contains(
-                Folder.CustomMetadata.builder()
-                    .putAdditionalProperty("foo", JsonValue.from("bar"))
-                    .build()
+                CustomMetadata.builder().putAdditionalProperty("foo", JsonValue.from("bar")).build()
             )
         assertThat(folder.folderId()).contains("folderId")
         assertThat(folder.folderPath()).contains("folderPath")
@@ -53,7 +52,7 @@ internal class FolderTest {
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                 .customMetadata(
-                    Folder.CustomMetadata.builder()
+                    CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
                         .build()
                 )

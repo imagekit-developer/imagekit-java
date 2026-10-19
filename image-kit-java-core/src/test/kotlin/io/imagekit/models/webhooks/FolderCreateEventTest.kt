@@ -5,6 +5,7 @@ package io.imagekit.models.webhooks
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.imagekit.core.JsonValue
 import io.imagekit.core.jsonMapper
+import io.imagekit.models.CustomMetadata
 import io.imagekit.models.files.Folder
 import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
@@ -24,7 +25,7 @@ internal class FolderCreateEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
-                            Folder.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -47,7 +48,7 @@ internal class FolderCreateEventTest {
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                     .customMetadata(
-                        Folder.CustomMetadata.builder()
+                        CustomMetadata.builder()
                             .putAdditionalProperty("foo", JsonValue.from("bar"))
                             .build()
                     )
@@ -73,7 +74,7 @@ internal class FolderCreateEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
-                            Folder.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
