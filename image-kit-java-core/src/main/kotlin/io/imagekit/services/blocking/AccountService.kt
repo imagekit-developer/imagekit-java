@@ -7,6 +7,7 @@ import io.imagekit.services.blocking.accounts.OriginService
 import io.imagekit.services.blocking.accounts.UrlEndpointService
 import io.imagekit.services.blocking.accounts.UsageAnalyticsService
 import io.imagekit.services.blocking.accounts.UsageService
+import io.imagekit.services.blocking.accounts.WebhookService
 import java.util.function.Consumer
 
 interface AccountService {
@@ -31,6 +32,8 @@ interface AccountService {
 
     fun urlEndpoints(): UrlEndpointService
 
+    fun webhooks(): WebhookService
+
     /** A view of [AccountService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
@@ -48,5 +51,7 @@ interface AccountService {
         fun origins(): OriginService.WithRawResponse
 
         fun urlEndpoints(): UrlEndpointService.WithRawResponse
+
+        fun webhooks(): WebhookService.WithRawResponse
     }
 }
