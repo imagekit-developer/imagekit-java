@@ -5,13 +5,13 @@ package io.imagekit.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.folders.FolderCopyParams
 import io.imagekit.models.folders.FolderCopyResponse
 import io.imagekit.models.folders.FolderCreateParams
 import io.imagekit.models.folders.FolderCreateResponse
 import io.imagekit.models.folders.FolderDeleteParams
-import io.imagekit.models.folders.FolderDeleteResponse
 import io.imagekit.models.folders.FolderMoveParams
 import io.imagekit.models.folders.FolderMoveResponse
 import io.imagekit.models.folders.FolderRenameParams
@@ -52,14 +52,10 @@ interface FolderService {
      * This will delete a folder and all its contents permanently. The API returns an empty
      * response.
      */
-    fun delete(params: FolderDeleteParams): FolderDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(params: FolderDeleteParams) = delete(params, RequestOptions.none())
 
     /** @see delete */
-    fun delete(
-        params: FolderDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): FolderDeleteResponse
+    fun delete(params: FolderDeleteParams, requestOptions: RequestOptions = RequestOptions.none())
 
     /**
      * This will copy one folder into another. The selected folder, its nested folders, files, and
@@ -135,15 +131,14 @@ interface FolderService {
          * [FolderService.delete].
          */
         @MustBeClosed
-        fun delete(params: FolderDeleteParams): HttpResponseFor<FolderDeleteResponse> =
-            delete(params, RequestOptions.none())
+        fun delete(params: FolderDeleteParams): HttpResponse = delete(params, RequestOptions.none())
 
         /** @see delete */
         @MustBeClosed
         fun delete(
             params: FolderDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<FolderDeleteResponse>
+        ): HttpResponse
 
         /**
          * Returns a raw HTTP response for `post /v1/bulkJobs/copyFolder`, but is otherwise the same

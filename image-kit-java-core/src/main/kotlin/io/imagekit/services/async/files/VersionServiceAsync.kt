@@ -4,10 +4,10 @@ package io.imagekit.services.async.files
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.http.HttpResponse
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.models.files.File
 import io.imagekit.models.files.versions.VersionDeleteParams
-import io.imagekit.models.files.versions.VersionDeleteResponse
 import io.imagekit.models.files.versions.VersionGetParams
 import io.imagekit.models.files.versions.VersionListParams
 import io.imagekit.models.files.versions.VersionRestoreParams
@@ -64,28 +64,26 @@ interface VersionServiceAsync {
      *
      * Note: If you want to delete all versions of a file, use the delete file API.
      */
-    fun delete(
-        versionId: String,
-        params: VersionDeleteParams,
-    ): CompletableFuture<VersionDeleteResponse> = delete(versionId, params, RequestOptions.none())
+    fun delete(versionId: String, params: VersionDeleteParams): CompletableFuture<Void?> =
+        delete(versionId, params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         versionId: String,
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse> =
+    ): CompletableFuture<Void?> =
         delete(params.toBuilder().versionId(versionId).build(), requestOptions)
 
     /** @see delete */
-    fun delete(params: VersionDeleteParams): CompletableFuture<VersionDeleteResponse> =
+    fun delete(params: VersionDeleteParams): CompletableFuture<Void?> =
         delete(params, RequestOptions.none())
 
     /** @see delete */
     fun delete(
         params: VersionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<VersionDeleteResponse>
+    ): CompletableFuture<Void?>
 
     /** This API returns an object with details or attributes of a file version. */
     fun get(versionId: String, params: VersionGetParams): CompletableFuture<File> =
@@ -190,28 +188,25 @@ interface VersionServiceAsync {
         fun delete(
             versionId: String,
             params: VersionDeleteParams,
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
-            delete(versionId, params, RequestOptions.none())
+        ): CompletableFuture<HttpResponse> = delete(versionId, params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             versionId: String,
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        ): CompletableFuture<HttpResponse> =
             delete(params.toBuilder().versionId(versionId).build(), requestOptions)
 
         /** @see delete */
-        fun delete(
-            params: VersionDeleteParams
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>> =
+        fun delete(params: VersionDeleteParams): CompletableFuture<HttpResponse> =
             delete(params, RequestOptions.none())
 
         /** @see delete */
         fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<VersionDeleteResponse>>
+        ): CompletableFuture<HttpResponse>
 
         /**
          * Returns a raw HTTP response for `get /v1/files/{fileId}/versions/{versionId}`, but is

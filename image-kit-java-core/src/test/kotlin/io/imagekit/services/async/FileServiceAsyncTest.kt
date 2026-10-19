@@ -134,7 +134,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.files()
 
-        val responseFuture =
+        val future =
             fileServiceAsync.copy(
                 FileCopyParams.builder()
                     .destinationPath("/folder/to/copy/into/")
@@ -143,8 +143,7 @@ internal class FileServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val response = future.get()
     }
 
     @Disabled("Mock server tests are disabled")
@@ -173,7 +172,7 @@ internal class FileServiceAsyncTest {
                 .build()
         val fileServiceAsync = client.files()
 
-        val responseFuture =
+        val future =
             fileServiceAsync.move(
                 FileMoveParams.builder()
                     .destinationPath("/folder/to/move/into/")
@@ -181,8 +180,7 @@ internal class FileServiceAsyncTest {
                     .build()
             )
 
-        val response = responseFuture.get()
-        response.validate()
+        val response = future.get()
     }
 
     @Disabled("Mock server tests are disabled")

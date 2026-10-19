@@ -7,6 +7,7 @@ import io.imagekit.services.async.accounts.OriginServiceAsync
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsync
 import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsync
 import io.imagekit.services.async.accounts.UsageServiceAsync
+import io.imagekit.services.async.accounts.WebhookServiceAsync
 import java.util.function.Consumer
 
 interface AccountServiceAsync {
@@ -31,6 +32,8 @@ interface AccountServiceAsync {
 
     fun urlEndpoints(): UrlEndpointServiceAsync
 
+    fun webhooks(): WebhookServiceAsync
+
     /**
      * A view of [AccountServiceAsync] that provides access to raw HTTP responses for each method.
      */
@@ -52,5 +55,7 @@ interface AccountServiceAsync {
         fun origins(): OriginServiceAsync.WithRawResponse
 
         fun urlEndpoints(): UrlEndpointServiceAsync.WithRawResponse
+
+        fun webhooks(): WebhookServiceAsync.WithRawResponse
     }
 }
