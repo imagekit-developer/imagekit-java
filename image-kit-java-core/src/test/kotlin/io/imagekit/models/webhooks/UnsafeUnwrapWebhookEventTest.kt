@@ -2055,7 +2055,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
-                            Folder.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -2103,7 +2103,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 Folder.CreatedBy.builder().email("email").name("name").build()
                             )
                             .customMetadata(
-                                Folder.CustomMetadata.builder()
+                                CustomMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
@@ -2138,7 +2138,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                         .customMetadata(
-                            Folder.CustomMetadata.builder()
+                            CustomMetadata.builder()
                                 .putAdditionalProperty("foo", JsonValue.from("bar"))
                                 .build()
                         )
@@ -2186,7 +2186,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                                 Folder.CreatedBy.builder().email("email").name("name").build()
                             )
                             .customMetadata(
-                                Folder.CustomMetadata.builder()
+                                CustomMetadata.builder()
                                     .putAdditionalProperty("foo", JsonValue.from("bar"))
                                     .build()
                             )
