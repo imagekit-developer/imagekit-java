@@ -5,6 +5,7 @@ package io.imagekit.services.blocking.files
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.checkRequired
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -18,7 +19,6 @@ import io.imagekit.core.http.parseable
 import io.imagekit.core.prepare
 import io.imagekit.models.files.File
 import io.imagekit.models.files.versions.VersionDeleteParams
-import io.imagekit.models.files.versions.VersionDeleteResponse
 import io.imagekit.models.files.versions.VersionGetParams
 import io.imagekit.models.files.versions.VersionListParams
 import io.imagekit.models.files.versions.VersionRestoreParams
@@ -41,12 +41,10 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
         // get /v1/files/{fileId}/versions
         withRawResponse().list(params, requestOptions).parse()
 
-    override fun delete(
-        params: VersionDeleteParams,
-        requestOptions: RequestOptions,
-    ): VersionDeleteResponse =
+    override fun delete(params: VersionDeleteParams, requestOptions: RequestOptions) {
         // delete /v1/files/{fileId}/versions/{versionId}
-        withRawResponse().delete(params, requestOptions).parse()
+        withRawResponse().delete(params, requestOptions)
+    }
 
     override fun get(params: VersionGetParams, requestOptions: RequestOptions): File =
         // get /v1/files/{fileId}/versions/{versionId}
@@ -99,13 +97,12 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
             }
         }
 
-        private val deleteHandler: Handler<VersionDeleteResponse> =
-            jsonHandler<VersionDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: VersionDeleteParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<VersionDeleteResponse> {
+        ): HttpResponse {
             // We check here instead of in the params builder because this can be specified
             // positionally or in the params class.
             checkRequired("versionId", params.versionId().getOrNull())
@@ -126,13 +123,7 @@ class VersionServiceImpl internal constructor(private val clientOptions: ClientO
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
+                response.use { deleteHandler.handle(it) }
             }
         }
 

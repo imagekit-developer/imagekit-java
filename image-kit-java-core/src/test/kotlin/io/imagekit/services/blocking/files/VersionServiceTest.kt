@@ -36,12 +36,9 @@ internal class VersionServiceTest {
                 .build()
         val versionService = client.files().versions()
 
-        val version =
-            versionService.delete(
-                VersionDeleteParams.builder().fileId("fileId").versionId("versionId").build()
-            )
-
-        version.validate()
+        versionService.delete(
+            VersionDeleteParams.builder().fileId("fileId").versionId("versionId").build()
+        )
     }
 
     @Disabled("Mock server tests are disabled")

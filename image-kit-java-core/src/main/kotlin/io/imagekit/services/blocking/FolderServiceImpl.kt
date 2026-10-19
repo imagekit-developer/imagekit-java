@@ -4,6 +4,7 @@ package io.imagekit.services.blocking
 
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
+import io.imagekit.core.handlers.emptyHandler
 import io.imagekit.core.handlers.errorBodyHandler
 import io.imagekit.core.handlers.errorHandler
 import io.imagekit.core.handlers.jsonHandler
@@ -20,7 +21,6 @@ import io.imagekit.models.folders.FolderCopyResponse
 import io.imagekit.models.folders.FolderCreateParams
 import io.imagekit.models.folders.FolderCreateResponse
 import io.imagekit.models.folders.FolderDeleteParams
-import io.imagekit.models.folders.FolderDeleteResponse
 import io.imagekit.models.folders.FolderMoveParams
 import io.imagekit.models.folders.FolderMoveResponse
 import io.imagekit.models.folders.FolderRenameParams
@@ -52,12 +52,10 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
         // post /v1/folder
         withRawResponse().create(params, requestOptions).parse()
 
-    override fun delete(
-        params: FolderDeleteParams,
-        requestOptions: RequestOptions,
-    ): FolderDeleteResponse =
+    override fun delete(params: FolderDeleteParams, requestOptions: RequestOptions) {
         // delete /v1/folder
-        withRawResponse().delete(params, requestOptions).parse()
+        withRawResponse().delete(params, requestOptions)
+    }
 
     override fun copy(
         params: FolderCopyParams,
@@ -127,13 +125,12 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
             }
         }
 
-        private val deleteHandler: Handler<FolderDeleteResponse> =
-            jsonHandler<FolderDeleteResponse>(clientOptions.jsonMapper)
+        private val deleteHandler: Handler<Void?> = emptyHandler()
 
         override fun delete(
             params: FolderDeleteParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<FolderDeleteResponse> {
+        ): HttpResponse {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
@@ -145,13 +142,7 @@ class FolderServiceImpl internal constructor(private val clientOptions: ClientOp
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
             val response = clientOptions.httpClient.execute(request, requestOptions)
             return errorHandler.handle(response).parseable {
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
+                response.use { deleteHandler.handle(it) }
             }
         }
 

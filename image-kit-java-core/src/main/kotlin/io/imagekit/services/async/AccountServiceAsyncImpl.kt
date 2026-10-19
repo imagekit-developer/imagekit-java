@@ -11,6 +11,8 @@ import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsync
 import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsyncImpl
 import io.imagekit.services.async.accounts.UsageServiceAsync
 import io.imagekit.services.async.accounts.UsageServiceAsyncImpl
+import io.imagekit.services.async.accounts.WebhookServiceAsync
+import io.imagekit.services.async.accounts.WebhookServiceAsyncImpl
 import java.util.function.Consumer
 
 class AccountServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -32,6 +34,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         UrlEndpointServiceAsyncImpl(clientOptions)
     }
 
+    private val webhooks: WebhookServiceAsync by lazy { WebhookServiceAsyncImpl(clientOptions) }
+
     override fun withRawResponse(): AccountServiceAsync.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AccountServiceAsync =
@@ -44,6 +48,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
     override fun origins(): OriginServiceAsync = origins
 
     override fun urlEndpoints(): UrlEndpointServiceAsync = urlEndpoints
+
+    override fun webhooks(): WebhookServiceAsync = webhooks
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AccountServiceAsync.WithRawResponse {
@@ -64,6 +70,10 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
             UrlEndpointServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookServiceAsync.WithRawResponse by lazy {
+            WebhookServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): AccountServiceAsync.WithRawResponse =
@@ -78,5 +88,7 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         override fun origins(): OriginServiceAsync.WithRawResponse = origins
 
         override fun urlEndpoints(): UrlEndpointServiceAsync.WithRawResponse = urlEndpoints
+
+        override fun webhooks(): WebhookServiceAsync.WithRawResponse = webhooks
     }
 }
