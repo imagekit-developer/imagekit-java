@@ -11,6 +11,8 @@ import io.imagekit.services.blocking.accounts.UsageAnalyticsService
 import io.imagekit.services.blocking.accounts.UsageAnalyticsServiceImpl
 import io.imagekit.services.blocking.accounts.UsageService
 import io.imagekit.services.blocking.accounts.UsageServiceImpl
+import io.imagekit.services.blocking.accounts.WebhookService
+import io.imagekit.services.blocking.accounts.WebhookServiceImpl
 import java.util.function.Consumer
 
 class AccountServiceImpl internal constructor(private val clientOptions: ClientOptions) :
@@ -30,6 +32,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
 
     private val urlEndpoints: UrlEndpointService by lazy { UrlEndpointServiceImpl(clientOptions) }
 
+    private val webhooks: WebhookService by lazy { WebhookServiceImpl(clientOptions) }
+
     override fun withRawResponse(): AccountService.WithRawResponse = withRawResponse
 
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AccountService =
@@ -42,6 +46,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
     override fun origins(): OriginService = origins
 
     override fun urlEndpoints(): UrlEndpointService = urlEndpoints
+
+    override fun webhooks(): WebhookService = webhooks
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AccountService.WithRawResponse {
@@ -62,6 +68,10 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
             UrlEndpointServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
+        private val webhooks: WebhookService.WithRawResponse by lazy {
+            WebhookServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
         ): AccountService.WithRawResponse =
@@ -76,5 +86,7 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
         override fun origins(): OriginService.WithRawResponse = origins
 
         override fun urlEndpoints(): UrlEndpointService.WithRawResponse = urlEndpoints
+
+        override fun webhooks(): WebhookService.WithRawResponse = webhooks
     }
 }

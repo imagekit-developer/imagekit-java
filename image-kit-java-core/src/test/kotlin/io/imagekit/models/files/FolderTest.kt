@@ -16,6 +16,7 @@ internal class FolderTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                 .customMetadata(
                     Folder.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
@@ -29,6 +30,8 @@ internal class FolderTest {
                 .build()
 
         assertThat(folder.createdAt()).contains(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+        assertThat(folder.createdBy())
+            .contains(Folder.CreatedBy.builder().email("email").name("name").build())
         assertThat(folder.customMetadata())
             .contains(
                 Folder.CustomMetadata.builder()
@@ -48,6 +51,7 @@ internal class FolderTest {
         val folder =
             Folder.builder()
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .createdBy(Folder.CreatedBy.builder().email("email").name("name").build())
                 .customMetadata(
                     Folder.CustomMetadata.builder()
                         .putAdditionalProperty("foo", JsonValue.from("bar"))
