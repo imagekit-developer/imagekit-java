@@ -49,6 +49,12 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
 
         @JvmField val FILE_VERSION_DELETED = of("file-version.deleted")
 
+        @JvmField val FOLDER_CREATED = of("folder.created")
+
+        @JvmField val FOLDER_UPDATED = of("folder.updated")
+
+        @JvmField val FOLDER_DELETED = of("folder.deleted")
+
         @JvmStatic fun of(value: String) = WebhookEventType(JsonField.of(value))
     }
 
@@ -66,6 +72,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
         FILE_DELETED,
         FILE_VERSION_CREATED,
         FILE_VERSION_DELETED,
+        FOLDER_CREATED,
+        FOLDER_UPDATED,
+        FOLDER_DELETED,
     }
 
     /**
@@ -90,6 +99,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
         FILE_DELETED,
         FILE_VERSION_CREATED,
         FILE_VERSION_DELETED,
+        FOLDER_CREATED,
+        FOLDER_UPDATED,
+        FOLDER_DELETED,
         /**
          * An enum member indicating that [WebhookEventType] was instantiated with an unknown value.
          */
@@ -117,6 +129,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
             FILE_DELETED -> Value.FILE_DELETED
             FILE_VERSION_CREATED -> Value.FILE_VERSION_CREATED
             FILE_VERSION_DELETED -> Value.FILE_VERSION_DELETED
+            FOLDER_CREATED -> Value.FOLDER_CREATED
+            FOLDER_UPDATED -> Value.FOLDER_UPDATED
+            FOLDER_DELETED -> Value.FOLDER_DELETED
             else -> Value._UNKNOWN
         }
 
@@ -142,6 +157,9 @@ class WebhookEventType @JsonCreator private constructor(private val value: JsonF
             FILE_DELETED -> Known.FILE_DELETED
             FILE_VERSION_CREATED -> Known.FILE_VERSION_CREATED
             FILE_VERSION_DELETED -> Known.FILE_VERSION_DELETED
+            FOLDER_CREATED -> Known.FOLDER_CREATED
+            FOLDER_UPDATED -> Known.FOLDER_UPDATED
+            FOLDER_DELETED -> Known.FOLDER_DELETED
             else -> throw ImageKitInvalidDataException("Unknown WebhookEventType: $value")
         }
 
