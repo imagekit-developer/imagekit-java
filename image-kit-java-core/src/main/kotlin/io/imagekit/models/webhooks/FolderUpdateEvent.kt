@@ -18,7 +18,11 @@ import java.util.Collections
 import java.util.Objects
 import kotlin.jvm.optionals.getOrNull
 
-/** Triggered when a folder is updated. */
+/**
+ * Triggered when a folder is updated, for example when its custom metadata changes or it is
+ * renamed. Renaming a folder sends one event per folder in the tree, each with its new
+ * `folderPath`.
+ */
 class FolderUpdateEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(

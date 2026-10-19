@@ -116,13 +116,26 @@ private constructor(
     fun fileVersionDelete(): Optional<FileVersionDeleteEvent> =
         Optional.ofNullable(fileVersionDelete)
 
-    /** Triggered when a folder is created. */
+    /**
+     * Triggered when a folder is created, whether explicitly, by copying or moving a folder, or
+     * implicitly when an upload creates missing parent folders. Copying or moving a folder tree
+     * sends one event per folder in the tree.
+     */
     fun folderCreate(): Optional<FolderCreateEvent> = Optional.ofNullable(folderCreate)
 
-    /** Triggered when a folder is updated. */
+    /**
+     * Triggered when a folder is updated, for example when its custom metadata changes or it is
+     * renamed. Renaming a folder sends one event per folder in the tree, each with its new
+     * `folderPath`.
+     */
     fun folderUpdate(): Optional<FolderUpdateEvent> = Optional.ofNullable(folderUpdate)
 
-    /** Triggered when a folder is deleted. */
+    /**
+     * Triggered when a folder is deleted. Deleting a folder tree sends one event per folder in the
+     * tree; the files inside it send `file.deleted` events and their versions send
+     * `file-version.deleted` events. Moving a folder sends this event for the old `folderId` and
+     * `folder.created` for the new one.
+     */
     fun folderDelete(): Optional<FolderDeleteEvent> = Optional.ofNullable(folderDelete)
 
     fun isVideoTransformationAccepted(): Boolean = videoTransformationAccepted != null
@@ -225,13 +238,26 @@ private constructor(
     fun asFileVersionDelete(): FileVersionDeleteEvent =
         fileVersionDelete.getOrThrow("fileVersionDelete")
 
-    /** Triggered when a folder is created. */
+    /**
+     * Triggered when a folder is created, whether explicitly, by copying or moving a folder, or
+     * implicitly when an upload creates missing parent folders. Copying or moving a folder tree
+     * sends one event per folder in the tree.
+     */
     fun asFolderCreate(): FolderCreateEvent = folderCreate.getOrThrow("folderCreate")
 
-    /** Triggered when a folder is updated. */
+    /**
+     * Triggered when a folder is updated, for example when its custom metadata changes or it is
+     * renamed. Renaming a folder sends one event per folder in the tree, each with its new
+     * `folderPath`.
+     */
     fun asFolderUpdate(): FolderUpdateEvent = folderUpdate.getOrThrow("folderUpdate")
 
-    /** Triggered when a folder is deleted. */
+    /**
+     * Triggered when a folder is deleted. Deleting a folder tree sends one event per folder in the
+     * tree; the files inside it send `file.deleted` events and their versions send
+     * `file-version.deleted` events. Moving a folder sends this event for the old `folderId` and
+     * `folder.created` for the new one.
+     */
     fun asFolderDelete(): FolderDeleteEvent = folderDelete.getOrThrow("folderDelete")
 
     fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
@@ -613,17 +639,30 @@ private constructor(
         fun ofFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent) =
             UnwrapWebhookEvent(fileVersionDelete = fileVersionDelete)
 
-        /** Triggered when a folder is created. */
+        /**
+         * Triggered when a folder is created, whether explicitly, by copying or moving a folder, or
+         * implicitly when an upload creates missing parent folders. Copying or moving a folder tree
+         * sends one event per folder in the tree.
+         */
         @JvmStatic
         fun ofFolderCreate(folderCreate: FolderCreateEvent) =
             UnwrapWebhookEvent(folderCreate = folderCreate)
 
-        /** Triggered when a folder is updated. */
+        /**
+         * Triggered when a folder is updated, for example when its custom metadata changes or it is
+         * renamed. Renaming a folder sends one event per folder in the tree, each with its new
+         * `folderPath`.
+         */
         @JvmStatic
         fun ofFolderUpdate(folderUpdate: FolderUpdateEvent) =
             UnwrapWebhookEvent(folderUpdate = folderUpdate)
 
-        /** Triggered when a folder is deleted. */
+        /**
+         * Triggered when a folder is deleted. Deleting a folder tree sends one event per folder in
+         * the tree; the files inside it send `file.deleted` events and their versions send
+         * `file-version.deleted` events. Moving a folder sends this event for the old `folderId`
+         * and `folder.created` for the new one.
+         */
         @JvmStatic
         fun ofFolderDelete(folderDelete: FolderDeleteEvent) =
             UnwrapWebhookEvent(folderDelete = folderDelete)
@@ -708,13 +747,26 @@ private constructor(
         /** Triggered when a file version is deleted. */
         fun visitFileVersionDelete(fileVersionDelete: FileVersionDeleteEvent): T
 
-        /** Triggered when a folder is created. */
+        /**
+         * Triggered when a folder is created, whether explicitly, by copying or moving a folder, or
+         * implicitly when an upload creates missing parent folders. Copying or moving a folder tree
+         * sends one event per folder in the tree.
+         */
         fun visitFolderCreate(folderCreate: FolderCreateEvent): T
 
-        /** Triggered when a folder is updated. */
+        /**
+         * Triggered when a folder is updated, for example when its custom metadata changes or it is
+         * renamed. Renaming a folder sends one event per folder in the tree, each with its new
+         * `folderPath`.
+         */
         fun visitFolderUpdate(folderUpdate: FolderUpdateEvent): T
 
-        /** Triggered when a folder is deleted. */
+        /**
+         * Triggered when a folder is deleted. Deleting a folder tree sends one event per folder in
+         * the tree; the files inside it send `file.deleted` events and their versions send
+         * `file-version.deleted` events. Moving a folder sends this event for the old `folderId`
+         * and `folder.created` for the new one.
+         */
         fun visitFolderDelete(folderDelete: FolderDeleteEvent): T
 
         /**
