@@ -12,7 +12,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
 import io.imagekit.core.BaseDeserializer
 import io.imagekit.core.BaseSerializer
 import io.imagekit.core.JsonValue
-import io.imagekit.core.allMaxBy
 import io.imagekit.core.getOrThrow
 import io.imagekit.errors.ImageKitInvalidDataException
 import java.util.Objects
@@ -790,71 +789,85 @@ private constructor(
             val json = JsonValue.fromJsonNode(node)
             val type = json.asObject().getOrNull()?.get("type")?.asString()?.getOrNull()
 
-            when (type) {}
-
-            val bestMatches =
-                sequenceOf(
-                        tryDeserialize(node, jacksonTypeRef<VideoTransformationAcceptedEvent>())
-                            ?.let {
-                                UnwrapWebhookEvent(videoTransformationAccepted = it, _json = json)
-                            },
-                        tryDeserialize(node, jacksonTypeRef<VideoTransformationReadyEvent>())?.let {
-                            UnwrapWebhookEvent(videoTransformationReady = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<VideoTransformationErrorEvent>())?.let {
-                            UnwrapWebhookEvent(videoTransformationError = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<UploadPreTransformSuccessEvent>())
-                            ?.let {
-                                UnwrapWebhookEvent(uploadPreTransformSuccess = it, _json = json)
-                            },
-                        tryDeserialize(node, jacksonTypeRef<UploadPreTransformErrorEvent>())?.let {
-                            UnwrapWebhookEvent(uploadPreTransformError = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<UploadPostTransformSuccessEvent>())
-                            ?.let {
-                                UnwrapWebhookEvent(uploadPostTransformSuccess = it, _json = json)
-                            },
-                        tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorEvent>())?.let {
-                            UnwrapWebhookEvent(uploadPostTransformError = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FileCreateEvent>())?.let {
-                            UnwrapWebhookEvent(fileCreate = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FileUpdateEvent>())?.let {
-                            UnwrapWebhookEvent(fileUpdate = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FileDeleteEvent>())?.let {
-                            UnwrapWebhookEvent(fileDelete = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FileVersionCreateEvent>())?.let {
-                            UnwrapWebhookEvent(fileVersionCreate = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FileVersionDeleteEvent>())?.let {
-                            UnwrapWebhookEvent(fileVersionDelete = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FolderCreateEvent>())?.let {
-                            UnwrapWebhookEvent(folderCreate = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FolderUpdateEvent>())?.let {
-                            UnwrapWebhookEvent(folderUpdate = it, _json = json)
-                        },
-                        tryDeserialize(node, jacksonTypeRef<FolderDeleteEvent>())?.let {
-                            UnwrapWebhookEvent(folderDelete = it, _json = json)
-                        },
-                    )
-                    .filterNotNull()
-                    .allMaxBy { it.validity() }
-                    .toList()
-            return when (bestMatches.size) {
-                // This can happen if what we're deserializing is completely incompatible with all
-                // the possible variants (e.g. deserializing from boolean).
-                0 -> UnwrapWebhookEvent(_json = json)
-                1 -> bestMatches.single()
-                // If there's more than one match with the highest validity, then use the first
-                // completely valid match, or simply the first match if none are completely valid.
-                else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+            when (type) {
+                "video.transformation.accepted" -> {
+                    return tryDeserialize(node, jacksonTypeRef<VideoTransformationAcceptedEvent>())
+                        ?.let { UnwrapWebhookEvent(videoTransformationAccepted = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "video.transformation.ready" -> {
+                    return tryDeserialize(node, jacksonTypeRef<VideoTransformationReadyEvent>())
+                        ?.let { UnwrapWebhookEvent(videoTransformationReady = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "video.transformation.error" -> {
+                    return tryDeserialize(node, jacksonTypeRef<VideoTransformationErrorEvent>())
+                        ?.let { UnwrapWebhookEvent(videoTransformationError = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "upload.pre-transform.success" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UploadPreTransformSuccessEvent>())
+                        ?.let { UnwrapWebhookEvent(uploadPreTransformSuccess = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "upload.pre-transform.error" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UploadPreTransformErrorEvent>())
+                        ?.let { UnwrapWebhookEvent(uploadPreTransformError = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "upload.post-transform.success" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UploadPostTransformSuccessEvent>())
+                        ?.let { UnwrapWebhookEvent(uploadPostTransformSuccess = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "upload.post-transform.error" -> {
+                    return tryDeserialize(node, jacksonTypeRef<UploadPostTransformErrorEvent>())
+                        ?.let { UnwrapWebhookEvent(uploadPostTransformError = it, _json = json) }
+                        ?: UnwrapWebhookEvent(_json = json)
+                }
+                "file.created" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FileCreateEvent>())?.let {
+                        UnwrapWebhookEvent(fileCreate = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "file.updated" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FileUpdateEvent>())?.let {
+                        UnwrapWebhookEvent(fileUpdate = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "file.deleted" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FileDeleteEvent>())?.let {
+                        UnwrapWebhookEvent(fileDelete = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "file-version.created" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FileVersionCreateEvent>())?.let {
+                        UnwrapWebhookEvent(fileVersionCreate = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "file-version.deleted" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FileVersionDeleteEvent>())?.let {
+                        UnwrapWebhookEvent(fileVersionDelete = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "folder.created" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FolderCreateEvent>())?.let {
+                        UnwrapWebhookEvent(folderCreate = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "folder.updated" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FolderUpdateEvent>())?.let {
+                        UnwrapWebhookEvent(folderUpdate = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
+                "folder.deleted" -> {
+                    return tryDeserialize(node, jacksonTypeRef<FolderDeleteEvent>())?.let {
+                        UnwrapWebhookEvent(folderDelete = it, _json = json)
+                    } ?: UnwrapWebhookEvent(_json = json)
+                }
             }
+
+            return UnwrapWebhookEvent(_json = json)
         }
     }
 

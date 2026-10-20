@@ -28,7 +28,6 @@ internal class UnwrapWebhookEventTest {
         val videoTransformationAccepted =
             VideoTransformationAcceptedEvent.builder()
                 .id("id")
-                .type("video.transformation.accepted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationAcceptedEvent.Data.builder()
@@ -116,7 +115,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofVideoTransformationAccepted(
                 VideoTransformationAcceptedEvent.builder()
                     .id("id")
-                    .type("video.transformation.accepted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationAcceptedEvent.Data.builder()
@@ -191,7 +189,6 @@ internal class UnwrapWebhookEventTest {
         val videoTransformationReady =
             VideoTransformationReadyEvent.builder()
                 .id("id")
-                .type("video.transformation.ready")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationReadyEvent.Data.builder()
@@ -300,7 +297,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofVideoTransformationReady(
                 VideoTransformationReadyEvent.builder()
                     .id("id")
-                    .type("video.transformation.ready")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationReadyEvent.Data.builder()
@@ -398,7 +394,6 @@ internal class UnwrapWebhookEventTest {
         val videoTransformationError =
             VideoTransformationErrorEvent.builder()
                 .id("id")
-                .type("video.transformation.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationErrorEvent.Data.builder()
@@ -495,7 +490,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofVideoTransformationError(
                 VideoTransformationErrorEvent.builder()
                     .id("id")
-                    .type("video.transformation.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         VideoTransformationErrorEvent.Data.builder()
@@ -581,7 +575,6 @@ internal class UnwrapWebhookEventTest {
         val uploadPreTransformSuccess =
             UploadPreTransformSuccessEvent.builder()
                 .id("id")
-                .type("upload.pre-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformSuccessEvent.Data.builder()
@@ -817,7 +810,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofUploadPreTransformSuccess(
                 UploadPreTransformSuccessEvent.builder()
                     .id("id")
-                    .type("upload.pre-transform.success")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPreTransformSuccessEvent.Data.builder()
@@ -1054,7 +1046,6 @@ internal class UnwrapWebhookEventTest {
         val uploadPreTransformError =
             UploadPreTransformErrorEvent.builder()
                 .id("id")
-                .type("upload.pre-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformErrorEvent.Data.builder()
@@ -1106,7 +1097,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofUploadPreTransformError(
                 UploadPreTransformErrorEvent.builder()
                     .id("id")
-                    .type("upload.pre-transform.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPreTransformErrorEvent.Data.builder()
@@ -1147,7 +1137,6 @@ internal class UnwrapWebhookEventTest {
         val uploadPostTransformSuccess =
             UploadPostTransformSuccessEvent.builder()
                 .id("id")
-                .type("upload.post-transform.success")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPostTransformSuccessEvent.Data.builder()
@@ -1204,7 +1193,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofUploadPostTransformSuccess(
                 UploadPostTransformSuccessEvent.builder()
                     .id("id")
-                    .type("upload.post-transform.success")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPostTransformSuccessEvent.Data.builder()
@@ -1249,7 +1237,6 @@ internal class UnwrapWebhookEventTest {
         val uploadPostTransformError =
             UploadPostTransformErrorEvent.builder()
                 .id("id")
-                .type("upload.post-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPostTransformErrorEvent.Data.builder()
@@ -1316,7 +1303,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofUploadPostTransformError(
                 UploadPostTransformErrorEvent.builder()
                     .id("id")
-                    .type("upload.post-transform.error")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         UploadPostTransformErrorEvent.Data.builder()
@@ -1372,7 +1358,6 @@ internal class UnwrapWebhookEventTest {
         val fileCreate =
             FileCreateEvent.builder()
                 .id("id")
-                .type("file.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -1465,7 +1450,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFileCreate(
                 FileCreateEvent.builder()
                     .id("id")
-                    .type("file.created")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         File.builder()
@@ -1558,7 +1542,6 @@ internal class UnwrapWebhookEventTest {
         val fileUpdate =
             FileUpdateEvent.builder()
                 .id("id")
-                .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -1651,7 +1634,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFileUpdate(
                 FileUpdateEvent.builder()
                     .id("id")
-                    .type("file.updated")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         File.builder()
@@ -1744,7 +1726,6 @@ internal class UnwrapWebhookEventTest {
         val fileDelete =
             FileDeleteEvent.builder()
                 .id("id")
-                .type("file.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                 .build()
@@ -1775,7 +1756,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFileDelete(
                 FileDeleteEvent.builder()
                     .id("id")
-                    .type("file.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                     .build()
@@ -1795,7 +1775,6 @@ internal class UnwrapWebhookEventTest {
         val fileVersionCreate =
             FileVersionCreateEvent.builder()
                 .id("id")
-                .type("file-version.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -1888,7 +1867,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFileVersionCreate(
                 FileVersionCreateEvent.builder()
                     .id("id")
-                    .type("file-version.created")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         File.builder()
@@ -1981,7 +1959,6 @@ internal class UnwrapWebhookEventTest {
         val fileVersionDelete =
             FileVersionDeleteEvent.builder()
                 .id("id")
-                .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     FileVersionDeleteEvent.Data.builder()
@@ -2017,7 +1994,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFileVersionDelete(
                 FileVersionDeleteEvent.builder()
                     .id("id")
-                    .type("file-version.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         FileVersionDeleteEvent.Data.builder()
@@ -2042,7 +2018,6 @@ internal class UnwrapWebhookEventTest {
         val folderCreate =
             FolderCreateEvent.builder()
                 .id("id")
-                .type("folder.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()
@@ -2088,7 +2063,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFolderCreate(
                 FolderCreateEvent.builder()
                     .id("id")
-                    .type("folder.created")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         Folder.builder()
@@ -2125,7 +2099,6 @@ internal class UnwrapWebhookEventTest {
         val folderUpdate =
             FolderUpdateEvent.builder()
                 .id("id")
-                .type("folder.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()
@@ -2171,7 +2144,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFolderUpdate(
                 FolderUpdateEvent.builder()
                     .id("id")
-                    .type("folder.updated")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(
                         Folder.builder()
@@ -2208,7 +2180,6 @@ internal class UnwrapWebhookEventTest {
         val folderDelete =
             FolderDeleteEvent.builder()
                 .id("id")
-                .type("folder.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
                 .build()
@@ -2239,7 +2210,6 @@ internal class UnwrapWebhookEventTest {
             UnwrapWebhookEvent.ofFolderDelete(
                 FolderDeleteEvent.builder()
                     .id("id")
-                    .type("folder.deleted")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
                     .build()

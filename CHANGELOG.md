@@ -1,5 +1,28 @@
 # Changelog
 
+## [3.7.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.6.0...v3.7.0) (2026-10-19)
+
+
+### Features
+
+* webhook crud api ([89098a2](https://github.com/imagekit-developer/imagekit-java/commit/89098a27dd8e8bb661fd827201517f64402741a1))
+
+
+### Bug Fixes
+
+* don't parse empty 204 responses for copy, move and delete methods ([36070fc](https://github.com/imagekit-developer/imagekit-java/commit/36070fc1626b6e78567f8b2da60d2bdc77375ee7))
+* **openapi:** reference shared CustomMetadata schema from FolderDetail ([180d82e](https://github.com/imagekit-developer/imagekit-java/commit/180d82eabb9c70ed28025e2e58587783ffe0af44))
+
+
+### Chores
+
+* pin next release ([7211d74](https://github.com/imagekit-developer/imagekit-java/commit/7211d7469593526468ab8859e8ea92461474b272))
+
+
+### Documentation
+
+* describe reserved original creation date field ([9aa1bc0](https://github.com/imagekit-developer/imagekit-java/commit/9aa1bc05bce9d3551601a8340ad299524dee739f))
+
 ## [3.6.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.5.0...v3.6.0) (2026-09-16)
 
 
