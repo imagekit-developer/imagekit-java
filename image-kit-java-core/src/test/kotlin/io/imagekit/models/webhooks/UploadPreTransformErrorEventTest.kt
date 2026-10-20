@@ -15,7 +15,6 @@ internal class UploadPreTransformErrorEventTest {
         val uploadPreTransformErrorEvent =
             UploadPreTransformErrorEvent.builder()
                 .id("id")
-                .type("upload.pre-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformErrorEvent.Data.builder()
@@ -41,7 +40,6 @@ internal class UploadPreTransformErrorEventTest {
                 .build()
 
         assertThat(uploadPreTransformErrorEvent.id()).isEqualTo("id")
-        assertThat(uploadPreTransformErrorEvent.type()).isEqualTo("upload.pre-transform.error")
         assertThat(uploadPreTransformErrorEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(uploadPreTransformErrorEvent.data())
@@ -75,7 +73,6 @@ internal class UploadPreTransformErrorEventTest {
         val uploadPreTransformErrorEvent =
             UploadPreTransformErrorEvent.builder()
                 .id("id")
-                .type("upload.pre-transform.error")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     UploadPreTransformErrorEvent.Data.builder()

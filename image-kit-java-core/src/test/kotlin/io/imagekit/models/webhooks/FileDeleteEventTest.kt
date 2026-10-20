@@ -15,13 +15,11 @@ internal class FileDeleteEventTest {
         val fileDeleteEvent =
             FileDeleteEvent.builder()
                 .id("id")
-                .type("file.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                 .build()
 
         assertThat(fileDeleteEvent.id()).isEqualTo("id")
-        assertThat(fileDeleteEvent.type()).isEqualTo("file.deleted")
         assertThat(fileDeleteEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileDeleteEvent.data())
@@ -34,7 +32,6 @@ internal class FileDeleteEventTest {
         val fileDeleteEvent =
             FileDeleteEvent.builder()
                 .id("id")
-                .type("file.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(FileDeleteEvent.Data.builder().fileId("fileId").build())
                 .build()
