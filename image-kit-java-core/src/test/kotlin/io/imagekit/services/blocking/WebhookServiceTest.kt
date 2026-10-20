@@ -23,7 +23,7 @@ internal class WebhookServiceTest {
         val webhookService = client.webhooks()
 
         val payload =
-            "{\"id\":\"id\",\"type\":\"video.transformation.accepted\",\"created_at\":\"2019-12-27T18:11:19.117Z\",\"data\":{\"asset\":{\"url\":\"https://example.com\"},\"transformation\":{\"type\":\"video-transformation\",\"options\":{\"audio_codec\":\"aac\",\"auto_rotate\":true,\"format\":\"mp4\",\"quality\":0,\"stream_protocol\":\"HLS\",\"variants\":[\"string\"],\"video_codec\":\"h264\"}}},\"request\":{\"url\":\"https://example.com\",\"x_request_id\":\"x_request_id\",\"user_agent\":\"user_agent\"}}"
+            "{\"id\":\"id\",\"created_at\":\"2019-12-27T18:11:19.117Z\",\"data\":{\"asset\":{\"url\":\"https://example.com\"},\"transformation\":{\"type\":\"video-transformation\",\"options\":{\"audio_codec\":\"aac\",\"auto_rotate\":true,\"format\":\"mp4\",\"quality\":0,\"stream_protocol\":\"HLS\",\"variants\":[\"string\"],\"video_codec\":\"h264\"}}},\"request\":{\"url\":\"https://example.com\",\"x_request_id\":\"x_request_id\",\"user_agent\":\"user_agent\"},\"type\":\"video.transformation.accepted\"}"
         val webhookSecret = "whsec_c2VjcmV0Cg=="
         val headers = Headers.builder().build()
 
@@ -40,7 +40,7 @@ internal class WebhookServiceTest {
         val webhookService = client.webhooks()
 
         val payload =
-            "{\"id\":\"id\",\"type\":\"video.transformation.accepted\",\"created_at\":\"2019-12-27T18:11:19.117Z\",\"data\":{\"asset\":{\"url\":\"https://example.com\"},\"transformation\":{\"type\":\"video-transformation\",\"options\":{\"audio_codec\":\"aac\",\"auto_rotate\":true,\"format\":\"mp4\",\"quality\":0,\"stream_protocol\":\"HLS\",\"variants\":[\"string\"],\"video_codec\":\"h264\"}}},\"request\":{\"url\":\"https://example.com\",\"x_request_id\":\"x_request_id\",\"user_agent\":\"user_agent\"}}"
+            "{\"id\":\"id\",\"created_at\":\"2019-12-27T18:11:19.117Z\",\"data\":{\"asset\":{\"url\":\"https://example.com\"},\"transformation\":{\"type\":\"video-transformation\",\"options\":{\"audio_codec\":\"aac\",\"auto_rotate\":true,\"format\":\"mp4\",\"quality\":0,\"stream_protocol\":\"HLS\",\"variants\":[\"string\"],\"video_codec\":\"h264\"}}},\"request\":{\"url\":\"https://example.com\",\"x_request_id\":\"x_request_id\",\"user_agent\":\"user_agent\"},\"type\":\"video.transformation.accepted\"}"
         val webhookSecret = "whsec_c2VjcmV0Cg=="
         val messageId = "1"
         val timestampSeconds = Instant.now().epochSecond
