@@ -95,8 +95,9 @@ private constructor(
          */
         fun successfullyDeletedFileIds(successfullyDeletedFileIds: JsonField<List<String>>) =
             apply {
-                this.successfullyDeletedFileIds =
-                    successfullyDeletedFileIds.map { it.toMutableList() }
+                this.successfullyDeletedFileIds = successfullyDeletedFileIds.map {
+                    it.toMutableList()
+                }
             }
 
         /**
