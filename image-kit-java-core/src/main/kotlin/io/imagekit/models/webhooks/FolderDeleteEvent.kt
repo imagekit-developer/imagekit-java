@@ -27,24 +27,23 @@ class FolderDeleteEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val type: JsonField<String>,
     private val createdAt: JsonField<OffsetDateTime>,
     private val data: JsonField<Data>,
+    private val type: JsonValue,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
         @JsonProperty("created_at")
         @ExcludeMissing
         createdAt: JsonField<OffsetDateTime> = JsonMissing.of(),
         @JsonProperty("data") @ExcludeMissing data: JsonField<Data> = JsonMissing.of(),
-    ) : this(id, type, createdAt, data, mutableMapOf())
+        @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
+    ) : this(id, createdAt, data, type, mutableMapOf())
 
-    fun toBaseWebhookEvent(): BaseWebhookEvent =
-        BaseWebhookEvent.builder().id(id).type(type).build()
+    fun toBaseWebhookEvent(): BaseWebhookEvent = BaseWebhookEvent.builder().id(id).build()
 
     /**
      * Unique identifier for the event.
@@ -53,14 +52,6 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun id(): String = id.getRequired("id")
-
-    /**
-     * The type of webhook event.
-     *
-     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun type(): String = type.getRequired("type")
 
     /**
      * Timestamp of when the event occurred in ISO8601 format.
@@ -77,18 +68,24 @@ private constructor(
     fun data(): Data = data.getRequired("data")
 
     /**
+     * Type of the webhook event.
+     *
+     * Expected to always return the following:
+     * ```java
+     * JsonValue.from("folder.deleted")
+     * ```
+     *
+     * However, this method can be useful for debugging and logging (e.g. if the server responded
+     * with an unexpected value).
+     */
+    @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
+
+    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
 
     /**
      * Returns the raw JSON value of [createdAt].
@@ -126,7 +123,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * .createdAt()
          * .data()
          * ```
@@ -138,17 +134,17 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var type: JsonField<String>? = null
         private var createdAt: JsonField<OffsetDateTime>? = null
         private var data: JsonField<Data>? = null
+        private var type: JsonValue = JsonValue.from("folder.deleted")
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(folderDeleteEvent: FolderDeleteEvent) = apply {
             id = folderDeleteEvent.id
-            type = folderDeleteEvent.type
             createdAt = folderDeleteEvent.createdAt
             data = folderDeleteEvent.data
+            type = folderDeleteEvent.type
             additionalProperties = folderDeleteEvent.additionalProperties.toMutableMap()
         }
 
@@ -162,17 +158,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
-
-        /** The type of webhook event. */
-        fun type(type: String) = type(JsonField.of(type))
-
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.type] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun type(type: JsonField<String>) = apply { this.type = type }
 
         /** Timestamp of when the event occurred in ISO8601 format. */
         fun createdAt(createdAt: OffsetDateTime) = createdAt(JsonField.of(createdAt))
@@ -195,6 +180,20 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun data(data: JsonField<Data>) = apply { this.data = data }
+
+        /**
+         * Sets the field to an arbitrary JSON value.
+         *
+         * It is usually unnecessary to call this method because the field defaults to the
+         * following:
+         * ```java
+         * JsonValue.from("folder.deleted")
+         * ```
+         *
+         * This method is primarily for setting the field to an undocumented or not yet supported
+         * value.
+         */
+        fun type(type: JsonValue) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -223,7 +222,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * .createdAt()
          * .data()
          * ```
@@ -233,9 +231,9 @@ private constructor(
         fun build(): FolderDeleteEvent =
             FolderDeleteEvent(
                 checkRequired("id", id),
-                checkRequired("type", type),
                 checkRequired("createdAt", createdAt),
                 checkRequired("data", data),
+                type,
                 additionalProperties.toMutableMap(),
             )
     }
@@ -256,9 +254,13 @@ private constructor(
         }
 
         id()
-        type()
         createdAt()
         data().validate()
+        _type().let {
+            if (it != JsonValue.from("folder.deleted")) {
+                throw ImageKitInvalidDataException("'type' is invalid, received $it")
+            }
+        }
         validated = true
     }
 
@@ -278,9 +280,9 @@ private constructor(
     @JvmSynthetic
     internal fun validity(): Int =
         (if (id.asKnown().isPresent) 1 else 0) +
-            (if (type.asKnown().isPresent) 1 else 0) +
             (if (createdAt.asKnown().isPresent) 1 else 0) +
-            (data.asKnown().getOrNull()?.validity() ?: 0)
+            (data.asKnown().getOrNull()?.validity() ?: 0) +
+            type.let { if (it == JsonValue.from("folder.deleted")) 1 else 0 }
 
     class Data
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -454,18 +456,18 @@ private constructor(
 
         return other is FolderDeleteEvent &&
             id == other.id &&
-            type == other.type &&
             createdAt == other.createdAt &&
             data == other.data &&
+            type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
     private val hashCode: Int by lazy {
-        Objects.hash(id, type, createdAt, data, additionalProperties)
+        Objects.hash(id, createdAt, data, type, additionalProperties)
     }
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "FolderDeleteEvent{id=$id, type=$type, createdAt=$createdAt, data=$data, additionalProperties=$additionalProperties}"
+        "FolderDeleteEvent{id=$id, createdAt=$createdAt, data=$data, type=$type, additionalProperties=$additionalProperties}"
 }

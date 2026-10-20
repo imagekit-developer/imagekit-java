@@ -460,11 +460,13 @@ private constructor(
                 object : Visitor<Int> {
                     override fun visitCloudinary(cloudinary: Cloudinary) = cloudinary.validity()
 
-                    override fun visitImgix(imgix: JsonValue) =
-                        imgix.let { if (it == JsonValue.from(mapOf("type" to "IMGIX"))) 1 else 0 }
+                    override fun visitImgix(imgix: JsonValue) = imgix.let {
+                        if (it == JsonValue.from(mapOf("type" to "IMGIX"))) 1 else 0
+                    }
 
-                    override fun visitAkamai(akamai: JsonValue) =
-                        akamai.let { if (it == JsonValue.from(mapOf("type" to "AKAMAI"))) 1 else 0 }
+                    override fun visitAkamai(akamai: JsonValue) = akamai.let {
+                        if (it == JsonValue.from(mapOf("type" to "AKAMAI"))) 1 else 0
+                    }
 
                     override fun unknown(json: JsonValue?) = 0
                 }

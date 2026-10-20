@@ -15,7 +15,6 @@ internal class VideoTransformationAcceptedEventTest {
         val videoTransformationAcceptedEvent =
             VideoTransformationAcceptedEvent.builder()
                 .id("id")
-                .type("video.transformation.accepted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationAcceptedEvent.Data.builder()
@@ -76,8 +75,6 @@ internal class VideoTransformationAcceptedEventTest {
                 .build()
 
         assertThat(videoTransformationAcceptedEvent.id()).isEqualTo("id")
-        assertThat(videoTransformationAcceptedEvent.type())
-            .isEqualTo("video.transformation.accepted")
         assertThat(videoTransformationAcceptedEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(videoTransformationAcceptedEvent.data())
@@ -142,7 +139,6 @@ internal class VideoTransformationAcceptedEventTest {
         val videoTransformationAcceptedEvent =
             VideoTransformationAcceptedEvent.builder()
                 .id("id")
-                .type("video.transformation.accepted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     VideoTransformationAcceptedEvent.Data.builder()

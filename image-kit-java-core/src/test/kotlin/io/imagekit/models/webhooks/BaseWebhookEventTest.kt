@@ -11,16 +11,15 @@ internal class BaseWebhookEventTest {
 
     @Test
     fun create() {
-        val baseWebhookEvent = BaseWebhookEvent.builder().id("id").type("type").build()
+        val baseWebhookEvent = BaseWebhookEvent.builder().id("id").build()
 
         assertThat(baseWebhookEvent.id()).isEqualTo("id")
-        assertThat(baseWebhookEvent.type()).isEqualTo("type")
     }
 
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val baseWebhookEvent = BaseWebhookEvent.builder().id("id").type("type").build()
+        val baseWebhookEvent = BaseWebhookEvent.builder().id("id").build()
 
         val roundtrippedBaseWebhookEvent =
             jsonMapper.readValue(

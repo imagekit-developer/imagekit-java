@@ -18,7 +18,6 @@ internal class FolderUpdateEventTest {
         val folderUpdateEvent =
             FolderUpdateEvent.builder()
                 .id("id")
-                .type("folder.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()
@@ -39,7 +38,6 @@ internal class FolderUpdateEventTest {
                 .build()
 
         assertThat(folderUpdateEvent.id()).isEqualTo("id")
-        assertThat(folderUpdateEvent.type()).isEqualTo("folder.updated")
         assertThat(folderUpdateEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(folderUpdateEvent.data())
@@ -67,7 +65,6 @@ internal class FolderUpdateEventTest {
         val folderUpdateEvent =
             FolderUpdateEvent.builder()
                 .id("id")
-                .type("folder.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()

@@ -18,7 +18,6 @@ internal class FolderCreateEventTest {
         val folderCreateEvent =
             FolderCreateEvent.builder()
                 .id("id")
-                .type("folder.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()
@@ -39,7 +38,6 @@ internal class FolderCreateEventTest {
                 .build()
 
         assertThat(folderCreateEvent.id()).isEqualTo("id")
-        assertThat(folderCreateEvent.type()).isEqualTo("folder.created")
         assertThat(folderCreateEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(folderCreateEvent.data())
@@ -67,7 +65,6 @@ internal class FolderCreateEventTest {
         val folderCreateEvent =
             FolderCreateEvent.builder()
                 .id("id")
-                .type("folder.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     Folder.builder()
