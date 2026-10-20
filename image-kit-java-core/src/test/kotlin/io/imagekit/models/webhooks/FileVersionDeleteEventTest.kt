@@ -15,7 +15,6 @@ internal class FileVersionDeleteEventTest {
         val fileVersionDeleteEvent =
             FileVersionDeleteEvent.builder()
                 .id("id")
-                .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     FileVersionDeleteEvent.Data.builder()
@@ -26,7 +25,6 @@ internal class FileVersionDeleteEventTest {
                 .build()
 
         assertThat(fileVersionDeleteEvent.id()).isEqualTo("id")
-        assertThat(fileVersionDeleteEvent.type()).isEqualTo("file-version.deleted")
         assertThat(fileVersionDeleteEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileVersionDeleteEvent.data())
@@ -44,7 +42,6 @@ internal class FileVersionDeleteEventTest {
         val fileVersionDeleteEvent =
             FileVersionDeleteEvent.builder()
                 .id("id")
-                .type("file-version.deleted")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     FileVersionDeleteEvent.Data.builder()

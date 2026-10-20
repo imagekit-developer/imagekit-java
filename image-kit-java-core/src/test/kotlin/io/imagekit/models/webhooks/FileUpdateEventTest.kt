@@ -22,7 +22,6 @@ internal class FileUpdateEventTest {
         val fileUpdateEvent =
             FileUpdateEvent.builder()
                 .id("id")
-                .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -90,7 +89,6 @@ internal class FileUpdateEventTest {
                 .build()
 
         assertThat(fileUpdateEvent.id()).isEqualTo("id")
-        assertThat(fileUpdateEvent.type()).isEqualTo("file.updated")
         assertThat(fileUpdateEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileUpdateEvent.data())
@@ -163,7 +161,6 @@ internal class FileUpdateEventTest {
         val fileUpdateEvent =
             FileUpdateEvent.builder()
                 .id("id")
-                .type("file.updated")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()

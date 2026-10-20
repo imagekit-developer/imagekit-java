@@ -22,7 +22,6 @@ internal class FileCreateEventTest {
         val fileCreateEvent =
             FileCreateEvent.builder()
                 .id("id")
-                .type("file.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
@@ -90,7 +89,6 @@ internal class FileCreateEventTest {
                 .build()
 
         assertThat(fileCreateEvent.id()).isEqualTo("id")
-        assertThat(fileCreateEvent.type()).isEqualTo("file.created")
         assertThat(fileCreateEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(fileCreateEvent.data())
@@ -163,7 +161,6 @@ internal class FileCreateEventTest {
         val fileCreateEvent =
             FileCreateEvent.builder()
                 .id("id")
-                .type("file.created")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                 .data(
                     File.builder()
