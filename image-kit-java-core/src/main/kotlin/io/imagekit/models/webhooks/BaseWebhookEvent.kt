@@ -19,15 +19,13 @@ class BaseWebhookEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
-    private val type: JsonField<String>,
     private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
 
     @JsonCreator
     private constructor(
-        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("type") @ExcludeMissing type: JsonField<String> = JsonMissing.of(),
-    ) : this(id, type, mutableMapOf())
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of()
+    ) : this(id, mutableMapOf())
 
     /**
      * Unique identifier for the event.
@@ -38,26 +36,11 @@ private constructor(
     fun id(): String = id.getRequired("id")
 
     /**
-     * The type of webhook event.
-     *
-     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
-     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
-     */
-    fun type(): String = type.getRequired("type")
-
-    /**
      * Returns the raw JSON value of [id].
      *
      * Unlike [id], this method doesn't throw if the JSON field has an unexpected type.
      */
     @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
-
-    /**
-     * Returns the raw JSON value of [type].
-     *
-     * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-     */
-    @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<String> = type
 
     @JsonAnySetter
     private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -79,7 +62,6 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          */
         @JvmStatic fun builder() = Builder()
@@ -89,13 +71,11 @@ private constructor(
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
-        private var type: JsonField<String>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(baseWebhookEvent: BaseWebhookEvent) = apply {
             id = baseWebhookEvent.id
-            type = baseWebhookEvent.type
             additionalProperties = baseWebhookEvent.additionalProperties.toMutableMap()
         }
 
@@ -109,17 +89,6 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun id(id: JsonField<String>) = apply { this.id = id }
-
-        /** The type of webhook event. */
-        fun type(type: String) = type(JsonField.of(type))
-
-        /**
-         * Sets [Builder.type] to an arbitrary JSON value.
-         *
-         * You should usually call [Builder.type] with a well-typed [String] value instead. This
-         * method is primarily for setting the field to an undocumented or not yet supported value.
-         */
-        fun type(type: JsonField<String>) = apply { this.type = type }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -148,17 +117,12 @@ private constructor(
          * The following fields are required:
          * ```java
          * .id()
-         * .type()
          * ```
          *
          * @throws IllegalStateException if any required field is unset.
          */
         fun build(): BaseWebhookEvent =
-            BaseWebhookEvent(
-                checkRequired("id", id),
-                checkRequired("type", type),
-                additionalProperties.toMutableMap(),
-            )
+            BaseWebhookEvent(checkRequired("id", id), additionalProperties.toMutableMap())
     }
 
     private var validated: Boolean = false
@@ -177,7 +141,6 @@ private constructor(
         }
 
         id()
-        type()
         validated = true
     }
 
@@ -194,9 +157,7 @@ private constructor(
      *
      * Used for best match union deserialization.
      */
-    @JvmSynthetic
-    internal fun validity(): Int =
-        (if (id.asKnown().isPresent) 1 else 0) + (if (type.asKnown().isPresent) 1 else 0)
+    @JvmSynthetic internal fun validity(): Int = (if (id.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
@@ -205,14 +166,12 @@ private constructor(
 
         return other is BaseWebhookEvent &&
             id == other.id &&
-            type == other.type &&
             additionalProperties == other.additionalProperties
     }
 
-    private val hashCode: Int by lazy { Objects.hash(id, type, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, additionalProperties) }
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "BaseWebhookEvent{id=$id, type=$type, additionalProperties=$additionalProperties}"
+    override fun toString() = "BaseWebhookEvent{id=$id, additionalProperties=$additionalProperties}"
 }
