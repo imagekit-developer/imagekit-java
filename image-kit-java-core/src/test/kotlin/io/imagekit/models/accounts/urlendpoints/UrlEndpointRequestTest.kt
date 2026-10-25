@@ -20,6 +20,7 @@ internal class UrlEndpointRequestTest {
                 .urlRewriter(
                     UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
+                        .useImprovedLayerSpec(true)
                         .build()
                 )
                 .build()
@@ -32,6 +33,7 @@ internal class UrlEndpointRequestTest {
                 UrlEndpointRequest.UrlRewriter.ofCloudinary(
                     UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
+                        .useImprovedLayerSpec(true)
                         .build()
                 )
             )
@@ -48,6 +50,7 @@ internal class UrlEndpointRequestTest {
                 .urlRewriter(
                     UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                         .preserveAssetDeliveryTypes(true)
+                        .useImprovedLayerSpec(true)
                         .build()
                 )
                 .build()
