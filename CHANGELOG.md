@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.7.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.0...v3.7.1) (2026-10-20)
+
+
+### Bug Fixes
+
+* **webhooks:** dispatch unwrap() on the event type instead of best-match guessing ([3da3b3f](https://github.com/imagekit-developer/imagekit-java/commit/3da3b3f2c26e7c145b5f885e0284deca3e35cf6e))
+
 ## [3.7.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.6.0...v3.7.0) (2026-10-19)
 
 
