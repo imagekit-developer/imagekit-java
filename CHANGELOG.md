@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.8.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.1...v3.8.0) (2026-10-30)
+
+
+### Features
+
+* **api:** add accounts.contract.get() for contract consumption ([28f07ee](https://github.com/imagekit-developer/imagekit-java/commit/28f07ee24ff3096139a1812c763f18670f1d88fa))
+* **api:** add useImprovedLayerSpec to the Cloudinary URL rewriter ([28f07ee](https://github.com/imagekit-developer/imagekit-java/commit/28f07ee24ff3096139a1812c763f18670f1d88fa))
+
 ## [3.7.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.0...v3.7.1) (2026-10-20)
 
 
