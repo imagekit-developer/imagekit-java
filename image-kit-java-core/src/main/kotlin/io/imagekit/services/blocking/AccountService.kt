@@ -3,6 +3,7 @@
 package io.imagekit.services.blocking
 
 import io.imagekit.core.ClientOptions
+import io.imagekit.services.blocking.accounts.ContractService
 import io.imagekit.services.blocking.accounts.OriginService
 import io.imagekit.services.blocking.accounts.UrlEndpointService
 import io.imagekit.services.blocking.accounts.UsageAnalyticsService
@@ -28,6 +29,8 @@ interface AccountService {
 
     fun usageAnalytics(): UsageAnalyticsService
 
+    fun contract(): ContractService
+
     fun origins(): OriginService
 
     fun urlEndpoints(): UrlEndpointService
@@ -47,6 +50,8 @@ interface AccountService {
         fun usage(): UsageService.WithRawResponse
 
         fun usageAnalytics(): UsageAnalyticsService.WithRawResponse
+
+        fun contract(): ContractService.WithRawResponse
 
         fun origins(): OriginService.WithRawResponse
 
