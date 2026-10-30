@@ -18,6 +18,7 @@ internal class UrlEndpointCreateParamsTest {
                     .urlRewriter(
                         UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
+                            .useImprovedLayerSpec(true)
                             .build()
                     )
                     .build()
@@ -37,6 +38,7 @@ internal class UrlEndpointCreateParamsTest {
                         .urlRewriter(
                             UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                                 .preserveAssetDeliveryTypes(true)
+                                .useImprovedLayerSpec(true)
                                 .build()
                         )
                         .build()
@@ -54,6 +56,7 @@ internal class UrlEndpointCreateParamsTest {
                     .urlRewriter(
                         UrlEndpointRequest.UrlRewriter.Cloudinary.builder()
                             .preserveAssetDeliveryTypes(true)
+                            .useImprovedLayerSpec(true)
                             .build()
                     )
                     .build()
