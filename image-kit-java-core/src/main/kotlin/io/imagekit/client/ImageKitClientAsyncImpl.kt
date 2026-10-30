@@ -22,6 +22,8 @@ import io.imagekit.services.async.NamedTransformationServiceAsync
 import io.imagekit.services.async.NamedTransformationServiceAsyncImpl
 import io.imagekit.services.async.SavedExtensionServiceAsync
 import io.imagekit.services.async.SavedExtensionServiceAsyncImpl
+import io.imagekit.services.async.TagServiceAsync
+import io.imagekit.services.async.TagServiceAsyncImpl
 import io.imagekit.services.async.WebhookServiceAsync
 import io.imagekit.services.async.WebhookServiceAsyncImpl
 import java.util.function.Consumer
@@ -61,6 +63,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
         AssetServiceAsyncImpl(clientOptionsWithUserAgent)
     }
 
+    private val tags: TagServiceAsync by lazy { TagServiceAsyncImpl(clientOptionsWithUserAgent) }
+
     private val cache: CacheServiceAsync by lazy {
         CacheServiceAsyncImpl(clientOptionsWithUserAgent)
     }
@@ -96,6 +100,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
     override fun assets(): AssetServiceAsync = assets
 
+    override fun tags(): TagServiceAsync = tags
+
     override fun cache(): CacheServiceAsync = cache
 
     override fun folders(): FolderServiceAsync = folders
@@ -129,6 +135,10 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
 
         private val assets: AssetServiceAsync.WithRawResponse by lazy {
             AssetServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val tags: TagServiceAsync.WithRawResponse by lazy {
+            TagServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val cache: CacheServiceAsync.WithRawResponse by lazy {
@@ -169,6 +179,8 @@ class ImageKitClientAsyncImpl(private val clientOptions: ClientOptions) : ImageK
             namedTransformations
 
         override fun assets(): AssetServiceAsync.WithRawResponse = assets
+
+        override fun tags(): TagServiceAsync.WithRawResponse = tags
 
         override fun cache(): CacheServiceAsync.WithRawResponse = cache
 
