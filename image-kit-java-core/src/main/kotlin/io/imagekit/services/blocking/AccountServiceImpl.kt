@@ -3,6 +3,8 @@
 package io.imagekit.services.blocking
 
 import io.imagekit.core.ClientOptions
+import io.imagekit.services.blocking.accounts.ContractService
+import io.imagekit.services.blocking.accounts.ContractServiceImpl
 import io.imagekit.services.blocking.accounts.OriginService
 import io.imagekit.services.blocking.accounts.OriginServiceImpl
 import io.imagekit.services.blocking.accounts.UrlEndpointService
@@ -28,6 +30,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
         UsageAnalyticsServiceImpl(clientOptions)
     }
 
+    private val contract: ContractService by lazy { ContractServiceImpl(clientOptions) }
+
     private val origins: OriginService by lazy { OriginServiceImpl(clientOptions) }
 
     private val urlEndpoints: UrlEndpointService by lazy { UrlEndpointServiceImpl(clientOptions) }
@@ -42,6 +46,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
     override fun usage(): UsageService = usage
 
     override fun usageAnalytics(): UsageAnalyticsService = usageAnalytics
+
+    override fun contract(): ContractService = contract
 
     override fun origins(): OriginService = origins
 
@@ -58,6 +64,10 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val usageAnalytics: UsageAnalyticsService.WithRawResponse by lazy {
             UsageAnalyticsServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val contract: ContractService.WithRawResponse by lazy {
+            ContractServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val origins: OriginService.WithRawResponse by lazy {
@@ -82,6 +92,8 @@ class AccountServiceImpl internal constructor(private val clientOptions: ClientO
         override fun usage(): UsageService.WithRawResponse = usage
 
         override fun usageAnalytics(): UsageAnalyticsService.WithRawResponse = usageAnalytics
+
+        override fun contract(): ContractService.WithRawResponse = contract
 
         override fun origins(): OriginService.WithRawResponse = origins
 

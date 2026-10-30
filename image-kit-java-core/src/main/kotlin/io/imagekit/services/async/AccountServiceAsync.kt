@@ -3,6 +3,7 @@
 package io.imagekit.services.async
 
 import io.imagekit.core.ClientOptions
+import io.imagekit.services.async.accounts.ContractServiceAsync
 import io.imagekit.services.async.accounts.OriginServiceAsync
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsync
 import io.imagekit.services.async.accounts.UsageAnalyticsServiceAsync
@@ -28,6 +29,8 @@ interface AccountServiceAsync {
 
     fun usageAnalytics(): UsageAnalyticsServiceAsync
 
+    fun contract(): ContractServiceAsync
+
     fun origins(): OriginServiceAsync
 
     fun urlEndpoints(): UrlEndpointServiceAsync
@@ -51,6 +54,8 @@ interface AccountServiceAsync {
         fun usage(): UsageServiceAsync.WithRawResponse
 
         fun usageAnalytics(): UsageAnalyticsServiceAsync.WithRawResponse
+
+        fun contract(): ContractServiceAsync.WithRawResponse
 
         fun origins(): OriginServiceAsync.WithRawResponse
 

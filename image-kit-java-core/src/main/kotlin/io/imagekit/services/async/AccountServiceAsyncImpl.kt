@@ -3,6 +3,8 @@
 package io.imagekit.services.async
 
 import io.imagekit.core.ClientOptions
+import io.imagekit.services.async.accounts.ContractServiceAsync
+import io.imagekit.services.async.accounts.ContractServiceAsyncImpl
 import io.imagekit.services.async.accounts.OriginServiceAsync
 import io.imagekit.services.async.accounts.OriginServiceAsyncImpl
 import io.imagekit.services.async.accounts.UrlEndpointServiceAsync
@@ -28,6 +30,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         UsageAnalyticsServiceAsyncImpl(clientOptions)
     }
 
+    private val contract: ContractServiceAsync by lazy { ContractServiceAsyncImpl(clientOptions) }
+
     private val origins: OriginServiceAsync by lazy { OriginServiceAsyncImpl(clientOptions) }
 
     private val urlEndpoints: UrlEndpointServiceAsync by lazy {
@@ -45,6 +49,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun usageAnalytics(): UsageAnalyticsServiceAsync = usageAnalytics
 
+    override fun contract(): ContractServiceAsync = contract
+
     override fun origins(): OriginServiceAsync = origins
 
     override fun urlEndpoints(): UrlEndpointServiceAsync = urlEndpoints
@@ -60,6 +66,10 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
         private val usageAnalytics: UsageAnalyticsServiceAsync.WithRawResponse by lazy {
             UsageAnalyticsServiceAsyncImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val contract: ContractServiceAsync.WithRawResponse by lazy {
+            ContractServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val origins: OriginServiceAsync.WithRawResponse by lazy {
@@ -84,6 +94,8 @@ class AccountServiceAsyncImpl internal constructor(private val clientOptions: Cl
         override fun usage(): UsageServiceAsync.WithRawResponse = usage
 
         override fun usageAnalytics(): UsageAnalyticsServiceAsync.WithRawResponse = usageAnalytics
+
+        override fun contract(): ContractServiceAsync.WithRawResponse = contract
 
         override fun origins(): OriginServiceAsync.WithRawResponse = origins
 

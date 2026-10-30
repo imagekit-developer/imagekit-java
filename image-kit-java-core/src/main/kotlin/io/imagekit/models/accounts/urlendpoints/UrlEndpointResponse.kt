@@ -638,6 +638,7 @@ private constructor(
         private constructor(
             private val preserveAssetDeliveryTypes: JsonField<Boolean>,
             private val type: JsonValue,
+            private val useImprovedLayerSpec: JsonField<Boolean>,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -647,7 +648,10 @@ private constructor(
                 @ExcludeMissing
                 preserveAssetDeliveryTypes: JsonField<Boolean> = JsonMissing.of(),
                 @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
-            ) : this(preserveAssetDeliveryTypes, type, mutableMapOf())
+                @JsonProperty("useImprovedLayerSpec")
+                @ExcludeMissing
+                useImprovedLayerSpec: JsonField<Boolean> = JsonMissing.of(),
+            ) : this(preserveAssetDeliveryTypes, type, useImprovedLayerSpec, mutableMapOf())
 
             /**
              * Whether to preserve `<asset_type>/<delivery_type>` in the rewritten URL.
@@ -671,6 +675,17 @@ private constructor(
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
+             * Whether to always rewrite Cloudinary layers to the improved ImageKit layer
+             * specification (`l-image`, `l-text`, ..., `l-end`). When `false` or omitted, the
+             * improved specification is used only for transformations that require it.
+             *
+             * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g.
+             *   if the server responded with an unexpected value).
+             */
+            fun useImprovedLayerSpec(): Optional<Boolean> =
+                useImprovedLayerSpec.getOptional("useImprovedLayerSpec")
+
+            /**
              * Returns the raw JSON value of [preserveAssetDeliveryTypes].
              *
              * Unlike [preserveAssetDeliveryTypes], this method doesn't throw if the JSON field has
@@ -679,6 +694,16 @@ private constructor(
             @JsonProperty("preserveAssetDeliveryTypes")
             @ExcludeMissing
             fun _preserveAssetDeliveryTypes(): JsonField<Boolean> = preserveAssetDeliveryTypes
+
+            /**
+             * Returns the raw JSON value of [useImprovedLayerSpec].
+             *
+             * Unlike [useImprovedLayerSpec], this method doesn't throw if the JSON field has an
+             * unexpected type.
+             */
+            @JsonProperty("useImprovedLayerSpec")
+            @ExcludeMissing
+            fun _useImprovedLayerSpec(): JsonField<Boolean> = useImprovedLayerSpec
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -710,12 +735,14 @@ private constructor(
 
                 private var preserveAssetDeliveryTypes: JsonField<Boolean>? = null
                 private var type: JsonValue = JsonValue.from("CLOUDINARY")
+                private var useImprovedLayerSpec: JsonField<Boolean> = JsonMissing.of()
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
                 internal fun from(cloudinary: Cloudinary) = apply {
                     preserveAssetDeliveryTypes = cloudinary.preserveAssetDeliveryTypes
                     type = cloudinary.type
+                    useImprovedLayerSpec = cloudinary.useImprovedLayerSpec
                     additionalProperties = cloudinary.additionalProperties.toMutableMap()
                 }
 
@@ -748,6 +775,25 @@ private constructor(
                  * supported value.
                  */
                 fun type(type: JsonValue) = apply { this.type = type }
+
+                /**
+                 * Whether to always rewrite Cloudinary layers to the improved ImageKit layer
+                 * specification (`l-image`, `l-text`, ..., `l-end`). When `false` or omitted, the
+                 * improved specification is used only for transformations that require it.
+                 */
+                fun useImprovedLayerSpec(useImprovedLayerSpec: Boolean) =
+                    useImprovedLayerSpec(JsonField.of(useImprovedLayerSpec))
+
+                /**
+                 * Sets [Builder.useImprovedLayerSpec] to an arbitrary JSON value.
+                 *
+                 * You should usually call [Builder.useImprovedLayerSpec] with a well-typed
+                 * [Boolean] value instead. This method is primarily for setting the field to an
+                 * undocumented or not yet supported value.
+                 */
+                fun useImprovedLayerSpec(useImprovedLayerSpec: JsonField<Boolean>) = apply {
+                    this.useImprovedLayerSpec = useImprovedLayerSpec
+                }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -787,6 +833,7 @@ private constructor(
                     Cloudinary(
                         checkRequired("preserveAssetDeliveryTypes", preserveAssetDeliveryTypes),
                         type,
+                        useImprovedLayerSpec,
                         additionalProperties.toMutableMap(),
                     )
             }
@@ -814,6 +861,7 @@ private constructor(
                         throw ImageKitInvalidDataException("'type' is invalid, received $it")
                     }
                 }
+                useImprovedLayerSpec()
                 validated = true
             }
 
@@ -834,7 +882,8 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (preserveAssetDeliveryTypes.asKnown().isPresent) 1 else 0) +
-                    type.let { if (it == JsonValue.from("CLOUDINARY")) 1 else 0 }
+                    type.let { if (it == JsonValue.from("CLOUDINARY")) 1 else 0 } +
+                    (if (useImprovedLayerSpec.asKnown().isPresent) 1 else 0)
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
@@ -844,17 +893,23 @@ private constructor(
                 return other is Cloudinary &&
                     preserveAssetDeliveryTypes == other.preserveAssetDeliveryTypes &&
                     type == other.type &&
+                    useImprovedLayerSpec == other.useImprovedLayerSpec &&
                     additionalProperties == other.additionalProperties
             }
 
             private val hashCode: Int by lazy {
-                Objects.hash(preserveAssetDeliveryTypes, type, additionalProperties)
+                Objects.hash(
+                    preserveAssetDeliveryTypes,
+                    type,
+                    useImprovedLayerSpec,
+                    additionalProperties,
+                )
             }
 
             override fun hashCode(): Int = hashCode
 
             override fun toString() =
-                "Cloudinary{preserveAssetDeliveryTypes=$preserveAssetDeliveryTypes, type=$type, additionalProperties=$additionalProperties}"
+                "Cloudinary{preserveAssetDeliveryTypes=$preserveAssetDeliveryTypes, type=$type, useImprovedLayerSpec=$useImprovedLayerSpec, additionalProperties=$additionalProperties}"
         }
     }
 

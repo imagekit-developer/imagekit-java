@@ -41,8 +41,8 @@ private constructor(
     ) : this(assetCount, label, lastUsedAt, name, mutableMapOf())
 
     /**
-     * The number of assets carrying the tag, counted across both tag sources and all file types
-     * regardless of the request's filters.
+     * The number of assets carrying the tag, counted across both tag sources (user-generated tags
+     * and AI-generated tags) and all file types regardless of the request's filters.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
@@ -152,8 +152,8 @@ private constructor(
         }
 
         /**
-         * The number of assets carrying the tag, counted across both tag sources and all file types
-         * regardless of the request's filters.
+         * The number of assets carrying the tag, counted across both tag sources (user-generated
+         * tags and AI-generated tags) and all file types regardless of the request's filters.
          */
         fun assetCount(assetCount: Long) = assetCount(JsonField.of(assetCount))
 
