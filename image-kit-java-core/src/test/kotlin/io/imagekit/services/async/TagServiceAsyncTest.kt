@@ -3,7 +3,6 @@
 package io.imagekit.services.async
 
 import io.imagekit.client.okhttp.ImageKitOkHttpClientAsync
-import io.imagekit.models.tags.TagListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -19,20 +18,9 @@ internal class TagServiceAsyncTest {
                 .build()
         val tagServiceAsync = client.tags()
 
-        val tagsFuture =
-            tagServiceAsync.list(
-                TagListParams.builder()
-                    .cursor("cursor")
-                    .fileType(TagListParams.FileType.IMAGE)
-                    .limit(1L)
-                    .prefix("prefix")
-                    .search("search")
-                    .sort(TagListParams.Sort.ASC_NAME)
-                    .tagSource(TagListParams.TagSource.USER)
-                    .build()
-            )
+        val pageFuture = tagServiceAsync.list()
 
-        val tags = tagsFuture.get()
-        tags.validate()
+        val page = pageFuture.get()
+        page.response().validate()
     }
 }

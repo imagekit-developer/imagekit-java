@@ -19,7 +19,7 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
-class TagListResponse
+class TagListPageResponse
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val nextCursor: JsonField<String>,
@@ -80,7 +80,7 @@ private constructor(
     companion object {
 
         /**
-         * Returns a mutable builder for constructing an instance of [TagListResponse].
+         * Returns a mutable builder for constructing an instance of [TagListPageResponse].
          *
          * The following fields are required:
          * ```java
@@ -91,7 +91,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    /** A builder for [TagListResponse]. */
+    /** A builder for [TagListPageResponse]. */
     class Builder internal constructor() {
 
         private var nextCursor: JsonField<String>? = null
@@ -99,10 +99,10 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(tagListResponse: TagListResponse) = apply {
-            nextCursor = tagListResponse.nextCursor
-            tags = tagListResponse.tags.map { it.toMutableList() }
-            additionalProperties = tagListResponse.additionalProperties.toMutableMap()
+        internal fun from(tagListPageResponse: TagListPageResponse) = apply {
+            nextCursor = tagListPageResponse.nextCursor
+            tags = tagListPageResponse.tags.map { it.toMutableList() }
+            additionalProperties = tagListPageResponse.additionalProperties.toMutableMap()
         }
 
         /** Cursor for the next page, or `null` when there are no more tags. */
@@ -160,7 +160,7 @@ private constructor(
         }
 
         /**
-         * Returns an immutable instance of [TagListResponse].
+         * Returns an immutable instance of [TagListPageResponse].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
          *
@@ -172,8 +172,8 @@ private constructor(
          *
          * @throws IllegalStateException if any required field is unset.
          */
-        fun build(): TagListResponse =
-            TagListResponse(
+        fun build(): TagListPageResponse =
+            TagListPageResponse(
                 checkRequired("nextCursor", nextCursor),
                 checkRequired("tags", tags).map { it.toImmutable() },
                 additionalProperties.toMutableMap(),
@@ -190,7 +190,7 @@ private constructor(
      * @throws ImageKitInvalidDataException if any value type in this object doesn't match its
      *   expected type.
      */
-    fun validate(): TagListResponse = apply {
+    fun validate(): TagListPageResponse = apply {
         if (validated) {
             return@apply
         }
@@ -223,7 +223,7 @@ private constructor(
             return true
         }
 
-        return other is TagListResponse &&
+        return other is TagListPageResponse &&
             nextCursor == other.nextCursor &&
             tags == other.tags &&
             additionalProperties == other.additionalProperties
@@ -234,5 +234,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "TagListResponse{nextCursor=$nextCursor, tags=$tags, additionalProperties=$additionalProperties}"
+        "TagListPageResponse{nextCursor=$nextCursor, tags=$tags, additionalProperties=$additionalProperties}"
 }

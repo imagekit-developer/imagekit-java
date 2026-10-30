@@ -8,12 +8,12 @@ import java.time.OffsetDateTime
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class TagListResponseTest {
+internal class TagListPageResponseTest {
 
     @Test
     fun create() {
-        val tagListResponse =
-            TagListResponse.builder()
+        val tagListPageResponse =
+            TagListPageResponse.builder()
                 .nextCursor("nextCursor")
                 .addTag(
                     Tag.builder()
@@ -25,8 +25,8 @@ internal class TagListResponseTest {
                 )
                 .build()
 
-        assertThat(tagListResponse.nextCursor()).contains("nextCursor")
-        assertThat(tagListResponse.tags())
+        assertThat(tagListPageResponse.nextCursor()).contains("nextCursor")
+        assertThat(tagListPageResponse.tags())
             .containsExactly(
                 Tag.builder()
                     .assetCount(0L)
@@ -40,8 +40,8 @@ internal class TagListResponseTest {
     @Test
     fun roundtrip() {
         val jsonMapper = jsonMapper()
-        val tagListResponse =
-            TagListResponse.builder()
+        val tagListPageResponse =
+            TagListPageResponse.builder()
                 .nextCursor("nextCursor")
                 .addTag(
                     Tag.builder()
@@ -53,12 +53,12 @@ internal class TagListResponseTest {
                 )
                 .build()
 
-        val roundtrippedTagListResponse =
+        val roundtrippedTagListPageResponse =
             jsonMapper.readValue(
-                jsonMapper.writeValueAsString(tagListResponse),
-                jacksonTypeRef<TagListResponse>(),
+                jsonMapper.writeValueAsString(tagListPageResponse),
+                jacksonTypeRef<TagListPageResponse>(),
             )
 
-        assertThat(roundtrippedTagListResponse).isEqualTo(tagListResponse)
+        assertThat(roundtrippedTagListPageResponse).isEqualTo(tagListPageResponse)
     }
 }

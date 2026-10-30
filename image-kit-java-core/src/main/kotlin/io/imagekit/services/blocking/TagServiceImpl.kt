@@ -14,8 +14,9 @@ import io.imagekit.core.http.HttpResponse.Handler
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.core.http.parseable
 import io.imagekit.core.prepare
+import io.imagekit.models.tags.TagListPage
+import io.imagekit.models.tags.TagListPageResponse
 import io.imagekit.models.tags.TagListParams
-import io.imagekit.models.tags.TagListResponse
 import java.util.function.Consumer
 
 class TagServiceImpl internal constructor(private val clientOptions: ClientOptions) : TagService {
@@ -29,7 +30,7 @@ class TagServiceImpl internal constructor(private val clientOptions: ClientOptio
     override fun withOptions(modifier: Consumer<ClientOptions.Builder>): TagService =
         TagServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
-    override fun list(params: TagListParams, requestOptions: RequestOptions): TagListResponse =
+    override fun list(params: TagListParams, requestOptions: RequestOptions): TagListPage =
         // get /v1/tags
         withRawResponse().list(params, requestOptions).parse()
 
@@ -46,13 +47,13 @@ class TagServiceImpl internal constructor(private val clientOptions: ClientOptio
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<TagListResponse> =
-            jsonHandler<TagListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<TagListPageResponse> =
+            jsonHandler<TagListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: TagListParams,
             requestOptions: RequestOptions,
-        ): HttpResponseFor<TagListResponse> {
+        ): HttpResponseFor<TagListPage> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -69,6 +70,13 @@ class TagServiceImpl internal constructor(private val clientOptions: ClientOptio
                         if (requestOptions.responseValidation!!) {
                             it.validate()
                         }
+                    }
+                    .let {
+                        TagListPage.builder()
+                            .service(TagServiceImpl(clientOptions))
+                            .params(params)
+                            .response(it)
+                            .build()
                     }
             }
         }

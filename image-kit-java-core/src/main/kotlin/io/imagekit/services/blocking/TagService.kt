@@ -6,8 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.http.HttpResponseFor
+import io.imagekit.models.tags.TagListPage
 import io.imagekit.models.tags.TagListParams
-import io.imagekit.models.tags.TagListResponse
 import java.util.function.Consumer
 
 interface TagService {
@@ -39,20 +39,20 @@ interface TagService {
      * within about a minute, but can take longer during heavy tagging activity, so a tag you just
      * added or removed may not be reflected immediately.
      */
-    fun list(): TagListResponse = list(TagListParams.none())
+    fun list(): TagListPage = list(TagListParams.none())
 
     /** @see list */
     fun list(
         params: TagListParams = TagListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): TagListResponse
+    ): TagListPage
 
     /** @see list */
-    fun list(params: TagListParams = TagListParams.none()): TagListResponse =
+    fun list(params: TagListParams = TagListParams.none()): TagListPage =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): TagListResponse =
+    fun list(requestOptions: RequestOptions): TagListPage =
         list(TagListParams.none(), requestOptions)
 
     /** A view of [TagService] that provides access to raw HTTP responses for each method. */
@@ -69,23 +69,23 @@ interface TagService {
          * Returns a raw HTTP response for `get /v1/tags`, but is otherwise the same as
          * [TagService.list].
          */
-        @MustBeClosed fun list(): HttpResponseFor<TagListResponse> = list(TagListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<TagListPage> = list(TagListParams.none())
 
         /** @see list */
         @MustBeClosed
         fun list(
             params: TagListParams = TagListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<TagListResponse>
+        ): HttpResponseFor<TagListPage>
 
         /** @see list */
         @MustBeClosed
-        fun list(params: TagListParams = TagListParams.none()): HttpResponseFor<TagListResponse> =
+        fun list(params: TagListParams = TagListParams.none()): HttpResponseFor<TagListPage> =
             list(params, RequestOptions.none())
 
         /** @see list */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<TagListResponse> =
+        fun list(requestOptions: RequestOptions): HttpResponseFor<TagListPage> =
             list(TagListParams.none(), requestOptions)
     }
 }

@@ -5,8 +5,8 @@ package io.imagekit.services.async
 import io.imagekit.core.ClientOptions
 import io.imagekit.core.RequestOptions
 import io.imagekit.core.http.HttpResponseFor
+import io.imagekit.models.tags.TagListPageAsync
 import io.imagekit.models.tags.TagListParams
-import io.imagekit.models.tags.TagListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -39,20 +39,20 @@ interface TagServiceAsync {
      * within about a minute, but can take longer during heavy tagging activity, so a tag you just
      * added or removed may not be reflected immediately.
      */
-    fun list(): CompletableFuture<TagListResponse> = list(TagListParams.none())
+    fun list(): CompletableFuture<TagListPageAsync> = list(TagListParams.none())
 
     /** @see list */
     fun list(
         params: TagListParams = TagListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
-    ): CompletableFuture<TagListResponse>
+    ): CompletableFuture<TagListPageAsync>
 
     /** @see list */
-    fun list(params: TagListParams = TagListParams.none()): CompletableFuture<TagListResponse> =
+    fun list(params: TagListParams = TagListParams.none()): CompletableFuture<TagListPageAsync> =
         list(params, RequestOptions.none())
 
     /** @see list */
-    fun list(requestOptions: RequestOptions): CompletableFuture<TagListResponse> =
+    fun list(requestOptions: RequestOptions): CompletableFuture<TagListPageAsync> =
         list(TagListParams.none(), requestOptions)
 
     /** A view of [TagServiceAsync] that provides access to raw HTTP responses for each method. */
@@ -69,23 +69,25 @@ interface TagServiceAsync {
          * Returns a raw HTTP response for `get /v1/tags`, but is otherwise the same as
          * [TagServiceAsync.list].
          */
-        fun list(): CompletableFuture<HttpResponseFor<TagListResponse>> = list(TagListParams.none())
+        fun list(): CompletableFuture<HttpResponseFor<TagListPageAsync>> =
+            list(TagListParams.none())
 
         /** @see list */
         fun list(
             params: TagListParams = TagListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<TagListResponse>>
+        ): CompletableFuture<HttpResponseFor<TagListPageAsync>>
 
         /** @see list */
         fun list(
             params: TagListParams = TagListParams.none()
-        ): CompletableFuture<HttpResponseFor<TagListResponse>> = list(params, RequestOptions.none())
+        ): CompletableFuture<HttpResponseFor<TagListPageAsync>> =
+            list(params, RequestOptions.none())
 
         /** @see list */
         fun list(
             requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<TagListResponse>> =
+        ): CompletableFuture<HttpResponseFor<TagListPageAsync>> =
             list(TagListParams.none(), requestOptions)
     }
 }

@@ -3,7 +3,6 @@
 package io.imagekit.services.blocking
 
 import io.imagekit.client.okhttp.ImageKitOkHttpClient
-import io.imagekit.models.tags.TagListParams
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
@@ -19,19 +18,8 @@ internal class TagServiceTest {
                 .build()
         val tagService = client.tags()
 
-        val tags =
-            tagService.list(
-                TagListParams.builder()
-                    .cursor("cursor")
-                    .fileType(TagListParams.FileType.IMAGE)
-                    .limit(1L)
-                    .prefix("prefix")
-                    .search("search")
-                    .sort(TagListParams.Sort.ASC_NAME)
-                    .tagSource(TagListParams.TagSource.USER)
-                    .build()
-            )
+        val page = tagService.list()
 
-        tags.validate()
+        page.response().validate()
     }
 }

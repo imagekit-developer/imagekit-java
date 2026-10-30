@@ -14,8 +14,9 @@ import io.imagekit.core.http.HttpResponse.Handler
 import io.imagekit.core.http.HttpResponseFor
 import io.imagekit.core.http.parseable
 import io.imagekit.core.prepareAsync
+import io.imagekit.models.tags.TagListPageAsync
+import io.imagekit.models.tags.TagListPageResponse
 import io.imagekit.models.tags.TagListParams
-import io.imagekit.models.tags.TagListResponse
 import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 
@@ -34,7 +35,7 @@ class TagServiceAsyncImpl internal constructor(private val clientOptions: Client
     override fun list(
         params: TagListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<TagListResponse> =
+    ): CompletableFuture<TagListPageAsync> =
         // get /v1/tags
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
@@ -51,13 +52,13 @@ class TagServiceAsyncImpl internal constructor(private val clientOptions: Client
                 clientOptions.toBuilder().apply(modifier::accept).build()
             )
 
-        private val listHandler: Handler<TagListResponse> =
-            jsonHandler<TagListResponse>(clientOptions.jsonMapper)
+        private val listHandler: Handler<TagListPageResponse> =
+            jsonHandler<TagListPageResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: TagListParams,
             requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<TagListResponse>> {
+        ): CompletableFuture<HttpResponseFor<TagListPageAsync>> {
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
@@ -76,6 +77,14 @@ class TagServiceAsyncImpl internal constructor(private val clientOptions: Client
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
                                 }
+                            }
+                            .let {
+                                TagListPageAsync.builder()
+                                    .service(TagServiceAsyncImpl(clientOptions))
+                                    .streamHandlerExecutor(clientOptions.streamHandlerExecutor)
+                                    .params(params)
+                                    .response(it)
+                                    .build()
                             }
                     }
                 }

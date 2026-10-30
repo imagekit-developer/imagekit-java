@@ -9,6 +9,7 @@ import io.imagekit.core.ClientOptions
 import io.imagekit.core.LogLevel
 import io.imagekit.core.Sleeper
 import io.imagekit.core.Timeout
+import io.imagekit.core.http.AsyncStreamResponse
 import io.imagekit.core.http.Headers
 import io.imagekit.core.http.HttpClient
 import io.imagekit.core.http.ProxyAuthenticator
@@ -18,6 +19,7 @@ import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import java.util.concurrent.Executor
 import java.util.concurrent.ExecutorService
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLSocketFactory
@@ -200,6 +202,17 @@ class ImageKitOkHttpClient private constructor() {
          * needs to be overridden.
          */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { clientOptions.jsonMapper(jsonMapper) }
+
+        /**
+         * The executor to use for running [AsyncStreamResponse.Handler] callbacks.
+         *
+         * Defaults to a dedicated cached thread pool.
+         *
+         * This class takes ownership of the executor and shuts it down, if possible, when closed.
+         */
+        fun streamHandlerExecutor(streamHandlerExecutor: Executor) = apply {
+            clientOptions.streamHandlerExecutor(streamHandlerExecutor)
+        }
 
         /**
          * The interface to use for delaying execution, like during retries.
