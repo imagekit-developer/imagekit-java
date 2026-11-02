@@ -24,6 +24,8 @@ import io.imagekit.services.blocking.NamedTransformationService
 import io.imagekit.services.blocking.NamedTransformationServiceImpl
 import io.imagekit.services.blocking.SavedExtensionService
 import io.imagekit.services.blocking.SavedExtensionServiceImpl
+import io.imagekit.services.blocking.TagService
+import io.imagekit.services.blocking.TagServiceImpl
 import io.imagekit.services.blocking.WebhookService
 import io.imagekit.services.blocking.WebhookServiceImpl
 import java.util.function.Consumer
@@ -61,6 +63,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
     private val assets: AssetService by lazy { AssetServiceImpl(clientOptionsWithUserAgent) }
 
+    private val tags: TagService by lazy { TagServiceImpl(clientOptionsWithUserAgent) }
+
     private val cache: CacheService by lazy { CacheServiceImpl(clientOptionsWithUserAgent) }
 
     private val folders: FolderService by lazy { FolderServiceImpl(clientOptionsWithUserAgent) }
@@ -89,6 +93,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
     override fun namedTransformations(): NamedTransformationService = namedTransformations
 
     override fun assets(): AssetService = assets
+
+    override fun tags(): TagService = tags
 
     override fun cache(): CacheService = cache
 
@@ -125,6 +131,10 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
 
         private val assets: AssetService.WithRawResponse by lazy {
             AssetServiceImpl.WithRawResponseImpl(clientOptions)
+        }
+
+        private val tags: TagService.WithRawResponse by lazy {
+            TagServiceImpl.WithRawResponseImpl(clientOptions)
         }
 
         private val cache: CacheService.WithRawResponse by lazy {
@@ -165,6 +175,8 @@ class ImageKitClientImpl(private val clientOptions: ClientOptions) : ImageKitCli
             namedTransformations
 
         override fun assets(): AssetService.WithRawResponse = assets
+
+        override fun tags(): TagService.WithRawResponse = tags
 
         override fun cache(): CacheService.WithRawResponse = cache
 
