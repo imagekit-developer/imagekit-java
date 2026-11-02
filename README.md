@@ -33,6 +33,7 @@ The REST API documentation can be found on [imagekit.io](https://imagekit.io/doc
   - [Client configuration](#client-configuration)
   - [File uploads](#file-uploads)
   - [Error handling](#error-handling)
+  - [Pagination](#pagination)
   - [Retries](#retries)
   - [Timeouts](#timeouts)
   - [Proxies](#proxies)
@@ -615,7 +616,7 @@ The SDK throws custom unchecked exception types:
 
 ## Pagination
 
-The SDK defines methods that return a paginated lists of results. It provides convenient ways to access the results either one page at a time or item-by-item across all pages.
+Some SDK methods, such as `tags().list()`, return paginated lists of results. The SDK provides convenient ways to access the results either one page at a time or item-by-item across all pages.
 
 ### Auto-pagination
 
