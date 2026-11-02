@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.7.0)
-[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.7.0)
+[![Maven Central](https://img.shields.io/maven-central/v/io.imagekit/image-kit-java)](https://central.sonatype.com/artifact/io.imagekit/image-kit-java/3.7.1)
+[![javadoc](https://javadoc.io/badge2/io.imagekit/image-kit-java/javadoc.svg)](https://javadoc.io/doc/io.imagekit/image-kit-java/3.7.1)
 
 <!-- x-release-please-end -->
 
@@ -11,7 +11,7 @@ The Image Kit Java SDK provides convenient access to the [Image Kit REST API](ht
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.7.0).
+The REST API documentation can be found on [imagekit.io](https://imagekit.io/docs/api-reference). Javadocs are available on [javadoc.io](https://javadoc.io/doc/io.imagekit/image-kit-java/3.7.1).
 
 <!-- x-release-please-end -->
 
@@ -22,7 +22,7 @@ The REST API documentation can be found on [imagekit.io](https://imagekit.io/doc
 ### Gradle
 
 ```kotlin
-implementation("io.imagekit:image-kit-java:3.7.0")
+implementation("io.imagekit:image-kit-java:3.7.1")
 ```
 
 ### Maven
@@ -31,7 +31,7 @@ implementation("io.imagekit:image-kit-java:3.7.0")
 <dependency>
   <groupId>io.imagekit</groupId>
   <artifactId>image-kit-java</artifactId>
-  <version>3.7.0</version>
+  <version>3.7.1</version>
 </dependency>
 ```
 
@@ -309,6 +309,106 @@ The SDK throws custom unchecked exception types:
 - [`ImageKitInvalidDataException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
 - [`ImageKitException`](image-kit-java-core/src/main/kotlin/io/imagekit/errors/ImageKitException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
+
+## Pagination
+
+The SDK defines methods that return a paginated lists of results. It provides convenient ways to access the results either one page at a time or item-by-item across all pages.
+
+### Auto-pagination
+
+To iterate through all results across all pages, use the `autoPager()` method, which automatically fetches more pages as needed.
+
+When using the synchronous client, the method returns an [`Iterable`](https://docs.oracle.com/javase/8/docs/api/java/lang/Iterable.html)
+
+```java
+import io.imagekit.models.tags.Tag;
+import io.imagekit.models.tags.TagListPage;
+
+TagListPage page = client.tags().list();
+
+// Process as an Iterable
+for (Tag tag : page.autoPager()) {
+    System.out.println(tag);
+}
+
+// Process as a Stream
+page.autoPager()
+    .stream()
+    .limit(50)
+    .forEach(tag -> System.out.println(tag));
+```
+
+When using the asynchronous client, the method returns an [`AsyncStreamResponse`](image-kit-java-core/src/main/kotlin/io/imagekit/core/http/AsyncStreamResponse.kt):
+
+```java
+import io.imagekit.core.http.AsyncStreamResponse;
+import io.imagekit.models.tags.Tag;
+import io.imagekit.models.tags.TagListPageAsync;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+CompletableFuture<TagListPageAsync> pageFuture = client.async().tags().list();
+
+pageFuture.thenRun(page -> page.autoPager().subscribe(tag -> {
+    System.out.println(tag);
+}));
+
+// If you need to handle errors or completion of the stream
+pageFuture.thenRun(page -> page.autoPager().subscribe(new AsyncStreamResponse.Handler<>() {
+    @Override
+    public void onNext(Tag tag) {
+        System.out.println(tag);
+    }
+
+    @Override
+    public void onComplete(Optional<Throwable> error) {
+        if (error.isPresent()) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error.get());
+        } else {
+            System.out.println("No more!");
+        }
+    }
+}));
+
+// Or use futures
+pageFuture.thenRun(page -> page.autoPager()
+    .subscribe(tag -> {
+        System.out.println(tag);
+    })
+    .onCompleteFuture()
+    .whenComplete((unused, error) -> {
+        if (error != null) {
+            System.out.println("Something went wrong!");
+            throw new RuntimeException(error);
+        } else {
+            System.out.println("No more!");
+        }
+    }));
+```
+
+### Manual pagination
+
+To access individual page items and manually request the next page, use the `items()`,
+`hasNextPage()`, and `nextPage()` methods:
+
+```java
+import io.imagekit.models.tags.Tag;
+import io.imagekit.models.tags.TagListPage;
+
+TagListPage page = client.tags().list();
+while (true) {
+    for (Tag tag : page.items()) {
+        System.out.println(tag);
+    }
+
+    if (!page.hasNextPage()) {
+        break;
+    }
+
+    page = page.nextPage();
+}
+```
 
 ## Logging
 
