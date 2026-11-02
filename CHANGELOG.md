@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.8.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.1...v3.8.0) (2026-11-02)
+
+
+### Features
+
+* add GET /v1/tags to list media library tags ([6d9ec12](https://github.com/imagekit-developer/imagekit-java/commit/6d9ec1287a5d7a795a11bed1e510ae283f3d32e4))
+* **api:** add accounts.contract.get() for contract consumption ([28f07ee](https://github.com/imagekit-developer/imagekit-java/commit/28f07ee24ff3096139a1812c763f18670f1d88fa))
+* **api:** add useImprovedLayerSpec to the Cloudinary URL rewriter ([28f07ee](https://github.com/imagekit-developer/imagekit-java/commit/28f07ee24ff3096139a1812c763f18670f1d88fa))
+
+
+### Documentation
+
+* add pagination example ([3efa829](https://github.com/imagekit-developer/imagekit-java/commit/3efa829e0a32ab24e94284321f0c76592334c43e))
+
 ## [3.7.1](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.0...v3.7.1) (2026-10-20)
 
 
