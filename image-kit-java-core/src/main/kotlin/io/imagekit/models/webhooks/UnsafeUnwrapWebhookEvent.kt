@@ -30,6 +30,9 @@ private constructor(
     private val videoTransformationAccepted: VideoTransformationAcceptedEvent? = null,
     private val videoTransformationReady: VideoTransformationReadyEvent? = null,
     private val videoTransformationError: VideoTransformationErrorEvent? = null,
+    private val imageAsyncTransformationAccepted: ImageAsyncTransformationAcceptedEvent? = null,
+    private val imageAsyncTransformationReady: ImageAsyncTransformationReadyEvent? = null,
+    private val imageAsyncTransformationError: ImageAsyncTransformationErrorEvent? = null,
     private val uploadPreTransformSuccess: UploadPreTransformSuccessEvent? = null,
     private val uploadPreTransformError: UploadPreTransformErrorEvent? = null,
     private val uploadPostTransformSuccess: UploadPostTransformSuccessEvent? = null,
@@ -68,6 +71,30 @@ private constructor(
      */
     fun videoTransformationError(): Optional<VideoTransformationErrorEvent> =
         Optional.ofNullable(videoTransformationError)
+
+    /**
+     * Triggered when a new asynchronous image transformation request is accepted for processing.
+     * This event confirms that ImageKit has received and queued your transformation request. Use
+     * this for debugging and tracking transformation lifecycle.
+     */
+    fun imageAsyncTransformationAccepted(): Optional<ImageAsyncTransformationAcceptedEvent> =
+        Optional.ofNullable(imageAsyncTransformationAccepted)
+
+    /**
+     * Triggered when an asynchronous image transformation is finished and the transformed image is
+     * ready to be served. Listen to this webhook and update any flags in your database or CMS so
+     * your application can start displaying the transformed image to users.
+     */
+    fun imageAsyncTransformationReady(): Optional<ImageAsyncTransformationReadyEvent> =
+        Optional.ofNullable(imageAsyncTransformationReady)
+
+    /**
+     * Triggered when an asynchronous image transformation fails. Listen to this webhook to log
+     * error reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+     * related to download failure. For other errors, contact ImageKit support.
+     */
+    fun imageAsyncTransformationError(): Optional<ImageAsyncTransformationErrorEvent> =
+        Optional.ofNullable(imageAsyncTransformationError)
 
     /**
      * Triggered when a pre-transformation completes successfully. The file has been processed with
@@ -143,6 +170,12 @@ private constructor(
 
     fun isVideoTransformationError(): Boolean = videoTransformationError != null
 
+    fun isImageAsyncTransformationAccepted(): Boolean = imageAsyncTransformationAccepted != null
+
+    fun isImageAsyncTransformationReady(): Boolean = imageAsyncTransformationReady != null
+
+    fun isImageAsyncTransformationError(): Boolean = imageAsyncTransformationError != null
+
     fun isUploadPreTransformSuccess(): Boolean = uploadPreTransformSuccess != null
 
     fun isUploadPreTransformError(): Boolean = uploadPreTransformError != null
@@ -190,6 +223,30 @@ private constructor(
      */
     fun asVideoTransformationError(): VideoTransformationErrorEvent =
         videoTransformationError.getOrThrow("videoTransformationError")
+
+    /**
+     * Triggered when a new asynchronous image transformation request is accepted for processing.
+     * This event confirms that ImageKit has received and queued your transformation request. Use
+     * this for debugging and tracking transformation lifecycle.
+     */
+    fun asImageAsyncTransformationAccepted(): ImageAsyncTransformationAcceptedEvent =
+        imageAsyncTransformationAccepted.getOrThrow("imageAsyncTransformationAccepted")
+
+    /**
+     * Triggered when an asynchronous image transformation is finished and the transformed image is
+     * ready to be served. Listen to this webhook and update any flags in your database or CMS so
+     * your application can start displaying the transformed image to users.
+     */
+    fun asImageAsyncTransformationReady(): ImageAsyncTransformationReadyEvent =
+        imageAsyncTransformationReady.getOrThrow("imageAsyncTransformationReady")
+
+    /**
+     * Triggered when an asynchronous image transformation fails. Listen to this webhook to log
+     * error reasons and debug issues. Check your origin and URL endpoint settings if the reason is
+     * related to download failure. For other errors, contact ImageKit support.
+     */
+    fun asImageAsyncTransformationError(): ImageAsyncTransformationErrorEvent =
+        imageAsyncTransformationError.getOrThrow("imageAsyncTransformationError")
 
     /**
      * Triggered when a pre-transformation completes successfully. The file has been processed with
@@ -298,6 +355,12 @@ private constructor(
                 visitor.visitVideoTransformationReady(videoTransformationReady)
             videoTransformationError != null ->
                 visitor.visitVideoTransformationError(videoTransformationError)
+            imageAsyncTransformationAccepted != null ->
+                visitor.visitImageAsyncTransformationAccepted(imageAsyncTransformationAccepted)
+            imageAsyncTransformationReady != null ->
+                visitor.visitImageAsyncTransformationReady(imageAsyncTransformationReady)
+            imageAsyncTransformationError != null ->
+                visitor.visitImageAsyncTransformationError(imageAsyncTransformationError)
             uploadPreTransformSuccess != null ->
                 visitor.visitUploadPreTransformSuccess(uploadPreTransformSuccess)
             uploadPreTransformError != null ->
@@ -350,6 +413,24 @@ private constructor(
                     videoTransformationError: VideoTransformationErrorEvent
                 ) {
                     videoTransformationError.validate()
+                }
+
+                override fun visitImageAsyncTransformationAccepted(
+                    imageAsyncTransformationAccepted: ImageAsyncTransformationAcceptedEvent
+                ) {
+                    imageAsyncTransformationAccepted.validate()
+                }
+
+                override fun visitImageAsyncTransformationReady(
+                    imageAsyncTransformationReady: ImageAsyncTransformationReadyEvent
+                ) {
+                    imageAsyncTransformationReady.validate()
+                }
+
+                override fun visitImageAsyncTransformationError(
+                    imageAsyncTransformationError: ImageAsyncTransformationErrorEvent
+                ) {
+                    imageAsyncTransformationError.validate()
                 }
 
                 override fun visitUploadPreTransformSuccess(
@@ -441,6 +522,18 @@ private constructor(
                     videoTransformationError: VideoTransformationErrorEvent
                 ) = videoTransformationError.validity()
 
+                override fun visitImageAsyncTransformationAccepted(
+                    imageAsyncTransformationAccepted: ImageAsyncTransformationAcceptedEvent
+                ) = imageAsyncTransformationAccepted.validity()
+
+                override fun visitImageAsyncTransformationReady(
+                    imageAsyncTransformationReady: ImageAsyncTransformationReadyEvent
+                ) = imageAsyncTransformationReady.validity()
+
+                override fun visitImageAsyncTransformationError(
+                    imageAsyncTransformationError: ImageAsyncTransformationErrorEvent
+                ) = imageAsyncTransformationError.validity()
+
                 override fun visitUploadPreTransformSuccess(
                     uploadPreTransformSuccess: UploadPreTransformSuccessEvent
                 ) = uploadPreTransformSuccess.validity()
@@ -491,6 +584,9 @@ private constructor(
             videoTransformationAccepted == other.videoTransformationAccepted &&
             videoTransformationReady == other.videoTransformationReady &&
             videoTransformationError == other.videoTransformationError &&
+            imageAsyncTransformationAccepted == other.imageAsyncTransformationAccepted &&
+            imageAsyncTransformationReady == other.imageAsyncTransformationReady &&
+            imageAsyncTransformationError == other.imageAsyncTransformationError &&
             uploadPreTransformSuccess == other.uploadPreTransformSuccess &&
             uploadPreTransformError == other.uploadPreTransformError &&
             uploadPostTransformSuccess == other.uploadPostTransformSuccess &&
@@ -510,6 +606,9 @@ private constructor(
             videoTransformationAccepted,
             videoTransformationReady,
             videoTransformationError,
+            imageAsyncTransformationAccepted,
+            imageAsyncTransformationReady,
+            imageAsyncTransformationError,
             uploadPreTransformSuccess,
             uploadPreTransformError,
             uploadPostTransformSuccess,
@@ -532,6 +631,12 @@ private constructor(
                 "UnsafeUnwrapWebhookEvent{videoTransformationReady=$videoTransformationReady}"
             videoTransformationError != null ->
                 "UnsafeUnwrapWebhookEvent{videoTransformationError=$videoTransformationError}"
+            imageAsyncTransformationAccepted != null ->
+                "UnsafeUnwrapWebhookEvent{imageAsyncTransformationAccepted=$imageAsyncTransformationAccepted}"
+            imageAsyncTransformationReady != null ->
+                "UnsafeUnwrapWebhookEvent{imageAsyncTransformationReady=$imageAsyncTransformationReady}"
+            imageAsyncTransformationError != null ->
+                "UnsafeUnwrapWebhookEvent{imageAsyncTransformationError=$imageAsyncTransformationError}"
             uploadPreTransformSuccess != null ->
                 "UnsafeUnwrapWebhookEvent{uploadPreTransformSuccess=$uploadPreTransformSuccess}"
             uploadPreTransformError != null ->
@@ -583,6 +688,39 @@ private constructor(
         @JvmStatic
         fun ofVideoTransformationError(videoTransformationError: VideoTransformationErrorEvent) =
             UnsafeUnwrapWebhookEvent(videoTransformationError = videoTransformationError)
+
+        /**
+         * Triggered when a new asynchronous image transformation request is accepted for
+         * processing. This event confirms that ImageKit has received and queued your transformation
+         * request. Use this for debugging and tracking transformation lifecycle.
+         */
+        @JvmStatic
+        fun ofImageAsyncTransformationAccepted(
+            imageAsyncTransformationAccepted: ImageAsyncTransformationAcceptedEvent
+        ) =
+            UnsafeUnwrapWebhookEvent(
+                imageAsyncTransformationAccepted = imageAsyncTransformationAccepted
+            )
+
+        /**
+         * Triggered when an asynchronous image transformation is finished and the transformed image
+         * is ready to be served. Listen to this webhook and update any flags in your database or
+         * CMS so your application can start displaying the transformed image to users.
+         */
+        @JvmStatic
+        fun ofImageAsyncTransformationReady(
+            imageAsyncTransformationReady: ImageAsyncTransformationReadyEvent
+        ) = UnsafeUnwrapWebhookEvent(imageAsyncTransformationReady = imageAsyncTransformationReady)
+
+        /**
+         * Triggered when an asynchronous image transformation fails. Listen to this webhook to log
+         * error reasons and debug issues. Check your origin and URL endpoint settings if the reason
+         * is related to download failure. For other errors, contact ImageKit support.
+         */
+        @JvmStatic
+        fun ofImageAsyncTransformationError(
+            imageAsyncTransformationError: ImageAsyncTransformationErrorEvent
+        ) = UnsafeUnwrapWebhookEvent(imageAsyncTransformationError = imageAsyncTransformationError)
 
         /**
          * Triggered when a pre-transformation completes successfully. The file has been processed
@@ -706,6 +844,33 @@ private constructor(
         ): T
 
         /**
+         * Triggered when a new asynchronous image transformation request is accepted for
+         * processing. This event confirms that ImageKit has received and queued your transformation
+         * request. Use this for debugging and tracking transformation lifecycle.
+         */
+        fun visitImageAsyncTransformationAccepted(
+            imageAsyncTransformationAccepted: ImageAsyncTransformationAcceptedEvent
+        ): T
+
+        /**
+         * Triggered when an asynchronous image transformation is finished and the transformed image
+         * is ready to be served. Listen to this webhook and update any flags in your database or
+         * CMS so your application can start displaying the transformed image to users.
+         */
+        fun visitImageAsyncTransformationReady(
+            imageAsyncTransformationReady: ImageAsyncTransformationReadyEvent
+        ): T
+
+        /**
+         * Triggered when an asynchronous image transformation fails. Listen to this webhook to log
+         * error reasons and debug issues. Check your origin and URL endpoint settings if the reason
+         * is related to download failure. For other errors, contact ImageKit support.
+         */
+        fun visitImageAsyncTransformationError(
+            imageAsyncTransformationError: ImageAsyncTransformationErrorEvent
+        ): T
+
+        /**
          * Triggered when a pre-transformation completes successfully. The file has been processed
          * with the requested transformation and is now available in the Media Library.
          */
@@ -814,6 +979,42 @@ private constructor(
                             UnsafeUnwrapWebhookEvent(videoTransformationError = it, _json = json)
                         } ?: UnsafeUnwrapWebhookEvent(_json = json)
                 }
+                "image.async-transformation.accepted" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ImageAsyncTransformationAcceptedEvent>(),
+                        )
+                        ?.let {
+                            UnsafeUnwrapWebhookEvent(
+                                imageAsyncTransformationAccepted = it,
+                                _json = json,
+                            )
+                        } ?: UnsafeUnwrapWebhookEvent(_json = json)
+                }
+                "image.async-transformation.ready" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ImageAsyncTransformationReadyEvent>(),
+                        )
+                        ?.let {
+                            UnsafeUnwrapWebhookEvent(
+                                imageAsyncTransformationReady = it,
+                                _json = json,
+                            )
+                        } ?: UnsafeUnwrapWebhookEvent(_json = json)
+                }
+                "image.async-transformation.error" -> {
+                    return tryDeserialize(
+                            node,
+                            jacksonTypeRef<ImageAsyncTransformationErrorEvent>(),
+                        )
+                        ?.let {
+                            UnsafeUnwrapWebhookEvent(
+                                imageAsyncTransformationError = it,
+                                _json = json,
+                            )
+                        } ?: UnsafeUnwrapWebhookEvent(_json = json)
+                }
                 "upload.pre-transform.success" -> {
                     return tryDeserialize(node, jacksonTypeRef<UploadPreTransformSuccessEvent>())
                         ?.let {
@@ -899,6 +1100,12 @@ private constructor(
                     generator.writeObject(value.videoTransformationReady)
                 value.videoTransformationError != null ->
                     generator.writeObject(value.videoTransformationError)
+                value.imageAsyncTransformationAccepted != null ->
+                    generator.writeObject(value.imageAsyncTransformationAccepted)
+                value.imageAsyncTransformationReady != null ->
+                    generator.writeObject(value.imageAsyncTransformationReady)
+                value.imageAsyncTransformationError != null ->
+                    generator.writeObject(value.imageAsyncTransformationError)
                 value.uploadPreTransformSuccess != null ->
                     generator.writeObject(value.uploadPreTransformSuccess)
                 value.uploadPreTransformError != null ->
