@@ -94,6 +94,9 @@ internal class UnsafeUnwrapWebhookEventTest {
             .contains(videoTransformationAccepted)
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -277,6 +280,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady())
             .contains(videoTransformationReady)
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -471,6 +477,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError())
             .contains(videoTransformationError)
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -555,6 +564,418 @@ internal class UnsafeUnwrapWebhookEventTest {
                     )
                     .request(
                         VideoTransformationErrorEvent.Request.builder()
+                            .url("https://example.com")
+                            .xRequestId("x_request_id")
+                            .userAgent("user_agent")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofImageAsyncTransformationAccepted() {
+        val imageAsyncTransformationAccepted =
+            ImageAsyncTransformationAcceptedEvent.builder()
+                .id("id")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    ImageAsyncTransformationAcceptedEvent.Data.builder()
+                        .asset(
+                            ImageAsyncTransformationAcceptedEvent.Data.Asset.builder()
+                                .url("https://example.com")
+                                .build()
+                        )
+                        .transformation(
+                            ImageAsyncTransformationAcceptedEvent.Data.Transformation.builder()
+                                .type(
+                                    ImageAsyncTransformationAcceptedEvent.Data.Transformation.Type
+                                        .IMAGE_TRANSFORMATION
+                                )
+                                .options(
+                                    ImageAsyncTransformationAcceptedEvent.Data.Transformation
+                                        .Options
+                                        .builder()
+                                        .transformation("transformation")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .request(
+                    ImageAsyncTransformationAcceptedEvent.Request.builder()
+                        .url("https://example.com")
+                        .xRequestId("x_request_id")
+                        .userAgent("user_agent")
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationAccepted(
+                imageAsyncTransformationAccepted
+            )
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted())
+            .contains(imageAsyncTransformationAccepted)
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderDeleted()).isEmpty
+    }
+
+    @Test
+    fun ofImageAsyncTransformationAcceptedRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationAccepted(
+                ImageAsyncTransformationAcceptedEvent.builder()
+                    .id("id")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        ImageAsyncTransformationAcceptedEvent.Data.builder()
+                            .asset(
+                                ImageAsyncTransformationAcceptedEvent.Data.Asset.builder()
+                                    .url("https://example.com")
+                                    .build()
+                            )
+                            .transformation(
+                                ImageAsyncTransformationAcceptedEvent.Data.Transformation.builder()
+                                    .type(
+                                        ImageAsyncTransformationAcceptedEvent.Data.Transformation
+                                            .Type
+                                            .IMAGE_TRANSFORMATION
+                                    )
+                                    .options(
+                                        ImageAsyncTransformationAcceptedEvent.Data.Transformation
+                                            .Options
+                                            .builder()
+                                            .transformation("transformation")
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .request(
+                        ImageAsyncTransformationAcceptedEvent.Request.builder()
+                            .url("https://example.com")
+                            .xRequestId("x_request_id")
+                            .userAgent("user_agent")
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofImageAsyncTransformationReady() {
+        val imageAsyncTransformationReady =
+            ImageAsyncTransformationReadyEvent.builder()
+                .id("id")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    ImageAsyncTransformationReadyEvent.Data.builder()
+                        .asset(
+                            ImageAsyncTransformationReadyEvent.Data.Asset.builder()
+                                .url("https://example.com")
+                                .build()
+                        )
+                        .transformation(
+                            ImageAsyncTransformationReadyEvent.Data.Transformation.builder()
+                                .type(
+                                    ImageAsyncTransformationReadyEvent.Data.Transformation.Type
+                                        .IMAGE_TRANSFORMATION
+                                )
+                                .options(
+                                    ImageAsyncTransformationReadyEvent.Data.Transformation.Options
+                                        .builder()
+                                        .transformation("transformation")
+                                        .build()
+                                )
+                                .output(
+                                    ImageAsyncTransformationReadyEvent.Data.Transformation.Output
+                                        .builder()
+                                        .url("https://example.com")
+                                        .imageMetadata(
+                                            ImageAsyncTransformationReadyEvent.Data.Transformation
+                                                .Output
+                                                .ImageMetadata
+                                                .builder()
+                                                .size(0L)
+                                                .format("format")
+                                                .build()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .request(
+                    ImageAsyncTransformationReadyEvent.Request.builder()
+                        .url("https://example.com")
+                        .xRequestId("x_request_id")
+                        .userAgent("user_agent")
+                        .build()
+                )
+                .timings(
+                    ImageAsyncTransformationReadyEvent.Timings.builder()
+                        .processingDuration(0L)
+                        .queueDuration(0L)
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationReady(imageAsyncTransformationReady)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady())
+            .contains(imageAsyncTransformationReady)
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderDeleted()).isEmpty
+    }
+
+    @Test
+    fun ofImageAsyncTransformationReadyRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationReady(
+                ImageAsyncTransformationReadyEvent.builder()
+                    .id("id")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        ImageAsyncTransformationReadyEvent.Data.builder()
+                            .asset(
+                                ImageAsyncTransformationReadyEvent.Data.Asset.builder()
+                                    .url("https://example.com")
+                                    .build()
+                            )
+                            .transformation(
+                                ImageAsyncTransformationReadyEvent.Data.Transformation.builder()
+                                    .type(
+                                        ImageAsyncTransformationReadyEvent.Data.Transformation.Type
+                                            .IMAGE_TRANSFORMATION
+                                    )
+                                    .options(
+                                        ImageAsyncTransformationReadyEvent.Data.Transformation
+                                            .Options
+                                            .builder()
+                                            .transformation("transformation")
+                                            .build()
+                                    )
+                                    .output(
+                                        ImageAsyncTransformationReadyEvent.Data.Transformation
+                                            .Output
+                                            .builder()
+                                            .url("https://example.com")
+                                            .imageMetadata(
+                                                ImageAsyncTransformationReadyEvent.Data
+                                                    .Transformation
+                                                    .Output
+                                                    .ImageMetadata
+                                                    .builder()
+                                                    .size(0L)
+                                                    .format("format")
+                                                    .build()
+                                            )
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .request(
+                        ImageAsyncTransformationReadyEvent.Request.builder()
+                            .url("https://example.com")
+                            .xRequestId("x_request_id")
+                            .userAgent("user_agent")
+                            .build()
+                    )
+                    .timings(
+                        ImageAsyncTransformationReadyEvent.Timings.builder()
+                            .processingDuration(0L)
+                            .queueDuration(0L)
+                            .build()
+                    )
+                    .build()
+            )
+
+        val roundtrippedUnsafeUnwrapWebhookEvent =
+            jsonMapper.readValue(
+                jsonMapper.writeValueAsString(unsafeUnwrapWebhookEvent),
+                jacksonTypeRef<UnsafeUnwrapWebhookEvent>(),
+            )
+
+        assertThat(roundtrippedUnsafeUnwrapWebhookEvent).isEqualTo(unsafeUnwrapWebhookEvent)
+    }
+
+    @Test
+    fun ofImageAsyncTransformationError() {
+        val imageAsyncTransformationError =
+            ImageAsyncTransformationErrorEvent.builder()
+                .id("id")
+                .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                .data(
+                    ImageAsyncTransformationErrorEvent.Data.builder()
+                        .asset(
+                            ImageAsyncTransformationErrorEvent.Data.Asset.builder()
+                                .url("https://example.com")
+                                .build()
+                        )
+                        .transformation(
+                            ImageAsyncTransformationErrorEvent.Data.Transformation.builder()
+                                .type(
+                                    ImageAsyncTransformationErrorEvent.Data.Transformation.Type
+                                        .IMAGE_TRANSFORMATION
+                                )
+                                .error(
+                                    ImageAsyncTransformationErrorEvent.Data.Transformation.Error
+                                        .builder()
+                                        .reason(
+                                            ImageAsyncTransformationErrorEvent.Data.Transformation
+                                                .Error
+                                                .Reason
+                                                .DOWNLOAD_FAILED
+                                        )
+                                        .message("message")
+                                        .build()
+                                )
+                                .options(
+                                    ImageAsyncTransformationErrorEvent.Data.Transformation.Options
+                                        .builder()
+                                        .transformation("transformation")
+                                        .build()
+                                )
+                                .build()
+                        )
+                        .build()
+                )
+                .request(
+                    ImageAsyncTransformationErrorEvent.Request.builder()
+                        .url("https://example.com")
+                        .xRequestId("x_request_id")
+                        .userAgent("user_agent")
+                        .build()
+                )
+                .build()
+
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationError(imageAsyncTransformationError)
+
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError())
+            .contains(imageAsyncTransformationError)
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.fileVersionDeleted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderCreated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderUpdated()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.folderDeleted()).isEmpty
+    }
+
+    @Test
+    fun ofImageAsyncTransformationErrorRoundtrip() {
+        val jsonMapper = jsonMapper()
+        val unsafeUnwrapWebhookEvent =
+            UnsafeUnwrapWebhookEvent.ofImageAsyncTransformationError(
+                ImageAsyncTransformationErrorEvent.builder()
+                    .id("id")
+                    .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
+                    .data(
+                        ImageAsyncTransformationErrorEvent.Data.builder()
+                            .asset(
+                                ImageAsyncTransformationErrorEvent.Data.Asset.builder()
+                                    .url("https://example.com")
+                                    .build()
+                            )
+                            .transformation(
+                                ImageAsyncTransformationErrorEvent.Data.Transformation.builder()
+                                    .type(
+                                        ImageAsyncTransformationErrorEvent.Data.Transformation.Type
+                                            .IMAGE_TRANSFORMATION
+                                    )
+                                    .error(
+                                        ImageAsyncTransformationErrorEvent.Data.Transformation.Error
+                                            .builder()
+                                            .reason(
+                                                ImageAsyncTransformationErrorEvent.Data
+                                                    .Transformation
+                                                    .Error
+                                                    .Reason
+                                                    .DOWNLOAD_FAILED
+                                            )
+                                            .message("message")
+                                            .build()
+                                    )
+                                    .options(
+                                        ImageAsyncTransformationErrorEvent.Data.Transformation
+                                            .Options
+                                            .builder()
+                                            .transformation("transformation")
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                            .build()
+                    )
+                    .request(
+                        ImageAsyncTransformationErrorEvent.Request.builder()
                             .url("https://example.com")
                             .xRequestId("x_request_id")
                             .userAgent("user_agent")
@@ -790,6 +1211,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess())
             .contains(uploadPreTransformSuccess)
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
@@ -1078,6 +1502,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError())
             .contains(uploadPreTransformError)
@@ -1174,6 +1601,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess())
@@ -1285,6 +1715,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -1433,6 +1866,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -1617,6 +2053,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -1739,6 +2178,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -1851,6 +2293,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -1979,6 +2424,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -2048,6 +2496,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -2129,6 +2580,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
@@ -2195,6 +2649,9 @@ internal class UnsafeUnwrapWebhookEventTest {
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationAccepted()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationReady()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.videoTransformationError()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationAccepted()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationReady()).isEmpty
+        assertThat(unsafeUnwrapWebhookEvent.imageAsyncTransformationError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformSuccess()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPreTransformError()).isEmpty
         assertThat(unsafeUnwrapWebhookEvent.uploadPostTransformSuccess()).isEmpty
