@@ -2116,6 +2116,7 @@ internal class UnwrapWebhookEventTest {
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                 .build()
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofFolderUpdated(folderUpdated)
@@ -2163,6 +2164,7 @@ internal class UnwrapWebhookEventTest {
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
+                    .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                     .build()
             )
 
@@ -2181,7 +2183,12 @@ internal class UnwrapWebhookEventTest {
             FolderDeleteEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                .data(
+                    FolderDeleteEvent.Data.builder()
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .build()
+                )
                 .build()
 
         val unwrapWebhookEvent = UnwrapWebhookEvent.ofFolderDeleted(folderDeleted)
@@ -2211,7 +2218,12 @@ internal class UnwrapWebhookEventTest {
                 FolderDeleteEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                    .data(
+                        FolderDeleteEvent.Data.builder()
+                            .folderId("folderId")
+                            .folderPath("folderPath")
+                            .build()
+                    )
                     .build()
             )
 

@@ -15,6 +15,7 @@ import io.imagekit.errors.ImageKitInvalidDataException
 import java.time.OffsetDateTime
 import java.util.Collections
 import java.util.Objects
+import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 
 /**
@@ -288,13 +289,19 @@ private constructor(
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val folderId: JsonField<String>,
+        private val folderPath: JsonField<String>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
         @JsonCreator
         private constructor(
-            @JsonProperty("folderId") @ExcludeMissing folderId: JsonField<String> = JsonMissing.of()
-        ) : this(folderId, mutableMapOf())
+            @JsonProperty("folderId")
+            @ExcludeMissing
+            folderId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("folderPath")
+            @ExcludeMissing
+            folderPath: JsonField<String> = JsonMissing.of(),
+        ) : this(folderId, folderPath, mutableMapOf())
 
         /**
          * The unique `folderId` of the deleted folder.
@@ -305,11 +312,28 @@ private constructor(
         fun folderId(): String = folderId.getRequired("folderId")
 
         /**
+         * Path of the deleted folder. For a moved folder, this is its path before the move.
+         *
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun folderPath(): Optional<String> = folderPath.getOptional("folderPath")
+
+        /**
          * Returns the raw JSON value of [folderId].
          *
          * Unlike [folderId], this method doesn't throw if the JSON field has an unexpected type.
          */
         @JsonProperty("folderId") @ExcludeMissing fun _folderId(): JsonField<String> = folderId
+
+        /**
+         * Returns the raw JSON value of [folderPath].
+         *
+         * Unlike [folderPath], this method doesn't throw if the JSON field has an unexpected type.
+         */
+        @JsonProperty("folderPath")
+        @ExcludeMissing
+        fun _folderPath(): JsonField<String> = folderPath
 
         @JsonAnySetter
         private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -340,11 +364,13 @@ private constructor(
         class Builder internal constructor() {
 
             private var folderId: JsonField<String>? = null
+            private var folderPath: JsonField<String> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
             internal fun from(data: Data) = apply {
                 folderId = data.folderId
+                folderPath = data.folderPath
                 additionalProperties = data.additionalProperties.toMutableMap()
             }
 
@@ -359,6 +385,18 @@ private constructor(
              * supported value.
              */
             fun folderId(folderId: JsonField<String>) = apply { this.folderId = folderId }
+
+            /** Path of the deleted folder. For a moved folder, this is its path before the move. */
+            fun folderPath(folderPath: String) = folderPath(JsonField.of(folderPath))
+
+            /**
+             * Sets [Builder.folderPath] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.folderPath] with a well-typed [String] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun folderPath(folderPath: JsonField<String>) = apply { this.folderPath = folderPath }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -392,7 +430,11 @@ private constructor(
              * @throws IllegalStateException if any required field is unset.
              */
             fun build(): Data =
-                Data(checkRequired("folderId", folderId), additionalProperties.toMutableMap())
+                Data(
+                    checkRequired("folderId", folderId),
+                    folderPath,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -412,6 +454,7 @@ private constructor(
             }
 
             folderId()
+            folderPath()
             validated = true
         }
 
@@ -429,7 +472,10 @@ private constructor(
          *
          * Used for best match union deserialization.
          */
-        @JvmSynthetic internal fun validity(): Int = (if (folderId.asKnown().isPresent) 1 else 0)
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (folderId.asKnown().isPresent) 1 else 0) +
+                (if (folderPath.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -438,15 +484,18 @@ private constructor(
 
             return other is Data &&
                 folderId == other.folderId &&
+                folderPath == other.folderPath &&
                 additionalProperties == other.additionalProperties
         }
 
-        private val hashCode: Int by lazy { Objects.hash(folderId, additionalProperties) }
+        private val hashCode: Int by lazy {
+            Objects.hash(folderId, folderPath, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Data{folderId=$folderId, additionalProperties=$additionalProperties}"
+            "Data{folderId=$folderId, folderPath=$folderPath, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
