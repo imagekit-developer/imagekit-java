@@ -125,7 +125,7 @@ private constructor(
     /**
      * Triggered when a folder is updated, for example when its custom metadata changes or it is
      * renamed. Renaming a folder sends one event per folder in the tree, each with its new
-     * `folderPath`.
+     * `folderPath` in `data` and its old `folderPath` in `previous`.
      */
     fun folderUpdated(): Optional<FolderUpdateEvent> = Optional.ofNullable(folderUpdated)
 
@@ -247,7 +247,7 @@ private constructor(
     /**
      * Triggered when a folder is updated, for example when its custom metadata changes or it is
      * renamed. Renaming a folder sends one event per folder in the tree, each with its new
-     * `folderPath`.
+     * `folderPath` in `data` and its old `folderPath` in `previous`.
      */
     fun asFolderUpdated(): FolderUpdateEvent = folderUpdated.getOrThrow("folderUpdated")
 
@@ -655,7 +655,7 @@ private constructor(
         /**
          * Triggered when a folder is updated, for example when its custom metadata changes or it is
          * renamed. Renaming a folder sends one event per folder in the tree, each with its new
-         * `folderPath`.
+         * `folderPath` in `data` and its old `folderPath` in `previous`.
          */
         @JvmStatic
         fun ofFolderUpdated(folderUpdated: FolderUpdateEvent) =
@@ -761,7 +761,7 @@ private constructor(
         /**
          * Triggered when a folder is updated, for example when its custom metadata changes or it is
          * renamed. Renaming a folder sends one event per folder in the tree, each with its new
-         * `folderPath`.
+         * `folderPath` in `data` and its old `folderPath` in `previous`.
          */
         fun visitFolderUpdated(folderUpdated: FolderUpdateEvent): T
 

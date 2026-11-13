@@ -16,14 +16,24 @@ internal class FolderDeleteEventTest {
             FolderDeleteEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                .data(
+                    FolderDeleteEvent.Data.builder()
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .build()
+                )
                 .build()
 
         assertThat(folderDeleteEvent.id()).isEqualTo("id")
         assertThat(folderDeleteEvent.createdAt())
             .isEqualTo(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
         assertThat(folderDeleteEvent.data())
-            .isEqualTo(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+            .isEqualTo(
+                FolderDeleteEvent.Data.builder()
+                    .folderId("folderId")
+                    .folderPath("folderPath")
+                    .build()
+            )
     }
 
     @Test
@@ -33,7 +43,12 @@ internal class FolderDeleteEventTest {
             FolderDeleteEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                .data(
+                    FolderDeleteEvent.Data.builder()
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .build()
+                )
                 .build()
 
         val roundtrippedFolderDeleteEvent =
