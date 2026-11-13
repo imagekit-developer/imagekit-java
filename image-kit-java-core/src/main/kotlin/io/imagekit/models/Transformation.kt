@@ -83,6 +83,7 @@ private constructor(
     private val radius: JsonField<Radius>,
     private val raw: JsonField<String>,
     private val rotation: JsonField<Rotation>,
+    private val saturation: JsonField<Long>,
     private val shadow: JsonField<Shadow>,
     private val sharpen: JsonField<Sharpen>,
     private val startOffset: JsonField<StartOffset>,
@@ -178,6 +179,7 @@ private constructor(
         @JsonProperty("radius") @ExcludeMissing radius: JsonField<Radius> = JsonMissing.of(),
         @JsonProperty("raw") @ExcludeMissing raw: JsonField<String> = JsonMissing.of(),
         @JsonProperty("rotation") @ExcludeMissing rotation: JsonField<Rotation> = JsonMissing.of(),
+        @JsonProperty("saturation") @ExcludeMissing saturation: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("shadow") @ExcludeMissing shadow: JsonField<Shadow> = JsonMissing.of(),
         @JsonProperty("sharpen") @ExcludeMissing sharpen: JsonField<Sharpen> = JsonMissing.of(),
         @JsonProperty("startOffset")
@@ -243,6 +245,7 @@ private constructor(
         radius,
         raw,
         rotation,
+        saturation,
         shadow,
         sharpen,
         startOffset,
@@ -724,6 +727,17 @@ private constructor(
     fun rotation(): Optional<Rotation> = rotation.getOptional("rotation")
 
     /**
+     * Adjusts the color saturation of the image. Accepts an integer from -100 to 100. Negative
+     * values desaturate (`-100` is fully gray), positive values increase saturation, and `0` leaves
+     * the image unchanged. Supported inside image overlays. Not supported for animated images. See
+     * [Saturation](https://imagekit.io/docs/effects-and-enhancements#saturation---e-saturation).
+     *
+     * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
+     *   server responded with an unexpected value).
+     */
+    fun saturation(): Optional<Long> = saturation.getOptional("saturation")
+
+    /**
      * Adds a shadow beneath solid objects in an image with a transparent background. For AI-based
      * drop shadows, refer to aiDropShadow. Pass `true` for a default shadow, or provide a string
      * for a custom shadow. See
@@ -1182,6 +1196,13 @@ private constructor(
     @JsonProperty("rotation") @ExcludeMissing fun _rotation(): JsonField<Rotation> = rotation
 
     /**
+     * Returns the raw JSON value of [saturation].
+     *
+     * Unlike [saturation], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("saturation") @ExcludeMissing fun _saturation(): JsonField<Long> = saturation
+
+    /**
      * Returns the raw JSON value of [shadow].
      *
      * Unlike [shadow], this method doesn't throw if the JSON field has an unexpected type.
@@ -1346,6 +1367,7 @@ private constructor(
         private var radius: JsonField<Radius> = JsonMissing.of()
         private var raw: JsonField<String> = JsonMissing.of()
         private var rotation: JsonField<Rotation> = JsonMissing.of()
+        private var saturation: JsonField<Long> = JsonMissing.of()
         private var shadow: JsonField<Shadow> = JsonMissing.of()
         private var sharpen: JsonField<Sharpen> = JsonMissing.of()
         private var startOffset: JsonField<StartOffset> = JsonMissing.of()
@@ -1406,6 +1428,7 @@ private constructor(
             radius = transformation.radius
             raw = transformation.raw
             rotation = transformation.rotation
+            saturation = transformation.saturation
             shadow = transformation.shadow
             sharpen = transformation.sharpen
             startOffset = transformation.startOffset
@@ -2281,6 +2304,23 @@ private constructor(
         fun rotation(string: String) = rotation(Rotation.ofString(string))
 
         /**
+         * Adjusts the color saturation of the image. Accepts an integer from -100 to 100. Negative
+         * values desaturate (`-100` is fully gray), positive values increase saturation, and `0`
+         * leaves the image unchanged. Supported inside image overlays. Not supported for animated
+         * images. See
+         * [Saturation](https://imagekit.io/docs/effects-and-enhancements#saturation---e-saturation).
+         */
+        fun saturation(saturation: Long) = saturation(JsonField.of(saturation))
+
+        /**
+         * Sets [Builder.saturation] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.saturation] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun saturation(saturation: JsonField<Long>) = apply { this.saturation = saturation }
+
+        /**
          * Adds a shadow beneath solid objects in an image with a transparent background. For
          * AI-based drop shadows, refer to aiDropShadow. Pass `true` for a default shadow, or
          * provide a string for a custom shadow. See
@@ -2626,6 +2666,7 @@ private constructor(
                 radius,
                 raw,
                 rotation,
+                saturation,
                 shadow,
                 sharpen,
                 startOffset,
@@ -2701,6 +2742,7 @@ private constructor(
         radius().ifPresent { it.validate() }
         raw()
         rotation().ifPresent { it.validate() }
+        saturation()
         shadow().ifPresent { it.validate() }
         sharpen().ifPresent { it.validate() }
         startOffset().ifPresent { it.validate() }
@@ -2775,6 +2817,7 @@ private constructor(
             (radius.asKnown().getOrNull()?.validity() ?: 0) +
             (if (raw.asKnown().isPresent) 1 else 0) +
             (rotation.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (saturation.asKnown().isPresent) 1 else 0) +
             (shadow.asKnown().getOrNull()?.validity() ?: 0) +
             (sharpen.asKnown().getOrNull()?.validity() ?: 0) +
             (startOffset.asKnown().getOrNull()?.validity() ?: 0) +
@@ -9080,6 +9123,7 @@ private constructor(
             radius == other.radius &&
             raw == other.raw &&
             rotation == other.rotation &&
+            saturation == other.saturation &&
             shadow == other.shadow &&
             sharpen == other.sharpen &&
             startOffset == other.startOffset &&
@@ -9141,6 +9185,7 @@ private constructor(
             radius,
             raw,
             rotation,
+            saturation,
             shadow,
             sharpen,
             startOffset,
@@ -9161,5 +9206,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorize=$colorize, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, density=$density, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
+        "Transformation{aiChangeBackground=$aiChangeBackground, aiDropShadow=$aiDropShadow, aiEdit=$aiEdit, aiRemoveBackground=$aiRemoveBackground, aiRemoveBackgroundExternal=$aiRemoveBackgroundExternal, aiRetouch=$aiRetouch, aiUpscale=$aiUpscale, aiVariation=$aiVariation, aspectRatio=$aspectRatio, audioCodec=$audioCodec, background=$background, blur=$blur, border=$border, colorize=$colorize, colorProfile=$colorProfile, colorReplace=$colorReplace, contrastStretch=$contrastStretch, crop=$crop, cropMode=$cropMode, defaultImage=$defaultImage, density=$density, distort=$distort, dpr=$dpr, duration=$duration, endOffset=$endOffset, flip=$flip, focus=$focus, format=$format, gradient=$gradient, grayscale=$grayscale, height=$height, lossless=$lossless, metadata=$metadata, named=$named, opacity=$opacity, original=$original, overlay=$overlay, page=$page, progressive=$progressive, quality=$quality, radius=$radius, raw=$raw, rotation=$rotation, saturation=$saturation, shadow=$shadow, sharpen=$sharpen, startOffset=$startOffset, streamingResolutions=$streamingResolutions, trim=$trim, unsharpMask=$unsharpMask, videoCodec=$videoCodec, width=$width, x=$x, xCenter=$xCenter, y=$y, yCenter=$yCenter, zoom=$zoom, additionalProperties=$additionalProperties}"
 }
