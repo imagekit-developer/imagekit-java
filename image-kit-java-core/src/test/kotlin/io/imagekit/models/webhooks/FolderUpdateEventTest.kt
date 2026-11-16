@@ -35,6 +35,7 @@ internal class FolderUpdateEventTest {
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                 .build()
 
         assertThat(folderUpdateEvent.id()).isEqualTo("id")
@@ -57,6 +58,8 @@ internal class FolderUpdateEventTest {
                     .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                     .build()
             )
+        assertThat(folderUpdateEvent.previous())
+            .contains(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
     }
 
     @Test
@@ -82,6 +85,7 @@ internal class FolderUpdateEventTest {
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                 .build()
 
         val roundtrippedFolderUpdateEvent =

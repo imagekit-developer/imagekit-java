@@ -2122,6 +2122,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                         .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                         .build()
                 )
+                .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                 .build()
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofFolderUpdated(folderUpdated)
@@ -2169,6 +2170,7 @@ internal class UnsafeUnwrapWebhookEventTest {
                             .updatedAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
                             .build()
                     )
+                    .previous(FolderUpdateEvent.Previous.builder().folderPath("folderPath").build())
                     .build()
             )
 
@@ -2187,7 +2189,12 @@ internal class UnsafeUnwrapWebhookEventTest {
             FolderDeleteEvent.builder()
                 .id("id")
                 .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                .data(
+                    FolderDeleteEvent.Data.builder()
+                        .folderId("folderId")
+                        .folderPath("folderPath")
+                        .build()
+                )
                 .build()
 
         val unsafeUnwrapWebhookEvent = UnsafeUnwrapWebhookEvent.ofFolderDeleted(folderDeleted)
@@ -2217,7 +2224,12 @@ internal class UnsafeUnwrapWebhookEventTest {
                 FolderDeleteEvent.builder()
                     .id("id")
                     .createdAt(OffsetDateTime.parse("2019-12-27T18:11:19.117Z"))
-                    .data(FolderDeleteEvent.Data.builder().folderId("folderId").build())
+                    .data(
+                        FolderDeleteEvent.Data.builder()
+                            .folderId("folderId")
+                            .folderPath("folderPath")
+                            .build()
+                    )
                     .build()
             )
 
