@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.9.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.8.0...v3.9.0) (2026-11-16)
+
+
+### Features
+
+* **transformation:** add saturation and encode negative numbers with the N prefix in URL generation ([94016b7](https://github.com/imagekit-developer/imagekit-java/commit/94016b722159f1fecbf88899835a5472f9c463d3))
+* **webhooks:** add folder paths to folder.deleted and folder.updated events ([0f0d13c](https://github.com/imagekit-developer/imagekit-java/commit/0f0d13c23a58396295a3e1f428fe10e21d7dbf3b))
+
+
+### Styles
+
+* format negative-number URL generation test ([27e40a3](https://github.com/imagekit-developer/imagekit-java/commit/27e40a35a3ac5cfc0100348ef1350421afcf1e43))
+
 ## [3.8.0](https://github.com/imagekit-developer/imagekit-java/compare/v3.7.1...v3.8.0) (2026-11-02)
 
 
