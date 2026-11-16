@@ -1,8 +1,14 @@
 package io.imagekit.lib
 
 import io.imagekit.client.okhttp.ImageKitOkHttpClient
+import io.imagekit.core.JsonValue
+import io.imagekit.models.ImageOverlay
+import io.imagekit.models.Overlay
+import io.imagekit.models.OverlayPosition
 import io.imagekit.models.SrcOptions
 import io.imagekit.models.StreamingResolution
+import io.imagekit.models.TextOverlay
+import io.imagekit.models.TextOverlayTransformation
 import io.imagekit.models.Transformation
 import io.imagekit.models.TransformationPosition
 import org.assertj.core.api.Assertions.assertThat
@@ -490,6 +496,7 @@ class HelperAdvancedTransformationsTest {
                     .unsharpMask("2-2-0.8-0.024")
                     .gradient("from-red_to-white")
                     .colorize("co-FF0000_in-15")
+                    .saturation(50L)
                     .colorReplace("FF0000_100_0000FF")
                     .distort("a-45")
                     .original(true)
@@ -512,7 +519,78 @@ class HelperAdvancedTransformationsTest {
 
         assertThat(url)
             .isEqualTo(
-                "https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=w-400,h-300,q-40,ar-4-3,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,cr-FF0000_100_0000FF,di-folder@@file.jpg,dpr-3,x-10,y-20,xc-30,yc-40,o-0.8,z-2,rt-90,bl-10,n-some_name,pr-true,lo-true,fl-h,t-5,md-true,cp-true,dn-72,vc-h264,ac-aac,so-5,eo-15,du-10,sr-1440_1080,e-grayscale,e-upscale,e-retouch,e-genvar,e-bgremove,e-contrast,e-dropshadow,e-changebg-prompt-car,e-edit-prompt-make it vintage,e-shadow-bl-15_st-40_x-10_y-N5,e-sharpen-10,e-usm-2-2-0.8-0.024,e-gradient-from-red_to-white,e-colorize-co-FF0000_in-15,e-distort-a-45,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end"
+                "https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=w-400,h-300,q-40,ar-4-3,c-force,cm-extract,fo-left,f-jpeg,r-50,bg-A94D34,b-5-A94D34,cr-FF0000_100_0000FF,di-folder@@file.jpg,dpr-3,x-10,y-20,xc-30,yc-40,o-0.8,z-2,rt-90,bl-10,n-some_name,pr-true,lo-true,fl-h,t-5,md-true,cp-true,dn-72,vc-h264,ac-aac,so-5,eo-15,du-10,sr-1440_1080,e-grayscale,e-upscale,e-retouch,e-genvar,e-bgremove,e-contrast,e-dropshadow,e-changebg-prompt-car,e-edit-prompt-make it vintage,e-shadow-bl-15_st-40_x-10_y-N5,e-sharpen-10,e-usm-2-2-0.8-0.024,e-gradient-from-red_to-white,e-colorize-co-FF0000_in-15,e-saturation-50,e-distort-a-45,orig-true,pg-2_4,h-200,w-300,l-image,i-logo.png,l-end"
+            )
+    }
+    @Test
+    fun `should encode negative numbers with the N prefix and keep N-prefixed strings as is`() {
+        val transformation =
+            listOf(
+                Transformation.builder()
+                    .rotation(-40.0)
+                    .x(-10.0)
+                    .y(-20.5)
+                    .saturation(-50L)
+                    .build(),
+                Transformation.builder().rotation("N40").x("N10").y(10.0).saturation(0L).build(),
+                Transformation.builder()
+                    .overlay(
+                        Overlay.ofImage(
+                            ImageOverlay.builder()
+                                .input("logo.png")
+                                .type(JsonValue.from("image"))
+                                .position(
+                                    OverlayPosition.builder()
+                                        .x(-10.0)
+                                        .y("N20")
+                                        .xCenter(-30.0)
+                                        .yCenter(-40.5)
+                                        .build()
+                                )
+                                .transformation(
+                                    listOf(
+                                        Transformation.builder()
+                                            .rotation(-15.0)
+                                            .saturation(-100L)
+                                            .build()
+                                    )
+                                )
+                                .build()
+                        )
+                    )
+                    .build(),
+                Transformation.builder()
+                    .overlay(
+                        Overlay.ofText(
+                            TextOverlay.builder()
+                                .text("Hello")
+                                .type(JsonValue.from("text"))
+                                .transformation(
+                                    listOf(
+                                        TextOverlayTransformation.builder().rotation(-45.0).build()
+                                    )
+                                )
+                                .build()
+                        )
+                    )
+                    .build(),
+            )
+
+        val url =
+            client
+                .helper()
+                .buildUrl(
+                    SrcOptions.builder()
+                        .urlEndpoint("https://ik.imagekit.io/test_url_endpoint")
+                        .transformationPosition(TransformationPosition.QUERY)
+                        .src("/test_path.jpg")
+                        .transformation(transformation as List<Transformation>)
+                        .build()
+                )
+
+        assertThat(url)
+            .isEqualTo(
+                "https://ik.imagekit.io/test_url_endpoint/test_path.jpg?tr=x-N10,y-N20.5,rt-N40,e-saturation-N50:x-N10,y-10,rt-N40,e-saturation-0:l-image,i-logo.png,lx-N10,ly-N20,lxc-N30,lyc-N40.5,rt-N15,e-saturation-N100,l-end:l-text,i-Hello,rt-N45,l-end"
             )
     }
 }

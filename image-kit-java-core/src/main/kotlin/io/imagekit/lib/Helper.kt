@@ -322,7 +322,7 @@ class Helper(private val privateKey: String) : HelperService {
             // X position
             transform.x().ifPresent { x ->
                 when {
-                    x.isNumber() -> parts.add("x-${formatNumber(x.asNumber())}")
+                    x.isNumber() -> parts.add("x-${formatSignedNumber(x.asNumber())}")
                     x.isString() -> parts.add("x-${x.asString()}")
                 }
             }
@@ -330,7 +330,7 @@ class Helper(private val privateKey: String) : HelperService {
             // Y position
             transform.y().ifPresent { y ->
                 when {
-                    y.isNumber() -> parts.add("y-${formatNumber(y.asNumber())}")
+                    y.isNumber() -> parts.add("y-${formatSignedNumber(y.asNumber())}")
                     y.isString() -> parts.add("y-${y.asString()}")
                 }
             }
@@ -360,7 +360,7 @@ class Helper(private val privateKey: String) : HelperService {
             // Rotation
             transform.rotation().ifPresent { rt ->
                 when {
-                    rt.isNumber() -> parts.add("rt-${formatNumber(rt.asNumber())}")
+                    rt.isNumber() -> parts.add("rt-${formatSignedNumber(rt.asNumber())}")
                     rt.isString() -> parts.add("rt-${rt.asString()}")
                 }
             }
@@ -504,6 +504,10 @@ class Helper(private val privateKey: String) : HelperService {
 
             transform.colorize().ifPresent { co -> parts.add("e-colorize-$co") }
 
+            transform.saturation().ifPresent { s ->
+                parts.add("e-saturation-${formatSignedNumber(s.toDouble())}")
+            }
+
             transform.distort().ifPresent { d -> parts.add("e-distort-$d") }
 
             // Original
@@ -546,6 +550,14 @@ class Helper(private val privateKey: String) : HelperService {
         } else {
             value.toString()
         }
+    }
+
+    /**
+     * Encodes a negative number with the N prefix, because "-" separates a key from its value in
+     * the URL. For example, -40 becomes "N40".
+     */
+    private fun formatSignedNumber(value: Double): String {
+        return if (value < 0) "N${formatNumber(-value)}" else formatNumber(value)
     }
 
     private val simpleOverlayPathRegex = Regex("^[a-zA-Z0-9\\-._/ ]*$")
@@ -805,7 +817,7 @@ class Helper(private val privateKey: String) : HelperService {
         }
         transform.rotation().ifPresent { rt ->
             when {
-                rt.isNumber() -> parts.add("rt-${formatNumber(rt.asNumber())}")
+                rt.isNumber() -> parts.add("rt-${formatSignedNumber(rt.asNumber())}")
                 rt.isString() -> parts.add("rt-${rt.asString()}")
             }
         }
@@ -870,25 +882,25 @@ class Helper(private val privateKey: String) : HelperService {
     ) {
         position.x().ifPresent { x ->
             when {
-                x.isNumber() -> parts.add("lx-${formatNumber(x.asNumber())}")
+                x.isNumber() -> parts.add("lx-${formatSignedNumber(x.asNumber())}")
                 x.isString() -> parts.add("lx-${x.asString()}")
             }
         }
         position.y().ifPresent { y ->
             when {
-                y.isNumber() -> parts.add("ly-${formatNumber(y.asNumber())}")
+                y.isNumber() -> parts.add("ly-${formatSignedNumber(y.asNumber())}")
                 y.isString() -> parts.add("ly-${y.asString()}")
             }
         }
         position.xCenter().ifPresent { xc ->
             when {
-                xc.isNumber() -> parts.add("lxc-${formatNumber(xc.asNumber())}")
+                xc.isNumber() -> parts.add("lxc-${formatSignedNumber(xc.asNumber())}")
                 xc.isString() -> parts.add("lxc-${xc.asString()}")
             }
         }
         position.yCenter().ifPresent { yc ->
             when {
-                yc.isNumber() -> parts.add("lyc-${formatNumber(yc.asNumber())}")
+                yc.isNumber() -> parts.add("lyc-${formatSignedNumber(yc.asNumber())}")
                 yc.isString() -> parts.add("lyc-${yc.asString()}")
             }
         }
