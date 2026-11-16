@@ -21,8 +21,9 @@ import kotlin.jvm.optionals.getOrNull
 
 /**
  * Triggered when a folder is updated, for example when its custom metadata changes or it is
- * renamed. Renaming a folder sends one event per folder in the tree, each with its new `folderPath`
- * in `data` and its old `folderPath` in `previous`.
+ * renamed. Renaming a folder sends one event per folder in the tree. In each of these events,
+ * `data.folderPath` is the folder's new path and `previous.folderPath` is its path before the
+ * rename.
  */
 class FolderUpdateEvent
 @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -84,8 +85,8 @@ private constructor(
     @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
     /**
-     * Values the folder had before this update. Present only when the folder was renamed or its
-     * parent folder was renamed.
+     * Present only when the folder or one of its parent folders was renamed. Contains the folder's
+     * path before the rename.
      *
      * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
@@ -217,8 +218,8 @@ private constructor(
         fun type(type: JsonValue) = apply { this.type = type }
 
         /**
-         * Values the folder had before this update. Present only when the folder was renamed or its
-         * parent folder was renamed.
+         * Present only when the folder or one of its parent folders was renamed. Contains the
+         * folder's path before the rename.
          */
         fun previous(previous: Previous) = previous(JsonField.of(previous))
 
@@ -324,8 +325,8 @@ private constructor(
             (previous.asKnown().getOrNull()?.validity() ?: 0)
 
     /**
-     * Values the folder had before this update. Present only when the folder was renamed or its
-     * parent folder was renamed.
+     * Present only when the folder or one of its parent folders was renamed. Contains the folder's
+     * path before the rename.
      */
     class Previous
     @JsonCreator(mode = JsonCreator.Mode.DISABLED)
@@ -344,10 +345,10 @@ private constructor(
         /**
          * Path of the folder before it was renamed.
          *
-         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
+         * @throws ImageKitInvalidDataException if the JSON field has an unexpected type or is
+         *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
          */
-        fun folderPath(): Optional<String> = folderPath.getOptional("folderPath")
+        fun folderPath(): String = folderPath.getRequired("folderPath")
 
         /**
          * Returns the raw JSON value of [folderPath].
@@ -372,14 +373,21 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Previous]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Previous].
+             *
+             * The following fields are required:
+             * ```java
+             * .folderPath()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Previous]. */
         class Builder internal constructor() {
 
-            private var folderPath: JsonField<String> = JsonMissing.of()
+            private var folderPath: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -423,8 +431,19 @@ private constructor(
              * Returns an immutable instance of [Previous].
              *
              * Further updates to this [Builder] will not mutate the returned instance.
+             *
+             * The following fields are required:
+             * ```java
+             * .folderPath()
+             * ```
+             *
+             * @throws IllegalStateException if any required field is unset.
              */
-            fun build(): Previous = Previous(folderPath, additionalProperties.toMutableMap())
+            fun build(): Previous =
+                Previous(
+                    checkRequired("folderPath", folderPath),
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
